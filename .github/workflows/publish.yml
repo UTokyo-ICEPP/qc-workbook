@@ -1,0 +1,27 @@
+name: publish
+
+# Only run this when the master branch changes
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  publish:
+    runs-on: self-hosted
+    steps:
+    - name: Check out the latest
+      run: |
+        cd $GITHUB_WORKSPACE
+        git pull origin master
+
+    - name: Build the books
+      run: |
+        jupyter-book build --path-output $GITHUB_WORKSPACE/../../jp source/jp
+        jupyter-book build --path-output $GITHUB_WORKSPACE/../../en source/en
+
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.5.9
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: $GITHUB_WORKSPACE/../../../_build/html
