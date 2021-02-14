@@ -3,7 +3,7 @@ author: 東京大学素粒子物理国際研究センター
 logo: ../images/icepp.jpg
 
 execute:
-  execute_notebooks: "off"  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
+  execute_notebooks: "auto"  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
 
 latex:
   latex_documents:
@@ -21,3 +21,10 @@ repository:
 launch_buttons:
   binderhub_url: "https://mybinder.org"
   thebelab: true
+
+sphinx:
+  config:
+    myst_footnote_transition: false
+    myst_enable_extensions:
+      - dollarmath
+      - smartquotes
