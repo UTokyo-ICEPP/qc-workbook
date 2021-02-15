@@ -39,3 +39,6 @@ build.callback(path_source='jp',
                verbose=0,
                quiet=0,
                individualpages=False)
+
+os.rename('{}/_build/html/reports'.format(options.target), '/tmp')
+os.rename('{}/_build/html/.buildinfo'.format(options.target), '/tmp')
