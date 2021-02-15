@@ -1,0 +1,957 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="モンテカルロ・サンプラーとしての利用" href="mc_sampler.html" />
+    <link rel="prev" title="[課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する" href="vqe_tracking.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/icepp.jpg" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  超並列計算機としての量子コンピュータ
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="qft.html">
+   量子フーリエ変換
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   1兆個の足し算を同時に行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   量子ダイナミクスシミュレーション
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  ショアとグローバーのアルゴリズム
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="shor.html">
+   ショアの素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover.html">
+   グローバーのアルゴリズムを使って、データベース検索を行う
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   [課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  モンテカルロサンプラー
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="mc_sampler.html">
+   モンテカルロ・サンプラーとしての利用
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  補足：より詳しく知りたい人のために
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_basics.html">
+   量子力学の基礎
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/vqc_machine_learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/vqc_machine_learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   内容
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-introduction-a">
+   はじめに
+   <a id="introduction">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-variational-method-a">
+   変分法と変分量子回路
+   <a id="variational_method">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-ml-a">
+   機械学習と深層学習
+   <a id="ml">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-qml-a">
+   量子機械学習
+   <a id="qml">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-example-a">
+   初歩的な例
+   <a id="example">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-data-a">
+     学習データの準備
+     <a id="func_data">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-state-preparation-a">
+     量子状態の生成
+     <a id="func_state_preparation">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-variational-form-a">
+     変分フォームを使った状態変換
+     <a id="func_variational_form">
+     </a>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#u-boldsymbol-theta">
+       変分量子回路
+       <span class="math notranslate nohighlight">
+        \(U(\boldsymbol{\theta})\)
+       </span>
+       の構成
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       2量子ビットゲートの作成
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id4">
+       回転ゲートと
+       <span class="math notranslate nohighlight">
+        \(U(\boldsymbol{\theta})\)
+       </span>
+       の作成
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-measurement-a">
+     測定とモデル出力
+     <a id="func_measurement">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-susy-a">
+   素粒子現象の探索への応用
+   <a id="susy">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-data-a">
+     学習データの準備
+     <a id="susy_data">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-state-preparation-a">
+     量子状態の生成
+     <a id="susy_state_preparation">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-variational-form-a">
+     変分フォームを使った状態変換
+     <a id="susy_variational_form">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-measurement-a">
+     測定とモデル出力
+     <a id="susy_measurement">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#vqe-a-id-vqe-application-a">
+   [課題] 素粒子実験へのVQEの応用
+   <a id="vqe_application">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-references-a">
+   参考文献
+   <a id="references">
+   </a>
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="id1">
+<h1>量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、量子コンピュータを応用することで古典機械学習の性能を向上するという観点から提案された、<strong>変分量子回路</strong>を使った学習手法 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>です。その手法の元になる変分法と、それに基づいた変分量子固有値ソルバー法について学んだのち、量子機械学習の学習へと進みます。</p>
+<div class="section" id="id2">
+<h2>内容<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p><a class="reference external" href="#introduction">はじめに</a></p></li>
+<li><p><a class="reference external" href="#variational_method">変分法と変分量子回路</a></p></li>
+<li><p><a class="reference external" href="#ml">機械学習</a></p></li>
+<li><p><a class="reference external" href="#qml">量子機械学習</a></p></li>
+<li><p><a class="reference external" href="#example">初歩的な例</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#func_data">学習データの準備</a></p></li>
+<li><p><a class="reference external" href="#func_state_preparation">量子状態の生成</a></p></li>
+<li><p><a class="reference external" href="#func_ariational_form">変分フォームを使った状態変換</a></p></li>
+<li><p><a class="reference external" href="#func_measurement">測定とモデル出力</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#susy">素粒子現象の探索への応用</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#susy_data">学習データの準備</a></p></li>
+<li><p><a class="reference external" href="#susy_state_preparation">量子状態の生成</a></p></li>
+<li><p><a class="reference external" href="#susy_ariational_form">変分フォームを使った状態変換</a></p></li>
+<li><p><a class="reference external" href="#susy_measurement">測定とモデル出力</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#vqe_application">[課題] VQEの応用</a></p></li>
+<li><p><a class="reference external" href="#references">参考文献</a></p></li>
+</ol>
+</div>
+<div class="section" id="a-id-introduction-a">
+<h2>はじめに <a id='introduction'></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<p>近年、機械学習の分野において<strong>深層学習</strong>（<strong>ディープラーニング</strong>）が注目を浴びています。ディープラーニングは<strong>ニューラルネットワーク</strong>の隠れ層を多層にすることで、入力と出力の間の複雑な関係を学習することができます。その学習結果を使って、新しい入力データに対して出力を予測することが可能になります。ここで学習する量子機械学習アルゴリズムは、このニューラルネットワークの部分を変分量子回路に置き換えたものです。つまり、ニューラルネットワークでの各ニューロン層への重みを調節する代わりに、変分量子回路のパラメータ（例えば回転ゲートの回転角）を調整することで入力と出力の関係を学習しようという試みです。
+量子力学の重ね合わせの原理から、<strong>指数関数的に増える多数の計算基底</strong>を使って状態を表現できることが量子コンピュータの強みです。この強みを生かすことで、データ間の複雑な相関を学習できる可能性が生まれます。そこに量子機械学習の最も大きな強みがあると考えられています。</p>
+<p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>として出版されています。</p>
+</div>
+<div class="section" id="a-id-variational-method-a">
+<h2>変分法と変分量子回路 <a id='variational_method'></a><a class="headerlink" href="#a-id-variational-method-a" title="Permalink to this headline">¶</a></h2>
+<p>変分量子回路の元になるのは、<strong>変分法</strong>（あるいは変分原理）と呼ばれる考え方です。量子力学における変分法と、その方法を用いた変分量子固有値ソルバー法については、この<a class="reference internal" href="vqe.html"><span class="doc std std-doc">ノートブック</span></a>を参照してください。</p>
+</div>
+<div class="section" id="a-id-ml-a">
+<h2>機械学習と深層学習 <a id='ml'></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
+<p>機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>と<span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>からなるデータ（<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>を要素とするベクトル、<span class="math notranslate nohighlight">\(i\)</span>は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数<span class="math notranslate nohighlight">\(x_i\)</span>を引数とする関数<span class="math notranslate nohighlight">\(f\)</span>を考え、その出力<span class="math notranslate nohighlight">\(\tilde{y_i}=f(x_i)\)</span>が<span class="math notranslate nohighlight">\(\tilde{y}_i\simeq y_i\)</span>となるような関数<span class="math notranslate nohighlight">\(f\)</span>をデータから近似的に求めることに対応します。
+一般的に、この関数<span class="math notranslate nohighlight">\(f\)</span>は変数<span class="math notranslate nohighlight">\(x\)</span>以外のパラメータを持っているでしょう。なので、そのパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>をうまく調整して、<span class="math notranslate nohighlight">\(y_i\simeq\tilde{y}_i\)</span>となる関数<span class="math notranslate nohighlight">\(f=f(x,\boldsymbol{w}^*)\)</span>とパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めることが機械学習の鍵になります。</p>
+<p>関数<span class="math notranslate nohighlight">\(f\)</span>を近似する方法の一つとして、現在主流になっているのが脳のニューロン構造を模式化したニューラルネットワークです。下図に示しているのは、ニューラルネットの基本的な構造です。丸で示しているのが構成ユニット（ニューロン）で、ニューロンを繋ぐ情報の流れを矢印で表しています。ニューラルネットには様々な構造が考えられますが、基本になるのは図に示したような層構造で、前層にあるニューロンの出力が次の層にあるニューロンへの入力になります。入力データ<span class="math notranslate nohighlight">\(x\)</span>を受ける入力層と出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>を出す出力層に加え、中間に複数の”隠れ層”を持つものを総称して深層ニューラルネットワークと呼びます。</p>
+<img src="figs/neural_net.png" width=50%>
+<p>では、もう少し数学的なモデルを見てみましょう。<span class="math notranslate nohighlight">\(l\)</span>層目にある<span class="math notranslate nohighlight">\(j\)</span>番目のユニット<span class="math notranslate nohighlight">\(u_j^l\)</span>に対して、前層（<span class="math notranslate nohighlight">\(l-1\)</span>番目）から<span class="math notranslate nohighlight">\(n\)</span>個の入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span> (<span class="math notranslate nohighlight">\(k=1,2,\cdots n\)</span>) がある場合、入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span>への重みパラメータ<span class="math notranslate nohighlight">\(w_k^l\)</span>を使って</p>
+<div class="math notranslate nohighlight">
+\[
+o_j^l=g\left(\sum_{k=1}^n o_k^{l-1}w_k^l\right)
+\]</div>
+<p>となる出力<span class="math notranslate nohighlight">\(o_j^l\)</span>を考えます。図で示すと</p>
+<img src="figs/neuron.png" width=35%>
+<p>になります。関数<span class="math notranslate nohighlight">\(g\)</span>は活性化関数と呼ばれ、入力に対して非線形な出力を与えます。活性化関数としては、一般的にはシグモイド関数やReLU（Rectified Linear Unit）等の関数が用いられることが多いです。</p>
+<p>関数<span class="math notranslate nohighlight">\(f(x,\boldsymbol{w}^*)\)</span>を求めるために、最適なパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を決定するプロセス（学習と呼ばれる）が必要です。そのために、出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>とターゲットとなる変数<span class="math notranslate nohighlight">\(y\)</span>の差を測定する関数<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を考えます（一般に損失関数やコスト関数と呼ばれます）。</p>
+<div class="math notranslate nohighlight">
+\[
+L(\boldsymbol{w}) = \frac{1}{N}\sum_{i=1}^N L(f(x_i,\boldsymbol{w}),y_i)
+\]</div>
+<p><span class="math notranslate nohighlight">\(N\)</span>は<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>データの数です。この損失関数<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を最小化するパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めたいわけですが、それには誤差逆伝搬法と呼ばれる手法を使うことができることが知られています。この手法は、<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>の各<span class="math notranslate nohighlight">\(w\)</span>に対する微分係数<span class="math notranslate nohighlight">\(\Delta_w L(\boldsymbol{w})\)</span>を求めて、</p>
+<div class="math notranslate nohighlight">
+\[
+w'=w-\epsilon\Delta_w L(\boldsymbol{w})
+\]</div>
+<p>のように<span class="math notranslate nohighlight">\(w\)</span>を更新することで、<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を最小化するというものです（<span class="math notranslate nohighlight">\(w\)</span>と<span class="math notranslate nohighlight">\(w'\)</span>は更新前と更新後のパラメータ）。<span class="math notranslate nohighlight">\(\epsilon\:(&gt;0)\)</span>は学習率と呼ばれるパラメータで、これは基本的には私たちが手で決めてやる必要があります。</p>
+</div>
+<div class="section" id="a-id-qml-a">
+<h2>量子機械学習<a id='qml'></a><a class="headerlink" href="#a-id-qml-a" title="Permalink to this headline">¶</a></h2>
+<p>変分量子回路を用いた量子機械学習アルゴリズムは、一般的には以下のような順番で量子回路に実装され、計算が行われます。</p>
+<ol class="simple">
+<li><p><strong>学習データ</strong><span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i, y_i)\}\)</span>を用意する。<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は入力データのベクトル、<span class="math notranslate nohighlight">\(y_i\)</span>は入力データに対する真の値（教師データ）とする（<span class="math notranslate nohighlight">\(i\)</span>は学習データのサンプルを表す添字）。</p></li>
+<li><p>入力<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>から何らかの規則で決まる回路<span class="math notranslate nohighlight">\(U_{\text{in}}(\boldsymbol{x})\)</span>（<strong>特徴量マップ</strong>と呼ぶ）を用意し、<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>の情報を埋め込んだ入力状態<span class="math notranslate nohighlight">\(|\psi_{\rm in}(\boldsymbol{x}_i)\rangle = U_{\text{in}}(\boldsymbol{x}_i)|0\rangle\)</span>を作る。</p></li>
+<li><p>入力状態にパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>に依存したゲート<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>（<strong>変分フォーム</strong>）を掛けたものを出力状態<span class="math notranslate nohighlight">\(|\psi_{\rm out}(\boldsymbol{x}_i,\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta})|\psi_{\rm in}(\boldsymbol{x}_i)\rangle\)</span>とする。</p></li>
+<li><p>出力状態のもとで何らかの<strong>観測量</strong>を測定し、測定値<span class="math notranslate nohighlight">\(O\)</span>を得る。例えば、最初の量子ビットで測定したパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の期待値<span class="math notranslate nohighlight">\(\langle Z_1\rangle = \langle \psi_{\rm out} |Z_1|\psi_{\rm out} \rangle\)</span>などを考える。</p></li>
+<li><p><span class="math notranslate nohighlight">\(F\)</span>を適当な関数として、<span class="math notranslate nohighlight">\(F(O)\)</span>をモデルの出力<span class="math notranslate nohighlight">\(y(\boldsymbol{x}_i,\boldsymbol{\theta})\)</span>とする。</p></li>
+<li><p>真の値<span class="math notranslate nohighlight">\(y_i\)</span>と出力<span class="math notranslate nohighlight">\(y(\boldsymbol{x}_i,\boldsymbol{\theta})\)</span>の間の乖離を表す<strong>コスト関数</strong><span class="math notranslate nohighlight">\(L(\boldsymbol{\theta})\)</span>を定義し、古典計算でコスト関数を計算する。</p></li>
+<li><p><span class="math notranslate nohighlight">\(L(\boldsymbol{\theta})\)</span>が小さくなるように<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>を更新する。</p></li>
+<li><p>3-7のプロセスを繰り返すことで、コスト関数を最小化する<span class="math notranslate nohighlight">\(\boldsymbol{\theta}=\boldsymbol{\theta^*}\)</span>を求める。</p></li>
+<li><p><span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta^*})\)</span>が学習によって得られた<strong>予測モデル</strong>になる。</p></li>
+</ol>
+<img src="figs/var_circuit.png" width=70%>
+<p>この順に量子機械学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.components.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">set_qiskit_aqua_logging</span>
+<span class="n">set_qiskit_aqua_logging</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>  <span class="c1"># choose INFO, DEBUG to see the log</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-example-a">
+<h2>初歩的な例<a id='example'></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h2>
+<p>ある入力<span class="math notranslate nohighlight">\(\{x_i\}\)</span>と、既知の関数<span class="math notranslate nohighlight">\(f\)</span>による出力<span class="math notranslate nohighlight">\(y_i=f(x_i)\)</span>が学習データとして与えられた時に、そのデータから関数<span class="math notranslate nohighlight">\(f\)</span>を近似的に求める問題を考えてみます。例として、<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>としてみます。</p>
+<div class="section" id="a-id-func-data-a">
+<h3>学習データの準備<a id='func_data'></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
+<p>まず、学習データを準備します。<span class="math notranslate nohighlight">\(x_{\text{min}}\)</span>と<span class="math notranslate nohighlight">\(x_{\text{max}}\)</span>の範囲でデータをnum_x_train個ランダムに取った後、正規分布に従うノイズを追加しておきます。nqubitが量子ビット数、c_depthが変分フォーム回路の深さ（後述）を表します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
+<span class="c1"># Qubit数、回路の深さ、訓練サンプル数の定義など</span>
+<span class="n">nqubit</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">c_depth</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="p">;</span> <span class="n">x_max</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">num_x_train</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="c1"># 関数の定義</span>
+<span class="n">func_to_learn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_x_train</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">func_to_learn</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+
+<span class="c1"># 関数に正規分布ノイズを付加</span>
+<span class="n">mag_noise</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">y_train_noise</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">+</span> <span class="n">mag_noise</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_x_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-func-state-preparation-a">
+<h3>量子状態の生成<a id='func_state_preparation'></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(|0\rangle^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\rm in}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
+\]</div>
+<p>と定義します。この<span class="math notranslate nohighlight">\(U_{\rm in}(x_i)\)</span>をゼロの標準状態に適用することで、入力<span class="math notranslate nohighlight">\(x_i\)</span>は<span class="math notranslate nohighlight">\(|\psi_{\rm in}(x_i)\rangle=U_{\rm in}(x_i)|0\rangle^{\otimes n}\)</span>という量子状態に変換されることになります。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">U_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">):</span>
+    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span>
+
+    <span class="n">angle_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">angle_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">angle_y</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">angle_z</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">U</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-func-variational-form-a">
+<h3>変分フォームを使った状態変換<a id='func_variational_form'></a><a class="headerlink" href="#a-id-func-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="u-boldsymbol-theta">
+<h4>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成<a class="headerlink" href="#u-boldsymbol-theta" title="Permalink to this headline">¶</a></h4>
+<p>次に、最適化すべき変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を作っていきます。これは以下の3つの手順で行います。</p>
+<ol class="simple">
+<li><p>2量子ビットゲートの作成（<span class="math notranslate nohighlight">\(\to\)</span> 量子ビットをエンタングルさせる）</p></li>
+<li><p>回転ゲートの作成</p></li>
+<li><p>1.と2.のゲートを交互に組み合わせ、1つの大きな変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を作る</p></li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h4>2量子ビットゲートの作成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>ここではControlled-<span class="math notranslate nohighlight">\(Z\)</span>ゲート（<span class="math notranslate nohighlight">\(CZ\)</span>）を使ってエンタングルさせ、モデルの表現能力を上げることを目指します。</p>
+</div>
+<div class="section" id="id4">
+<h4>回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p><span class="math notranslate nohighlight">\(CZ\)</span>ゲートを使ってエンタングルメントを生成する回路<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と、<span class="math notranslate nohighlight">\(j \:(=1,2,\cdots n)\)</span>番目の量子ビットに適用する回転ゲート</p>
+<p>\begin{align}
+U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j3}^l)R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
+\end{align}</p>
+<p>を掛けたものを組み合わせて、変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を構成します。ここで<span class="math notranslate nohighlight">\(l\)</span>は量子回路の層を表していて、<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と上記の回転ゲートを合計<span class="math notranslate nohighlight">\(d\)</span>層繰り返すことを意味しています。実際は、この演習では最初に回転ゲート<span class="math notranslate nohighlight">\(U_{\text{rot}}\)</span>を一度適用してから<span class="math notranslate nohighlight">\(d\)</span>層繰り返す構造を使うため、全体としては</p>
+<p>\begin{align}
+U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot}}(\theta_j^l)\right) \cdot U_{\text{ent}}\right)\cdot\prod_{j=1}^n U_{\text{rot}}(\theta_j^0)
+\end{align}</p>
+<p>という形式の変分量子回路を用いることになります。つまり、変分量子回路は全体で<span class="math notranslate nohighlight">\(3n(d+1)\)</span>個のパラメータを含んでいます。<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>の初期値ですが、<span class="math notranslate nohighlight">\([0, 2\pi]\)</span>の範囲でランダムに設定するものとします。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">)</span>
+    <span class="c1">#cr = ClassicalRegister(nqubit)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c_depth</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">U</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">nqubit</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">U</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-func-measurement-a">
+<h3>測定とモデル出力<a id='func_measurement'></a><a class="headerlink" href="#a-id-func-measurement-a" title="Permalink to this headline">¶</a></h3>
+<p>モデルの出力（予測値）として、状態<span class="math notranslate nohighlight">\(|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle=U(\boldsymbol{\theta})|\psi_{\rm in}(\boldsymbol{x})\rangle\)</span>の元で最初の量子ビットを<span class="math notranslate nohighlight">\(Z\)</span>基底で測定した時の期待値を使うことにします。つまり<span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta}) = \langle Z_0(\boldsymbol{x},\boldsymbol{\theta}) \rangle = \langle \psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})|Z_0|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle\)</span>です。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+
+    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+    <span class="n">cr</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+    <span class="n">circ</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">cr</span><span class="p">)</span>
+
+    <span class="n">u_in</span> <span class="o">=</span> <span class="n">U_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">)</span><span class="o">.</span><span class="n">to_instruction</span><span class="p">()</span>
+    <span class="n">u_out</span> <span class="o">=</span> <span class="n">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">to_instruction</span><span class="p">()</span>
+
+    <span class="n">circ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="n">qr</span><span class="p">)</span>
+    <span class="n">circ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_out</span><span class="p">,</span> <span class="n">qr</span><span class="p">)</span>
+    <span class="n">circ</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">circ</span>
+
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s2">&quot;qasm_simulator&quot;</span><span class="p">)</span>
+<span class="n">NUM_SHOTS</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="n">cost_total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)):</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+        <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train_noise</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">exp_2Z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">cost_total</span> <span class="o">+=</span> <span class="n">cost</span>
+
+    <span class="k">return</span> <span class="n">cost_total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ここで0と1の測定結果（固有値+1と-1）に2を掛けているのは、<span class="math notranslate nohighlight">\(Z\)</span>基底での測定結果の範囲を広げるためです。コスト関数<span class="math notranslate nohighlight">\(L\)</span>として、モデルの予測値と真の値<span class="math notranslate nohighlight">\(y_i\)</span>の平均2乗誤差の総和を使っています。</p>
+<p>では、最後にこの回路を実行して、結果を見てみましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_vars</span> <span class="o">=</span> <span class="n">nqubit</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">c_depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_vars</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="n">ret</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">num_vars</span><span class="o">=</span><span class="n">num_vars</span><span class="p">,</span> <span class="n">objective_function</span><span class="o">=</span><span class="n">objective_function</span><span class="p">,</span> <span class="n">initial_point</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ret[0] =&#39;</span><span class="p">,</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">x_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">:</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
+    <span class="n">y_pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_2Z</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train_noise</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Data (w/ Noise)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_list</span><span class="p">,</span> <span class="n">func_to_learn</span><span class="p">(</span><span class="n">x_list</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original Function&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Predicted Function&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>生成された図を確認してください。ノイズを印加した学習データの分布から、元の関数<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>をほぼ導き出せていることが分かると思います。</p>
+</div>
+</div>
+<div class="section" id="a-id-susy-a">
+<h2>素粒子現象の探索への応用<a id='susy'></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
+<p>次の実習課題では、（<strong>標準模型</strong>と呼ばれる）素粒子現象の基本理論を超える新しい物理現象として、<strong>超対称性理論</strong>（<em>Supersymmetry</em>、略してSUSY）から予言される新粒子の探索を考えてみます。下の図はSUSY信号（左側）と標準模型でのバックグラウンド（右側）のファインマンダイアグラムを表していて、この二つの物理過程を量子機械学習で分類することを試みます。</p>
+<img src="figs/susy_bg.png" width=70%>
+<p>(図の引用：参考文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>)</p>
+<div class="section" id="a-id-susy-data-a">
+<h3>学習データの準備<a id='susy_data'></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
+<p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>に委ねますが、ある特定のSUSY粒子生成反応とそれに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
+<p>以下では、まず学習に使う運動学的変数を選び、その変数を指定したサンプルを訓練用とテスト用に準備します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.algorithms</span> <span class="kn">import</span> <span class="n">VQC</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.utils</span> <span class="kn">import</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">,</span> <span class="n">map_label_to_class_name</span>
+
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data_files/SUSY_1K.csv&quot;</span><span class="p">,</span>
+                 <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;MT2&#39;</span><span class="p">,</span><span class="s1">&#39;S_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">,</span><span class="s1">&#39;dPhi_r_b&#39;</span><span class="p">,</span><span class="s1">&#39;cos_theta_r1&#39;</span><span class="p">))</span>
+
+<span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># dimension of each data point</span>
+<span class="k">if</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">]</span>
+<span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+<span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+
+<span class="n">training_size</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">testing_size</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">10598</span>
+
+<span class="n">df_sig</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
+<span class="n">df_bkg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
+
+<span class="n">df_sig_training</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">training_size</span><span class="p">]</span>
+<span class="n">df_bkg_training</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">training_size</span><span class="p">]</span>
+<span class="n">df_sig_test</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">training_size</span><span class="p">:</span><span class="n">training_size</span><span class="o">+</span><span class="n">testing_size</span><span class="p">]</span>
+<span class="n">df_bkg_test</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">training_size</span><span class="p">:</span><span class="n">training_size</span><span class="o">+</span><span class="n">testing_size</span><span class="p">]</span>
+<span class="n">training_input</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">df_sig_training</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span><span class="n">df_bkg_training</span><span class="p">}</span>
+<span class="n">test_input</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">df_sig_test</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span><span class="n">df_bkg_test</span><span class="p">}</span>
+<span class="c1">#print(&#39;train_input =&#39;,training_input)</span>
+<span class="c1">#print(&#39;test_input =&#39;,test_input)</span>
+
+<span class="n">datapoints</span><span class="p">,</span> <span class="n">class_to_label</span> <span class="o">=</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">(</span><span class="n">test_input</span><span class="p">)</span>
+<span class="n">datapoints_tr</span><span class="p">,</span> <span class="n">class_to_label_tr</span> <span class="o">=</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">(</span><span class="n">training_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-susy-state-preparation-a">
+<h3>量子状態の生成<a id='susy_state_preparation'></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\rm in}(\boldsymbol{x}_i)\)</span>の作成ですが、ここでは参考文献<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>に従い、</p>
+<p>\begin{align}
+U_{\phi_{{k}}}(\boldsymbol{x}<em>i)=\exp\left(i\phi</em>{{k}}(\boldsymbol{x}_i)Z_k\right)
+\end{align}</p>
+<p>とします（<span class="math notranslate nohighlight">\(k\)</span>は入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>のベクトル要素の添字）。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\boldsymbol{x}_i)=x_i^k\)</span>と決めて（<span class="math notranslate nohighlight">\(x_i^k\)</span>は<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>を<span class="math notranslate nohighlight">\(k\)</span>個の量子ビットに埋め込みます。この<span class="math notranslate nohighlight">\(U_{\phi_{\{k\}}}(x)\)</span>にアダマール演算子を組み合わせることで、全体として</p>
+<p>\begin{align}
+U_{\rm in}(\boldsymbol{x}<em>i) = U</em>{\phi}(\boldsymbol{x}<em>i) H^{\otimes n},::U</em>{\phi}(\boldsymbol{x}<em>i) = \exp\left(i \sum</em>{k=1}^n \phi_{{k}}(\boldsymbol{x}_i)Z_k\right)
+\end{align}</p>
+<p>が得られます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZFeatureMap</span><span class="p">(</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-susy-variational-form-a">
+<h3>変分フォームを使った状態変換<a id='susy_variational_form'></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<p>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして</p>
+<p>\begin{align}
+U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
+\end{align}</p>
+<p>を使います。上の例では<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を自分で組み立てましたが、Qiskitにはこの<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を実装するAPIがすでに準備されているので、ここではそれを使います。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">two</span> <span class="o">=</span> <span class="n">TwoLocal</span><span class="p">(</span><span class="n">feature_dim</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ry&#39;</span><span class="p">,</span><span class="s1">&#39;rz&#39;</span><span class="p">],</span> <span class="s1">&#39;cz&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">two</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-susy-measurement-a">
+<h3>測定とモデル出力<a id='susy_measurement'></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
+<p>測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのAPIを用いるので、プログラムはかなり簡略化されています。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータで実行する場合</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+
+<span class="c1"># 量子コンピュータで実行する場合</span>
+<span class="c1">#from qiskit import IBMQ</span>
+<span class="c1">#IBMQ.load_account()</span>
+<span class="c1">#provider0 = IBMQ.get_provider(hub=&#39;ibm-q&#39;, group=&#39;open&#39;, project=&#39;main&#39;)</span>
+<span class="c1">#backend_name = &#39;ibmq_santiago&#39;</span>
+<span class="c1">#backend = provider0.get_backend(backend_name)</span>
+
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="n">niter</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vqc</span> <span class="o">=</span> <span class="n">VQC</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">feature_map</span><span class="p">,</span> <span class="n">two</span><span class="p">,</span> <span class="n">training_input</span><span class="p">,</span> <span class="n">test_input</span><span class="p">)</span>
+
+<span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+                                   <span class="n">seed_simulator</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span> <span class="n">seed_transpiler</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
+                                   <span class="n">skip_qobj_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">quantum_instance</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; --- Testing success ratio: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;testing_accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>学習したモデルの出力に対して、閾値を設定することで信号とバックグラウンドの選別が可能になります。その選別性能を評価するために一般的に行われるのは、閾値を連続的に変化させた時に得られる選別効率を2次元平面上でプロットすることです。この曲線をROC（Receiver Operating Characteristic）曲線と言います。</p>
+<p>学習結果を使って、訓練用とテスト用のデータからROC曲線を描いてみます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_probs</span><span class="p">,</span> <span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datapoints</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">prob_test_signal</span> <span class="o">=</span> <span class="n">predicted_probs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">#predicted_classes = map_label_to_class_name(predicted_labels, vqc.label_to_class)</span>
+<span class="c1">#print(&quot; ---   Prediction:   {}&quot;.format(predicted_classes))</span>
+<span class="n">predicted_probs_tr</span><span class="p">,</span> <span class="n">predicted_labels_tr</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datapoints_tr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">prob_train_signal</span> <span class="o">=</span> <span class="n">predicted_probs_tr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">datapoints</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prob_test_signal</span><span class="p">,</span> <span class="n">drop_intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">,</span> <span class="n">thresholds_tr</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">datapoints_tr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prob_train_signal</span><span class="p">,</span> <span class="n">drop_intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+<span class="n">roc_auc_tr</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Testing Data (AUC = </span><span class="si">%0.3f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">roc_auc</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkblue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Data (AUC = </span><span class="si">%0.3f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">roc_auc_tr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="vqe-a-id-vqe-application-a">
+<h2>[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a><a class="headerlink" href="#vqe-a-id-vqe-application-a" title="Permalink to this headline">¶</a></h2>
+<p>ここでは、高エネルギー物理実験にVQEを応用できるかどうかを考えます。その応用例と課題をこの<a class="reference internal" href="vqe_tracking.html"><span class="doc std std-doc">ノートブック</span></a>に準備しました。最後にある課題をレポートとして提出してください。</p>
+</div>
+<div class="section" id="a-id-references-a">
+<h2>参考文献<a id='references'></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii, “Quantum circuit learning”, <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">Phys. Rev. A 98, 032309 (2018)</a></p></li>
+<li><p>V. Havlicek <em>et al.</em> , “Supervised learning with quantum-enhanced feature spaces”, <a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">Nature 567, 209–212 (2019)</a></p></li>
+<li><p>P. Baldi, P. Sadowski, and D. Whiteson, “Searching for exotic particles in high-energy physics with deep learning”, <a class="reference external" href="https://www.nature.com/articles/ncomms5308">Nature Commun. 5, 4308 (2014)</a></p></li>
+</ol>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">[課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する</a>
+    <a class='right-next' id="next-link" href="mc_sampler.html" title="next page">モンテカルロ・サンプラーとしての利用</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By 東京大学素粒子物理国際研究センター<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>

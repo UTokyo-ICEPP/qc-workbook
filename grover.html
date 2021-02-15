@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>グローバーのアルゴリズムを使って、データベース検索を行う &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="変分法と変分量子固有値ソルバー法を学習する" href="vqe.html" />
+    <link rel="prev" title="ショアの素因数分解アルゴリズムを学習する" href="shor.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/icepp.jpg" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  超並列計算機としての量子コンピュータ
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="qft.html">
+   量子フーリエ変換
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   1兆個の足し算を同時に行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   量子ダイナミクスシミュレーション
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  ショアとグローバーのアルゴリズム
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="shor.html">
+   ショアの素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   グローバーのアルゴリズムを使って、データベース検索を行う
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   [課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqc_machine_learning.html">
+   量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  モンテカルロサンプラー
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="mc_sampler.html">
+   モンテカルロ・サンプラーとしての利用
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  補足：より詳しく知りたい人のために
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_basics.html">
+   量子力学の基礎
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/grover.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/grover.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   目次
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-introduction-a">
+   はじめに
+   <a id="introduction">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-database-a">
+   非構造化データの検索
+   <a id="database">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-grover-a">
+   グローバーのアルゴリズム
+   <a id="grover">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-phaseoracle-a">
+     位相オラクルの導入
+     <a id="grover_phaseoracle">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-circuit-a">
+     量子回路の構成
+     <a id="grover_circuit">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-superposition-a">
+     重ね合わせ状態の生成
+     <a id="grover_superposition">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-geometry-a">
+     幾何学的な表現
+     <a id="grover_geometry">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-oracle-a">
+     オラクルの適用
+     <a id="grover_oracle">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#diffuser-a-id-grover-diffuser-a">
+     Diffuserの適用
+     <a id="grover_diffuser">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-amp-a">
+     振幅増幅を可視化する
+     <a id="grover_amp">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-grover-multidata-a">
+     複数データの検索
+     <a id="grover_multidata">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#n-2-6-a-id-imp-a">
+   アルゴリズムの実装 (
+   <span class="math notranslate nohighlight">
+    \(N=2^6\)
+   </span>
+   の場合)
+   <a id="imp">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qiskit-a-id-imp-qiskit-a">
+     Qiskitでの実装
+     <a id="imp_qiskit">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-simulator-a">
+     シミュレータでの実験
+     <a id="imp_simulator">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-qc-a">
+     量子コンピュータでの実験
+     <a id="imp_qc">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-grover-application-a">
+   [課題] 振幅増幅を確認する
+   <a id="grover_application">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-references-a">
+   参考文献
+   <a id="references">
+   </a>
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="id1">
+<h1>グローバーのアルゴリズムを使って、データベース検索を行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>ここでは、<strong>グローバーのアルゴリズム</strong>の紹介と、そのアルゴリズムを使用して構造化されていないデータベースを検索する問題を考えます。アルゴリズムを説明した後に、Qiskitを使用してグローバーのアルゴリズムを実装します。</p>
+<div class="section" id="id2">
+<h2>目次<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p><a class="reference external" href="#introduction">はじめに</a></p></li>
+<li><p><a class="reference external" href="#database">非構造化データの検索</a></p></li>
+<li><p><a class="reference external" href="#grover">グローバーのアルゴリズム</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#grover_phaseoracle">位相オラクルの導入</a></p></li>
+<li><p><a class="reference external" href="#grover_circuit">量子回路の構成</a></p></li>
+<li><p><a class="reference external" href="#grover_superposition">重ね合わせ状態の生成</a></p></li>
+<li><p><a class="reference external" href="#grover_geometry">幾何学的な表現</a></p></li>
+<li><p><a class="reference external" href="#grover_oracle">オラクルの適用</a></p></li>
+<li><p><a class="reference external" href="#grover_diffuser">Diffuserの適用</a></p></li>
+<li><p><a class="reference external" href="#grover_amp">振幅増幅を可視化する</a></p></li>
+<li><p><a class="reference external" href="#grover_multidata">複数データの検索</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#imp">アルゴリズムの実装 (<span class="math notranslate nohighlight">\(N=2^8\)</span>の場合)</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#imp_qiskit">Qiskitでの実装</a></p></li>
+<li><p><a class="reference external" href="#imp_simulator">シミュレータでの実験</a></p></li>
+<li><p><a class="reference external" href="#imp_qc">量子コンピュータでの実験</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#grover_application">[課題] 振幅増幅を確認する</a></p></li>
+<li><p><a class="reference external" href="#references">参考文献</a></p></li>
+</ol>
+</div>
+<div class="section" id="a-id-introduction-a">
+<h2>はじめに <a id='introduction'></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<p>量子コンピュータが古典コンピュータの計算能力を優位に上回る性能を発揮するためには、量子計算の特徴をうまく活用するアルゴリズムを考える必要があります。そのような量子アルゴリズムの一つとして知られているのが、グローバーのアルゴリズムです。このアルゴリズムは<strong>構造化されていないデータベースの検索</strong>に適しており、古典計算より少ない計算量で答えを得られることが証明されています。このアルゴリズムは<strong>振幅増幅</strong>と呼ばれる手法をベースにしており、量子アルゴリズムのサブルーチンとしても幅広く活用されています。</p>
+</div>
+<div class="section" id="a-id-database-a">
+<h2>非構造化データの検索 <a id='database'></a><a class="headerlink" href="#a-id-database-a" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(N\)</span>個の要素からなるリストがあり、その中の一つの要素<span class="math notranslate nohighlight">\(w\)</span>を見つけたいとします。求める要素<span class="math notranslate nohighlight">\(w\)</span>を見つけるためには、古典計算では最悪の場合<span class="math notranslate nohighlight">\(N\)</span>回、平均では<span class="math notranslate nohighlight">\(\boldsymbol{N/2}\)</span>回リストを調べる必要があります。グローバーのアルゴリズムでは、おおよそ<span class="math notranslate nohighlight">\(\boldsymbol{\sqrt{N}}\)</span>回の検索で<span class="math notranslate nohighlight">\(w\)</span>を見つけることができることが知られています。つまり、<strong>古典計算に対して二次の高速化が可能</strong>というわけです。</p>
+</div>
+<div class="section" id="a-id-grover-a">
+<h2>グローバーのアルゴリズム <a id='grover'></a><a class="headerlink" href="#a-id-grover-a" title="Permalink to this headline">¶</a></h2>
+<p>ここでは<span class="math notranslate nohighlight">\(n\)</span>個の量子ビットを考え、その量子ビットが存在する可能性のある全ての計算基底でリストが構成されているものとします。つまり<span class="math notranslate nohighlight">\(N=2^n\)</span>として、リストは<span class="math notranslate nohighlight">\(|00\cdots00\rangle\)</span>, <span class="math notranslate nohighlight">\(|00\cdots01\rangle\)</span>, <span class="math notranslate nohighlight">\(|00\cdots10\rangle\)</span>, <span class="math notranslate nohighlight">\(\cdots\)</span>, <span class="math notranslate nohighlight">\(|11\cdots11\rangle\)</span>までの<span class="math notranslate nohighlight">\(N\)</span>個の要素（10進数表記で<span class="math notranslate nohighlight">\(|0\rangle\)</span>, <span class="math notranslate nohighlight">\(|1\rangle\)</span>, <span class="math notranslate nohighlight">\(\cdots\)</span>, <span class="math notranslate nohighlight">\(|N-1\rangle\)</span>）を含んでいます。</p>
+<div class="section" id="a-id-grover-phaseoracle-a">
+<h3>位相オラクルの導入 <a id='grover_phaseoracle'></a><a class="headerlink" href="#a-id-grover-phaseoracle-a" title="Permalink to this headline">¶</a></h3>
+<p>グローバーのアルゴリズムで重要になるのは、特定の状態の位相を変える位相オラクルです。まず、<span class="math notranslate nohighlight">\(U|x\rangle=(-1)^{f(x)}|x\rangle\)</span>で与えられる位相オラクルを考えます。ここで関数<span class="math notranslate nohighlight">\(f(x)\)</span>として
+<span class="math notranslate nohighlight">\(
+f(x) = \bigg\{
+\begin{aligned}
+&amp;1 \quad \text{if} \; x = w \\
+&amp;0 \quad \text{else} \\
+\end{aligned}
+\)</span>
+を考えると、求める解<span class="math notranslate nohighlight">\(w\)</span>の位相を反転するオラクル<span class="math notranslate nohighlight">\(U_w\)</span>
+$<span class="math notranslate nohighlight">\(
+U_w:\begin{aligned}
+&amp;|w\rangle \to -|w\rangle\\
+&amp;|x\rangle \to |x\rangle \quad \forall \; x \neq w
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+が得られます。この時、\)</span>U_w<span class="math notranslate nohighlight">\(は\)</span>U_w=I-2|w\rangle\langle w|<span class="math notranslate nohighlight">\(と表現できることが分かります。また、関数\)</span>f_0(x)<span class="math notranslate nohighlight">\(として
+\)</span>
+f_0(x) = \bigg{
+\begin{aligned}
+&amp;0 \quad \text{if} ; x = 0 \
+&amp;1 \quad \text{else} \
+\end{aligned}
+<span class="math notranslate nohighlight">\(
+を考えると、0以外の位相を反転するユニタリー\)</span>U_0<span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+U_0:\begin{aligned}
+&amp;|0\rangle^{\otimes n} \to |0\rangle^{\otimes n}\\
+&amp;|x\rangle \to -|x\rangle \quad \forall \; x \neq 0
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+を得ることができます。この時、\)</span>U_0<span class="math notranslate nohighlight">\(は\)</span>U_0=2|0\rangle\langle 0|^{\otimes n}-I$になります。</p>
+</div>
+<div class="section" id="a-id-grover-circuit-a">
+<h3>量子回路の構成 <a id='grover_circuit'></a><a class="headerlink" href="#a-id-grover-circuit-a" title="Permalink to this headline">¶</a></h3>
+<p>グローバーアルゴリズムを実装する量子回路の構造は、下図のようになっています。<span class="math notranslate nohighlight">\(|0\rangle\)</span>に初期化された状態から出発し、Hadamard演算を適用して重ね合わせ状態を作ります。その後、
+<span class="math notranslate nohighlight">\(G\)</span>と書かれている演算を繰り返し適用します。</p>
+<img src="figs/grover.png" width=60%>
+<p><span class="math notranslate nohighlight">\(G\)</span>は「グローバーの反復」とも呼ばれるユニタリー演算で、以下のような4つのステップから構成されています。</p>
+<img src="figs/grover_iter.png" width=40%>
+<p>回路の最初にあるHadamard演算と合わせて、グローバーの反復を1回実行するまでのステップ</p>
+<img src="figs/grover_iter1.png" width=60%>
+<p>を細かく見ていきましょう。</p>
+</div>
+<div class="section" id="a-id-grover-superposition-a">
+<h3>重ね合わせ状態の生成 <a id='grover_superposition'></a><a class="headerlink" href="#a-id-grover-superposition-a" title="Permalink to this headline">¶</a></h3>
+<p>まず、<span class="math notranslate nohighlight">\(n\)</span>量子ビット回路の初期状態<span class="math notranslate nohighlight">\(|0\rangle^{\otimes n}\)</span>にHadamard演算を適用し、一様に重ね合わされた状態を生成します。</p>
+<div class="math notranslate nohighlight">
+\[
+|s\rangle = H^{\otimes n}|0\rangle^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}|x\rangle
+\]</div>
+<p>この状態を<span class="math notranslate nohighlight">\(|s\rangle\)</span>とします。</p>
+</div>
+<div class="section" id="a-id-grover-geometry-a">
+<h3>幾何学的な表現 <a id='grover_geometry'></a><a class="headerlink" href="#a-id-grover-geometry-a" title="Permalink to this headline">¶</a></h3>
+<p>この<span class="math notranslate nohighlight">\(|s\rangle\)</span>の状態を幾何学的に表現してみましょう。まず、重ね合わせ状態<span class="math notranslate nohighlight">\(|s\rangle\)</span>と求める状態<span class="math notranslate nohighlight">\(|w\rangle\)</span>が張る2次元平面を考えます。<span class="math notranslate nohighlight">\(|w\rangle\)</span>に直交する状態<span class="math notranslate nohighlight">\(|w^{\perp}\rangle\)</span>は<span class="math notranslate nohighlight">\(|w^{\perp}\rangle:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}|x\rangle\)</span>と表現できるため、この平面上では<span class="math notranslate nohighlight">\(|w\rangle\)</span>に直交する軸に相当します。簡易的に、この平面では<span class="math notranslate nohighlight">\(|w^{\perp}\rangle=\begin{bmatrix}1\\0\end{bmatrix}\)</span>と<span class="math notranslate nohighlight">\(|w\rangle=\begin{bmatrix}0\\1\end{bmatrix}\)</span>と書くことにします。</p>
+<p>まとめると、この2次元平面では、<span class="math notranslate nohighlight">\(|s\rangle\)</span>は(<span class="math notranslate nohighlight">\(|w^{\perp}\rangle\)</span>, <span class="math notranslate nohighlight">\(|w\rangle\)</span>)という二つのベクトルの線形和として書くことができます。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+|s\rangle&amp;=\sqrt{\frac{N-1}{N}}|w^{\perp}\rangle+\sqrt{\frac1N}|w\rangle\\
+&amp;=: \cos\frac\theta2|w^{\perp}\rangle+\sin\frac\theta2|w\rangle\\
+&amp;= \begin{bmatrix}\cos\frac\theta2\\\sin\frac\theta2\end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<p>答えが一つであるため、<span class="math notranslate nohighlight">\(|w\rangle\)</span>の振幅は<span class="math notranslate nohighlight">\(\sqrt{\frac1N}\)</span>、<span class="math notranslate nohighlight">\(|w^{\perp}\rangle\)</span>の振幅は<span class="math notranslate nohighlight">\(\sqrt{\frac{N-1}{N}}\)</span>になります。<span class="math notranslate nohighlight">\(\sin\frac\theta2=\sqrt{\frac1N}\)</span>なる<span class="math notranslate nohighlight">\(\theta\)</span>を定義すると、</p>
+<div class="math notranslate nohighlight">
+\[
+\theta=2\arcsin\frac{1}{\sqrt{N}}
+\]</div>
+<p>になります。(<span class="math notranslate nohighlight">\(|w^{\perp}\rangle\)</span>, <span class="math notranslate nohighlight">\(|w\rangle\)</span>)平面での<span class="math notranslate nohighlight">\(|s\rangle\)</span>を図示すると、以下のようになります。</p>
+<img src="figs/grover_rot1.png" width=30%></div>
+<div class="section" id="a-id-grover-oracle-a">
+<h3>オラクルの適用 <a id='grover_oracle'></a><a class="headerlink" href="#a-id-grover-oracle-a" title="Permalink to this headline">¶</a></h3>
+<p>次に、<span class="math notranslate nohighlight">\(|s\rangle\)</span>にオラクル<span class="math notranslate nohighlight">\(U_w\)</span>を適用します。このオラクルは、この平面上では<span class="math notranslate nohighlight">\(U_w=I-2|w\rangle\langle w|=\begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}\)</span>と表現することが可能です。つまり、<span class="math notranslate nohighlight">\(U_w\)</span>は<span class="math notranslate nohighlight">\(|w^{\perp}\rangle\)</span>軸に関して<span class="math notranslate nohighlight">\(|s\rangle\)</span>を折り返す操作（下図）に対応しており、この操作で<span class="math notranslate nohighlight">\(|w\rangle\)</span>の位相が反転します。</p>
+<img src="figs/grover_rot2.png" width=30%></div>
+<div class="section" id="diffuser-a-id-grover-diffuser-a">
+<h3>Diffuserの適用 <a id='grover_diffuser'></a><a class="headerlink" href="#diffuser-a-id-grover-diffuser-a" title="Permalink to this headline">¶</a></h3>
+<p>次は<span class="math notranslate nohighlight">\(H^{\otimes n}U_0H^{\otimes n}\)</span>の適用で、この演算はDiffuserと呼ばれます。<span class="math notranslate nohighlight">\(U_0=2|0\rangle\langle0|^{\otimes n}-I\)</span>なので、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+H^{\otimes n}U_0H^{\otimes n}&amp;=2H^{\otimes n}|0\rangle^{\otimes n}\langle0|^{\otimes n}H^{\otimes n}-H^{\otimes n}H^{\otimes n}\\
+&amp;=2|s\rangle\langle s|-I\\
+&amp;=\begin{bmatrix}\cos\theta&amp;\sin\theta\\\sin\theta&amp;-\cos\theta\end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<p>になります。つまり、Diffuserは<span class="math notranslate nohighlight">\(U_w|s\rangle\)</span>を<span class="math notranslate nohighlight">\(|s\rangle\)</span>に関して折り返す操作に対応します（下図）。</p>
+<img src="figs/grover_rot3.png" width=30%>
+<p>まとめると、グローバーの反復<span class="math notranslate nohighlight">\(G=(2|s\rangle\langle s|-I)U_w\)</span>は</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+G&amp;=(2|s\rangle\langle s|-I)U_w\\
+&amp;= \begin{bmatrix}\cos\theta&amp;-\sin\theta\\\sin\theta&amp;\cos\theta\end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<p>であるため、<span class="math notranslate nohighlight">\(|s\rangle\)</span>を<span class="math notranslate nohighlight">\(|w\rangle\)</span>に向けて角度<span class="math notranslate nohighlight">\(\theta\)</span>だけ回転する操作を表していることが分かります（下図）。</p>
+<img src="figs/grover_rot4.png" width=30%>
+<p><span class="math notranslate nohighlight">\(G\)</span>を1回適用すれば<span class="math notranslate nohighlight">\(\theta\)</span>だけ回転するということは、<span class="math notranslate nohighlight">\(G\)</span>を<span class="math notranslate nohighlight">\(r\)</span>回繰り返せば<span class="math notranslate nohighlight">\(r\theta\)</span>回転することになります。その時の<span class="math notranslate nohighlight">\(|s\rangle\)</span>の状態は</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G^r|s\rangle=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end{bmatrix}
+\end{split}\]</div>
+<p>で与えられます。つまり、求める答え<span class="math notranslate nohighlight">\(|w\rangle\)</span>に到達するためには、<span class="math notranslate nohighlight">\(\frac{2r+1}2\theta\approx\frac{\pi}2\)</span>となる<span class="math notranslate nohighlight">\(r\)</span>の回数だけ回転すれば良いことになります。
+1回の回転角<span class="math notranslate nohighlight">\(\theta\)</span>が十分小さいとして、<span class="math notranslate nohighlight">\(\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2\)</span>とすると、<span class="math notranslate nohighlight">\(r\approx\frac\pi4\sqrt{N}\)</span>が得られます。つまり<span class="math notranslate nohighlight">\({\cal O}(\sqrt{N})\)</span>の操作で答え<span class="math notranslate nohighlight">\(|w\rangle\)</span>に到達することが示せたわけであり、古典計算に対する2次の高速化が得られることが分かりました。</p>
+<p>Diffuserの役割をもう少し見てみましょう。ある状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が、<span class="math notranslate nohighlight">\(|\psi\rangle:=\sum_k a_k|k\rangle\)</span>という振幅<span class="math notranslate nohighlight">\(a_k\)</span>を持つ<span class="math notranslate nohighlight">\(|k\rangle\)</span>の重ね合わせ状態として書かれるとしましょう。この状態にDiffuserを適用すると</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+(2|s\rangle\langle s|-I)|\psi\rangle&amp;=\frac2N\sum_i|i\rangle\cdot\sum_{j,k}a_k\langle j|k\rangle-\sum_k a_k|k\rangle\\
+&amp;= 2\frac{\sum_i a_i}{N}\sum_k|k\rangle-\sum_k a_k|k\rangle\\
+&amp;= \sum_k(2\langle a\rangle-a_k)|k\rangle
+\end{aligned}
+\end{split}\]</div>
+<p>となります。<span class="math notranslate nohighlight">\(\langle a\rangle\equiv\frac{\sum_i a_i}{N}\)</span>は振幅の平均です。ある状態<span class="math notranslate nohighlight">\(|k\rangle\)</span>の振幅<span class="math notranslate nohighlight">\(a_k\)</span>が<span class="math notranslate nohighlight">\(a_k=\langle a\rangle-\Delta\)</span>で与えられるとすると、Diffuserを適用した後の振幅は<span class="math notranslate nohighlight">\(2\langle a\rangle-a_k=\langle a\rangle+\Delta\)</span>になります。つまり、Diffuserは平均<span class="math notranslate nohighlight">\(\langle a\rangle\)</span>に関して振幅を反転する操作を表していることが分かります。</p>
+</div>
+<div class="section" id="a-id-grover-amp-a">
+<h3>振幅増幅を可視化する <a id='grover_amp'></a><a class="headerlink" href="#a-id-grover-amp-a" title="Permalink to this headline">¶</a></h3>
+<p>グローバーアルゴリズムで振幅がどのように増幅されるのか、可視化するとこのようになります。</p>
+<p>まず、最初のHadamard変換で全ての計算基底が等しい振幅を持つ重ね合わせ状態を生成します（下図の1）。横軸は<span class="math notranslate nohighlight">\(N\)</span>個の計算基底、縦軸は各基底の振幅の大きさを表しており、全ての基底が<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{N}}\)</span>の大きさの振幅を持っています（振幅の平均を赤破線で表示）。</p>
+<p>次にオラクル<span class="math notranslate nohighlight">\(U_w\)</span>を適用すると、<span class="math notranslate nohighlight">\(|w\rangle\)</span>の位相が反転し、振幅が<span class="math notranslate nohighlight">\(-\frac{1}{\sqrt{N}}\)</span>になります（下図の2）。この状態での振幅の平均は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{N}}(1-\frac2N)\)</span>になり、(1)の状態より低くなります。</p>
+<p>最後にDiffuserを適用すると、平均に関して振幅を反転します（下図の3）。その結果、<span class="math notranslate nohighlight">\(|w\rangle\)</span>の振幅が増幅され、<span class="math notranslate nohighlight">\(|w\rangle\)</span>以外の基底の振幅は減少します。1回のグローバーの反復操作で、<span class="math notranslate nohighlight">\(|w\rangle\)</span>の振幅が約3倍程度増幅することも図から見てとれます。この操作を繰り返し実行すれば<span class="math notranslate nohighlight">\(|w\rangle\)</span>の振幅がさらに増幅されるため、正しい答えを得る確率が増加していくことも予想がつくと思います。</p>
+<img src="figs/grover_amp.png" width=100%></div>
+<div class="section" id="a-id-grover-multidata-a">
+<h3>複数データの検索 <a id='grover_multidata'></a><a class="headerlink" href="#a-id-grover-multidata-a" title="Permalink to this headline">¶</a></h3>
+<p>このセクションの最後に、複数のデータを検索する場合を考察してみましょう。例えば、<span class="math notranslate nohighlight">\(N=2^n\)</span>個のデータから<span class="math notranslate nohighlight">\(M\)</span>個のデータ<span class="math notranslate nohighlight">\(\{w_i\}\;(i=0,1,\cdots,M-1)\)</span>を探すケースです。これまでと同様に</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+&amp;|w\rangle:=\frac{1}{\sqrt{M}}\sum_{i=0}^{M-1}|w_i\rangle\\
+&amp;|w^{\perp}\rangle:=\frac{1}{\sqrt{N-M}}\sum_{x\notin\{w_0,\cdots,w_{M-1}\}}|x\rangle
+\end{aligned}
+\end{split}\]</div>
+<p>が張る2次元平面の上で、同様の議論を進めることができます。<span class="math notranslate nohighlight">\(|s\rangle\)</span>はこの平面上で</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+|s\rangle&amp;=\sqrt{\frac{N-M}{N}}|w^{\perp}\rangle+\sqrt{\frac{M}{N}}|w\rangle\\
+&amp;=: \cos\frac\theta2|w^{\perp}\rangle+\sin\frac\theta2|w\rangle\\
+\end{aligned}
+\end{split}\]</div>
+<p>と表現でき、<span class="math notranslate nohighlight">\(|w\rangle\)</span>の振幅<span class="math notranslate nohighlight">\(\sqrt{\frac{M}{N}}\)</span>を<span class="math notranslate nohighlight">\(\sin\frac\theta2\)</span>と定義すると、角度<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=2\arcsin\sqrt{\frac{M}{N}}\)</span>になります。答えが一つのケースと比べて、角度は<span class="math notranslate nohighlight">\(\sqrt{M}\)</span>倍大きく、1回のグローバーの反復操作でより大きく回転することになります。その結果、より少ない<span class="math notranslate nohighlight">\(r\approx\frac\pi4\sqrt{\frac{N}{M}}\)</span>回の回転操作で答えに到達することが可能になることが分かります。</p>
+</div>
+</div>
+<div class="section" id="n-2-6-a-id-imp-a">
+<h2>アルゴリズムの実装 (<span class="math notranslate nohighlight">\(N=2^6\)</span>の場合) <a id='imp'></a><a class="headerlink" href="#n-2-6-a-id-imp-a" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素を持つリスト（<span class="math notranslate nohighlight">\(=[0,1,2,\cdots,63]\)</span>）から、一つの答え”45”を見つけるグローバーアルゴリズムを実装してみます。6量子ビットの量子回路を使って、<span class="math notranslate nohighlight">\(|45\rangle=|101101\rangle\)</span>を探す問題です。</p>
+<p>量子回路は以下のような構成になります。オラクルは<span class="math notranslate nohighlight">\(|101101\rangle\)</span>の状態の位相を反転するため、multi-controlled <span class="math notranslate nohighlight">\(Z\)</span>ゲートを使います。
+Diffuserは（テンソル積 <span class="math notranslate nohighlight">\(\otimes 6\)</span>を省略して）<span class="math notranslate nohighlight">\(H(2|0\rangle\langle0|-I)H\)</span>に対応する部分です。<span class="math notranslate nohighlight">\(2|0\rangle\langle0|-I\)</span>で<span class="math notranslate nohighlight">\(|0\rangle\)</span>以外の基底の位相を反転しますが、この部分は最初に<span class="math notranslate nohighlight">\(R_Z(2\pi)\)</span>ゲートで全ての基底の位相を反転させ、その後に<span class="math notranslate nohighlight">\(|0\rangle\)</span>の場合だけ位相をさらに反転させることで実装します。</p>
+<img src="figs/grover_6bits_45.png" width=60%><div class="section" id="qiskit-a-id-imp-qiskit-a">
+<h3>Qiskitでの実装 <a id='imp_qiskit'></a><a class="headerlink" href="#qiskit-a-id-imp-qiskit-a" title="Permalink to this headline">¶</a></h3>
+<p>まず必要な環境をセットアップします。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Qiskit関連のパッケージをインポート</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Statevector</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>まず6量子ビットの回路を準備します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">grover_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>一様な重ね合わせ状態<span class="math notranslate nohighlight">\(|s\rangle\)</span>を生成した後に、オラクルを実装します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">initialize_s</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">qubits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;回路のqubitsにHゲートを適用&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">qubits</span><span class="p">:</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="n">grover_circuit</span> <span class="o">=</span> <span class="n">initialize_s</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+
+<span class="c1"># オラクルを作成して、回路に実装</span>
+<span class="n">oracle</span><span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">oracle_gate</span> <span class="o">=</span> <span class="n">oracle</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
+<span class="n">oracle_gate</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_w&quot;</span>
+
+<span class="n">grover_circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oracle_gate</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f01828f1e20&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>次に、Diffuser用の回路を実装します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">diffuser</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+
+    <span class="c1"># multi-controlled Zゲート</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+
+    <span class="n">U_s</span> <span class="o">=</span> <span class="n">qc</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
+    <span class="n">U_s</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_s&quot;</span>
+    <span class="k">return</span> <span class="n">U_s</span>
+
+<span class="n">grover_circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diffuser</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">grover_circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+<span class="n">grover_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐┌──────┐┌──────┐ ░ ┌─┐               
+   q_0: ┤ H ├┤0     ├┤0     ├─░─┤M├───────────────
+        ├───┤│      ││      │ ░ └╥┘┌─┐            
+   q_1: ┤ H ├┤1     ├┤1     ├─░──╫─┤M├────────────
+        ├───┤│      ││      │ ░  ║ └╥┘┌─┐         
+   q_2: ┤ H ├┤2     ├┤2     ├─░──╫──╫─┤M├─────────
+        ├───┤│  U_w ││  U_s │ ░  ║  ║ └╥┘┌─┐      
+   q_3: ┤ H ├┤3     ├┤3     ├─░──╫──╫──╫─┤M├──────
+        ├───┤│      ││      │ ░  ║  ║  ║ └╥┘┌─┐   
+   q_4: ┤ H ├┤4     ├┤4     ├─░──╫──╫──╫──╫─┤M├───
+        ├───┤│      ││      │ ░  ║  ║  ║  ║ └╥┘┌─┐
+   q_5: ┤ H ├┤5     ├┤5     ├─░──╫──╫──╫──╫──╫─┤M├
+        └───┘└──────┘└──────┘ ░  ║  ║  ║  ║  ║ └╥┘
+meas: 6/═════════════════════════╩══╩══╩══╩══╩══╩═
+                                 0  1  2  3  4  5 </pre></div></div>
+</div>
+</div>
+<div class="section" id="a-id-imp-simulator-a">
+<h3>シミュレータでの実験 <a id='imp_simulator'></a><a class="headerlink" href="#a-id-imp-simulator-a" title="Permalink to this headline">¶</a></h3>
+<p>上の回路をシミュレータで実行して、結果をプロットしてみます。結果が分かりやすくなるように、測定したビット列を整数にしてからプロットするようにしてみます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="c1"># 横軸を整数でプロットする</span>
+<span class="k">def</span> <span class="nf">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">rect</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">autolabel</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rect</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">height</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span>
+                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span><span class="o">+</span><span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span><span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                        <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span><span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+    <span class="n">autolabel</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Probabilities&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/grover_23_0.png" src="_images/grover_23_0.png" />
+</div>
+</div>
+<p>この結果から、<span class="math notranslate nohighlight">\(|101101\rangle=|45\rangle\)</span>の状態が高い確率で測定できたことが分かります。</p>
+<p>しかし、上での議論からも分かるように、<span class="math notranslate nohighlight">\(N=2^6\)</span>の探索では一回のグローバー反復では正しくない答えも無視できない確率で現れてきます。グローバーの反復を複数回繰り返すことで、正しい答えがより高い確率で得られることを課題として見ることにします。</p>
+</div>
+<div class="section" id="a-id-imp-qc-a">
+<h3>量子コンピュータでの実験 <a id='imp_qc'></a><a class="headerlink" href="#a-id-imp-qc-a" title="Permalink to this headline">¶</a></h3>
+<p>以下ようにすることで、量子コンピュータで実行することができます。結果を確認してください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 量子コンピュータで実行する場合</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
+<span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span>
+                                   <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="o">.</span><span class="n">operational</span><span class="o">==</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;least busy backend: &quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">IBMQAccountCredentialsNotFound</span><span class="g g-Whitespace">            </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">6</span><span class="o">-</span><span class="mi">4</span><span class="n">f88940aa7d0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># 量子コンピュータで実行する場合</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span>
+
+<span class="nn">/usr/local/lib/python3.8/dist-packages/qiskit/providers/ibmq/ibmqfactory.py</span> in <span class="ni">load_account</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">172</span> 
+<span class="g g-Whitespace">    </span><span class="mi">173</span>         <span class="k">if</span> <span class="ow">not</span> <span class="n">credentials_list</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">174</span>             <span class="k">raise</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span>                 <span class="s1">&#39;No IBM Quantum Experience credentials found.&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">176</span> 
+
+<span class="ne">IBMQAccountCredentialsNotFound</span>: &#39;No IBM Quantum Experience credentials found.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 計算結果</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">)</span>
+<span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-grover-application-a">
+<h2>[課題] 振幅増幅を確認する <a id='grover_application'></a><a class="headerlink" href="#a-id-grover-application-a" title="Permalink to this headline">¶</a></h2>
+<p>グローバーのアルゴリズムを適用し、振幅が変化していく過程を可視化することを試みます。</p>
+<p>上で考えた<span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素リスト（<span class="math notranslate nohighlight">\(x\leq64\)</span>）から、適当な整数<span class="math notranslate nohighlight">\(x\)</span>を一つ選び、その数<span class="math notranslate nohighlight">\(x\)</span>を見つけるグローバーのアルゴリズムを実装してください。</p>
+<ul class="simple">
+<li><p>グローバーの反復を複数回繰り返すプログラムを作成してください。</p></li>
+<li><p>探索に必要な反復回数はおよそいくつでしょうか？また、探索に必要な反復回数を超えると振幅はどうなるでしょうか？</p></li>
+<li><p>実装した回路を繰り返し実行することで、求める解<span class="math notranslate nohighlight">\(x\)</span>に対応する振幅が大きくなっていく過程を可視化してください。</p></li>
+<li><p>求める解<span class="math notranslate nohighlight">\(x\)</span>を観測した回数と反復数との関係を示す図を作ってください。</p></li>
+<li><p>二つの整数（<span class="math notranslate nohighlight">\(x_1\)</span>, <span class="math notranslate nohighlight">\(x_2\)</span>）を見つける問題へ拡張し、探索に必要な反復数や解の観測数が予想される振る舞いをしていることを確認してください。</p></li>
+</ul>
+</div>
+<div class="section" id="a-id-references-a">
+<h2>参考文献<a id='references'></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Nielsen, Michael A and Chuang, Isaac L, “Quantum Computation and Quantum Information”, Cambridge University Pres, 2000.</p></li>
+</ol>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="shor.html" title="previous page">ショアの素因数分解アルゴリズムを学習する</a>
+    <a class='right-next' id="next-link" href="vqe.html" title="next page">変分法と変分量子固有値ソルバー法を学習する</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By 東京大学素粒子物理国際研究センター<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>

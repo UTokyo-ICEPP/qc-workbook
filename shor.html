@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ショアの素因数分解アルゴリズムを学習する &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="グローバーのアルゴリズムを使って、データベース検索を行う" href="grover.html" />
+    <link rel="prev" title="量子ダイナミクスシミュレーション" href="dynamics_simulation.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/icepp.jpg" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  超並列計算機としての量子コンピュータ
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="qft.html">
+   量子フーリエ変換
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   1兆個の足し算を同時に行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   量子ダイナミクスシミュレーション
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  ショアとグローバーのアルゴリズム
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   ショアの素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover.html">
+   グローバーのアルゴリズムを使って、データベース検索を行う
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   [課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqc_machine_learning.html">
+   量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  モンテカルロサンプラー
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="mc_sampler.html">
+   モンテカルロ・サンプラーとしての利用
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  補足：より詳しく知りたい人のために
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_basics.html">
+   量子力学の基礎
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/shor.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/shor.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   目次
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-introduction-a">
+   はじめに
+   <a id="introduction">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-qpe-a">
+   量子位相推定
+   <a id="qpe">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-qpe-1qubit-a">
+     1量子ビットの位相推定
+     <a id="qpe_1qubit">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#n-a-id-qpe-nqubit-a">
+     <span class="math notranslate nohighlight">
+      \(n\)
+     </span>
+     量子ビットの位相推定
+     <a id="qpe_nqubit">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-shor-a">
+   ショアのアルゴリズム
+   <a id="shor">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-factoring-example-a">
+     素因数分解の例
+     <a id="factoring_example">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-shor-circuit-a">
+     量子回路
+     <a id="shor_circuit">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-shor-measurement-a">
+     測定結果の解析
+     <a id="shor_measurement">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-continued-fractions-a">
+     連分数展開
+     <a id="continued_fractions">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-modular-exponentiation-a">
+     剰余指数化
+     <a id="modular_exponentiation">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-imp-a">
+   アルゴリズムの実装
+   <a id="imp">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-period-a">
+     位数の発見
+     <a id="imp_period">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-oracle-a">
+     オラクルの実装
+     <a id="imp_oracle">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-circuit-a">
+     回路全体の実装
+     <a id="imp_circuit">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-imp-ana-a">
+     計算結果の解析
+     <a id="imp_ana">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-references-a">
+   参考文献
+   <a id="references">
+   </a>
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="id1">
+<h1>ショアの素因数分解アルゴリズムを学習する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>ここでは<strong>ショアのアルゴリズム</strong>を学習します。アルゴリズムの元になっている<strong>量子位相推定</strong>の手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
+<div class="section" id="id2">
+<h2>目次<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p><a class="reference external" href="#introduction">はじめに</a></p></li>
+<li><p><a class="reference external" href="#qpe">量子位相推定</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#qpe_1qubit">1量子ビットの位相推定</a></p></li>
+<li><p><a class="reference external" href="#qpe_nqubit"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#shor">ショアのアルゴリズム</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#factoring_example">素因数分解の例</a></p></li>
+<li><p><a class="reference external" href="#shor_circuit">量子回路</a></p></li>
+<li><p><a class="reference external" href="#shor_measurement">測定結果の解析</a></p></li>
+<li><p><a class="reference external" href="#continued_fractions">連分数展開</a></p></li>
+<li><p><a class="reference external" href="#modular_exponentiation">剰余指数化</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#imp">アルゴリズムの実装</a></p>
+<ol class="simple">
+<li><p><a class="reference external" href="#imp_period">位数の発見</a></p></li>
+<li><p><a class="reference external" href="#imp_oracle">オラクルの実装</a></p></li>
+<li><p><a class="reference external" href="#imp_circuit">回路全体の実装</a></p></li>
+<li><p><a class="reference external" href="#imp_ana">計算結果の解析</a></p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#references">参考文献</a></p></li>
+</ol>
+</div>
+<div class="section" id="a-id-introduction-a">
+<h2>はじめに <a id='introduction'></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<p>古典計算の能力をはるかに上回る量子計算の一つの例として、最も有名なものがショアの量子計算アルゴリズムでしょう。このアルゴリズムは、大きな正の数を二つの素数の積に分解するというものです。古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると<strong>指数関数的に計算量が増える</strong>と予想されています。ショアのアルゴリズムを用いれば、同じ問題を<strong>多項式時間で解くことができる</strong>と考えられています。
+古典計算での素因数分解の難しさは鍵暗号技術の元になっており、指数関数的に高速なショアのアルゴリズムが大きく注目される理由もそこにあります。</p>
+</div>
+<div class="section" id="a-id-qpe-a">
+<h2>量子位相推定 <a id='qpe'></a><a class="headerlink" href="#a-id-qpe-a" title="Permalink to this headline">¶</a></h2>
+<p>まず、ショアのアルゴリズムの元になっている**「量子位相推定」<strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう（実際、ショアのアルゴリズムはほぼQPEそのものであることが追々分かります）。
+QPEの理解には</strong>「量子フーリエ変換」**（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについてはXXを参照してください。
+QPEが考える問題は、あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？という問題です。</p>
+<div class="section" id="a-id-qpe-1qubit-a">
+<h3>1量子ビットの位相推定 <a id='qpe_1qubit'></a><a class="headerlink" href="#a-id-qpe-1qubit-a" title="Permalink to this headline">¶</a></h3>
+<p>まず、下図にあるような量子回路を考えてみましょう。</p>
+<img src="figs/qpe_1qubit.png" width=30%>
+<p>この場合、量子回路のステップ 1-3での量子状態は以下のようになります。</p>
+<ul class="simple">
+<li><p>ステップ 1 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}}(|0\rangle|\psi\rangle+|1\rangle|\psi\rangle)\)</span></p></li>
+<li><p>ステップ 2 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}}(|0\rangle|\psi\rangle+|1\rangle e^{2\pi i\theta}|\psi\rangle)\)</span></p></li>
+<li><p>ステップ 3 : <span class="math notranslate nohighlight">\(\frac{1}{2}\left[(1+e^{2\pi i\theta})|0\rangle+(1-e^{2\pi i\theta})|1\rangle\right]\)</span></p></li>
+</ul>
+<p>この状態で上側の量子ビットを測定すると、<span class="math notranslate nohighlight">\(|(1+e^{2\pi i\theta})/2|^2\)</span>の確率で0、<span class="math notranslate nohighlight">\(|(1-e^{2\pi i\theta})/2|^2\)</span>の確率で1を測定するでしょう。つまり、この確率の値から位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるわけです。
+しかし、<span class="math notranslate nohighlight">\(\theta\)</span>の値が小さい場合、ほぼ100%の確率で0を、ほぼ0％の確率で1を測定することになるため、100%あるいは0%からのずれを精度良く決めるためには多数回の測定が必要になります。</p>
+</div>
+<div class="section" id="n-a-id-qpe-nqubit-a">
+<h3><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定 <a id='qpe_nqubit'></a><a class="headerlink" href="#n-a-id-qpe-nqubit-a" title="Permalink to this headline">¶</a></h3>
+<p>そこで、上側のレジスタを<span class="math notranslate nohighlight">\(n\)</span>量子ビットに拡張した量子回路（下図）を考えてみましょう。</p>
+<img src="figs/qpe_wo_iqft.png" width=50%>
+<p>準備として、<span class="math notranslate nohighlight">\(U^{2^x}|\psi\rangle\)</span>が以下のように書けることに留意しておきます。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
+&amp;=U^{2^x-1}e^{2\pi i\theta}|\psi\rangle\\
+&amp;=U^{2^x-2}e^{2\pi i\theta2}|\psi\rangle\\
+&amp;=\cdots\\
+&amp;=e^{2\pi i\theta2^x}|\psi\rangle
+\end{aligned}
+\end{split}\]</div>
+<p>この量子回路のステップ 1, 2, … <span class="math notranslate nohighlight">\(n+1\)</span>での量子状態は以下のようになります。</p>
+<ul class="simple">
+<li><p>ステップ 1 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+|1\rangle)^{\otimes n}|\psi\rangle\)</span></p></li>
+<li><p>ステップ 2 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+e^{2\pi i\theta2^{n-1}}|1\rangle)(|0\rangle+|1\rangle)^{\otimes n-1}|\psi\rangle\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></li>
+<li><p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span> : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+e^{2\pi i\theta2^{n-1}}|1\rangle)(|0\rangle+e^{2\pi i\theta2^{n-2}}|1\rangle)\cdots(|0\rangle+e^{2\pi i\theta2^0}|1\rangle)|\psi\rangle\)</span></p></li>
+</ul>
+<p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態は、QFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を施せば、状態<span class="math notranslate nohighlight">\(|2^n\theta\rangle\)</span>が得られることになります。この状態を測定することで<span class="math notranslate nohighlight">\(2^n\theta\)</span>、つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができる、というのがQPEです（下図）。</p>
+<p><a id='qpe_nqubit_fig'></a>
+<img src="figs/qpe.png" width=70%></p>
+</div>
+</div>
+<div class="section" id="a-id-shor-a">
+<h2>ショアのアルゴリズム <a id='shor'></a><a class="headerlink" href="#a-id-shor-a" title="Permalink to this headline">¶</a></h2>
+<p>では、ショアのアルゴリズムの本題に入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数<span class="math notranslate nohighlight">\(N\)</span>を、自明ではない素数の積<span class="math notranslate nohighlight">\(N=qp\)</span>に分解する」という問題です。</p>
+<p>まず、整数の剰余についての表記法をおさらいしておきます。以下のような整数の並び<span class="math notranslate nohighlight">\(x\)</span>を考えたとき、例えば3で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>x</p></th>
+<th class="head"><p>0</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p>7</p></th>
+<th class="head"><p>8</p></th>
+<th class="head"><p>9</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>y</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<p>になります。この時、<span class="math notranslate nohighlight">\(x=y\;(\text{mod}\;3)\)</span>と書くものとします（<span class="math notranslate nohighlight">\(k\)</span>を0以上の整数とすれば、<span class="math notranslate nohighlight">\(x=3k+y\)</span>と書くこともできます）。</p>
+<p>ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。アルゴリズムの一部でしか量子計算を使わないわけですが、この青地の部分を古典計算で実行するのが難しいわけですが、その理由は追々明らかになります。</p>
+<img src="figs/shor_flow.png" width=50%><div class="section" id="a-id-factoring-example-a">
+<h3>素因数分解の例 <a id='factoring_example'></a><a class="headerlink" href="#a-id-factoring-example-a" title="Permalink to this headline">¶</a></h3>
+<p>簡単な例として、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解をこのアルゴリズムに沿って考えてみましょう。</p>
+<p>例えば、15に素な数として<span class="math notranslate nohighlight">\(a=7\)</span>を選んだとします。そこで<span class="math notranslate nohighlight">\(7^x\)</span>を15で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>x</p></th>
+<th class="head"><p>0</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>y</p></td>
+<td><p>1</p></td>
+<td><p>7</p></td>
+<td><p>4</p></td>
+<td><p>13</p></td>
+<td><p>1</p></td>
+<td><p>7</p></td>
+<td><p>4</p></td>
+<td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>のようになります。つまり、<span class="math notranslate nohighlight">\(7^r=1\;(\text{mod}\;15)\)</span>を満たす最小の<span class="math notranslate nohighlight">\(r\)</span>は4になることが分かります。
+<span class="math notranslate nohighlight">\(r=4\)</span>は偶数なので、<span class="math notranslate nohighlight">\(x\equiv7^{4/2}\; (\text{mod}\; 15)=4\)</span>と定義すると、<span class="math notranslate nohighlight">\(x+1=5\neq0\;(\text{mod}\; 15)\)</span>なので、</p>
+<div class="math notranslate nohighlight">
+\[
+\{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}
+\]</div>
+<p>となって、<span class="math notranslate nohighlight">\(15=5\times3\)</span>が得られました。</p>
+</div>
+<div class="section" id="a-id-shor-circuit-a">
+<h3>量子回路 <a id='shor_circuit'></a><a class="headerlink" href="#a-id-shor-circuit-a" title="Permalink to this headline">¶</a></h3>
+<p><span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解を実装する量子回路は、以下のような構成をしています。</p>
+<p><a id='shor_circuit_fig'></a>
+<img src="figs/shor.png" width=70%></p>
+<p>上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つづつなのは、15が4ビット（<span class="math notranslate nohighlight">\(n=4\)</span>）で表現できるからです（15の2進数表記 = [1111]）。状態は全て<span class="math notranslate nohighlight">\(|0\rangle\)</span>に初期化されているものとして、測定用ビットの状態を<span class="math notranslate nohighlight">\(|x\rangle\)</span>、作業用ビットの状態を<span class="math notranslate nohighlight">\(|w\rangle\)</span>とします。
+<span class="math notranslate nohighlight">\(U_f\)</span>は以下のようなオラクル</p>
+<img src="figs/shor_oracle2.png" width=25%>
+<p>で、作業用ビットの出力状態が<span class="math notranslate nohighlight">\(|w\oplus f(x)\rangle\)</span>になるものと理解しておきます（詳細は後で説明します）。関数<span class="math notranslate nohighlight">\(f(x)\)</span>は<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>で定義されるものとします。</p>
+<p>では、回路のステップ 1-5ごとに量子状態を見ていきましょう。</p>
+<ul class="simple">
+<li><p>ステップ 1 : $<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^4}}\left[\sum_{j=0}^{2^4-1}|j\rangle\right]|0\rangle^{\otimes 4} = \frac{1}{4}\left[|0\rangle+|1\rangle+\cdots+|15\rangle\right]|0\rangle^{\otimes 4}\)</span>$</p></li>
+<li><p>ステップ 2 :
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+&amp;\frac{1}{4}\left[|0\rangle|0\oplus7^0\;(\text{mod}\;15)\rangle+|1\rangle|0\oplus7^1\;(\text{mod}\;15)\rangle+\cdots+|15\rangle|0\oplus7^{15}\;(\text{mod}\;15)\rangle\right]\\
+=&amp;\frac{1}{4}\left[|0\rangle|1\rangle+|1\rangle|7\rangle+|2\rangle|4\rangle+|3\rangle|13\rangle+|4\rangle|1\rangle+\cdots+|15\rangle|13\rangle\right]
+\end{aligned}
+\)</span>$</p></li>
+</ul>
+<p>ステップ 2の後に作業用ビットを測定します。<span class="math notranslate nohighlight">\(|w\rangle\)</span>は<span class="math notranslate nohighlight">\(|1\rangle\)</span>, <span class="math notranslate nohighlight">\(|7\rangle\)</span>, <span class="math notranslate nohighlight">\(|4\rangle\)</span>, <span class="math notranslate nohighlight">\(|13\rangle\)</span>のどれかなので、例えば測定の結果13が得られたとします。その場合</p>
+<ul class="simple">
+<li><p>ステップ 3 : <span class="math notranslate nohighlight">\(\frac{1}{2}\left[|3\rangle+|7\rangle+|11\rangle+|15\rangle\right]\)</span></p></li>
+</ul>
+<p>となります。次に、測定用ビットに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用します。逆フーリエ変換はある状態<span class="math notranslate nohighlight">\(|j\rangle\)</span>を<span class="math notranslate nohighlight">\(|j\rangle \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}|k\rangle\)</span>に変換するので、</p>
+<ul class="simple">
+<li><p>ステップ 4 :
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+&amp;\frac{1}{2}QFT^\dagger\left[|3\rangle+|7\rangle+|11\rangle+|15\rangle\right]\\
+=&amp;\frac{1}{2}\frac1{\sqrt{2^4}}\sum_{k=0}^{2^4-1}\left[e^{\frac{-2\pi i\cdot3k}{2^4}}+e^{\frac{-2\pi i\cdot7k}{2^4}}+e^{\frac{-2\pi i\cdot11k}{2^4}}+e^{\frac{-2\pi i\cdot15k}{2^4}}\right]|k\rangle\\
+=&amp;\frac{1}{8}\left[4|0\rangle+4i|4\rangle-4|8\rangle-4i|12\rangle\right]
+\end{aligned}
+\)</span>$</p></li>
+<li><p>ステップ 5 : 測定用ビットを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。</p></li>
+</ul>
+<p>ステップ 2で<span class="math notranslate nohighlight">\(7^x\;(\text{mod}\;15)\)</span>を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。</p>
+</div>
+<div class="section" id="a-id-shor-measurement-a">
+<h3>測定結果の解析 <a id='shor_measurement'></a><a class="headerlink" href="#a-id-shor-measurement-a" title="Permalink to this headline">¶</a></h3>
+<p>この測定結果の意味を考察してみましょう。ショアのアルゴリズムの<a class="reference external" href="#shor_circuit_fig">回路</a>と<span class="math notranslate nohighlight">\(n\)</span>量子ビット位相推定の<a class="reference external" href="#qpe_nqubit_fig">回路</a>の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を<span class="math notranslate nohighlight">\(2^4=16\)</span>倍したものになっているはずです。つまり、例えば測定用レジスタが4の場合、位相<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=4/16=0.25\)</span>です。この位相は何を意味しているのでしょうか？</p>
+<p>ショアのアルゴリズムの量子回路として、私たちは<span class="math notranslate nohighlight">\(|w\rangle=|0\rangle^{\otimes n}\)</span>を初期状態として<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span> <span class="math notranslate nohighlight">\((f(x)\equiv a^x\;(\text{mod}\;N))\)</span> となるオラクル<span class="math notranslate nohighlight">\(U_f\)</span>を考えました。この<span class="math notranslate nohighlight">\(U_f\)</span>を実装するために、以下のようなユニタリー演算子を考えてみます。</p>
+<div class="math notranslate nohighlight">
+\[
+U|m\rangle=|am\;(\text{mod}\;N)\rangle
+\]</div>
+<p>このユニタリーは、<span class="math notranslate nohighlight">\(m=1\)</span>のとき<span class="math notranslate nohighlight">\(U|1\rangle=|a\;(\text{mod}\;N)\rangle\)</span>になるので、<span class="math notranslate nohighlight">\(w=0\)</span>とした<span class="math notranslate nohighlight">\(U_f|x\rangle|0\rangle\)</span>を<span class="math notranslate nohighlight">\(U\)</span>を使って実装することができます。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+U_f|x\rangle|0\rangle&amp;=|x\rangle|a^x\;(\text{mod}\;N)\rangle\\
+&amp;=U^x|x\rangle|1\rangle
+\end{aligned}
+\end{split}\]</div>
+<p>ここで</p>
+<div class="math notranslate nohighlight">
+\[
+|\psi_s\rangle=\frac{1}{\sqrt{r}}\sum_{k=0}^{r-1}e^{-2\pi isk/r}|a^k\;(\text{mod}\;N)\rangle
+\]</div>
+<p>（<span class="math notranslate nohighlight">\(s\)</span>は<span class="math notranslate nohighlight">\(0&lt;s&lt;r-1\)</span>の整数）となるベクトル<span class="math notranslate nohighlight">\(|\psi_s\rangle\)</span>を定義すると、</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}|\psi_s\rangle=|1\rangle
+\]</div>
+<p>が導けると同時に、<span class="math notranslate nohighlight">\(|\psi_s\rangle\)</span>は<span class="math notranslate nohighlight">\(U\)</span>の固有ベクトルであり、固有値<span class="math notranslate nohighlight">\(e^{2\pi is/r}\)</span>を持つことが分かります。</p>
+<div class="math notranslate nohighlight">
+\[
+U|\psi_s\rangle=e^{2\pi is/r}|\psi_s\rangle
+\]</div>
+<p>つまり、ショアのアルゴリズムのオラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作は、固有値<span class="math notranslate nohighlight">\(e^{2\pi is/r}\)</span>を持つ固有ベクトル<span class="math notranslate nohighlight">\(|\psi_s\rangle\)</span>の重ね合わせ状態<span class="math notranslate nohighlight">\(|1\rangle\)</span>にユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回適用することと同等であり、その後に逆QFTを掛けるということは、まさにQPEの操作を行っていることに対応しています。</p>
+<p>QPEで導出する位相を思い出すと、それは<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>なるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>と固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対する固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>に含まれる位相<span class="math notranslate nohighlight">\(\theta\)</span>でした。以上のことから、ショアのアルゴリズムから得られる位相<span class="math notranslate nohighlight">\(\theta\)</span>は、<span class="math notranslate nohighlight">\(s/r\)</span>（の整数倍）の意味を持つことも分かるでしょう。</p>
+</div>
+<div class="section" id="a-id-continued-fractions-a">
+<h3>連分数展開 <a id='continued_fractions'></a><a class="headerlink" href="#a-id-continued-fractions-a" title="Permalink to this headline">¶</a></h3>
+<p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために、<strong>連分数展開</strong>という手法を使います。詳細は文献[]に委ねますが、この手法を使うことで<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
+<p>例えば<span class="math notranslate nohighlight">\(\theta=0.25\)</span>の場合、<span class="math notranslate nohighlight">\(r=4\)</span>が得られます（少ないですが<span class="math notranslate nohighlight">\(r=8\)</span>が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（<a class="reference external" href="#factoring_example">ここ</a>を参照）。</p>
+</div>
+<div class="section" id="a-id-modular-exponentiation-a">
+<h3>剰余指数化 <a id='modular_exponentiation'></a><a class="headerlink" href="#a-id-modular-exponentiation-a" title="Permalink to this headline">¶</a></h3>
+<p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span>をもう少し考えてみましょう。<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>は、<span class="math notranslate nohighlight">\(x\)</span>の2進数表記</p>
+<div class="math notranslate nohighlight">
+\[
+x=[x_1x_2\cdots x_n]=2^{n-1}x_1+2^{n-2}x_2+\cdots+2^0x_n
+\]</div>
+<p>を使って</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
+&amp;=a^{2^{n-1}x_1+2^{n-2}x_2+\cdots+2^0x_n}\;(\text{mod}\;N)\\
+&amp;=a^{2^{n-1}x_1}a^{2^{n-2}x_2}\cdots a^{2^0x_n}\;(\text{mod}\;N)
+\end{aligned}
+\end{split}\]</div>
+<p>と書くことができます。つまり、この関数は以下のようなユニタリー演算を考えれば実装することができます。</p>
+<img src="figs/shor_oracle.png" width=60%>
+<p><span class="math notranslate nohighlight">\(n\)</span>量子ビットQPEの<a class="reference external" href="#qpe_nqubit_fig">回路</a>と比較すれば、このユニタリーはQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に<span class="math notranslate nohighlight">\(a^x\;(\text{mod}\;N)\)</span>を掛けてQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実現する手法を、<strong>剰余指数化</strong>と呼びます。</p>
+</div>
+</div>
+<div class="section" id="a-id-imp-a">
+<h2>アルゴリズムの実装 <a id='imp'></a><a class="headerlink" href="#a-id-imp-a" title="Permalink to this headline">¶</a></h2>
+<p>ここから、ショアのアルゴリズムを実装していきます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1</span>
+<span class="c1"># tabulate 0.8.7 needed</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">641</span><span class="n">a36611372</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="ne">---&gt; </span><span class="mi">11</span> <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;tabulate&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-imp-period-a">
+<h3>位数の発見 <a id='imp_period'></a><a class="headerlink" href="#a-id-imp-period-a" title="Permalink to this headline">¶</a></h3>
+<p>まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。</p>
+<p><span class="math notranslate nohighlight">\(N\)</span>を正の整数として、関数<span class="math notranslate nohighlight">\(f(x)=a^x\;(\text{mod}\;N)\)</span>の振る舞いを見ます。ここで、<span class="math notranslate nohighlight">\(a\)</span>は<span class="math notranslate nohighlight">\(N\)</span>と互いに素な<span class="math notranslate nohighlight">\(N\)</span>未満の正の整数で、位数<span class="math notranslate nohighlight">\(r\)</span>は<span class="math notranslate nohighlight">\(a^r=1\;(\text{mod}\;N)\)</span>を満たす非ゼロの最小の整数です。
+以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものであり、x印の間の中間値を表していないことに注意してください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># プロットするデータを計算する</span>
+<span class="n">xvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+<span class="n">yvals</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xvals</span><span class="p">]</span>
+
+<span class="c1"># matplotlibを使って描画</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span> <span class="n">yvals</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;$x$&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;$</span><span class="si">%i</span><span class="s1">^x$ mod $</span><span class="si">%i</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span>
+       <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Example of Periodic Function in Shor&#39;s Algorithm&quot;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span> <span class="c1"># グラフ上にrをプロット</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">yvals</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span><span class="mi">1</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s1">&#39;&lt;-&gt;&#39;</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;$r=</span><span class="si">%i</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">r</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="mf">1.5</span><span class="p">))</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Could not find period, check a &lt; N and have no common factors.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-imp-oracle-a">
+<h3>オラクルの実装 <a id='imp_oracle'></a><a class="headerlink" href="#a-id-imp-oracle-a" title="Permalink to this headline">¶</a></h3>
+<p>以下では、<span class="math notranslate nohighlight">\(N=15\)</span>を素因数に分解してみます。まず上で説明したように、<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;N)\rangle\)</span>となるユニタリーを<span class="math notranslate nohighlight">\(x\)</span>回繰り返すことで、オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を実装します。<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;N)\rangle\)</span>を実装する関数U_amod15は以下のようになります。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;mod 15による制御ゲートをかける&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,7,8,11 or 13&quot;</span><span class="p">)</span>
+
+    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">power</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+    <span class="n">U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
+    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">^</span><span class="si">%i</span><span class="s2"> mod 15&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+    <span class="n">c_U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">c_U</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\tt{power}\)</span>が繰り返しの回数になります。</p>
+</div>
+<div class="section" id="a-id-imp-circuit-a">
+<h3>回路全体の実装 <a id='imp_circuit'></a><a class="headerlink" href="#a-id-imp-circuit-a" title="Permalink to this headline">¶</a></h3>
+<p>測定用ビットとして、8量子ビットを使います。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify variables</span>
+<span class="n">n_count</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># number of counting qubits</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">7</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>次に、逆QFTの回路を与えます（量子フーリエ変換の詳細についてはXXを参照）。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;n量子ビットの逆QFTを回路の最初のn量子ビットにかける&quot;&quot;&quot;</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="c1"># Swapsを忘れない!</span>
+    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <span class="n">qc</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;QFT^dagger&quot;</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ショアのアルゴリズムを実装する量子回路は、以上の要素を使って構築することができます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># n_count個の測定用量子ビットと、Uを操作するための4つの作業用量子ビットで量子回路を作る</span>
+<span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_count</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_count</span><span class="p">)</span>
+
+<span class="c1"># 測定用量子ビットにHゲートをかけて初期化</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">)))</span>
+
+<span class="c1"># 最後の作業用量子ビットを|1&gt;の状態にする</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="n">n_count</span><span class="p">)</span>
+
+<span class="c1"># 制御Uを適用</span>
+<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">):</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">q</span><span class="p">),</span> <span class="p">[</span><span class="n">q</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">n_count</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+
+<span class="c1"># 逆QFTを適用</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qft_dagger</span><span class="p">(</span><span class="n">n_count</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">)))</span>
+
+<span class="c1"># 回路を測定</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">)))</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>シミュレータで実行して、結果を確認してみます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">rect</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">autolabel</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rect</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">height</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span>
+                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span><span class="o">+</span><span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span><span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                        <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span><span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+    <span class="n">autolabel</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Probabilities&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-id-imp-ana-a">
+<h3>計算結果の解析 <a id='imp_ana'></a><a class="headerlink" href="#a-id-imp-ana-a" title="Permalink to this headline">¶</a></h3>
+<p>出力された結果から、位相を求めてみます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span><span class="p">,</span> <span class="n">measured_phases</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">answer</span><span class="p">:</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 10進数に変換</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">decimal</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">)</span>
+    <span class="n">measured_phases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="c1"># これらの値をテーブルの行に追加します：</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">),</span>
+                 <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2"> = </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">,</span> <span class="n">phase</span><span class="p">)])</span>
+<span class="c1"># tabulateを使って、ASCIIテーブルとして行を印刷します：</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span>
+               <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Register Output (Dec)&quot;</span><span class="p">,</span> <span class="s2">&quot;Phase&quot;</span><span class="p">],</span>
+               <span class="n">colalign</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span><span class="s2">&quot;right&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>得られた位相の情報から、連分数アルゴリズムを使用して<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(r\)</span>を見つけることができます。Pythonの組み込みのfractions(分数)モジュールを使用して、小数をFractionオブジェクトに変換できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">measured_phases</span><span class="p">:</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">phase</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">frac</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">),</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">])</span>
+<span class="c1"># ASCIIテーブルを表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span>
+               <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Phase&quot;</span><span class="p">,</span> <span class="s2">&quot;Fraction&quot;</span><span class="p">,</span> <span class="s2">&quot;Guess for r&quot;</span><span class="p">],</span>
+               <span class="n">colalign</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>limit_denominatorメソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。</p>
+<p>測定された結果のうち、2つ（64と192）が正しい答えである<span class="math notranslate nohighlight">\(r=4\)</span>を与えたことが分かります。</p>
+</div>
+</div>
+<div class="section" id="a-id-references-a">
+<h2>参考文献<a id='references'></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Nielsen, Michael A and Chuang, Isaac L, “Quantum Computation and Quantum Information”, Cambridge University Pres, 2000.</p></li>
+</ol>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">量子ダイナミクスシミュレーション</a>
+    <a class='right-next' id="next-link" href="grover.html" title="next page">グローバーのアルゴリズムを使って、データベース検索を行う</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By 東京大学素粒子物理国際研究センター<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
