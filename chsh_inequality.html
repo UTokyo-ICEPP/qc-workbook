@@ -594,7 +594,7 @@ X R_y\left(\frac{\pi}{2}\right) H \ket{0} &amp; = X R_y\left(\frac{\pi}{2}\right
 <div class="section" id="id10">
 <h4><a class="toc-backref" href="#id23">2量子ビットの操作</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
 <p>2量子ビットの操作は、量子ビットの超電導素子での実装の都合上、全て「制御ゲート」（controlled gates）という方式で行われます。この方式では、2つのビットのうち片方を制御（control）、もう片方を標的（target）として、制御ビットが1の時だけ標的ビットに何らかの操作がかかります。</p>
-<p>例として、ある1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。2ビットレジスタの第2ビットを制御、第1ビットを標的とすると（reminder: 並べて書くときは左が第2で右が第1です）</p>
+<p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。2ビットレジスタの第2ビットを制御、第1ビットを標的とすると（reminder: 並べて書くときは左が第2で右が第1です）</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -605,7 +605,7 @@ C^1_0[U](\ket{1}\ket{1}) &amp; = \ket{1}U\ket{1}
 \end{align}
 \end{split}\]</div>
 <p>です。</p>
-<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>は<span class="math notranslate nohighlight">\(CX\)</span>や<span class="math notranslate nohighlight">\(CNOT\)</span>とも呼ばれ、</p>
+<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>は<span class="math notranslate nohighlight">\(CX\)</span>や<span class="math notranslate nohighlight">\(CNOT\)</span>とも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートは<span class="math notranslate nohighlight">\(CNOT\)</span>と1量子ビットゲートの組み合わせに分解できます。</p>
 <p>Qiskitで2ビットレジスタに制御ゲートを用い、計算基底<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}, \ket{2}, \ket{3}\)</span>の振幅の絶対値自乗が<span class="math notranslate nohighlight">\(1:2:3:4\)</span>の比になるような状態を作ってみましょう。さらに<span class="math notranslate nohighlight">\(C^0_1[Z]\)</span>ゲートを使って<span class="math notranslate nohighlight">\(\ket{3}\)</span>だけ振幅の符号が他と異なるようにします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -713,7 +713,7 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f1d14846c70&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f5875868f10&gt;
 </pre></div>
 </div>
 </div>
