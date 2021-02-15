@@ -42,4 +42,4 @@ build.callback(path_source='jp',
 
 if not options.keep_reports:
     shutil.rmtree('{}/_build/html/reports'.format(options.target))
-    shutil.rmtree('{}/_build/html/.buildinfo'.format(options.target))
+    os.remove('{}/_build/html/.buildinfo'.format(options.target))
