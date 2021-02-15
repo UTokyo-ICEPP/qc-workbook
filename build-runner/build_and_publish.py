@@ -13,7 +13,7 @@ parser.add_argument('--account', '-a', metavar='ACCOUNT', dest='account', defaul
 parser.add_argument('--branch', '-b', metavar='BRANCH', dest='branch', default='master', help='Branch from which to build the website.')
 parser.add_argument('--source', '-i', metavar='PATH', dest='source', default='/tmp/qc-workbook/source', help='Source directory.')
 parser.add_argument('--target', '-o', metavar='PATH', dest='target', default='/tmp/qc-workbook/build', help='Build directory.')
-parser.add_argument('--publish', )
+parser.add_argument('--keep-reports', '-r', action='store_true', dest='keep_reports', help='Keep the reports directory and .buildinfo file.')
 options = parser.parse_args()
 sys.argv = []
 
@@ -40,5 +40,6 @@ build.callback(path_source='jp',
                quiet=0,
                individualpages=False)
 
-os.rename('{}/_build/html/reports'.format(options.target), '/tmp')
-os.rename('{}/_build/html/.buildinfo'.format(options.target), '/tmp')
+if not options.keep_reports:
+    shutil.rmtree('{}/_build/html/reports'.format(options.target))
+    shutil.rmtree('{}/_build/html/.buildinfo'.format(options.target))
