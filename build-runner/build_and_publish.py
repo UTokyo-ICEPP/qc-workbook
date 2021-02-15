@@ -12,7 +12,7 @@ parser.add_argument('--checkout', '-k', action='store_true', dest='checkout', he
 parser.add_argument('--account', '-a', metavar='ACCOUNT', dest='account', default='UTokyo-ICEPP', help='Github account of the source repository.')
 parser.add_argument('--branch', '-b', metavar='BRANCH', dest='branch', default='master', help='Branch from which to build the website.')
 parser.add_argument('--source', '-i', metavar='PATH', dest='source', default='/tmp/qc-workbook/source', help='Source directory.')
-parser.add_argument('--target', '-o', metavar='PATH', dest='target', default='/build', help='Build directory.')
+parser.add_argument('--target', '-o', metavar='PATH', dest='target', default='/tmp/qc-workbook/build', help='Build directory.')
 parser.add_argument('--publish', )
 options = parser.parse_args()
 sys.argv = []
