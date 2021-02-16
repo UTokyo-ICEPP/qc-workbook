@@ -7,7 +7,7 @@ RUN apt-get -y update && \
        python3-pip
 
 RUN pip3 install --no-cache-dir myst-parser==0.13.3 && \
-    pip3 install --no-cache-dir qiskit matplotlib pylatexenc jupyter-book
+    pip3 install --no-cache-dir qiskit matplotlib pylatexenc jupyter-book tabulate
 
 COPY clean_packages.sh /
 RUN /clean_packages.sh
