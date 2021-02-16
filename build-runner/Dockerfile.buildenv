@@ -1,14 +1,25 @@
-FROM ubuntu:latest
+FROM ubuntu:latest AS packages
 
 RUN apt-get -y update && \
     apt-get install -y \
        python3 \
        python3-venv \
-       python3-pip && \
+       python3-pip
+
+RUN pip3 install --no-cache-dir myst-parser==0.13.3 && \
+    pip3 install --no-cache-dir qiskit matplotlib pylatexenc jupyter-book
+
+COPY clean_packages.sh /
+RUN /clean_packages.sh
+
+
+FROM ubuntu:latest
+
+RUN apt-get -y update && \
+    apt-get install -y python3 && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir myst-parser==0.13.3 && \
-    pip3 install --no-cache-dir qiskit jupyterlab matplotlib pylatexenc jupyter-book
+COPY --from=packages /packages.tar.gz /
 
-RUN mkdir -p /tmp/qc-workbook
+RUN tar -C / -xzf /packages.tar.gz && rm /packages.tar.gz
