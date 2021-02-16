@@ -3,7 +3,12 @@ author: 東京大学素粒子物理国際研究センター
 logo: figs/icepp.jpg
 
 execute:
-  execute_notebooks: "auto"  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
+  execute_notebooks: auto  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
+
+parse:
+  myst_enable_extensions:
+    - dollarmath
+    - smartquotes
 
 latex:
   latex_documents:
@@ -12,19 +17,17 @@ latex:
 html:
   favicon: figs/favicon_icepp.png
   use_repository_button: true
+  use_edit_page_button: true
 
 repository:
   url: "https://github.com/UTokyo-ICEPP/qc-workbook"
-  book_path: source/ja
+  path_to_book: source/ja
   branch: master
 
 launch_buttons:
   binderhub_url: "https://mybinder.org"
-  thebelab: true
+  thebe: true
 
 sphinx:
   config:
     myst_footnote_transition: false
-    myst_enable_extensions:
-      - dollarmath
-      - smartquotes
