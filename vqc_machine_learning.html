@@ -633,13 +633,15 @@ U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 <div class="section" id="id4">
 <h4><a class="toc-backref" href="#id15">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <p><span class="math notranslate nohighlight">\(CZ\)</span>ゲートを使ってエンタングルメントを生成する回路<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と、<span class="math notranslate nohighlight">\(j \:(=1,2,\cdots n)\)</span>番目の量子ビットに適用する回転ゲート</p>
-<p>\begin{align}
+<div class="math notranslate nohighlight">
+\[
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j3}^l)R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
-\end{align}</p>
+\]</div>
 <p>を掛けたものを組み合わせて、変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を構成します。ここで<span class="math notranslate nohighlight">\(l\)</span>は量子回路の層を表していて、<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と上記の回転ゲートを合計<span class="math notranslate nohighlight">\(d\)</span>層繰り返すことを意味しています。実際は、この演習では最初に回転ゲート<span class="math notranslate nohighlight">\(U_{\text{rot}}\)</span>を一度適用してから<span class="math notranslate nohighlight">\(d\)</span>層繰り返す構造を使うため、全体としては</p>
-<p>\begin{align}
-U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot}}(\theta_j^l)\right) \cdot U_{\text{ent}}\right)\cdot\prod_{j=1}^n U_{\text{rot}}(\theta_j^0)
-\end{align}</p>
+<div class="math notranslate nohighlight">
+\[
+U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot}}(\theta_j^l)\right) \cdot U_{\text{ent}}\right)\cdot\prod_{j=1}^n U_{\text{rot}}(\theta_j^0)
+\]</div>
 <p>という形式の変分量子回路を用いることになります。つまり、変分量子回路は全体で<span class="math notranslate nohighlight">\(3n(d+1)\)</span>個のパラメータを含んでいます。<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>の初期値ですが、<span class="math notranslate nohighlight">\([0, 2\pi]\)</span>の範囲でランダムに設定するものとします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -796,13 +798,15 @@ U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot
 <div class="section" id="a-id-susy-state-preparation-a">
 <h3><a class="toc-backref" href="#id19">量子状態の生成<a id='susy_state_preparation'></a></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
 <p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\rm in}(\boldsymbol{x}_i)\)</span>の作成ですが、ここでは参考文献<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>に従い、</p>
-<p>\begin{align}
-U_{\phi_{{k}}}(\boldsymbol{x}<em>i)=\exp\left(i\phi</em>{{k}}(\boldsymbol{x}_i)Z_k\right)
-\end{align}</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\phi_{\{k\}}}(\boldsymbol{x}_i)=\exp\left(i\phi_{\{k\}}(\boldsymbol{x}_i)Z_k\right)
+\]</div>
 <p>とします（<span class="math notranslate nohighlight">\(k\)</span>は入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>のベクトル要素の添字）。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\boldsymbol{x}_i)=x_i^k\)</span>と決めて（<span class="math notranslate nohighlight">\(x_i^k\)</span>は<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>を<span class="math notranslate nohighlight">\(k\)</span>個の量子ビットに埋め込みます。この<span class="math notranslate nohighlight">\(U_{\phi_{\{k\}}}(x)\)</span>にアダマール演算子を組み合わせることで、全体として</p>
-<p>\begin{align}
-U_{\rm in}(\boldsymbol{x}<em>i) = U</em>{\phi}(\boldsymbol{x}<em>i) H^{\otimes n},::U</em>{\phi}(\boldsymbol{x}<em>i) = \exp\left(i \sum</em>{k=1}^n \phi_{{k}}(\boldsymbol{x}_i)Z_k\right)
-\end{align}</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\rm in}(\boldsymbol{x}_i) = U_{\phi}(\boldsymbol{x}_i) H^{\otimes n},\:\:U_{\phi}(\boldsymbol{x}_i) = \exp\left(i \sum_{k=1}^n \phi_{\{k\}}(\boldsymbol{x}_i)Z_k\right)
+\]</div>
 <p>が得られます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -815,9 +819,10 @@ U_{\rm in}(\boldsymbol{x}<em>i) = U</em>{\phi}(\boldsymbol{x}<em>i) H^{\otimes n
 <div class="section" id="a-id-susy-variational-form-a">
 <h3><a class="toc-backref" href="#id20">変分フォームを使った状態変換<a id='susy_variational_form'></a></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
 <p>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして</p>
-<p>\begin{align}
+<div class="math notranslate nohighlight">
+\[
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
-\end{align}</p>
+\]</div>
 <p>を使います。上の例では<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を自分で組み立てましたが、Qiskitにはこの<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を実装するAPIがすでに準備されているので、ここではそれを使います。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
