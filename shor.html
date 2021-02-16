@@ -473,13 +473,13 @@
 </div>
 <div class="section" id="a-id-qpe-a">
 <h2><a class="toc-backref" href="#id4">量子位相推定 <a id='qpe'></a></a><a class="headerlink" href="#a-id-qpe-a" title="Permalink to this headline">¶</a></h2>
-<p>まず、ショアのアルゴリズムの元になっている**「量子位相推定」<strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう（実際、ショアのアルゴリズムはほぼQPEそのものであることが追々分かります）。
-QPEの理解には</strong>「量子フーリエ変換」**（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについてはXXを参照してください。
+<p>まず、ショアのアルゴリズムの元になっている「<strong>量子位相推定」</strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう（実際、ショアのアルゴリズムはほぼQPEそのものであることが追々分かります）。
+QPEの理解には**「量子フーリエ変換」**（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについてはXXを参照してください。
 QPEが考える問題は、あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？という問題です。</p>
 <div class="section" id="a-id-qpe-1qubit-a">
 <h3><a class="toc-backref" href="#id5">1量子ビットの位相推定 <a id='qpe_1qubit'></a></a><a class="headerlink" href="#a-id-qpe-1qubit-a" title="Permalink to this headline">¶</a></h3>
 <p>まず、下図にあるような量子回路を考えてみましょう。</p>
-<img src="figs/qpe_1qubit.png" width=30%>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe_1qubit.png"><img alt="qpe_1qubit" class="bg-primary mb-1 align-center" src="_images/qpe_1qubit.png" style="width: 300px;" /></a>
 <p>この場合、量子回路のステップ 1-3での量子状態は以下のようになります。</p>
 <ul class="simple">
 <li><p>ステップ 1 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}}(|0\rangle|\psi\rangle+|1\rangle|\psi\rangle)\)</span></p></li>
