@@ -47,9 +47,9 @@
     <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
     <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -256,7 +256,9 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         
-        
+        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/circuit_from_scratch.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
 </div>
 
@@ -274,7 +276,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/circuit_from_scratch.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/circuit_from_scratch.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -282,6 +284,9 @@
         
         
         
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
         
     </div>
 </div>
@@ -308,28 +313,55 @@
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id5">
-     1量子ビット
+     1、2量子ビット
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id6">
-     2量子ビット
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id7">
      3量子ビット以上
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id8">
+  <a class="reference internal nav-link" href="#id7">
    量子状態生成
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     問題1: 1量子ビット、相対位相付き
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     問題2: ベル状態、相対位相付き
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ghz">
+     問題3: GHZ状態
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#equal-superposition">
+     問題4: Equal superposition
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     問題5: 特定の基底の符号を反転させる
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     問題6: Equal superpositionに位相を付ける
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id9">
+  <a class="reference internal nav-link" href="#id13">
    [課題]ダブルスリット実験のシミュレーション
   </a>
  </li>
@@ -351,21 +383,29 @@
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id10">シミュレータで量子状態を調べる</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id11">その他のゲート</a></p>
+<li><p><a class="reference internal" href="#id3" id="id14">シミュレータで量子状態を調べる</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id15">その他のゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id5" id="id12">1量子ビット</a></p></li>
-<li><p><a class="reference internal" href="#id6" id="id13">2量子ビット</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id14">3量子ビット以上</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id16">1、2量子ビット</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id17">3量子ビット以上</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id8" id="id15">量子状態生成</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id16">[課題]ダブルスリット実験のシミュレーション</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id18">量子状態生成</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id8" id="id19">問題1: 1量子ビット、相対位相付き</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id20">問題2: ベル状態、相対位相付き</a></p></li>
+<li><p><a class="reference internal" href="#ghz" id="id21">問題3: GHZ状態</a></p></li>
+<li><p><a class="reference internal" href="#equal-superposition" id="id22">問題4: Equal superposition</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id23">問題5: 特定の基底の符号を反転させる</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id24">問題6: Equal superpositionに位相を付ける</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id13" id="id25">[課題]ダブルスリット実験のシミュレーション</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id10">シミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">シミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>前半で見たように、QCで実現される量子状態は、量子力学の公理に基づいて理論的に計算・予測できます。そこで用いられる数学的操作も単なる足し算や掛け算（線形演算）なので、実はQCの量子状態は（古典）計算機で比較的簡単に計算できます。当然のことですが、QCは何も魔法のブラックボックスというわけではありません。</p>
 <p>ただし、古典計算機で量子状態を再現するためには、特殊な場合を除いて、量子ビット数の指数関数的な量のメモリが必要になります。これも前半で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットあれば、系の自由度（degrees of freedom / d.o.f.: 実数自由パラメータの数）は<span class="math notranslate nohighlight">\(2^{n+1} - 2\)</span>ですので、例えば各自由度を64ビットの浮動小数点で表現するとしたら、必要なメモリは(-2を無視して)</p>
 <div class="math notranslate nohighlight">
@@ -412,7 +452,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fb93ceeb580&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fbf81d33c70&gt;
 </pre></div>
 </div>
 </div>
@@ -465,23 +505,53 @@
 </div>
 </div>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id11">その他のゲート</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">その他のゲート</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>前半でよく使われる1量子ビットゲートと2量子ビット制御ゲートを紹介しましたが、他にも知っておくと便利なゲートがいくつかあります。</p>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id12">1量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<ul>
-<li><p><span class="math notranslate nohighlight">\(U_1\)</span>または<span class="math notranslate nohighlight">\(P\)</span>: パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、<span class="math notranslate nohighlight">\(\ket{1}\)</span>に位相<span class="math notranslate nohighlight">\(e^{i\phi}\)</span>をかける。<span class="math notranslate nohighlight">\(P(\phi)\)</span>は<span class="math notranslate nohighlight">\(R_{z}(\phi)\)</span>と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られます。ただし2量子ビット制御ゲートとしては<span class="math notranslate nohighlight">\(C[R_z(\phi)]\)</span>と<span class="math notranslate nohighlight">\(C[P(\phi)]\)</span>は異なる働きをします。</p></li>
-<li><p><span class="math notranslate nohighlight">\(U_3\)</span>: パラメータ<span class="math notranslate nohighlight">\(\theta, \phi, \lambda\)</span>を取り、単一量子ビットの任意の状態を実現する。</p>
+<h3><a class="toc-backref" href="#id16">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<table class="table">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ゲート名</p></th>
+<th class="head"><p>対象量子ビット数</p></th>
+<th class="head"><p>説明</p></th>
+<th class="head"><p>Qiskitコード</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(P\)</span></p></td>
+<td><p>1</p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、<span class="math notranslate nohighlight">\(\ket{1}\)</span>に位相<span class="math notranslate nohighlight">\(e^{i\phi}\)</span>をかける。<span class="math notranslate nohighlight">\(P(\phi)\)</span>は<span class="math notranslate nohighlight">\(R_{z}(\phi)\)</span>と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られる。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.p(phi,</span> <span class="pre">i)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(U_3\)</span></p></td>
+<td><p>1</p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\theta, \phi, \lambda\)</span>を取り、単一量子ビットの任意の状態を実現する。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}U_3(\theta, \phi, \lambda)\ket{0} = \cos\left(\frac{\theta}{2}\right) \ket{0} + e^{i\phi}\sin\left(\frac{\theta}{2}\right) \ket{1} \\
 U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\right) \ket{0} + e^{i(\phi+\lambda)}\cos\left(\frac{\theta}{2}\right) \ket{1}\end{split}\]</div>
-</li>
-</ul>
-</div>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id13">2量子ビット</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<ul>
-<li><p>SWAP: 二つの量子ビットの量子状態を交換する。CNOT三回で実装できる。</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.u3(theta,</span> <span class="pre">phi,</span> <span class="pre">lambda,</span> <span class="pre">i)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C^i_j[U_1]\)</span>, <span class="math notranslate nohighlight">\(C^i_j[P]\)</span></p></td>
+<td><p>2</p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i, j\)</span>が1であるような計算基底の位相を<span class="math notranslate nohighlight">\(\phi\)</span>前進させる。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}C^i_j[U_1(\phi)] \ket{00} = \ket{00} \\
+C^i_j[U_1(\phi)] \ket{01} = \ket{01} \\
+C^i_j[U_1(\phi)] \ket{10} = \ket{10} \\
+C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.cp(phi,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SWAP</p></td>
+<td><p>2</p></td>
+<td><p>二つの量子ビットの量子状態を交換する。CNOT三回で実装できる。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 &amp; C^0_1[X]C^1_0[X]C^0_1[X] (\alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11}) \\
@@ -489,21 +559,427 @@ U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\righ
 = &amp; C^0_1[X] (\alpha \ket{00} + \beta \ket{11} + \gamma \ket{01} + \delta \ket{10}) \\
 = &amp; \alpha \ket{00} + \beta \ket{10} + \gamma \ket{01} + \delta \ket{11}
 \end{align}\end{split}\]</div>
-</li>
-</ul>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.swap(i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id17">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます。そのようなゲートを含む回路を実機で実行するときには、「トランスパイル」（transpilation）という過程を経て最終的には全て1量子ビットゲートとCNOTに自動的に分解されます。</p>
+<p>3量子ビット以上にかかるゲートも基本は制御ゲートで、よく使われるのは制御ビットが複数あるような多重制御（multi-controlled）ゲート<span class="math notranslate nohighlight">\(C^{ij\dots}_{k}[U]\)</span>です。そのうち制御ビットが2つで標的ビット1つに<span class="math notranslate nohighlight">\(X\)</span>をかける<span class="math notranslate nohighlight">\(C^{ij}_{k}[X]\)</span>は特別多用され、Toffoliゲートとも呼ばれます。</p>
+<p>多重制御ゲートでない3量子ビットゲートの例として、controlled SWAPというものも存在します。制御ビット1つで他の2つの量子ビットの間の量子状態交換を制御します。当然制御ビットを増やしたmulti-controlled SWAPというものも考えられます。</p>
+<p>Qiskitで多重制御ゲートに対応するコードは一般に<code class="docutils literal notranslate"><span class="pre">circuit.mc?(parameters,</span> <span class="pre">[controls],</span> <span class="pre">target)</span></code>という形を取ります。例えばToffoliゲートは</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">mcx</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>で、<span class="math notranslate nohighlight">\(C^{ij}_{k}[R_y]\)</span>は</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">mcry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>となります。</p>
+</div>
 </div>
 <div class="section" id="id7">
-<h3><a class="toc-backref" href="#id14">3量子ビット以上</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます。そのようなゲートを含む回路を実機で実行するときには、「トランスパイル」（transpilation）という過程を経て最終的には全て1量子ビットゲートとCNOTに自動的に分解されます。</p>
-<p>3量子ビット以上にかかるゲートも基本は制御ゲートで、よく使われるのは制御ビットが複数あるような多制御（multi-controlled）ゲート<span class="math notranslate nohighlight">\(C^{ij\dots}_{k}[U]\)</span>です。そのうち制御ビットが2つで標的ビット1つに<span class="math notranslate nohighlight">\(X\)</span>をかける<span class="math notranslate nohighlight">\(C^{ij}_{k}[X]\)</span>は特別多用され、Toffoliゲートとも呼ばれます。</p>
-<p>多制御ゲートでない3量子ビットゲートの例として、controlled SWAPというものも存在します。制御ビット1つで他の2つの量子ビットの間の量子状態交換を制御します。当然制御ビットを増やしたmulti-controlled SWAPというものも考えられます。</p>
+<h2><a class="toc-backref" href="#id18">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。</p>
+<p>まずは回路の量子状態を表示する<code class="docutils literal notranslate"><span class="pre">show_state</span></code>という関数を定義します。</p>
+<div class="cell tag_hide-cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;\pi&#39;</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Print the quantum state of the circuit in latex markdown.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        circuit (QuantumCircuit): The circuit.</span>
+<span class="sd">        amp_norm (None or tuple): If not None, specify the normalization of the amplitudes by</span>
+<span class="sd">            (numeric devisor, unit in latex)</span>
+<span class="sd">        phase_norm (None or tuple): If not None, specify the normalization of the phases by</span>
+<span class="sd">            (numeric devisor, unit in latex)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Run the circuit in statevector_simulator and obtain the final state statevector</span>
+    <span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
+    <span class="n">statevector</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">simulator</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Absolute value and the phase of the amplitudes</span>
+    <span class="n">absamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
+    <span class="n">logamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">statevector</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">logamp</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">absamp</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">))</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">logamp</span><span class="o">.</span><span class="n">imag</span>
+    
+    <span class="c1"># Set the numerical tolerance for various comparisons</span>
+    <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">1.e-3</span>
+        
+    <span class="c1"># Final latex string</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    
+    <span class="c1"># Sign of each term (initialized to 0 so the first term doesn&#39;t get a + in front)</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statevector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">absamp</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">phase</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        
+        <span class="c1"># Skip terms with absolute amplitude less than tolerance</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Latex string for this term</span>
+        <span class="n">basis_term</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># Write the amplitude</span>
+        <span class="k">if</span> <span class="n">amp_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># No amplitude normalization -&gt; just write as a raw float</span>
+            <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># With amplitude normalization</span>
+            <span class="n">a</span> <span class="o">/=</span> <span class="n">amp_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                <span class="c1"># Amplitude is integer * norm</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
+                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Otherwise float * norm</span>
+                <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                
+            <span class="n">basis_term</span> <span class="o">+=</span> <span class="n">amp_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Write the phase</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">+=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            
+            <span class="c1"># First check if the phase is a multiple of pi or pi/2</span>
+            <span class="n">pbypi</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pbypi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">pbypi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                <span class="c1"># Multiple of pi</span>
+                <span class="n">pbypi</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">pbypi</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">pbypi</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">pbypi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">pbypi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                <span class="c1"># Multiple of pi/2</span>
+                <span class="n">twopbypi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">pbypi</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">twopbypi</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;i&#39;</span>
+                <span class="k">if</span> <span class="n">twopbypi</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;e^{&#39;</span>
+                <span class="k">if</span> <span class="n">phase_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># No phase normalization -&gt; write as exp(raw float * i)</span>
+                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># With phase normalization -&gt; write as exp(divident * norm * i)</span>
+                    <span class="n">p</span> <span class="o">/=</span> <span class="n">phase_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
+                            <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="n">phase_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; i}&#39;</span>
+                
+        <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; |</span><span class="si">{}</span><span class="s1">\rangle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="s1">&#39; + &#39;</span>
+        <span class="k">elif</span> <span class="n">sign</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="s1">&#39; - &#39;</span>
+            
+        <span class="n">state</span> <span class="o">+=</span> <span class="n">basis_term</span>
+        
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+        
+    <span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">)))</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id8">
-<h2><a class="toc-backref" href="#id15">量子状態生成</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<h3><a class="toc-backref" href="#id19">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>1量子ビットに対して状態</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2}}\left(\ket{0} + i\ket{1}\right)
+\]</div>
+<p>を作りなさい。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># circuit.?</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p>正解は無限に存在しますが、上の回路ですでにアダマールゲートがかかっているので、最も手っ取り早いのは</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>でしょう。自分で入力して確認してみてください。</p>
+<p>また、上で触れたように、単一量子ビットの場合、<span class="math notranslate nohighlight">\(U_3\)</span>ゲートを使えば任意の状態を一つのゲート操作で生成できます。<span class="math notranslate nohighlight">\(U_3\)</span>を使った解答は</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">u3</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>です。</p>
 </div>
 <div class="section" id="id9">
-<h2><a class="toc-backref" href="#id16">[課題]ダブルスリット実験のシミュレーション</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<h3><a class="toc-backref" href="#id20">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>2量子ビットに対して状態</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2}}\left(\ket{0} + i\ket{3}\right)
+\]</div>
+<p>を作りなさい。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="c1"># circuit.?</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p>問題1の結果を利用すると簡単です。初期状態は両ビットとも<span class="math notranslate nohighlight">\(\ket{0}\)</span>なので、2ビットレジスタに対して問題1の操作をすると状態<span class="math notranslate nohighlight">\(1/\frac{2}(\ket{0} + i\ket{1})\ket{0}\)</span>ができます。ここでビット0から1にCNOTをかけると、<span class="math notranslate nohighlight">\(\ket{1}\ket{0} \rightarrow \ket{1}\ket{1}\)</span>となるので、望む状態が実現します。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ghz">
+<h3><a class="toc-backref" href="#id21">問題3: GHZ状態</a><a class="headerlink" href="#ghz" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>3量子ビットに対して状態</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2}} (\ket{0} + \ket{7})
+\]</div>
+<p>を作りなさい。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="c1"># circuit.?</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">mcx</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>$1.41 \cdot \frac{1}{\sqrt{2}} |0\rangle$</p>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p>Bell状態の生成と発想は同じですが、多重制御ゲート<span class="math notranslate nohighlight">\(C^{01}_2[X]\)</span>を利用します。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">mcx</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="equal-superposition">
+<h3><a class="toc-backref" href="#id22">問題4: Equal superposition</a><a class="headerlink" href="#equal-superposition" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
+\]</div>
+<p>を作る回路を考え、<span class="math notranslate nohighlight">\(n=4\)</span>のケースを実装しなさい。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="c1"># circuit.?</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>$4 \cdot \frac{1}{4} |0\rangle$</p>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p>Equal superpositionと呼ばれるこの状態は、量子計算でおそらく一番多様される状態です。一見複雑に思えますが、<span class="math notranslate nohighlight">\(n\)</span>桁の二進数で<span class="math notranslate nohighlight">\(0\)</span>から<span class="math notranslate nohighlight">\(2^n-1\)</span>までの数を表現すると、全ての0/1の組み合わせが登場するということを考えると、</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}) \otimes \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}) \otimes \cdots \otimes \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})
+\]</div>
+<p>と、<span class="math notranslate nohighlight">\(n\)</span>個の<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{0} + \ket{1})\)</span>の積と等しいことがわかります。つまり各ビットに対してアダマールゲートをかけた状態にほかならず、</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>が正解です。</p>
+</div>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id23">問題5: 特定の基底の符号を反転させる</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>問題4の4ビットequal superposition状態において、基底<span class="math notranslate nohighlight">\(\ket{5}\)</span>の符号を反転させなさい。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+<span class="c1"># circuit.?</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>$\frac{1}{4} |0\rangle + \frac{1}{4} |1\rangle + \frac{1}{4} |2\rangle + \frac{1}{4} |3\rangle + \frac{1}{4} |4\rangle + \frac{1}{4} |5\rangle + \frac{1}{4} |6\rangle + \frac{1}{4} |7\rangle + \frac{1}{4} |8\rangle + \frac{1}{4} |9\rangle + \frac{1}{4} |10\rangle + \frac{1}{4} |11\rangle + \frac{1}{4} |12\rangle + \frac{1}{4} |13\rangle + \frac{1}{4} |14\rangle + \frac{1}{4} |15\rangle$</p>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p><span class="math notranslate nohighlight">\(\ket{5}=\ket{0101}\)</span>の符号を反転させるには、4つの量子ビットが0, 1, 0, 1という値を取っている状態のみに作用するゲートを使います。必然的に多重制御ゲートが用いられますが、残念ながら制御ゲートはビットの値が1であるときにしか働きません。そこで、まず<span class="math notranslate nohighlight">\(\ket{0101}\)</span>を<span class="math notranslate nohighlight">\(\ket{1111}\)</span>に変換し、その上で<span class="math notranslate nohighlight">\(C^{012}_{3}[Z]\)</span>を使います<a class="footnote-reference brackets" href="#mcz" id="id11">1</a>。符号を反転させたら、最初の操作の逆操作をして<span class="math notranslate nohighlight">\(\ket{1111}\)</span>を<span class="math notranslate nohighlight">\(\ket{0101}\)</span>に変換します。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">mcz</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Xの逆操作はX</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>ビット1と3にかかっている<span class="math notranslate nohighlight">\(X\)</span>ゲートは当然他の基底にも影響するので、例えば<span class="math notranslate nohighlight">\(\ket{0011}\)</span>は<span class="math notranslate nohighlight">\(\ket{0110}\)</span>となります。しかし、1と3に<span class="math notranslate nohighlight">\(X\)</span>をかけて<span class="math notranslate nohighlight">\(\ket{1111}\)</span>になるのは<span class="math notranslate nohighlight">\(\ket{0101}\)</span>だけなので、逆操作でちゃんと「後片付け」さえすれば、この一連の操作で<span class="math notranslate nohighlight">\(\ket{5}\)</span>だけをいじることができます。</p>
+</div>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id24">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k} \quad (j \in \mathbb{N})
+\]</div>
+<p>を作る回路を考え、<span class="math notranslate nohighlight">\(n=8, j=3\)</span>のケースを実装しなさい。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
+
+<span class="n">j</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="c1">#for i in range(num_qubits):</span>
+<span class="c1">#    circuit.h(i)</span>
+    
+<span class="c1"># circuit.?</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">j</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">)</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">),</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">j</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i j}{2^n}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>$\frac{1}{16} |0\rangle + \frac{1}{16}e^{\frac{2 \pi i j}{2^n} i} |1\rangle + \frac{1}{16}e^{2 \cdot \frac{2 \pi i j}{2^n} i} |2\rangle + \frac{1}{16}e^{3 \cdot \frac{2 \pi i j}{2^n} i} |3\rangle + \frac{1}{16}e^{4 \cdot \frac{2 \pi i j}{2^n} i} |4\rangle + \frac{1}{16}e^{5 \cdot \frac{2 \pi i j}{2^n} i} |5\rangle + \frac{1}{16}e^{6 \cdot \frac{2 \pi i j}{2^n} i} |6\rangle + \frac{1}{16}e^{7 \cdot \frac{2 \pi i j}{2^n} i} |7\rangle + \frac{1}{16}e^{8 \cdot \frac{2 \pi i j}{2^n} i} |8\rangle + \frac{1}{16}e^{9 \cdot \frac{2 \pi i j}{2^n} i} |9\rangle + \frac{1}{16}e^{10 \cdot \frac{2 \pi i j}{2^n} i} |10\rangle + \frac{1}{16}e^{11 \cdot \frac{2 \pi i j}{2^n} i} |11\rangle + \frac{1}{16}e^{12 \cdot \frac{2 \pi i j}{2^n} i} |12\rangle + \frac{1}{16}e^{13 \cdot \frac{2 \pi i j}{2^n} i} |13\rangle + \frac{1}{16}e^{14 \cdot \frac{2 \pi i j}{2^n} i} |14\rangle + \frac{1}{16}e^{15 \cdot \frac{2 \pi i j}{2^n} i} |15\rangle + \frac{1}{16}e^{16 \cdot \frac{2 \pi i j}{2^n} i} |16\rangle + \frac{1}{16}e^{17 \cdot \frac{2 \pi i j}{2^n} i} |17\rangle + \frac{1}{16}e^{18 \cdot \frac{2 \pi i j}{2^n} i} |18\rangle + \frac{1}{16}e^{19 \cdot \frac{2 \pi i j}{2^n} i} |19\rangle + \frac{1}{16}e^{20 \cdot \frac{2 \pi i j}{2^n} i} |20\rangle + \frac{1}{16}e^{21 \cdot \frac{2 \pi i j}{2^n} i} |21\rangle + \frac{1}{16}e^{22 \cdot \frac{2 \pi i j}{2^n} i} |22\rangle + \frac{1}{16}e^{23 \cdot \frac{2 \pi i j}{2^n} i} |23\rangle + \frac{1}{16}e^{24 \cdot \frac{2 \pi i j}{2^n} i} |24\rangle + \frac{1}{16}e^{25 \cdot \frac{2 \pi i j}{2^n} i} |25\rangle + \frac{1}{16}e^{26 \cdot \frac{2 \pi i j}{2^n} i} |26\rangle + \frac{1}{16}e^{27 \cdot \frac{2 \pi i j}{2^n} i} |27\rangle + \frac{1}{16}e^{28 \cdot \frac{2 \pi i j}{2^n} i} |28\rangle + \frac{1}{16}e^{29 \cdot \frac{2 \pi i j}{2^n} i} |29\rangle + \frac{1}{16}e^{30 \cdot \frac{2 \pi i j}{2^n} i} |30\rangle + \frac{1}{16}e^{31 \cdot \frac{2 \pi i j}{2^n} i} |31\rangle + \frac{1}{16}e^{32 \cdot \frac{2 \pi i j}{2^n} i} |32\rangle + \frac{1}{16}e^{33 \cdot \frac{2 \pi i j}{2^n} i} |33\rangle + \frac{1}{16}e^{34 \cdot \frac{2 \pi i j}{2^n} i} |34\rangle + \frac{1}{16}e^{35 \cdot \frac{2 \pi i j}{2^n} i} |35\rangle + \frac{1}{16}e^{36 \cdot \frac{2 \pi i j}{2^n} i} |36\rangle + \frac{1}{16}e^{37 \cdot \frac{2 \pi i j}{2^n} i} |37\rangle + \frac{1}{16}e^{38 \cdot \frac{2 \pi i j}{2^n} i} |38\rangle + \frac{1}{16}e^{39 \cdot \frac{2 \pi i j}{2^n} i} |39\rangle + \frac{1}{16}e^{40 \cdot \frac{2 \pi i j}{2^n} i} |40\rangle + \frac{1}{16}e^{41 \cdot \frac{2 \pi i j}{2^n} i} |41\rangle + \frac{1}{16}e^{42 \cdot \frac{2 \pi i j}{2^n} i} |42\rangle + \frac{1}{16}e^{43 \cdot \frac{2 \pi i j}{2^n} i} |43\rangle + \frac{1}{16}e^{44 \cdot \frac{2 \pi i j}{2^n} i} |44\rangle + \frac{1}{16}e^{45 \cdot \frac{2 \pi i j}{2^n} i} |45\rangle + \frac{1}{16}e^{46 \cdot \frac{2 \pi i j}{2^n} i} |46\rangle + \frac{1}{16}e^{47 \cdot \frac{2 \pi i j}{2^n} i} |47\rangle + \frac{1}{16}e^{48 \cdot \frac{2 \pi i j}{2^n} i} |48\rangle + \frac{1}{16}e^{49 \cdot \frac{2 \pi i j}{2^n} i} |49\rangle + \frac{1}{16}e^{50 \cdot \frac{2 \pi i j}{2^n} i} |50\rangle + \frac{1}{16}e^{51 \cdot \frac{2 \pi i j}{2^n} i} |51\rangle + \frac{1}{16}e^{52 \cdot \frac{2 \pi i j}{2^n} i} |52\rangle + \frac{1}{16}e^{53 \cdot \frac{2 \pi i j}{2^n} i} |53\rangle + \frac{1}{16}e^{54 \cdot \frac{2 \pi i j}{2^n} i} |54\rangle + \frac{1}{16}e^{55 \cdot \frac{2 \pi i j}{2^n} i} |55\rangle + \frac{1}{16}e^{56 \cdot \frac{2 \pi i j}{2^n} i} |56\rangle + \frac{1}{16}e^{57 \cdot \frac{2 \pi i j}{2^n} i} |57\rangle + \frac{1}{16}e^{58 \cdot \frac{2 \pi i j}{2^n} i} |58\rangle + \frac{1}{16}e^{59 \cdot \frac{2 \pi i j}{2^n} i} |59\rangle + \frac{1}{16}e^{60 \cdot \frac{2 \pi i j}{2^n} i} |60\rangle + \frac{1}{16}e^{61 \cdot \frac{2 \pi i j}{2^n} i} |61\rangle + \frac{1}{16}e^{62 \cdot \frac{2 \pi i j}{2^n} i} |62\rangle + \frac{1}{16}e^{63 \cdot \frac{2 \pi i j}{2^n} i} |63\rangle - \frac{1}{16}i |64\rangle + \frac{1}{16}e^{65 \cdot \frac{2 \pi i j}{2^n} i} |65\rangle + \frac{1}{16}e^{66 \cdot \frac{2 \pi i j}{2^n} i} |66\rangle + \frac{1}{16}e^{67 \cdot \frac{2 \pi i j}{2^n} i} |67\rangle + \frac{1}{16}e^{68 \cdot \frac{2 \pi i j}{2^n} i} |68\rangle + \frac{1}{16}e^{69 \cdot \frac{2 \pi i j}{2^n} i} |69\rangle + \frac{1}{16}e^{70 \cdot \frac{2 \pi i j}{2^n} i} |70\rangle + \frac{1}{16}e^{71 \cdot \frac{2 \pi i j}{2^n} i} |71\rangle + \frac{1}{16}e^{72 \cdot \frac{2 \pi i j}{2^n} i} |72\rangle + \frac{1}{16}e^{73 \cdot \frac{2 \pi i j}{2^n} i} |73\rangle + \frac{1}{16}e^{74 \cdot \frac{2 \pi i j}{2^n} i} |74\rangle + \frac{1}{16}e^{75 \cdot \frac{2 \pi i j}{2^n} i} |75\rangle + \frac{1}{16}e^{76 \cdot \frac{2 \pi i j}{2^n} i} |76\rangle + \frac{1}{16}e^{77 \cdot \frac{2 \pi i j}{2^n} i} |77\rangle + \frac{1}{16}e^{78 \cdot \frac{2 \pi i j}{2^n} i} |78\rangle + \frac{1}{16}e^{79 \cdot \frac{2 \pi i j}{2^n} i} |79\rangle + \frac{1}{16}e^{80 \cdot \frac{2 \pi i j}{2^n} i} |80\rangle + \frac{1}{16}e^{81 \cdot \frac{2 \pi i j}{2^n} i} |81\rangle + \frac{1}{16}e^{82 \cdot \frac{2 \pi i j}{2^n} i} |82\rangle + \frac{1}{16}e^{83 \cdot \frac{2 \pi i j}{2^n} i} |83\rangle + \frac{1}{16}e^{84 \cdot \frac{2 \pi i j}{2^n} i} |84\rangle + \frac{1}{16}e^{85 \cdot \frac{2 \pi i j}{2^n} i} |85\rangle + \frac{1}{16}e^{0.67 \cdot \frac{2 \pi i j}{2^n} i} |86\rangle + \frac{1}{16}e^{1.67 \cdot \frac{2 \pi i j}{2^n} i} |87\rangle + \frac{1}{16}e^{2.67 \cdot \frac{2 \pi i j}{2^n} i} |88\rangle + \frac{1}{16}e^{3.67 \cdot \frac{2 \pi i j}{2^n} i} |89\rangle + \frac{1}{16}e^{4.67 \cdot \frac{2 \pi i j}{2^n} i} |90\rangle + \frac{1}{16}e^{5.67 \cdot \frac{2 \pi i j}{2^n} i} |91\rangle + \frac{1}{16}e^{6.67 \cdot \frac{2 \pi i j}{2^n} i} |92\rangle + \frac{1}{16}e^{7.67 \cdot \frac{2 \pi i j}{2^n} i} |93\rangle + \frac{1}{16}e^{8.67 \cdot \frac{2 \pi i j}{2^n} i} |94\rangle + \frac{1}{16}e^{9.67 \cdot \frac{2 \pi i j}{2^n} i} |95\rangle + \frac{1}{16}e^{10.67 \cdot \frac{2 \pi i j}{2^n} i} |96\rangle + \frac{1}{16}e^{11.67 \cdot \frac{2 \pi i j}{2^n} i} |97\rangle + \frac{1}{16}e^{12.67 \cdot \frac{2 \pi i j}{2^n} i} |98\rangle + \frac{1}{16}e^{13.67 \cdot \frac{2 \pi i j}{2^n} i} |99\rangle + \frac{1}{16}e^{14.67 \cdot \frac{2 \pi i j}{2^n} i} |100\rangle + \frac{1}{16}e^{15.67 \cdot \frac{2 \pi i j}{2^n} i} |101\rangle + \frac{1}{16}e^{16.67 \cdot \frac{2 \pi i j}{2^n} i} |102\rangle + \frac{1}{16}e^{17.67 \cdot \frac{2 \pi i j}{2^n} i} |103\rangle + \frac{1}{16}e^{18.67 \cdot \frac{2 \pi i j}{2^n} i} |104\rangle + \frac{1}{16}e^{19.67 \cdot \frac{2 \pi i j}{2^n} i} |105\rangle + \frac{1}{16}e^{20.67 \cdot \frac{2 \pi i j}{2^n} i} |106\rangle + \frac{1}{16}e^{21.67 \cdot \frac{2 \pi i j}{2^n} i} |107\rangle + \frac{1}{16}e^{22.67 \cdot \frac{2 \pi i j}{2^n} i} |108\rangle + \frac{1}{16}e^{23.67 \cdot \frac{2 \pi i j}{2^n} i} |109\rangle + \frac{1}{16}e^{24.67 \cdot \frac{2 \pi i j}{2^n} i} |110\rangle + \frac{1}{16}e^{25.67 \cdot \frac{2 \pi i j}{2^n} i} |111\rangle + \frac{1}{16}e^{26.67 \cdot \frac{2 \pi i j}{2^n} i} |112\rangle + \frac{1}{16}e^{27.67 \cdot \frac{2 \pi i j}{2^n} i} |113\rangle + \frac{1}{16}e^{28.67 \cdot \frac{2 \pi i j}{2^n} i} |114\rangle + \frac{1}{16}e^{29.67 \cdot \frac{2 \pi i j}{2^n} i} |115\rangle + \frac{1}{16}e^{30.67 \cdot \frac{2 \pi i j}{2^n} i} |116\rangle + \frac{1}{16}e^{31.67 \cdot \frac{2 \pi i j}{2^n} i} |117\rangle + \frac{1}{16}e^{32.67 \cdot \frac{2 \pi i j}{2^n} i} |118\rangle + \frac{1}{16}e^{33.67 \cdot \frac{2 \pi i j}{2^n} i} |119\rangle + \frac{1}{16}e^{34.67 \cdot \frac{2 \pi i j}{2^n} i} |120\rangle + \frac{1}{16}e^{35.67 \cdot \frac{2 \pi i j}{2^n} i} |121\rangle + \frac{1}{16}e^{36.67 \cdot \frac{2 \pi i j}{2^n} i} |122\rangle + \frac{1}{16}e^{37.67 \cdot \frac{2 \pi i j}{2^n} i} |123\rangle + \frac{1}{16}e^{38.67 \cdot \frac{2 \pi i j}{2^n} i} |124\rangle + \frac{1}{16}e^{39.67 \cdot \frac{2 \pi i j}{2^n} i} |125\rangle + \frac{1}{16}e^{40.67 \cdot \frac{2 \pi i j}{2^n} i} |126\rangle + \frac{1}{16}e^{41.67 \cdot \frac{2 \pi i j}{2^n} i} |127\rangle - \frac{1}{16} |128\rangle + \frac{1}{16}e^{43.67 \cdot \frac{2 \pi i j}{2^n} i} |129\rangle + \frac{1}{16}e^{44.67 \cdot \frac{2 \pi i j}{2^n} i} |130\rangle + \frac{1}{16}e^{45.67 \cdot \frac{2 \pi i j}{2^n} i} |131\rangle + \frac{1}{16}e^{46.67 \cdot \frac{2 \pi i j}{2^n} i} |132\rangle + \frac{1}{16}e^{47.67 \cdot \frac{2 \pi i j}{2^n} i} |133\rangle + \frac{1}{16}e^{48.67 \cdot \frac{2 \pi i j}{2^n} i} |134\rangle + \frac{1}{16}e^{49.67 \cdot \frac{2 \pi i j}{2^n} i} |135\rangle + \frac{1}{16}e^{50.67 \cdot \frac{2 \pi i j}{2^n} i} |136\rangle + \frac{1}{16}e^{51.67 \cdot \frac{2 \pi i j}{2^n} i} |137\rangle + \frac{1}{16}e^{52.67 \cdot \frac{2 \pi i j}{2^n} i} |138\rangle + \frac{1}{16}e^{53.67 \cdot \frac{2 \pi i j}{2^n} i} |139\rangle + \frac{1}{16}e^{54.67 \cdot \frac{2 \pi i j}{2^n} i} |140\rangle + \frac{1}{16}e^{55.67 \cdot \frac{2 \pi i j}{2^n} i} |141\rangle + \frac{1}{16}e^{56.67 \cdot \frac{2 \pi i j}{2^n} i} |142\rangle + \frac{1}{16}e^{57.67 \cdot \frac{2 \pi i j}{2^n} i} |143\rangle + \frac{1}{16}e^{58.67 \cdot \frac{2 \pi i j}{2^n} i} |144\rangle + \frac{1}{16}e^{59.67 \cdot \frac{2 \pi i j}{2^n} i} |145\rangle + \frac{1}{16}e^{60.67 \cdot \frac{2 \pi i j}{2^n} i} |146\rangle + \frac{1}{16}e^{61.67 \cdot \frac{2 \pi i j}{2^n} i} |147\rangle + \frac{1}{16}e^{62.67 \cdot \frac{2 \pi i j}{2^n} i} |148\rangle + \frac{1}{16}e^{63.67 \cdot \frac{2 \pi i j}{2^n} i} |149\rangle + \frac{1}{16}e^{64.67 \cdot \frac{2 \pi i j}{2^n} i} |150\rangle + \frac{1}{16}e^{65.67 \cdot \frac{2 \pi i j}{2^n} i} |151\rangle + \frac{1}{16}e^{66.67 \cdot \frac{2 \pi i j}{2^n} i} |152\rangle + \frac{1}{16}e^{67.67 \cdot \frac{2 \pi i j}{2^n} i} |153\rangle + \frac{1}{16}e^{68.67 \cdot \frac{2 \pi i j}{2^n} i} |154\rangle + \frac{1}{16}e^{69.67 \cdot \frac{2 \pi i j}{2^n} i} |155\rangle + \frac{1}{16}e^{70.67 \cdot \frac{2 \pi i j}{2^n} i} |156\rangle + \frac{1}{16}e^{71.67 \cdot \frac{2 \pi i j}{2^n} i} |157\rangle + \frac{1}{16}e^{72.67 \cdot \frac{2 \pi i j}{2^n} i} |158\rangle + \frac{1}{16}e^{73.67 \cdot \frac{2 \pi i j}{2^n} i} |159\rangle + \frac{1}{16}e^{74.67 \cdot \frac{2 \pi i j}{2^n} i} |160\rangle + \frac{1}{16}e^{75.67 \cdot \frac{2 \pi i j}{2^n} i} |161\rangle + \frac{1}{16}e^{76.67 \cdot \frac{2 \pi i j}{2^n} i} |162\rangle + \frac{1}{16}e^{77.67 \cdot \frac{2 \pi i j}{2^n} i} |163\rangle + \frac{1}{16}e^{78.67 \cdot \frac{2 \pi i j}{2^n} i} |164\rangle + \frac{1}{16}e^{79.67 \cdot \frac{2 \pi i j}{2^n} i} |165\rangle + \frac{1}{16}e^{80.67 \cdot \frac{2 \pi i j}{2^n} i} |166\rangle + \frac{1}{16}e^{81.67 \cdot \frac{2 \pi i j}{2^n} i} |167\rangle + \frac{1}{16}e^{82.67 \cdot \frac{2 \pi i j}{2^n} i} |168\rangle + \frac{1}{16}e^{83.67 \cdot \frac{2 \pi i j}{2^n} i} |169\rangle + \frac{1}{16}e^{84.67 \cdot \frac{2 \pi i j}{2^n} i} |170\rangle + \frac{1}{16}e^{0.33 \cdot \frac{2 \pi i j}{2^n} i} |171\rangle + \frac{1}{16}e^{1.33 \cdot \frac{2 \pi i j}{2^n} i} |172\rangle + \frac{1}{16}e^{2.33 \cdot \frac{2 \pi i j}{2^n} i} |173\rangle + \frac{1}{16}e^{3.33 \cdot \frac{2 \pi i j}{2^n} i} |174\rangle + \frac{1}{16}e^{4.33 \cdot \frac{2 \pi i j}{2^n} i} |175\rangle + \frac{1}{16}e^{5.33 \cdot \frac{2 \pi i j}{2^n} i} |176\rangle + \frac{1}{16}e^{6.33 \cdot \frac{2 \pi i j}{2^n} i} |177\rangle + \frac{1}{16}e^{7.33 \cdot \frac{2 \pi i j}{2^n} i} |178\rangle + \frac{1}{16}e^{8.33 \cdot \frac{2 \pi i j}{2^n} i} |179\rangle + \frac{1}{16}e^{9.33 \cdot \frac{2 \pi i j}{2^n} i} |180\rangle + \frac{1}{16}e^{10.33 \cdot \frac{2 \pi i j}{2^n} i} |181\rangle + \frac{1}{16}e^{11.33 \cdot \frac{2 \pi i j}{2^n} i} |182\rangle + \frac{1}{16}e^{12.33 \cdot \frac{2 \pi i j}{2^n} i} |183\rangle + \frac{1}{16}e^{13.33 \cdot \frac{2 \pi i j}{2^n} i} |184\rangle + \frac{1}{16}e^{14.33 \cdot \frac{2 \pi i j}{2^n} i} |185\rangle + \frac{1}{16}e^{15.33 \cdot \frac{2 \pi i j}{2^n} i} |186\rangle + \frac{1}{16}e^{16.33 \cdot \frac{2 \pi i j}{2^n} i} |187\rangle + \frac{1}{16}e^{17.33 \cdot \frac{2 \pi i j}{2^n} i} |188\rangle + \frac{1}{16}e^{18.33 \cdot \frac{2 \pi i j}{2^n} i} |189\rangle + \frac{1}{16}e^{19.33 \cdot \frac{2 \pi i j}{2^n} i} |190\rangle + \frac{1}{16}e^{20.33 \cdot \frac{2 \pi i j}{2^n} i} |191\rangle + \frac{1}{16}i |192\rangle + \frac{1}{16}e^{22.33 \cdot \frac{2 \pi i j}{2^n} i} |193\rangle + \frac{1}{16}e^{23.33 \cdot \frac{2 \pi i j}{2^n} i} |194\rangle + \frac{1}{16}e^{24.33 \cdot \frac{2 \pi i j}{2^n} i} |195\rangle + \frac{1}{16}e^{25.33 \cdot \frac{2 \pi i j}{2^n} i} |196\rangle + \frac{1}{16}e^{26.33 \cdot \frac{2 \pi i j}{2^n} i} |197\rangle + \frac{1}{16}e^{27.33 \cdot \frac{2 \pi i j}{2^n} i} |198\rangle + \frac{1}{16}e^{28.33 \cdot \frac{2 \pi i j}{2^n} i} |199\rangle + \frac{1}{16}e^{29.33 \cdot \frac{2 \pi i j}{2^n} i} |200\rangle + \frac{1}{16}e^{30.33 \cdot \frac{2 \pi i j}{2^n} i} |201\rangle + \frac{1}{16}e^{31.33 \cdot \frac{2 \pi i j}{2^n} i} |202\rangle + \frac{1}{16}e^{32.33 \cdot \frac{2 \pi i j}{2^n} i} |203\rangle + \frac{1}{16}e^{33.33 \cdot \frac{2 \pi i j}{2^n} i} |204\rangle + \frac{1}{16}e^{34.33 \cdot \frac{2 \pi i j}{2^n} i} |205\rangle + \frac{1}{16}e^{35.33 \cdot \frac{2 \pi i j}{2^n} i} |206\rangle + \frac{1}{16}e^{36.33 \cdot \frac{2 \pi i j}{2^n} i} |207\rangle + \frac{1}{16}e^{37.33 \cdot \frac{2 \pi i j}{2^n} i} |208\rangle + \frac{1}{16}e^{38.33 \cdot \frac{2 \pi i j}{2^n} i} |209\rangle + \frac{1}{16}e^{39.33 \cdot \frac{2 \pi i j}{2^n} i} |210\rangle + \frac{1}{16}e^{40.33 \cdot \frac{2 \pi i j}{2^n} i} |211\rangle + \frac{1}{16}e^{41.33 \cdot \frac{2 \pi i j}{2^n} i} |212\rangle + \frac{1}{16}e^{42.33 \cdot \frac{2 \pi i j}{2^n} i} |213\rangle + \frac{1}{16}e^{43.33 \cdot \frac{2 \pi i j}{2^n} i} |214\rangle + \frac{1}{16}e^{44.33 \cdot \frac{2 \pi i j}{2^n} i} |215\rangle + \frac{1}{16}e^{45.33 \cdot \frac{2 \pi i j}{2^n} i} |216\rangle + \frac{1}{16}e^{46.33 \cdot \frac{2 \pi i j}{2^n} i} |217\rangle + \frac{1}{16}e^{47.33 \cdot \frac{2 \pi i j}{2^n} i} |218\rangle + \frac{1}{16}e^{48.33 \cdot \frac{2 \pi i j}{2^n} i} |219\rangle + \frac{1}{16}e^{49.33 \cdot \frac{2 \pi i j}{2^n} i} |220\rangle + \frac{1}{16}e^{50.33 \cdot \frac{2 \pi i j}{2^n} i} |221\rangle + \frac{1}{16}e^{51.33 \cdot \frac{2 \pi i j}{2^n} i} |222\rangle + \frac{1}{16}e^{52.33 \cdot \frac{2 \pi i j}{2^n} i} |223\rangle + \frac{1}{16}e^{53.33 \cdot \frac{2 \pi i j}{2^n} i} |224\rangle + \frac{1}{16}e^{54.33 \cdot \frac{2 \pi i j}{2^n} i} |225\rangle + \frac{1}{16}e^{55.33 \cdot \frac{2 \pi i j}{2^n} i} |226\rangle + \frac{1}{16}e^{56.33 \cdot \frac{2 \pi i j}{2^n} i} |227\rangle + \frac{1}{16}e^{57.33 \cdot \frac{2 \pi i j}{2^n} i} |228\rangle + \frac{1}{16}e^{58.33 \cdot \frac{2 \pi i j}{2^n} i} |229\rangle + \frac{1}{16}e^{59.33 \cdot \frac{2 \pi i j}{2^n} i} |230\rangle + \frac{1}{16}e^{60.33 \cdot \frac{2 \pi i j}{2^n} i} |231\rangle + \frac{1}{16}e^{61.33 \cdot \frac{2 \pi i j}{2^n} i} |232\rangle + \frac{1}{16}e^{62.33 \cdot \frac{2 \pi i j}{2^n} i} |233\rangle + \frac{1}{16}e^{63.33 \cdot \frac{2 \pi i j}{2^n} i} |234\rangle + \frac{1}{16}e^{64.33 \cdot \frac{2 \pi i j}{2^n} i} |235\rangle + \frac{1}{16}e^{65.33 \cdot \frac{2 \pi i j}{2^n} i} |236\rangle + \frac{1}{16}e^{66.33 \cdot \frac{2 \pi i j}{2^n} i} |237\rangle + \frac{1}{16}e^{67.33 \cdot \frac{2 \pi i j}{2^n} i} |238\rangle + \frac{1}{16}e^{68.33 \cdot \frac{2 \pi i j}{2^n} i} |239\rangle + \frac{1}{16}e^{69.33 \cdot \frac{2 \pi i j}{2^n} i} |240\rangle + \frac{1}{16}e^{70.33 \cdot \frac{2 \pi i j}{2^n} i} |241\rangle + \frac{1}{16}e^{71.33 \cdot \frac{2 \pi i j}{2^n} i} |242\rangle + \frac{1}{16}e^{72.33 \cdot \frac{2 \pi i j}{2^n} i} |243\rangle + \frac{1}{16}e^{73.33 \cdot \frac{2 \pi i j}{2^n} i} |244\rangle + \frac{1}{16}e^{74.33 \cdot \frac{2 \pi i j}{2^n} i} |245\rangle + \frac{1}{16}e^{75.33 \cdot \frac{2 \pi i j}{2^n} i} |246\rangle + \frac{1}{16}e^{76.33 \cdot \frac{2 \pi i j}{2^n} i} |247\rangle + \frac{1}{16}e^{77.33 \cdot \frac{2 \pi i j}{2^n} i} |248\rangle + \frac{1}{16}e^{78.33 \cdot \frac{2 \pi i j}{2^n} i} |249\rangle + \frac{1}{16}e^{79.33 \cdot \frac{2 \pi i j}{2^n} i} |250\rangle + \frac{1}{16}e^{80.33 \cdot \frac{2 \pi i j}{2^n} i} |251\rangle + \frac{1}{16}e^{81.33 \cdot \frac{2 \pi i j}{2^n} i} |252\rangle + \frac{1}{16}e^{82.33 \cdot \frac{2 \pi i j}{2^n} i} |253\rangle + \frac{1}{16}e^{83.33 \cdot \frac{2 \pi i j}{2^n} i} |254\rangle + \frac{1}{16}e^{84.33 \cdot \frac{2 \pi i j}{2^n} i} |255\rangle$</p>
+</div>
+</div>
+<p><strong>解答</strong></p>
+<p>この回路は<a class="reference internal" href="qft.html"><span class="doc">後の実習</span></a>で登場する量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>を上の状態に変換するのに対し、この問題では<span class="math notranslate nohighlight">\(j\)</span>は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。</p>
+<p>問題4と同じように、この状態も個々の量子ビットにおける<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせの積として表現できます。そのためには<span class="math notranslate nohighlight">\(k\)</span>の二進数表現<span class="math notranslate nohighlight">\(k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)\)</span>を用いて、<span class="math notranslate nohighlight">\(\ket{k}\)</span>の位相を</p>
+<div class="math notranslate nohighlight">
+\[
+\exp\left(2\pi i \frac{jk}{2^n}\right) = \exp \left(2\pi i \frac{j}{2^n} \sum_{m=0}^{n-1} 2^m k_m\right) = \prod_{m=0}^{n-1} \exp \left(2\pi i \frac{j}{2^{n-m}} k_m\right)
+\]</div>
+<p>と分解します。一方</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{k} = \ket{k_{n-1}} \otimes \ket{k_{n-2}} \otimes \cdots \ket{k_0}
+\]</div>
+<p>なので、</p>
+<div class="math notranslate nohighlight">
+\[
+e^{2\pi i jk/2^n} \ket{k} = e^{2\pi i jk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \otimes e^{2\pi i jk_{1}/2^{n-1}} \ket{k_1} \otimes e^{2\pi i jk_{0}/2^n} \ket{k_{0}}.
+\]</div>
+<p>最後に、<span class="math notranslate nohighlight">\(k_m = 0\)</span>ならば<span class="math notranslate nohighlight">\(e^{2\pi i jk_{m}/2^n} = 1\)</span>であることから、</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k} = \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i j/2} \ket{1}\right) \otimes \cdots \otimes \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i j/2^n} \ket{1}\right)
+\]</div>
+<p>がわかります。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">j</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id13">
+<h2><a class="toc-backref" href="#id25">[課題]ダブルスリット実験のシミュレーション</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="mcz"><span class="brackets"><a class="fn-backref" href="#id11">1</a></span></dt>
+<dd><p>（多重）制御<span class="math notranslate nohighlight">\(Z\)</span>ゲートはどのビットを制御と呼んでも標的と呼んでも同じ作用をするので、<span class="math notranslate nohighlight">\(C^{123}_0[Z]\)</span>でもなんでも構いません。</p>
+</dd>
+</dl>
 </div>
 </div>
 
@@ -511,7 +987,7 @@ U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\righ
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
+            repo: "UTokyo-ICEPP/qc-workbook",
             ref: "master",
         },
         codeMirrorConfig: {

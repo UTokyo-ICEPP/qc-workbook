@@ -47,9 +47,9 @@
     <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
     <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -256,7 +256,9 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         
-        
+        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/vqe.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
 </div>
 
@@ -274,7 +276,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/vqe.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/vqe.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -282,6 +284,9 @@
         
         
         
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
         
     </div>
 </div>
@@ -561,9 +566,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution: [0.51357006 0.48642994]
-Obtained Distribution: [0.5189, 0.4811]
-Output Error (L1-Distance): 0.004859881261160881
-Parameters Found: [1.53817349 0.08690852 1.51300786]
+Obtained Distribution: [0.5058, 0.4942]
+Output Error (L1-Distance): 0.027540118738839103
+Parameters Found: [1.56866491 1.32051983 0.54643742]
 </pre></div>
 </div>
 </div>
@@ -583,7 +588,7 @@ Parameters Found: [1.53817349 0.08690852 1.51300786]
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
+            repo: "UTokyo-ICEPP/qc-workbook",
             ref: "master",
         },
         codeMirrorConfig: {

@@ -47,9 +47,9 @@
     <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
     <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -256,7 +256,9 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         
-        
+        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/chsh_inequality.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
 </div>
 
@@ -274,7 +276,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/chsh_inequality.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/chsh_inequality.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -282,6 +284,9 @@
         
         
         
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
         
     </div>
 </div>
@@ -527,11 +532,30 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明できます。</p>
 <div class="section" id="id9">
 <h4><a class="toc-backref" href="#id22">1量子ビットの操作</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
-<p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。</p>
-<ul>
-<li><p><span class="math notranslate nohighlight">\(X\)</span>: <span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える</p></li>
-<li><p><span class="math notranslate nohighlight">\(Z\)</span>: <span class="math notranslate nohighlight">\(\ket{1}\)</span>の振幅を<span class="math notranslate nohighlight">\(-1\)</span>倍する</p></li>
-<li><p><span class="math notranslate nohighlight">\(H\)</span>（アダマールゲート）: 計算基底それぞれに対して、以下の変形をする。</p>
+<p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。（表中コードの<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>は量子ビットの番号）</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ゲート名</p></th>
+<th class="head"><p>説明</p></th>
+<th class="head"><p>Qiskitコード</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(X\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.x(i)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(Z\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\ket{1}\)</span>の振幅を<span class="math notranslate nohighlight">\(-1\)</span>倍する。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.z(i)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(H\)</span>（アダマールゲート）</p></td>
+<td><p>計算基底それぞれに対して、以下の変形をする。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}H\ket{0} = \frac{1}{\sqrt{2}} (\ket{0} + \ket{1}) \\
 H\ket{1} = \frac{1}{\sqrt{2}} (\ket{0} - \ket{1})\end{split}\]</div>
@@ -542,19 +566,28 @@ H\ket{1} = \frac{1}{\sqrt{2}} (\ket{0} - \ket{1})\end{split}\]</div>
 H\ket{\psi} &amp; = \alpha \frac{1}{\sqrt{2}} (\ket{0} + \ket{1}) + \beta \frac{1}{\sqrt{2}} (\ket{0} - \ket{1}) \\
             &amp; = \frac{1}{\sqrt{2}} (\alpha + \beta) \ket{0} + \frac{1}{\sqrt{2}} (\alpha - \beta) \ket{1}
 \end{align}\end{split}\]</div>
-<p>となります。</p>
-</li>
-<li><p><span class="math notranslate nohighlight">\(R_{y}\)</span>: パラメータ<span class="math notranslate nohighlight">\(\theta\)</span>を取り、計算基底それぞれに対して、以下の変形をする。</p>
+<p>となる。</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.h(i)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R_{y}\)</span></p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\theta\)</span>を取り、計算基底それぞれに対して、以下の変形をする。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}R_{y}(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
 R_{y}(\theta)\ket{1} = -\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}\end{split}\]</div>
-</li>
-<li><p><span class="math notranslate nohighlight">\(R_{z}\)</span>: パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、計算基底それぞれに対して、以下の変形をする。</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.ry(theta,</span> <span class="pre">i)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(R_{z}\)</span></p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、計算基底それぞれに対して、以下の変形をする。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}R_{z}(\phi)\ket{0} = e^{-i\phi/2}\ket{0} \\
 R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
-</li>
-</ul>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.rz(phi,</span> <span class="pre">i)</span></code></p></td>
+</tr>
+</tbody>
+</table>
 <p>それでは、2量子ビットレジスタの第1ビットに<span class="math notranslate nohighlight">\(H, R_y, X\)</span>の順にゲートをかけて、最後に測定をする回路をQiskitで書いてみましょう。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -605,7 +638,38 @@ C^1_0[U](\ket{1}\ket{1}) &amp; = \ket{1}U\ket{1}
 \end{align}
 \end{split}\]</div>
 <p>です。</p>
-<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>は<span class="math notranslate nohighlight">\(CX\)</span>や<span class="math notranslate nohighlight">\(CNOT\)</span>とも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートは<span class="math notranslate nohighlight">\(CNOT\)</span>と1量子ビットゲートの組み合わせに分解できます。</p>
+<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>はCXやCNOTとも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートは<span class="math notranslate nohighlight">\(CNOT\)</span>と1量子ビットゲートの組み合わせに分解できます。</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ゲート名</p></th>
+<th class="head"><p>説明</p></th>
+<th class="head"><p>Qiskitコード</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C^i_j[X]\)</span>, CX, CNOT</p></td>
+<td><p>ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(X\)</span>を作用させる。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.cx(i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(C^i_j[Z]\)</span></p></td>
+<td><p>ビット<span class="math notranslate nohighlight">\(i, j\)</span>が1である計算基底の符号を反転させる。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.cz(i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C^i_j[R_{y}]\)</span></p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\theta\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(R_y\)</span>を作用させる。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.cry(theta,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R_{z}\)</span></p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(R_y\)</span>を作用させる。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">circuit.crz(phi,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
+</tr>
+</tbody>
+</table>
 <p>Qiskitで2ビットレジスタに制御ゲートを用い、計算基底<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}, \ket{2}, \ket{3}\)</span>の振幅の絶対値自乗が<span class="math notranslate nohighlight">\(1:2:3:4\)</span>の比になるような状態を作ってみましょう。さらに<span class="math notranslate nohighlight">\(C^0_1[Z]\)</span>ゲートを使って<span class="math notranslate nohighlight">\(\ket{3}\)</span>だけ振幅の符号が他と異なるようにします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -713,7 +777,7 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fc7e51408e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f43a7cf2910&gt;
 </pre></div>
 </div>
 </div>
@@ -1033,7 +1097,7 @@ Yes, we are using a quantum computer!
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
+            repo: "UTokyo-ICEPP/qc-workbook",
             ref: "master",
         },
         codeMirrorConfig: {
