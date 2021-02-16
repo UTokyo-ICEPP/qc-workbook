@@ -302,11 +302,6 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
-   内容
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#a-id-introduction-a">
    はじめに
    <a id="introduction">
@@ -395,29 +390,29 @@
 <h1>変分法と変分量子固有値ソルバー法を学習する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>この実習では、変分法の基本的な考え方と、その方法に基づいた変分量子回路と呼ばれる量子計算の手法を学びます。特に、量子計算と古典計算を組み合わせた**「量子・古典ハイブリッドアルゴリズム」<strong>としての変分量子回路に着目します。この手法を用いて、近似的な固有値計算を可能にする</strong>変分量子固有値ソルバー法**と呼ばれる方法へ拡張していきます。</p>
 <p>この教材は、Qiskit textbookの<a class="reference external" href="https://qiskit.org/textbook/ch-applications/vqe-molecules.html">”Simulating Molecules using VQE”</a>を参考にしています。</p>
-<div class="section" id="id2">
-<h2>内容<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li><p><a class="reference external" href="#introduction">はじめに</a></p></li>
-<li><p><a class="reference external" href="#varmethod">量子力学における変分法</a></p>
-<ol class="simple">
-<li><p><a class="reference external" href="#backgroundmath">数学的背景</a></p></li>
-<li><p><a class="reference external" href="#groundstate">基底状態の近似</a></p></li>
-</ol>
+<div class="contents local topic" id="id2">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a-id-introduction-a" id="id3">はじめに<a id='introduction'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-varmethod-a" id="id4">量子力学における変分法<a id='varmethod'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-id-backgroundmath-a" id="id5">数学的背景<a id='backgroundmath'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-groundstate-a" id="id6">基底状態の近似<a id='groundstate'></a></a></p></li>
+</ul>
 </li>
-<li><p><a class="reference external" href="#vqe">変分量子固有値ソルバー法</a></p>
-<ol class="simple">
-<li><p><a class="reference external" href="#varforms">変分量子回路</a></p></li>
-<li><p><a class="reference external" href="#simplevarform">単純な変分フォーム</a></p></li>
-<li><p><a class="reference external" href="#optimization">パラメータの最適化</a></p></li>
-<li><p><a class="reference external" href="#example">変分フォームを使った実例</a></p></li>
-</ol>
+<li><p><a class="reference internal" href="#a-id-vqe-a" id="id7">変分量子固有値ソルバー法<a id='vqe'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-id-varforms-a" id="id8">変分量子回路<a id='varforms'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-simplevarform-a" id="id9">単純な変分フォーム<a id='simplevarform'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-optimization-a" id="id10">パラメータの最適化<a id='optimization'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-example-a" id="id11">変分フォームを使った実例<a id='example'></a></a></p></li>
+</ul>
 </li>
-<li><p><a class="reference external" href="#references">参考文献</a></p></li>
-</ol>
+<li><p><a class="reference internal" href="#a-id-references-a" id="id12">参考文献<a id='references'></a></a></p></li>
+</ul>
 </div>
 <div class="section" id="a-id-introduction-a">
-<h2>はじめに<a id='introduction'></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">はじめに<a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
 <p>行列で表現されるある物理系に対して、その固有値の最小値を見つけるという操作は、多くのアプリケーションで必要となる重要な技術です。例えば化学では、分子を特徴づけるエルミート行列の最小固有値は、そのシステムの基底状態のエネルギーになります。最小固有値を見つけるには**「量子位相推定」**[1]と呼ばれる手法（この<a class="reference external" href="shor.ipynb#qpe">ノートブック</a>を参照）を使うことができますが、実用的な応用問題の実装に必要な回路は、NISQコンピュータでは実現できないほど長くなることが知られています。そのために、短い量子回路を利用して分子の基底状態エネルギーを推定する手法として、<strong>変分量子固有値ソルバー法</strong>（<em>Variational Quantum Eigensolver</em>, VQE）が提案されました <a class="reference external" href="https://www.nature.com/articles/ncomms5213">[2]</a>。</p>
 <p>まず、VQEの元になる関係を形式的に表現してみましょう。何か分からない最小固有値<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>とその固有状態<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>をもったエルミート行列<span class="math notranslate nohighlight">\(H\)</span>が与えられたとして、VQEはエネルギーの下限である<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>の近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求める手法です。つまり</p>
 <p>\begin{align*}
@@ -426,9 +421,9 @@
 <p>を満たす、できるだけ小さい<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求めることに対応します。ここで<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle\)</span>は近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>に対応する固有状態で、<span class="math notranslate nohighlight">\(\theta\)</span>はパラメータです。つまり、適当な初期状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に<span class="math notranslate nohighlight">\(U(\theta)\)</span>で表現されるパラメータ化された回路を適用することで、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>を近似する状態<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle \equiv U(\theta)|\psi\rangle\)</span>を得ようというアイデアです。最適なパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>の値は、期待値 <span class="math notranslate nohighlight">\(\langle \psi(\theta) |H|\psi(\theta) \rangle\)</span>が最小になるように古典計算を繰り返しながら求めていくことになります。</p>
 </div>
 <div class="section" id="a-id-varmethod-a">
-<h2>量子力学における変分法<a id='varmethod'></a><a class="headerlink" href="#a-id-varmethod-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">量子力学における変分法<a id='varmethod'></a></a><a class="headerlink" href="#a-id-varmethod-a" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="a-id-backgroundmath-a">
-<h3>数学的背景<a id='backgroundmath'></a><a class="headerlink" href="#a-id-backgroundmath-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">数学的背景<a id='backgroundmath'></a></a><a class="headerlink" href="#a-id-backgroundmath-a" title="Permalink to this headline">¶</a></h3>
 <p>VQEは量子力学の<strong>変分法</strong>を応用した手法です。変分法をより良く理解するために、基礎的な数学的背景を説明します。行列<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>とその固有値<span class="math notranslate nohighlight">\(\lambda_i\)</span>は、<span class="math notranslate nohighlight">\(A |\psi_i\rangle = \lambda_i |\psi_i\rangle\)</span>の関係にあります。行列<span class="math notranslate nohighlight">\(H\)</span>がエルミート行列<span class="math notranslate nohighlight">\(H = H^{\dagger}\)</span>の場合、スペクトル定理から<span class="math notranslate nohighlight">\(H\)</span>の固有値は実数になります（<span class="math notranslate nohighlight">\(\lambda_i = \lambda_i^*\)</span>）。測定できる量は実数である必要があるため、量子系のハミルトニアンを記述するためにはエルミート行列が適切です。さらに、<span class="math notranslate nohighlight">\(H\)</span>は以下のように表現できます。</p>
 <div class="math notranslate nohighlight">
 \[
@@ -456,21 +451,21 @@ H = \sum_{i = 1}^{N} \lambda_i |\psi_i\rangle \langle \psi_i |
 <p>が成り立つことは明らかです。上記の式が<strong>変分法</strong>と呼ばれるもの（テキストによっては<strong>変分原理</strong>と呼ぶ）[3]で、<span class="math notranslate nohighlight">\(H\)</span>の最小固有値を下限として、任意の波動関数の期待値を近似的に求めることができることを表しています。この式から、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>状態の期待値は<span class="math notranslate nohighlight">\(\langle \psi_{min}|H|\psi_{min}\rangle = \langle \psi_{min}|\lambda_{min}|\psi_{min}\rangle = \lambda_{min}\)</span>になることも分かるでしょう。</p>
 </div>
 <div class="section" id="a-id-groundstate-a">
-<h3>基底状態の近似<a id='groundstate'></a><a class="headerlink" href="#a-id-groundstate-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">基底状態の近似<a id='groundstate'></a></a><a class="headerlink" href="#a-id-groundstate-a" title="Permalink to this headline">¶</a></h3>
 <p>系のハミルトニアンがエルミート行列<span class="math notranslate nohighlight">\(H\)</span>で表現されている場合、系の基底状態のエネルギーは<span class="math notranslate nohighlight">\(H\)</span>の最小固有値になります。まず<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>の初期推定として任意の波動関数<span class="math notranslate nohighlight">\(|\psi \rangle\)</span>（<em>Ansatz</em>と呼ばれる）を選び、その状態での期待値<span class="math notranslate nohighlight">\(\langle H \rangle_{\psi}\)</span>を計算します。変分法の鍵は、この期待値が小さくなるように波動関数を更新しながら計算を繰り返し、ハミルトニアンの基底状態エネルギーに近づけていくところにあります。</p>
 </div>
 </div>
 <div class="section" id="a-id-vqe-a">
-<h2>変分量子固有値ソルバー法<a id='vqe'></a><a class="headerlink" href="#a-id-vqe-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">変分量子固有値ソルバー法<a id='vqe'></a></a><a class="headerlink" href="#a-id-vqe-a" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="a-id-varforms-a">
-<h3>変分量子回路<a id='varforms'></a><a class="headerlink" href="#a-id-varforms-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">変分量子回路<a id='varforms'></a></a><a class="headerlink" href="#a-id-varforms-a" title="Permalink to this headline">¶</a></h3>
 <p>量子コンピューター上で変分法を実装するには、系統的に<em>Ansatz</em>を更新する方法が必要です。VQEはこれを決まった構造を持つパラメータ化された量子回路（<strong>変分量子回路</strong>）を使って行います。この回路はしばしば<strong>変分フォーム</strong>（<em>variational form</em>）とも呼ばれ、ユニタリー変換<span class="math notranslate nohighlight">\(U(\theta)\)</span>で表現されます（<span class="math notranslate nohighlight">\(\theta\)</span>はパラメータ）。
 変分フォームを初期状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>（例えば標準状態<span class="math notranslate nohighlight">\(|0\rangle\)</span>）に適用すると、出力として<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle \equiv U(\theta)|\psi\rangle\)</span>が生成されます。この状態の元で期待値<span class="math notranslate nohighlight">\(\langle \psi(\theta)|H|\psi(\theta)\rangle\)</span>が<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>に近付くように、<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle\)</span>に対してパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>の最適化を行います。
 パラメータの最適化は古典計算で実行することを想定しており、その意味でVQEは典型的な**「量子・古典ハイブリッドアルゴリズム」**の一つです。</p>
 <p>変分フォームの決め方ですが、解きたい問題のドメインに応じて特定の構造を持つ変分フォームを導入することがあります。そうではなく、幅広い問題への応用ができるようにドメインに依存しない形の変分フォーム（例えば<span class="math notranslate nohighlight">\(R_Y\)</span>ゲート）を使うこともあります。高エネルギー実験への応用では、この<span class="math notranslate nohighlight">\(R_Y\)</span>ゲートを使った変分フォームを実装します。</p>
 </div>
 <div class="section" id="a-id-simplevarform-a">
-<h3>単純な変分フォーム<a id='simplevarform'></a><a class="headerlink" href="#a-id-simplevarform-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">単純な変分フォーム<a id='simplevarform'></a></a><a class="headerlink" href="#a-id-simplevarform-a" title="Permalink to this headline">¶</a></h3>
 <p>変分フォームを決める時には、2つの相反する目的に対してバランスを考える必要があります。<span class="math notranslate nohighlight">\(n\)</span>量子ビットの変分フォームは、パラメータの数を増やせば<span class="math notranslate nohighlight">\(|\psi\rangle \in \mathbb{C}^N\)</span>（<span class="math notranslate nohighlight">\(N=2^n\)</span>）の任意の状態ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>を生成できるでしょう。しかし、パラメータの最適化のことを考えれば、できれば可能な限り少ないパラメータで変分フォームを構築したいですよね。</p>
 <p>ここでは、まず<span class="math notranslate nohighlight">\(n=1\)</span>の場合を考えます。<span class="math notranslate nohighlight">\(U3\)</span>ゲートは3つのパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>、<span class="math notranslate nohighlight">\(\phi\)</span>、<span class="math notranslate nohighlight">\(\lambda\)</span>を使って以下の変換を表現します:</p>
 <div class="math notranslate nohighlight">
@@ -480,16 +475,15 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 <p>グローバル位相を除いて、3つのパラメータを適切に設定して実装すれば任意の単一量子ビットの変換が行えます。この<strong>ユニバーサル</strong>な変分フォームは、3つしかパラメータがないため効率的に最適化できるという特徴があります。ただ強調すべき点は、任意の状態を生成できるということは、この変分フォームが生成する状態は<span class="math notranslate nohighlight">\(H\)</span>の期待値を計算する上で必要になる状態に限定されないということです。つまり、この性質が意味するのは、最小の期待値が求まるかどうかは古典計算の最適化の能力だけに依存するということです。</p>
 </div>
 <div class="section" id="a-id-optimization-a">
-<h3>パラメータの最適化<a id='optimization'></a><a class="headerlink" href="#a-id-optimization-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">パラメータの最適化<a id='optimization'></a></a><a class="headerlink" href="#a-id-optimization-a" title="Permalink to this headline">¶</a></h3>
 <p>パラメータ化された変分フォームを選択したら、ターゲットとなるハミルトニアンの期待値を最小化するように、変分法に従ってパラメータを最適化する必要があります。パラメータの最適化のプロセスには様々な課題があります。例えば、量子ハードウェアには様々なタイプのノイズがあるため、その状態でエネルギーを測定しても正しい答えが返ってくるという保証はありません。そのために、パラメータの最適化に使う目的関数の評価が実際のエネルギーの値からずれてしまい、正しくパラメータの更新ができない可能性があります。また、最適化の手法（<strong>オプティマイザー</strong>）によっては、パラメータの数に依って目的関数を評価する回数が増えることがあり、さらにノイズの影響を受けやすくなります。つまり、アプリケーションの要求を考慮しながら、オプティマイザーの選択にも気を配る必要があります。</p>
 <p>最も一般的な最適化手法は、エネルギーの減少が極大になるような方向に各パラメータを更新する<strong>勾配降下法</strong>です。各パラメータごとに勾配を計算するため、最適化すべきパラメータの数に応じて目的関数を評価する回数は増えます。また、この性質から探索空間の中で局所的な最適値を素早く発見することは可能ですが、逆に探索が局所的な最小値に留まってしまうことがあります。勾配降下法は直感的で理解しやすい最適化の手法ですが、少なくとも現在のNISQコンピュータでは精度良く実行するのは難しいと考えられていて、現状ではあまり推奨されてはいません。</p>
 <p>ノイズのある量子コンピュータで目的関数を最適化する適切なオプティマイザーとして、<em>Simultaneous Perturbation Stochastic Approximation</em>（<strong>SPSA</strong>）があります。SPSAは２回の測定だけで目的関数の勾配を近似できるという特徴があります。勾配降下法では各パラメータを独立に変化させるのに対して、SPSAでは全てのパラメータを同時にランダムに変化させます。以上のことから、現在のところVQEを利用する場合のオプティマイザーとしてはSPSAが推奨されているようです。</p>
 <p>ノイズがない量子コンピュータで目的関数を評価する場合（例えば状態ベクトルシミュレータで実行する場合など）は、Pythonの<a class="reference external" href="https://www.scipy.org/scipylib/index.html">SciPy</a>パッケージで提供されているオプティマイザーなど様々な選択肢があります。この実習では、Qiskit Aquaでサポートされているオプティマイザーの中で、特に<em>Constrained Optimization by Linear Approximation</em>（<strong>COBYLA</strong>）と呼ばれるオプティマイザーも使用します。COBYLAは目的関数の評価を1回しか実行しない（つまり評価の回数がパラメータの数に依存しない）ため、ノイズがない状態でかつ評価の回数を少なくしたい場合にはCOBYLAの利用が推奨されているようです。いづれにしろ、どのオプティマイザーがベストかはVQEアルゴリズムの実装形式や実行環境によって変わるため、ある程度経験によって決める必要があると考えられます。</p>
 </div>
 <div class="section" id="a-id-example-a">
-<h3>変分フォームを使った実例<a id='example'></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">変分フォームを使った実例<a id='example'></a></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h3>
 <p>ではここで、単一量子ビットの変分フォームを利用してパラメータ最適化の例を実行してみましょう。例として、ランダムな確率分布のベクトル<span class="math notranslate nohighlight">\(\vec{x}\)</span>を入力として与えた時、出力の確率分布が<span class="math notranslate nohighlight">\(\vec{x}\)</span>に近くなるように単一量子ビットの変分フォームを決定するという問題を考えます（2つの確率分布の近さはL1距離によって定義します）。</p>
-<img src="figs/vqe_u3.png" width=40%>
 <p>最初に、Pythonでランダムな確率分布のベクトルを作成します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -566,9 +560,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution: [0.51357006 0.48642994]
-Obtained Distribution: [0.5075, 0.4925]
-Output Error (L1-Distance): 0.011140118738839133
-Parameters Found: [1.54580287 0.94968799 0.52477021]
+Obtained Distribution: [0.5135, 0.4865]
+Output Error (L1-Distance): 0.015459881261160824
+Parameters Found: [1.53403866 0.12859323 0.49440623]
 </pre></div>
 </div>
 </div>
@@ -576,7 +570,7 @@ Parameters Found: [1.54580287 0.94968799 0.52477021]
 </div>
 </div>
 <div class="section" id="a-id-references-a">
-<h2>参考文献<a id='references'></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li><p>Nielsen, Michael A and Chuang, Isaac L, “Quantum Computation and Quantum Information”, Cambridge University Pres, 2000.</p></li>
 <li><p>Peruzzo, Alberto, et al., “A variational eigenvalue solver on a photonic quantum processor”, <a class="reference external" href="https://www.nature.com/articles/ncomms5213">Nature commun. 5, 4213 (2014)</a>.</p></li>

@@ -302,11 +302,6 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
-   内容
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#a-id-introduction-a">
    はじめに
    <a id="introduction">
@@ -461,45 +456,51 @@
   <div class="section" id="id1">
 <h1>量子・古典ハイブリッドの量子機械学習アルゴリズムを使って、新しい素粒子現象の発見を目指す<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、量子コンピュータを応用することで古典機械学習の性能を向上するという観点から提案された、<strong>変分量子回路</strong>を使った学習手法 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>です。その手法の元になる変分法と、それに基づいた変分量子固有値ソルバー法について学んだのち、量子機械学習の学習へと進みます。</p>
-<div class="section" id="id2">
-<h2>内容<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li><p><a class="reference external" href="#introduction">はじめに</a></p></li>
-<li><p><a class="reference external" href="#variational_method">変分法と変分量子回路</a></p></li>
-<li><p><a class="reference external" href="#ml">機械学習</a></p></li>
-<li><p><a class="reference external" href="#qml">量子機械学習</a></p></li>
-<li><p><a class="reference external" href="#example">初歩的な例</a></p>
-<ol class="simple">
-<li><p><a class="reference external" href="#func_data">学習データの準備</a></p></li>
-<li><p><a class="reference external" href="#func_state_preparation">量子状態の生成</a></p></li>
-<li><p><a class="reference external" href="#func_ariational_form">変分フォームを使った状態変換</a></p></li>
-<li><p><a class="reference external" href="#func_measurement">測定とモデル出力</a></p></li>
-</ol>
+<div class="contents local topic" id="id2">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a-id-introduction-a" id="id5">はじめに <a id='introduction'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-variational-method-a" id="id6">変分法と変分量子回路 <a id='variational_method'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-ml-a" id="id7">機械学習と深層学習 <a id='ml'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-qml-a" id="id8">量子機械学習<a id='qml'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-example-a" id="id9">初歩的な例<a id='example'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-id-func-data-a" id="id10">学習データの準備<a id='func_data'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-func-state-preparation-a" id="id11">量子状態の生成<a id='func_state_preparation'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-func-variational-form-a" id="id12">変分フォームを使った状態変換<a id='func_variational_form'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#u-boldsymbol-theta" id="id13">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id14">2量子ビットゲートの作成</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id15">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a></p></li>
+</ul>
 </li>
-<li><p><a class="reference external" href="#susy">素粒子現象の探索への応用</a></p>
-<ol class="simple">
-<li><p><a class="reference external" href="#susy_data">学習データの準備</a></p></li>
-<li><p><a class="reference external" href="#susy_state_preparation">量子状態の生成</a></p></li>
-<li><p><a class="reference external" href="#susy_ariational_form">変分フォームを使った状態変換</a></p></li>
-<li><p><a class="reference external" href="#susy_measurement">測定とモデル出力</a></p></li>
-</ol>
+<li><p><a class="reference internal" href="#a-id-func-measurement-a" id="id16">測定とモデル出力<a id='func_measurement'></a></a></p></li>
+</ul>
 </li>
-<li><p><a class="reference external" href="#vqe_application">[課題] VQEの応用</a></p></li>
-<li><p><a class="reference external" href="#references">参考文献</a></p></li>
-</ol>
+<li><p><a class="reference internal" href="#a-id-susy-a" id="id17">素粒子現象の探索への応用<a id='susy'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-id-susy-data-a" id="id18">学習データの準備<a id='susy_data'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-state-preparation-a" id="id19">量子状態の生成<a id='susy_state_preparation'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-variational-form-a" id="id20">変分フォームを使った状態変換<a id='susy_variational_form'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-measurement-a" id="id21">測定とモデル出力<a id='susy_measurement'></a></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#vqe-a-id-vqe-application-a" id="id22">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-references-a" id="id23">参考文献<a id='references'></a></a></p></li>
+</ul>
 </div>
 <div class="section" id="a-id-introduction-a">
-<h2>はじめに <a id='introduction'></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">はじめに <a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
 <p>近年、機械学習の分野において<strong>深層学習</strong>（<strong>ディープラーニング</strong>）が注目を浴びています。ディープラーニングは<strong>ニューラルネットワーク</strong>の隠れ層を多層にすることで、入力と出力の間の複雑な関係を学習することができます。その学習結果を使って、新しい入力データに対して出力を予測することが可能になります。ここで学習する量子機械学習アルゴリズムは、このニューラルネットワークの部分を変分量子回路に置き換えたものです。つまり、ニューラルネットワークでの各ニューロン層への重みを調節する代わりに、変分量子回路のパラメータ（例えば回転ゲートの回転角）を調整することで入力と出力の関係を学習しようという試みです。
 量子力学の重ね合わせの原理から、<strong>指数関数的に増える多数の計算基底</strong>を使って状態を表現できることが量子コンピュータの強みです。この強みを生かすことで、データ間の複雑な相関を学習できる可能性が生まれます。そこに量子機械学習の最も大きな強みがあると考えられています。</p>
 <p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>として出版されています。</p>
 </div>
 <div class="section" id="a-id-variational-method-a">
-<h2>変分法と変分量子回路 <a id='variational_method'></a><a class="headerlink" href="#a-id-variational-method-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">変分法と変分量子回路 <a id='variational_method'></a></a><a class="headerlink" href="#a-id-variational-method-a" title="Permalink to this headline">¶</a></h2>
 <p>変分量子回路の元になるのは、<strong>変分法</strong>（あるいは変分原理）と呼ばれる考え方です。量子力学における変分法と、その方法を用いた変分量子固有値ソルバー法については、この<a class="reference internal" href="vqe.html"><span class="doc std std-doc">ノートブック</span></a>を参照してください。</p>
 </div>
 <div class="section" id="a-id-ml-a">
-<h2>機械学習と深層学習 <a id='ml'></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">機械学習と深層学習 <a id='ml'></a></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
 <p>機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>と<span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>からなるデータ（<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>を要素とするベクトル、<span class="math notranslate nohighlight">\(i\)</span>は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数<span class="math notranslate nohighlight">\(x_i\)</span>を引数とする関数<span class="math notranslate nohighlight">\(f\)</span>を考え、その出力<span class="math notranslate nohighlight">\(\tilde{y_i}=f(x_i)\)</span>が<span class="math notranslate nohighlight">\(\tilde{y}_i\simeq y_i\)</span>となるような関数<span class="math notranslate nohighlight">\(f\)</span>をデータから近似的に求めることに対応します。
 一般的に、この関数<span class="math notranslate nohighlight">\(f\)</span>は変数<span class="math notranslate nohighlight">\(x\)</span>以外のパラメータを持っているでしょう。なので、そのパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>をうまく調整して、<span class="math notranslate nohighlight">\(y_i\simeq\tilde{y}_i\)</span>となる関数<span class="math notranslate nohighlight">\(f=f(x,\boldsymbol{w}^*)\)</span>とパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めることが機械学習の鍵になります。</p>
 <p>関数<span class="math notranslate nohighlight">\(f\)</span>を近似する方法の一つとして、現在主流になっているのが脳のニューロン構造を模式化したニューラルネットワークです。下図に示しているのは、ニューラルネットの基本的な構造です。丸で示しているのが構成ユニット（ニューロン）で、ニューロンを繋ぐ情報の流れを矢印で表しています。ニューラルネットには様々な構造が考えられますが、基本になるのは図に示したような層構造で、前層にあるニューロンの出力が次の層にあるニューロンへの入力になります。入力データ<span class="math notranslate nohighlight">\(x\)</span>を受ける入力層と出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>を出す出力層に加え、中間に複数の”隠れ層”を持つものを総称して深層ニューラルネットワークと呼びます。</p>
@@ -525,7 +526,7 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 <p>のように<span class="math notranslate nohighlight">\(w\)</span>を更新することで、<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を最小化するというものです（<span class="math notranslate nohighlight">\(w\)</span>と<span class="math notranslate nohighlight">\(w'\)</span>は更新前と更新後のパラメータ）。<span class="math notranslate nohighlight">\(\epsilon\:(&gt;0)\)</span>は学習率と呼ばれるパラメータで、これは基本的には私たちが手で決めてやる必要があります。</p>
 </div>
 <div class="section" id="a-id-qml-a">
-<h2>量子機械学習<a id='qml'></a><a class="headerlink" href="#a-id-qml-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">量子機械学習<a id='qml'></a></a><a class="headerlink" href="#a-id-qml-a" title="Permalink to this headline">¶</a></h2>
 <p>変分量子回路を用いた量子機械学習アルゴリズムは、一般的には以下のような順番で量子回路に実装され、計算が行われます。</p>
 <ol class="simple">
 <li><p><strong>学習データ</strong><span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i, y_i)\}\)</span>を用意する。<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は入力データのベクトル、<span class="math notranslate nohighlight">\(y_i\)</span>は入力データに対する真の値（教師データ）とする（<span class="math notranslate nohighlight">\(i\)</span>は学習データのサンプルを表す添字）。</p></li>
@@ -538,7 +539,6 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 <li><p>3-7のプロセスを繰り返すことで、コスト関数を最小化する<span class="math notranslate nohighlight">\(\boldsymbol{\theta}=\boldsymbol{\theta^*}\)</span>を求める。</p></li>
 <li><p><span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta^*})\)</span>が学習によって得られた<strong>予測モデル</strong>になる。</p></li>
 </ol>
-<img src="figs/var_circuit.png" width=70%>
 <p>この順に量子機械学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -560,10 +560,10 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 </div>
 </div>
 <div class="section" id="a-id-example-a">
-<h2>初歩的な例<a id='example'></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">初歩的な例<a id='example'></a></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h2>
 <p>ある入力<span class="math notranslate nohighlight">\(\{x_i\}\)</span>と、既知の関数<span class="math notranslate nohighlight">\(f\)</span>による出力<span class="math notranslate nohighlight">\(y_i=f(x_i)\)</span>が学習データとして与えられた時に、そのデータから関数<span class="math notranslate nohighlight">\(f\)</span>を近似的に求める問題を考えてみます。例として、<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>としてみます。</p>
 <div class="section" id="a-id-func-data-a">
-<h3>学習データの準備<a id='func_data'></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">学習データの準備<a id='func_data'></a></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
 <p>まず、学習データを準備します。<span class="math notranslate nohighlight">\(x_{\text{min}}\)</span>と<span class="math notranslate nohighlight">\(x_{\text{max}}\)</span>の範囲でデータをnum_x_train個ランダムに取った後、正規分布に従うノイズを追加しておきます。nqubitが量子ビット数、c_depthが変分フォーム回路の深さ（後述）を表します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -589,7 +589,7 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 </div>
 </div>
 <div class="section" id="a-id-func-state-preparation-a">
-<h3>量子状態の生成<a id='func_state_preparation'></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">量子状態の生成<a id='func_state_preparation'></a></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
 <p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(|0\rangle^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\rm in}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
@@ -616,9 +616,9 @@ U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 </div>
 </div>
 <div class="section" id="a-id-func-variational-form-a">
-<h3>変分フォームを使った状態変換<a id='func_variational_form'></a><a class="headerlink" href="#a-id-func-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">変分フォームを使った状態変換<a id='func_variational_form'></a></a><a class="headerlink" href="#a-id-func-variational-form-a" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="u-boldsymbol-theta">
-<h4>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成<a class="headerlink" href="#u-boldsymbol-theta" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id13">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a><a class="headerlink" href="#u-boldsymbol-theta" title="Permalink to this headline">¶</a></h4>
 <p>次に、最適化すべき変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を作っていきます。これは以下の3つの手順で行います。</p>
 <ol class="simple">
 <li><p>2量子ビットゲートの作成（<span class="math notranslate nohighlight">\(\to\)</span> 量子ビットをエンタングルさせる）</p></li>
@@ -627,11 +627,11 @@ U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 </ol>
 </div>
 <div class="section" id="id3">
-<h4>2量子ビットゲートの作成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id14">2量子ビットゲートの作成</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
 <p>ここではControlled-<span class="math notranslate nohighlight">\(Z\)</span>ゲート（<span class="math notranslate nohighlight">\(CZ\)</span>）を使ってエンタングルさせ、モデルの表現能力を上げることを目指します。</p>
 </div>
 <div class="section" id="id4">
-<h4>回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id15">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <p><span class="math notranslate nohighlight">\(CZ\)</span>ゲートを使ってエンタングルメントを生成する回路<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と、<span class="math notranslate nohighlight">\(j \:(=1,2,\cdots n)\)</span>番目の量子ビットに適用する回転ゲート</p>
 <p>\begin{align}
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j3}^l)R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
@@ -669,7 +669,7 @@ U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot
 </div>
 </div>
 <div class="section" id="a-id-func-measurement-a">
-<h3>測定とモデル出力<a id='func_measurement'></a><a class="headerlink" href="#a-id-func-measurement-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">測定とモデル出力<a id='func_measurement'></a></a><a class="headerlink" href="#a-id-func-measurement-a" title="Permalink to this headline">¶</a></h3>
 <p>モデルの出力（予測値）として、状態<span class="math notranslate nohighlight">\(|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle=U(\boldsymbol{\theta})|\psi_{\rm in}(\boldsymbol{x})\rangle\)</span>の元で最初の量子ビットを<span class="math notranslate nohighlight">\(Z\)</span>基底で測定した時の期待値を使うことにします。つまり<span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta}) = \langle Z_0(\boldsymbol{x},\boldsymbol{\theta}) \rangle = \langle \psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})|Z_0|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle\)</span>です。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -740,12 +740,11 @@ U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot
 </div>
 </div>
 <div class="section" id="a-id-susy-a">
-<h2>素粒子現象の探索への応用<a id='susy'></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">素粒子現象の探索への応用<a id='susy'></a></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
 <p>次の実習課題では、（<strong>標準模型</strong>と呼ばれる）素粒子現象の基本理論を超える新しい物理現象として、<strong>超対称性理論</strong>（<em>Supersymmetry</em>、略してSUSY）から予言される新粒子の探索を考えてみます。下の図はSUSY信号（左側）と標準模型でのバックグラウンド（右側）のファインマンダイアグラムを表していて、この二つの物理過程を量子機械学習で分類することを試みます。</p>
-<img src="figs/susy_bg.png" width=70%>
 <p>(図の引用：参考文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>)</p>
 <div class="section" id="a-id-susy-data-a">
-<h3>学習データの準備<a id='susy_data'></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">学習データの準備<a id='susy_data'></a></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
 <p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>に委ねますが、ある特定のSUSY粒子生成反応とそれに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
 <p>以下では、まず学習に使う運動学的変数を選び、その変数を指定したサンプルを訓練用とテスト用に準備します。</p>
 <div class="cell docutils container">
@@ -795,7 +794,7 @@ U\left({\theta_j^l}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot
 </div>
 </div>
 <div class="section" id="a-id-susy-state-preparation-a">
-<h3>量子状態の生成<a id='susy_state_preparation'></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">量子状態の生成<a id='susy_state_preparation'></a></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
 <p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\rm in}(\boldsymbol{x}_i)\)</span>の作成ですが、ここでは参考文献<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>に従い、</p>
 <p>\begin{align}
 U_{\phi_{{k}}}(\boldsymbol{x}<em>i)=\exp\left(i\phi</em>{{k}}(\boldsymbol{x}_i)Z_k\right)
@@ -814,7 +813,7 @@ U_{\rm in}(\boldsymbol{x}<em>i) = U</em>{\phi}(\boldsymbol{x}<em>i) H^{\otimes n
 </div>
 </div>
 <div class="section" id="a-id-susy-variational-form-a">
-<h3>変分フォームを使った状態変換<a id='susy_variational_form'></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">変分フォームを使った状態変換<a id='susy_variational_form'></a></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
 <p>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして</p>
 <p>\begin{align}
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
@@ -830,7 +829,7 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 </div>
 </div>
 <div class="section" id="a-id-susy-measurement-a">
-<h3>測定とモデル出力<a id='susy_measurement'></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">測定とモデル出力<a id='susy_measurement'></a></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
 <p>測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのAPIを用いるので、プログラムはかなり簡略化されています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -892,11 +891,11 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 </div>
 </div>
 <div class="section" id="vqe-a-id-vqe-application-a">
-<h2>[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a><a class="headerlink" href="#vqe-a-id-vqe-application-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id22">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a><a class="headerlink" href="#vqe-a-id-vqe-application-a" title="Permalink to this headline">¶</a></h2>
 <p>ここでは、高エネルギー物理実験にVQEを応用できるかどうかを考えます。その応用例と課題をこの<a class="reference internal" href="vqe_tracking.html"><span class="doc std std-doc">ノートブック</span></a>に準備しました。最後にある課題をレポートとして提出してください。</p>
 </div>
 <div class="section" id="a-id-references-a">
-<h2>参考文献<a id='references'></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id23">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li><p>K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii, “Quantum circuit learning”, <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">Phys. Rev. A 98, 032309 (2018)</a></p></li>
 <li><p>V. Havlicek <em>et al.</em> , “Supervised learning with quantum-enhanced feature spaces”, <a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">Nature 567, 209–212 (2019)</a></p></li>
