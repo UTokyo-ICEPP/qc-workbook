@@ -57,7 +57,7 @@
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="量子フーリエ変換" href="qft.html" />
+    <link rel="next" title="[課題]ダブルスリット実験のシミュレーション" href="double_slit.html" />
     <link rel="prev" title="CHSH不等式の破れを確認する" href="chsh_inequality.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -111,6 +111,11 @@
    単純な量子回路をゼロから書く
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_slit.html">
+   [課題]ダブルスリット実験のシミュレーション
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -118,11 +123,6 @@
  </span>
 </p>
 <ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="qft.html">
-   量子フーリエ変換
-  </a>
- </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    1兆個の足し算を同時に行う
@@ -187,10 +187,15 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：より詳しく知りたい人のために
+  補足：予備知識・実習環境
  </span>
 </p>
 <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習に必要なもの
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="quantum_basics.html">
    量子力学の基礎
@@ -358,12 +363,12 @@
      問題6: Equal superpositionに位相を付ける
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     問題7: 量子フーリエ変換
+    </a>
+   </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
-   [課題]ダブルスリット実験のシミュレーション
-  </a>
  </li>
 </ul>
 
@@ -398,9 +403,9 @@
 <li><p><a class="reference internal" href="#equal-superposition" id="id22">問題4: Equal superposition</a></p></li>
 <li><p><a class="reference internal" href="#id10" id="id23">問題5: 特定の基底の符号を反転させる</a></p></li>
 <li><p><a class="reference internal" href="#id12" id="id24">問題6: Equal superpositionに位相を付ける</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id25">問題7: 量子フーリエ変換</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id13" id="id25">[課題]ダブルスリット実験のシミュレーション</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
@@ -452,7 +457,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7efc23728e20&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fa543771520&gt;
 </pre></div>
 </div>
 </div>
@@ -734,6 +739,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
+<div class="toggle docutils container">
 <p>正解は無限に存在しますが、上の回路ですでにアダマールゲートがかかっているので、最も手っ取り早いのは</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -745,6 +751,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </pre></div>
 </div>
 <p>です。</p>
+</div>
 </div>
 <div class="section" id="id9">
 <h3><a class="toc-backref" href="#id20">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
@@ -774,11 +781,13 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
+<div class="toggle docutils container">
 <p>問題1の結果を利用すると簡単です。初期状態は両ビットとも<span class="math notranslate nohighlight">\(\ket{0}\)</span>なので、2ビットレジスタに対して問題1の操作をすると状態<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{0} + i\ket{1})\ket{0}\)</span>ができます。ここでビット0から1にCNOTをかけると、<span class="math notranslate nohighlight">\(\ket{1}\ket{0} \rightarrow \ket{1}\ket{1}\)</span>となるので、望む状態が実現します。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="ghz">
@@ -809,11 +818,13 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
+<div class="toggle docutils container">
 <p>Bell状態の生成と発想は同じですが、多重制御ゲート<span class="math notranslate nohighlight">\(C^{01}_2[X]\)</span>を利用します。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">mcx</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="equal-superposition">
@@ -846,6 +857,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
+<div class="toggle docutils container">
 <p>Equal superpositionと呼ばれるこの状態は、量子計算でおそらく一番多様される状態です。一見複雑に思えますが、<span class="math notranslate nohighlight">\(n\)</span>桁の二進数で<span class="math notranslate nohighlight">\(0\)</span>から<span class="math notranslate nohighlight">\(2^n-1\)</span>までの数を表現すると、全ての0/1の組み合わせが登場するということを考えると、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -855,6 +867,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 <p>が正解です。</p>
 </div>
@@ -886,6 +899,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
+<div class="toggle docutils container">
 <p><span class="math notranslate nohighlight">\(\ket{5}=\ket{0101}\)</span>の符号を反転させるには、4つの量子ビットが0, 1, 0, 1という値を取っている状態のみに作用するゲートを使います。必然的に多重制御ゲートが用いられますが、残念ながら制御ゲートはビットの値が1であるときにしか働きません。そこで、まず<span class="math notranslate nohighlight">\(\ket{0101}\)</span>を<span class="math notranslate nohighlight">\(\ket{1111}\)</span>に変換し、その上で<span class="math notranslate nohighlight">\(C^{012}_{3}[Z]\)</span>を使います<a class="footnote-reference brackets" href="#mcz" id="id11">1</a>。符号を反転させたら、最初の操作の逆操作をして<span class="math notranslate nohighlight">\(\ket{1111}\)</span>を<span class="math notranslate nohighlight">\(\ket{0101}\)</span>に変換します。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -899,22 +913,23 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <p>ビット1と3にかかっている<span class="math notranslate nohighlight">\(X\)</span>ゲートは当然他の基底にも影響するので、例えば<span class="math notranslate nohighlight">\(\ket{0011}\)</span>は<span class="math notranslate nohighlight">\(\ket{0110}\)</span>となります。しかし、1と3に<span class="math notranslate nohighlight">\(X\)</span>をかけて<span class="math notranslate nohighlight">\(\ket{1111}\)</span>になるのは<span class="math notranslate nohighlight">\(\ket{0101}\)</span>だけなので、逆操作でちゃんと「後片付け」さえすれば、この一連の操作で<span class="math notranslate nohighlight">\(\ket{5}\)</span>だけをいじることができます。</p>
 </div>
+</div>
 <div class="section" id="id12">
 <h3><a class="toc-backref" href="#id24">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k} \quad (j \in \mathbb{N})
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i s k/2^n} \ket{k} \quad (s \in \mathbb{R})
 \]</div>
-<p>を作る回路を考え、<span class="math notranslate nohighlight">\(n=6, j=3\)</span>のケースを実装しなさい。</p>
+<p>を作る回路を考え、<span class="math notranslate nohighlight">\(n=6, s=2.5\)</span>のケースを実装しなさい。</p>
 <div class="cell tag_output_scroll tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">6</span>
 
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
 
-<span class="n">j</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mf">2.5</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT BELOW ###</span>
@@ -934,11 +949,12 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <p><strong>解答</strong></p>
-<p>この回路は<a class="reference internal" href="qft.html"><span class="doc">後の実習</span></a>で登場する量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>を上の状態に変換するのに対し、この問題では<span class="math notranslate nohighlight">\(j\)</span>は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。</p>
+<div class="toggle docutils container">
+<p>この回路は次の問題の量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態<span class="math notranslate nohighlight">\(\ket{s}\)</span>（このとき<span class="math notranslate nohighlight">\(s\)</span>は整数）を上の状態に変換するのに対し、この問題では<span class="math notranslate nohighlight">\(s\)</span>は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。</p>
 <p>問題4と同じように、この状態も個々の量子ビットにおける<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせの積として表現できます。そのためには<span class="math notranslate nohighlight">\(k\)</span>の二進数表現<span class="math notranslate nohighlight">\(k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)\)</span>を用いて、<span class="math notranslate nohighlight">\(\ket{k}\)</span>の位相を</p>
 <div class="math notranslate nohighlight">
 \[
-\exp\left(2\pi i \frac{jk}{2^n}\right) = \exp \left(2\pi i \frac{j}{2^n} \sum_{m=0}^{n-1} 2^m k_m\right) = \prod_{m=0}^{n-1} \exp \left(2\pi i \frac{j}{2^{n-m}} k_m\right)
+\exp\left(2\pi i \frac{sk}{2^n}\right) = \exp \left(2\pi i \frac{s}{2^n} \sum_{m=0}^{n-1} 2^m k_m\right) = \prod_{m=0}^{n-1} \exp \left(2\pi i \frac{s}{2^{n-m}} k_m\right)
 \]</div>
 <p>と分解します。一方</p>
 <div class="math notranslate nohighlight">
@@ -948,30 +964,149 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <p>なので、</p>
 <div class="math notranslate nohighlight">
 \[
-e^{2\pi i jk/2^n} \ket{k} = e^{2\pi i jk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \otimes e^{2\pi i jk_{1}/2^{n-1}} \ket{k_1} \otimes e^{2\pi i jk_{0}/2^n} \ket{k_{0}}.
+e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \otimes e^{2\pi i sk_{1}/2^{n-1}} \ket{k_1} \otimes e^{2\pi i sk_{0}/2^n} \ket{k_{0}}.
 \]</div>
-<p>最後に、<span class="math notranslate nohighlight">\(k_m = 0\)</span>ならば<span class="math notranslate nohighlight">\(e^{2\pi i jk_{m}/2^n} = 1\)</span>であることから、</p>
+<p>最後に、<span class="math notranslate nohighlight">\(k_m = 0\)</span>ならば<span class="math notranslate nohighlight">\(e^{2\pi i sk_{m}/2^n} = 1\)</span>であることから、</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k} = \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i j/2} \ket{1}\right) \otimes \cdots \otimes \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i j/2^n} \ket{1}\right)
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i sk/2^n} \ket{k} = \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i s/2} \ket{1}\right) \otimes \cdots \otimes \frac{1}{\sqrt{2}} \left(\ket{0} + e^{2\pi i s/2^n} \ket{1}\right)
 \]</div>
 <p>がわかります。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">j</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">s</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>が正解となります。</p>
 </div>
 </div>
 <div class="section" id="id13">
-<h2><a class="toc-backref" href="#id25">[課題]ダブルスリット実験のシミュレーション</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<h3><a class="toc-backref" href="#id25">問題7: 量子フーリエ変換</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p><strong>問題</strong></p>
+<p><span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタの状態<span class="math notranslate nohighlight">\(\ket{j} \, (j \in \{0,1,\dots,2^n-1\})\)</span>を以下のように変換する回路を考え、<span class="math notranslate nohighlight">\(n=6, j=23\)</span>のケースを実装しなさい。</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{j} \rightarrow \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
+\]</div>
+<div class="cell tag_output_scroll tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
+
+<span class="n">j</span> <span class="o">=</span> <span class="mi">23</span>
+
+<span class="c1"># jの二進数表現で値が1になっているビットに対してXを作用させる -&gt; 状態|j&gt;を作る</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">j</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="c1"># circuit.?</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">),</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています。現在知られている中で最も重要な量子プリミティブ（アルゴリズムの部品）と言っても過言ではないでしょう。</p>
+<p>古典コンピュータで離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません。QFTは量子超越が実現されている計算の好例です。</p>
+<p><strong>解答</strong></p>
+<p>前の問題同様、基本は<span class="math notranslate nohighlight">\(H\)</span>ゲート<span class="math notranslate nohighlight">\(P\)</span>ゲートを使っていきますが、今回は<span class="math notranslate nohighlight">\(\ket{j}\)</span>という「入力」があるので、制御ゲートを利用する必要があります。</p>
+<p>ビットn-1に着目しましょう。前回同様<span class="math notranslate nohighlight">\(j_m \, (m=0,\dots,n-1, \, j_m=0,1)\)</span>を使って<span class="math notranslate nohighlight">\(j\)</span>の二進数表現を<span class="math notranslate nohighlight">\(j=\sum_{m=0}^{n-1} 2^m j_m\)</span>としておきます。ビットn-1の初期状態は<span class="math notranslate nohighlight">\(\ket{j_{n-1}}_{n-1}\)</span>なので、アダマールゲートをかけると</p>
+<div class="math notranslate nohighlight">
+\[
+H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac{j_{n-1}}{2}} \ket{1}_{n-1}\right]
+\]</div>
+<p>です。さらに、<span class="math notranslate nohighlight">\(j_{0}, \dots j_{n-2}\)</span>の情報をこのビットに盛り込むためにビット0からn-2まででそれぞれ制御した<span class="math notranslate nohighlight">\(C^m_{n-1}[P]\)</span>を使います。ただし、かける位相は制御ビットごとに異なります。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; C^{n-2}_{n-1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi i}{2^n}\right)\right] \cdots C^{0}_{n-1}\left[P\left(\frac{2 \pi i}{2^n}\right)\right] (H\ket{j_{n-1}}_{n-1}) \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0 \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0
+\end{align}
+\end{split}\]</div>
+<p>次に、ビットn-2にも同様の操作をします。ただし、制御はビットn-3以下からのみです。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; C^{n-3}_{n-2}\left[P\left(\frac{2^{n-2} \cdot 2 \pi i}{2^n}\right)\right] \cdots C^{0}_{n-2}\left[P\left(\frac{2 \cdot 2 \pi i}{2^n}\right)\right] (H\ket{j_{n-2}}_{n-2}) \cdots \ket{j_0}_0 \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-2} + \exp \left(2 \pi i \frac{2 \sum_{m=0}^{n-2} 2^{m} j_m}{2^n}\right) \ket{1}_{n-2}\right] \ket{j_{n-3}}_{n-3} \cdots \ket{j_0}_0
+\end{align}
+\end{split}\]</div>
+<p>これをビット0まで繰り返します。制御は常に位数の小さいビットからです。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; C^{n-4}_{n-3}\left[P\left(\frac{2^{n-2} \cdot 2 \pi i}{2^n}\right)\right] \cdots C^{0}_{n-3}\left[P\left(\frac{2^2 \cdot 2 \pi i}{2^n}\right)\right] (H\ket{j_{n-3}}_{n-3}) \cdots \ket{j_0}_0 \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-3} + \exp \left(2 \pi i \frac{2^2 \sum_{m=0}^{n-3} 2^{m} j_m}{2^n}\right) \ket{1}_{n-3}\right] \ket{j_{n-4}}_{n-4} \cdots \ket{j_0}_0
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+\dots
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; C^{0}_{1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi i}{2^n}\right)\right] (H\ket{j_{1}}_{1}) \ket{j_0}_0 \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{1} + \exp \left(2 \pi i \frac{2^{n-2} \sum_{m=0}^{1} 2^{m} j_m}{2^n}\right) \ket{1}_{1}\right] \ket{j_0}_0
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; H\ket{j_0}_0 \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_{0}\right].
+\end{align}
+\end{split}\]</div>
+<p>ここまでの全ての操作を順に適用すると、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+(H_0) (C^{0}_{1}[P]H_1) \cdots (C^{n-2}_{n-1}[P] \cdots C^{0}_{n-1}[P]H_{n-1}) \, \ket{j_{n-1}}_{n-1} \ket{j_{n-2}}_{n-2} \cdots \ket{j_{0}}_0 \\
+= \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
+\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{tk}{\tilde{k}}\)</span></p>
+<p>例によって全ての量子ビットに<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>が現れるので、右辺は振幅<span class="math notranslate nohighlight">\(\{c_k\}\)</span>を用いて<span class="math notranslate nohighlight">\(\sum_{k=0}^{2^n-1} c_k \ket{k}\)</span>の形で表せます。後の利便性のために<span class="math notranslate nohighlight">\(k\)</span>の代わりに整数<span class="math notranslate nohighlight">\(\tk\)</span>とその二進数表現<span class="math notranslate nohighlight">\(\tk_{l}\)</span>を使って、</p>
+<div class="math notranslate nohighlight">
+\[
+c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
+\]</div>
+<p>二重和が厄介な形をしていますが、<span class="math notranslate nohighlight">\(j_m, \tk_l \in {0, 1}\)</span>なので、<span class="math notranslate nohighlight">\(n-1-l+m &gt;= n\)</span>のとき和の中身が<span class="math notranslate nohighlight">\(2^n\)</span>の倍数となり、<span class="math notranslate nohighlight">\(\exp (2 \pi i / 2^n \cdot a 2^n) = 1 \, \forall a \in \mathbb{N}\)</span>であることを用いると、<span class="math notranslate nohighlight">\(m\)</span>についての和を<span class="math notranslate nohighlight">\(n-1\)</span>までに拡張できます。さらに<span class="math notranslate nohighlight">\(k_l = \tk_{n-1 - l}\)</span>と定義すると、</p>
+<div class="math notranslate nohighlight">
+\[
+c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-1} 2^l k_l \right).
+\]</div>
+<p>つまり、ここまでの操作で得られる状態は</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_0}_{n-1} \cdots \ket{k_{n-1}}_0
+\]</div>
+<p>であり、求める状態に対してビット順序が逆転したものになっていることがわかります。したがって、最後にSWAPを使ってビット順序を逆転させれば量子フーリエ変換が完成します。</p>
+<p>正解は</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">itarg</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">itarg</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ictrl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="n">ictrl</span> <span class="o">-</span> <span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">num_qubits</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">itarg</span><span class="p">)</span>
+        
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>です。</p>
 <dl class="footnote brackets">
 <dt class="label" id="mcz"><span class="brackets"><a class="fn-backref" href="#id11">1</a></span></dt>
 <dd><p>（多重）制御<span class="math notranslate nohighlight">\(Z\)</span>ゲートはどのビットを制御と呼んでも標的と呼んでも同じ作用をするので、<span class="math notranslate nohighlight">\(C^{123}_0[Z]\)</span>でもなんでも構いません。</p>
 </dd>
 </dl>
+</div>
 </div>
 </div>
 
@@ -1004,7 +1139,7 @@ e^{2\pi i jk/2^n} \ket{k} = e^{2\pi i jk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="chsh_inequality.html" title="previous page">CHSH不等式の破れを確認する</a>
-    <a class='right-next' id="next-link" href="qft.html" title="next page">量子フーリエ変換</a>
+    <a class='right-next' id="next-link" href="double_slit.html" title="next page">[課題]ダブルスリット実験のシミュレーション</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

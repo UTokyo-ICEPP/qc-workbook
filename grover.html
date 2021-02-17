@@ -111,6 +111,11 @@
    単純な量子回路をゼロから書く
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_slit.html">
+   [課題]ダブルスリット実験のシミュレーション
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -118,11 +123,6 @@
  </span>
 </p>
 <ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="qft.html">
-   量子フーリエ変換
-  </a>
- </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    1兆個の足し算を同時に行う
@@ -187,10 +187,15 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：より詳しく知りたい人のために
+  補足：予備知識・実習環境
  </span>
 </p>
 <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習に必要なもの
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="quantum_basics.html">
    量子力学の基礎
@@ -523,6 +528,7 @@ U_0:\begin{aligned}
 <h3><a class="toc-backref" href="#id7">量子回路の構成 <a id='grover_circuit'></a></a><a class="headerlink" href="#a-id-grover-circuit-a" title="Permalink to this headline">¶</a></h3>
 <p>グローバーアルゴリズムを実装する量子回路の構造は、下図のようになっています。<span class="math notranslate nohighlight">\(|0\rangle\)</span>に初期化された状態から出発し、Hadamard演算を適用して重ね合わせ状態を作ります。その後、
 <span class="math notranslate nohighlight">\(G\)</span>と書かれている演算を繰り返し適用します。</p>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover.png"><img alt="grover" class="bg-primary mb-1 align-center" src="_images/grover.png" style="width: 600px;" /></a>
 <p><span class="math notranslate nohighlight">\(G\)</span>は「グローバーの反復」とも呼ばれるユニタリー演算で、以下のような4つのステップから構成されています。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_iter.png"><img alt="grover_iter" class="bg-primary mb-1 align-center" src="_images/grover_iter.png" style="width: 600px;" /></a>
 <p>回路の最初にあるHadamard演算と合わせて、グローバーの反復を1回実行するまでのステップ</p>
@@ -697,7 +703,7 @@ Diffuserは（テンソル積 <span class="math notranslate nohighlight">\(\otim
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f9ef591adc0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f760fa31d60&gt;
 </pre></div>
 </div>
 </div>

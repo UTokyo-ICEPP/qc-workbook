@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>量子ダイナミクスシミュレーション &#8212; 量子コンピューティング・ワークブック</title>
+    <title>実習に必要なもの &#8212; 量子コンピューティング・ワークブック</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -55,8 +55,8 @@
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ショアの素因数分解アルゴリズムを学習する" href="shor.html" />
-    <link rel="prev" title="1兆個の足し算を同時に行う" href="extreme_simd.html" />
+    <link rel="next" title="量子力学の基礎" href="quantum_basics.html" />
+    <link rel="prev" title="モンテカルロ・サンプラーとしての利用" href="mc_sampler.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -120,14 +120,14 @@
   超並列計算機としての量子コンピュータ
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    1兆個の足し算を同時に行う
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
    量子ダイナミクスシミュレーション
   </a>
  </li>
@@ -188,9 +188,9 @@
   補足：予備知識・実習環境
  </span>
 </p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    実習に必要なもの
   </a>
  </li>
@@ -239,7 +239,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/dynamics_simulation.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/prerequisites.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
@@ -259,7 +259,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         
-        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/dynamics_simulation.ipynb"><button
+        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/prerequisites.ipynb"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -279,7 +279,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/dynamics_simulation.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/prerequisites.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -299,6 +299,49 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#python">
+   予備知識：Pythonと実習の実行環境
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     基礎
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     実行環境
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ibm-quantum-experience">
+   IBM Quantum Experience
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ibmidibm-quantum-experience">
+     IBMidを取得し、IBM Quantum Experienceにログインする
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qiskit">
+     Qiskitにトークンを登録する
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -307,7 +350,73 @@
               <div>
                 
   <div class="section" id="id1">
-<h1>量子ダイナミクスシミュレーション<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>実習に必要なもの<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="id2">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#python" id="id5">予備知識：Pythonと実習の実行環境</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id3" id="id6">基礎</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id7">実行環境</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ibm-quantum-experience" id="id8">IBM Quantum Experience</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ibmidibm-quantum-experience" id="id9">IBMidを取得し、IBM Quantum Experienceにログインする</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id10">Qiskitにトークンを登録する</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="python">
+<h2><a class="toc-backref" href="#id5">予備知識：Pythonと実習の実行環境</a><a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3><a class="toc-backref" href="#id6">基礎</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id7">実行環境</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>実習は全てこのウェブサイト上で行えるようになっていますが、必要であれば各ページ右上にあるダウンロードボタンからそのページの元になったJupyter Notebookを取得できます。Githubのアイコンをクリックしてワークブックのレポジトリを参照することもできます。</p>
+<p>ダウンロードしたノートブックをローカルに実行するためには、Pythonバージョン3.8以上に、<code class="docutils literal notranslate"><span class="pre">pip</span></code>を使って以下のパッケージをインストールする必要があります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">qiskit</span> <span class="n">matplotlib</span> <span class="n">pylatexenc</span> <span class="n">tabulate</span>
+</pre></div>
+</div>
+<p>最初のパッケージQiskitがIBMの提供する量子コンピューティング用のライブラリで、実習は全てこれを利用します。</p>
+</div>
+</div>
+<div class="section" id="ibm-quantum-experience">
+<h2><a class="toc-backref" href="#id8">IBM Quantum Experience</a><a class="headerlink" href="#ibm-quantum-experience" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ibmidibm-quantum-experience">
+<h3><a class="toc-backref" href="#id9">IBMidを取得し、IBM Quantum Experienceにログインする</a><a class="headerlink" href="#ibmidibm-quantum-experience" title="Permalink to this headline">¶</a></h3>
+<p>IBM Q System Oneを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>ウェブサイトでIDを取得し、サービスにログインしてください。</p>
+<p>ログインしたらホーム画面の右上のアカウントアイコンをクリックし、My Accountを選択します。</p>
+<a class="reference internal image-reference" href="_images/ibmq_home.jpg" id="ibm-quantum-experiene-home"><img alt="_images/ibmq_home.jpg" id="ibm-quantum-experiene-home" src="_images/ibmq_home.jpg" style="height: 300px;" /></a>
+<p>My Account画面からトークンをコピーできます。</p>
+<a class="reference internal image-reference" href="_images/ibmq_token.jpg" id="my-account"><img alt="_images/ibmq_token.jpg" id="my-account" src="_images/ibmq_token.jpg" style="height: 300px;" /></a>
+</div>
+<div class="section" id="qiskit">
+<span id="qiskit-token"></span><h3><a class="toc-backref" href="#id10">Qiskitにトークンを登録する</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h3>
+<p>アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。</p>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
+
+<span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上のように<code class="docutils literal notranslate"><span class="pre">enable_account</span></code>を利用する場合は、Pythonプログラムを実行するたびに（Jupyter notebookのカーネルを再起動するたびに）認証を行います。</p>
+<p>ローカルディスクに書き込める環境にあれば、</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">save_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>とすることでトークンが保存され、以降はPythonプログラムを実行するたびに行う手続きが</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>に変わります。</p>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
@@ -338,8 +447,8 @@
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="extreme_simd.html" title="previous page">1兆個の足し算を同時に行う</a>
-    <a class='right-next' id="next-link" href="shor.html" title="next page">ショアの素因数分解アルゴリズムを学習する</a>
+    <a class='left-prev' id="prev-link" href="mc_sampler.html" title="previous page">モンテカルロ・サンプラーとしての利用</a>
+    <a class='right-next' id="next-link" href="quantum_basics.html" title="next page">量子力学の基礎</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

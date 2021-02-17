@@ -111,6 +111,11 @@
    単純な量子回路をゼロから書く
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_slit.html">
+   [課題]ダブルスリット実験のシミュレーション
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -118,11 +123,6 @@
  </span>
 </p>
 <ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="qft.html">
-   量子フーリエ変換
-  </a>
- </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    1兆個の足し算を同時に行う
@@ -187,10 +187,15 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：より詳しく知りたい人のために
+  補足：予備知識・実習環境
  </span>
 </p>
 <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習に必要なもの
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="quantum_basics.html">
    量子力学の基礎
@@ -356,29 +361,12 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ibmq">
-   IBMQを使う
+  <a class="reference internal nav-link" href="#id13">
+   回路を実機で実行する
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibmidibm-quantum-experience">
-     IBMidを取得し、IBM Quantum Experienceにログインする
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
-     Qiskitにトークンを登録する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
-     回路をIBMQに送り、実行させる
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id15">
+  <a class="reference internal nav-link" href="#id14">
    量子測定結果の解析
   </a>
  </li>
@@ -399,45 +387,39 @@
 <div class="contents local topic" id="id1">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id2" id="id16">本当に量子コンピュータなのか？</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id17">CHSH不等式とは</a></p></li>
-<li><p><a class="reference internal" href="#qiskit" id="id18">Qiskitの基本構造</a></p>
+<li><p><a class="reference internal" href="#id2" id="id15">本当に量子コンピュータなのか？</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id16">CHSH不等式とは</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id17">Qiskitの基本構造</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id4" id="id19">量子ビット</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id20">ゲート、回路、測定</a></p></li>
-<li><p><a class="reference internal" href="#id8" id="id21">よく使うゲート</a></p>
+<li><p><a class="reference internal" href="#id4" id="id18">量子ビット</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id19">ゲート、回路、測定</a></p></li>
+<li><p><a class="reference internal" href="#id8" id="id20">よく使うゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id9" id="id22">1量子ビットの操作</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id23">2量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id21">1量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id22">2量子ビットの操作</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id11" id="id24">回路図の書き方と読み方</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id23">回路図の書き方と読み方</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id12" id="id25">CHSH不等式を計算する回路を書く</a></p></li>
-<li><p><a class="reference internal" href="#ibmq" id="id26">IBMQを使う</a></p>
-<ul>
-<li><p><a class="reference internal" href="#ibmidibm-quantum-experience" id="id27">IBMidを取得し、IBM Quantum Experienceにログインする</a></p></li>
-<li><p><a class="reference internal" href="#id13" id="id28">Qiskitにトークンを登録する</a></p></li>
-<li><p><a class="reference internal" href="#id14" id="id29">回路をIBMQに送り、実行させる</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#id15" id="id30">量子測定結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id24">CHSH不等式を計算する回路を書く</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id25">回路を実機で実行する</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id26">量子測定結果の解析</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id16">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>このワークブックの主旨が量子コンピュータ（QC）を使おう、ということですが、QCなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソースとして使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQCなのでしょうか。どうしたらそれが調べられるでしょうか。</p>
 <p>QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。</p>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id17">CHSH不等式とは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">CHSH不等式とは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>CHSH不等式やその根本であるBell不等式の意義については、<a class="reference internal" href="quantum_basics.html"><span class="doc">量子力学の基礎</span></a>を参照してください。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用していると言えることになります。</p>
 <p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザ一つしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>を利用します。</p>
 </div>
 <div class="section" id="qiskit">
-<h2><a class="toc-backref" href="#id18">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
 <p>IBM Q System OneのQCで量子計算を実行するには、IBMの提供する<a class="reference external" href="https://qiskit.org/">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
 <ol class="simple">
 <li><p>空っぽの量子回路を定義する。</p></li>
@@ -452,7 +434,7 @@
 </ol>
 <p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>を参照してください。</p>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id19">量子ビット</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">量子ビット</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。量子ビットや量子レジスタ（量子ビットを並べたもの）は量子コンピュータ中で常に一つの「状態」にあります。</p>
 <p>量子レジスタの状態を物理学の習わしに従ってしばしば「ケット」という<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>のような記号で表しますが、これ自体はただの記号なので特に意味はありません。別に「枠」なしで<span class="math notranslate nohighlight">\(\psi\)</span>と書いても、絵文字を使って🔱と書いても、何でも構いません。</p>
 <p>重要なのは各量子ビットに対して2つの<strong>基底状態</strong>が定義できることで、量子計算の習わしではそれらを<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>で表し、「計算基底」とも呼びます<a class="footnote-reference brackets" href="#basis" id="id5">1</a>。そして、量子ビットの任意の状態は、2つの複素数<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を使って</p>
@@ -506,7 +488,7 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>のように量子ビット数（この場合4）と名前（<code class="docutils literal notranslate"><span class="pre">'myregister'</span></code>）を指定して初期化します。初期状態では、量子ビットはすべて<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態にあります。レジスタオブジェクトはこのままではあまり使い道がなく、基本的には次に紹介する量子回路の一部として利用します。</p>
 </div>
 <div class="section" id="id7">
-<h3><a class="toc-backref" href="#id20">ゲート、回路、測定</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">ゲート、回路、測定</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>量子計算とは、端的に言えば、量子レジスタに特定の状態を生成し、その振幅を利用することと言えます。</p>
 <p>とは言っても、いきなり「えいや」と好きな量子状態を作れるわけではなく、パターンの決まった単純操作（<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える、ブロッホ球表現での位相角度<span class="math notranslate nohighlight">\(\phi\)</span>を増減させる、など）を順番に組み合わせて複雑な状態を作っていきます。この単純操作のオペレーションのことを一般に量子<strong>ゲート</strong>といい、ゲートの種類や順番を指定したプログラムに相当するものを量子<strong>回路</strong>と呼びます。</p>
 <p>Qiskitでは、量子回路を<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトで表します。</p>
@@ -528,10 +510,10 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">ショアの素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
 </div>
 <div class="section" id="id8">
-<h3><a class="toc-backref" href="#id21">よく使うゲート</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">よく使うゲート</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明できます。</p>
 <div class="section" id="id9">
-<h4><a class="toc-backref" href="#id22">1量子ビットの操作</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id21">1量子ビットの操作</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
 <p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。（表中コードの<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>は量子ビットの番号）</p>
 <table class="table">
 <colgroup>
@@ -625,16 +607,16 @@ X R_y\left(\frac{\pi}{2}\right) H \ket{0} &amp; = X R_y\left(\frac{\pi}{2}\right
 <p>なので、結局<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態に戻る操作でした。</p>
 </div>
 <div class="section" id="id10">
-<h4><a class="toc-backref" href="#id23">2量子ビットの操作</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id22">2量子ビットの操作</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
 <p>2量子ビットの操作は、量子ビットの超電導素子での実装の都合上、全て「制御ゲート」（controlled gates）という方式で行われます。この方式では、2つのビットのうち片方を制御（control）、もう片方を標的（target）として、制御ビットが1の時だけ標的ビットに何らかの操作がかかります。</p>
-<p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。2ビットレジスタの第2ビットを制御、第1ビットを標的とすると（reminder: 並べて書くときは左が第2で右が第1です）</p>
+<p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。ケットの添字でビットの番号を表して（reminder: 並べて書くときは左が第2で右が第1です）</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-C^1_0[U](\ket{0}\ket{0}) &amp; = \ket{0}\ket{0} \\
-C^1_0[U](\ket{0}\ket{1}) &amp; = \ket{0}\ket{1} \\
-C^1_0[U](\ket{1}\ket{0}) &amp; = \ket{1}U\ket{0} \\
-C^1_0[U](\ket{1}\ket{1}) &amp; = \ket{1}U\ket{1}
+C^1_0[U](\ket{0}_1\ket{0}_0) &amp; = \ket{0}_1\ket{0}_0 \\
+C^1_0[U](\ket{0}_1\ket{1}_0) &amp; = \ket{0}_1\ket{1}_0 \\
+C^1_0[U](\ket{1}_1\ket{0}_0) &amp; = \ket{1}_1U\ket{0}_0 \\
+C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 \end{align}
 \end{split}\]</div>
 <p>です。</p>
@@ -700,10 +682,10 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; C^1_0[R_y(\theta_3 - \theta_2)]R_{y0}(\theta_1)R_{y1}(\theta_2)\ket{0}\ket{0} \\
-= &amp; C^1_0[R_y(\theta_3 - \theta_2)]\left(\sqrt{\frac{3}{10}} \ket{0} + \sqrt{\frac{7}{10}} \ket{1}\right) R_y(\theta_2)\ket{0}\\
-= &amp; \sqrt{\frac{3}{10}} \ket{0} R_y(\theta_2)\ket{0} + \sqrt{\frac{7}{10}} \ket{1} R_y(\theta_3)\ket{0} \\
-= &amp; \sqrt{\frac{3}{10}} \ket{0} \left(\sqrt{\frac{1}{3}} \ket{0} + \sqrt{\frac{2}{3}} \ket{1}\right) + \sqrt{\frac{7}{10}} \ket{1} \left(\sqrt{\frac{3}{7}} \ket{0} + \sqrt{\frac{4}{7}} \ket{1}\right) \\
+&amp; C^1_0[R_y(\theta_3 - \theta_2)]R_{y0}(\theta_1)R_{y1}(\theta_2)\ket{0}_1\ket{0}_0 \\
+= &amp; C^1_0[R_y(\theta_3 - \theta_2)]\left(\sqrt{\frac{3}{10}} \ket{0}_1 + \sqrt{\frac{7}{10}} \ket{1}_1\right) R_y(\theta_2)\ket{0}_0\\
+= &amp; \sqrt{\frac{3}{10}} \ket{0}_1 R_y(\theta_2)\ket{0}_0 + \sqrt{\frac{7}{10}} \ket{1}_1 R_y(\theta_3)\ket{0}_0 \\
+= &amp; \sqrt{\frac{3}{10}} \ket{0}_1 \left(\sqrt{\frac{1}{3}} \ket{0}_0 + \sqrt{\frac{2}{3}} \ket{1}_0\right) + \sqrt{\frac{7}{10}} \ket{1}_1 \left(\sqrt{\frac{3}{7}} \ket{0}_0 + \sqrt{\frac{4}{7}} \ket{1}_0\right) \\
 = &amp; \sqrt{\frac{1}{10}} \ket{00} + \sqrt{\frac{2}{10}} \ket{01} + \sqrt{\frac{3}{10}} \ket{10} + \sqrt{\frac{4}{10}} \ket{11} 
 \end{align}
 \end{split}\]</div>
@@ -712,7 +694,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 </div>
 <div class="section" id="id11">
-<h3><a class="toc-backref" href="#id24">回路図の書き方と読み方</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">回路図の書き方と読み方</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>量子回路を可視化する方法として、「回路図」の標準的な描き方が決まっています。Qiskitでは<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>というメソッドを使って自動描画できます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -744,7 +726,7 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="section" id="id12">
-<h2><a class="toc-backref" href="#id25">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「Bell状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。Bell状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -777,7 +759,7 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f1924b2d1c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f9e7265f040&gt;
 </pre></div>
 </div>
 </div>
@@ -836,8 +818,8 @@ meas: 2/════════════════════════
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-R_{y1}\left(\frac{\pi}{4}\right) C^0_1[X] H_0 \ket{0}\ket{0} = &amp; R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}\ket{0} + \ket{1}\ket{1}) \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}(c\ket{0} + s\ket{1}) + \ket{1}(-s\ket{0} + c\ket{1})\right]\\
+R_{y1}\left(\frac{\pi}{4}\right) C^0_1[X] H_0 \ket{0}_1\ket{0}_0 = &amp; R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
+= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_1(c\ket{0}_0 + s\ket{1}_0) + \ket{1}_1(-s\ket{0}_0 + c\ket{1}_0)\right]\\
 = &amp; \frac{1}{\sqrt{2}} (c\ket{00} + s\ket{01} - s\ket{10} + c\ket{11}).
 \end{align}
 \end{split}\]</div>
@@ -851,7 +833,7 @@ P^0_{01} = P^0_{10} = \frac{s^2}{2}
 <p>同様に、回路1の状態は</p>
 <div class="math notranslate nohighlight">
 \[
-R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}\ket{0} + \ket{1}\ket{1}) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
+R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
 \]</div>
 <p>で確率<span class="math notranslate nohighlight">\(P^1_{l}\)</span>は</p>
 <div class="math notranslate nohighlight">
@@ -863,8 +845,8 @@ P^1_{01} = P^1_{10} = \frac{c^2}{2}
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}\ket{0} + \ket{1}\ket{1}) \\
-= &amp; \frac{1}{\sqrt{2}} \left[ \frac{1}{\sqrt{2}} (\ket{0} + \ket{1}) (c\ket{0} + s\ket{1}) + \frac{1}{\sqrt{2}} (-\ket{0} + \ket{1}) (-s\ket{0} + c\ket{1}) \right] \\
+&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
+= &amp; \frac{1}{\sqrt{2}} \left[ \frac{1}{\sqrt{2}} (\ket{0}_1 + \ket{1}_1) (c\ket{0}_0 + s\ket{1}_0) + \frac{1}{\sqrt{2}} (-\ket{0}_1 + \ket{1}_1) (-s\ket{0}_0 + c\ket{1}_0) \right] \\
 = &amp; \frac{1}{2} \left[ (s+c)\ket{00} + (s-c)\ket{01} - (s-c)\ket{10} + (s+c)\ket{11} \right]
 \end{align}
 \end{split}\]</div>
@@ -878,7 +860,7 @@ P^2_{01} = P^2_{10} = \frac{(s - c)^2}{4}
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}\ket{0} + \ket{1}\ket{1}) \\
+&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
 = &amp; \frac{1}{2} \left[ (s+c)\ket{00} - (s-c)\ket{01} + (s-c)\ket{10} + (s+c)\ket{11} \right]
 \end{align}
 \end{split}\]</div>
@@ -908,18 +890,9 @@ C^3 = 0
 <p>となり、<span class="math notranslate nohighlight">\(S = \sqrt{2} &lt; 2\)</span>です。これがCHSH不等式です。</p>
 <p>それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から<span class="math notranslate nohighlight">\(S\)</span>の値を計算して確認してみましょう。</p>
 </div>
-<div class="section" id="ibmq">
-<h2><a class="toc-backref" href="#id26">IBMQを使う</a><a class="headerlink" href="#ibmq" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="ibmidibm-quantum-experience">
-<h3><a class="toc-backref" href="#id27">IBMidを取得し、IBM Quantum Experienceにログインする</a><a class="headerlink" href="#ibmidibm-quantum-experience" title="Permalink to this headline">¶</a></h3>
-<p>IBM Q System Oneを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>ウェブサイトでIDを取得し、サービスにログインしてください。</p>
-<p>ログインしたらホーム画面の右上のアカウントアイコンをクリックし、My Accountを選択します。</p>
-<a class="reference internal image-reference" href="_images/ibmq_home.jpg" id="ibm-quantum-experiene-home"><img alt="_images/ibmq_home.jpg" id="ibm-quantum-experiene-home" src="_images/ibmq_home.jpg" style="height: 300px;" /></a>
-<p>My Account画面からトークンをコピーできます。</p>
-<a class="reference internal image-reference" href="_images/ibmq_token.jpg" id="my-account"><img alt="_images/ibmq_token.jpg" id="my-account" src="_images/ibmq_token.jpg" style="height: 300px;" /></a>
-</div>
 <div class="section" id="id13">
-<h3><a class="toc-backref" href="#id28">Qiskitにトークンを登録する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<h2><a class="toc-backref" href="#id25">回路を実機で実行する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>まずは<a class="reference internal" href="prerequisites.html#qiskit-token"><span class="std std-ref">トークン</span></a>を使ってIBMQに接続します。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
@@ -929,21 +902,7 @@ C^3 = 0
 </div>
 </div>
 </div>
-<p>上のように<code class="docutils literal notranslate"><span class="pre">enable_account</span></code>を利用する場合は、Pythonプログラムを実行するたびに（Jupyter notebookのカーネルを再起動するたびに）認証を行います。</p>
-<p>ローカルディスクに書き込める環境にあれば、</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">save_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>とすることでトークンが保存され、以降はPythonプログラムを実行するたびに行う手続きが</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>に変わります。</p>
-</div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id29">回路をIBMQに送り、実行させる</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
-<p>認証が済んだら、上の回路0から3をそれぞれIBMQの量子コンピュータに送り、実行結果を返してもらいましょう。</p>
-<p>まずは利用する量子コンピュータを選びます。</p>
+<p>認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
@@ -976,10 +935,18 @@ C^3 = 0
 <p>これで回路がジョブとしてバックエンドに送られ、キューに入りました。ジョブの実行結果は<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数の返り値であるジョブオブジェクトから参照します。</p>
 <p>IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。</p>
 <p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>のホーム画面の右側で確認できます。また、自分の投じたジョブのステータスは左のツールバーのうちのJobsボタンから確認できます。</p>
+<p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら以下のようにします。</p>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="n">job_monitor</span><span class="p">(</span><span class="n">jobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 最後に送ったジョブのステータスを2秒ごとにチェックする</span>
+</pre></div>
 </div>
 </div>
-<div class="section" id="id15">
-<h2><a class="toc-backref" href="#id30">量子測定結果の解析</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id14">
+<h2><a class="toc-backref" href="#id26">量子測定結果の解析</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>ジョブオブジェクトの<code class="docutils literal notranslate"><span class="pre">result()</span></code>というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">

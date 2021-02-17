@@ -111,6 +111,11 @@
    単純な量子回路をゼロから書く
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_slit.html">
+   [課題]ダブルスリット実験のシミュレーション
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -118,11 +123,6 @@
  </span>
 </p>
 <ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="qft.html">
-   量子フーリエ変換
-  </a>
- </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    1兆個の足し算を同時に行う
@@ -187,10 +187,15 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：より詳しく知りたい人のために
+  補足：予備知識・実習環境
  </span>
 </p>
 <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習に必要なもの
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="quantum_basics.html">
    量子力学の基礎
@@ -506,7 +511,7 @@ O(a,b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_
 \]</div>
 <p><span class="math notranslate nohighlight">\(T\)</span>は{0,1}のバイナリー値を持ちますが、シンプルな計算で{+1,-1}を持つ量子ビットに変換することができます。{+1,-1}はパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の固有値でもあるため、パウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子を使ってハミルトニアンを構成することができれば、そのまま量子回路に実装することができます。</p>
 <p>以下のスペースに、どのような変換が可能か等を含め、VQEでTrackingを実行するために必要な量子演算を定義してください。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
 <span class="kn">from</span> <span class="nn">qiskit.aqua.operators</span> <span class="kn">import</span> <span class="n">WeightedPauliOperator</span>
@@ -517,20 +522,12 @@ O(a,b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">  File</span><span class="nn"> &quot;&lt;ipython-input-3-4792ada6f02f&gt;&quot;</span><span class="gt">, line </span><span class="mi">4</span>
-    <span class="k">def</span> <span class="nf">get_qubitops</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
-                     <span class="o">^</span>
-<span class="ne">SyntaxError</span>: invalid syntax
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="vqe-a-id-tracking-vqe-a">
 <h3><a class="toc-backref" href="#id10">VQEによる近似解の探索<a id='tracking_vqe'></a></a><a class="headerlink" href="#vqe-a-id-tracking-vqe-a" title="Permalink to this headline">¶</a></h3>
 <p>上で定義したハミルトニアンを元に、VQEを使ってエネルギーの最小固有値（の近似解）を求めていきます。ただその前に、このハミルトニアンの行列を対角化してエネルギーの最小固有値とその固有ベクトルを厳密に計算した場合の答えを出してみましょう。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qubitOp</span> <span class="o">=</span> <span class="n">get_qubitops</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -553,7 +550,7 @@ O(a,b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_
 </div>
 <p>xのリストで1になっている量子ビット（セグメント）が、最小エネルギーに対応するものとして選ばれているのが分かります。</p>
 <p>次に、同じハミルトニアンモデルをVQEに実装して、最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- run optimization with VQE</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">10598</span>
@@ -587,7 +584,7 @@ O(a,b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_
 <h3><a class="toc-backref" href="#id11">おまけ<a id='omake'></a></a><a class="headerlink" href="#a-id-omake-a" title="Permalink to this headline">¶</a></h3>
 <p>Trackingがうまく行っても、この答えでは面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。</p>
 <p>このコードは、QUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面でプロットして、どのヒットが選ばれたかを分かりやすく可視化したものです。緑の線が実際に見つかった飛跡で、青の線を含めたものが全体の飛跡の候補です。この実習では限られた数の量子ビットしか使っていないため、大部分の飛跡は見つけられていませんが、緑の線から計算に使った3点ヒットからは正しく飛跡が見つかっていることが分かると思います。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hepqpr.qallse</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">input_path</span> <span class="o">=</span> <span class="s1">&#39;./data_files/event000001000-hits.csv&#39;</span>
