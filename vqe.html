@@ -193,7 +193,7 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
-   実習に必要なもの
+   実習の準備
   </a>
  </li>
  <li class="toctree-l1">
@@ -489,6 +489,7 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 <div class="section" id="a-id-example-a">
 <h3><a class="toc-backref" href="#id11">変分フォームを使った実例<a id='example'></a></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h3>
 <p>ではここで、単一量子ビットの変分フォームを利用してパラメータ最適化の例を実行してみましょう。例として、ランダムな確率分布のベクトル<span class="math notranslate nohighlight">\(\vec{x}\)</span>を入力として与えた時、出力の確率分布が<span class="math notranslate nohighlight">\(\vec{x}\)</span>に近くなるように単一量子ビットの変分フォームを決定するという問題を考えます（2つの確率分布の近さはL1距離によって定義します）。</p>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/vqe_u3.png"><img alt="vqe_u3" class="bg-primary mb-1 align-center" src="_images/vqe_u3.png" style="width: 400px;" /></a>
 <p>最初に、Pythonでランダムな確率分布のベクトルを作成します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -565,9 +566,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution: [0.51357006 0.48642994]
-Obtained Distribution: [0.507, 0.493]
-Output Error (L1-Distance): 0.01634011873883917
-Parameters Found: [1.5550346  0.93369636 0.53044287]
+Obtained Distribution: [0.5191, 0.4809]
+Output Error (L1-Distance): 0.013859881261160834
+Parameters Found: [1.53392435 1.24516058 0.51815105]
 </pre></div>
 </div>
 </div>

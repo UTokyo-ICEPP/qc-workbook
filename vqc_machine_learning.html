@@ -193,7 +193,7 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
-   実習に必要なもの
+   実習の準備
   </a>
  </li>
  <li class="toctree-l1">
@@ -544,6 +544,7 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 <li><p>3-7のプロセスを繰り返すことで、コスト関数を最小化する<span class="math notranslate nohighlight">\(\boldsymbol{\theta}=\boldsymbol{\theta^*}\)</span>を求める。</p></li>
 <li><p><span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta^*})\)</span>が学習によって得られた<strong>予測モデル</strong>になる。</p></li>
 </ol>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/var_circuit.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/var_circuit.png" style="width: 700px;" /></a>
 <p>この順に量子機械学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -743,15 +744,15 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [1.3749427  2.28429806 5.28027358 0.89628242 7.02978454 0.10616591
- 6.15715806 3.13730847 6.75077947 3.72506708 4.55960366 0.18199125
- 1.64372149 0.68153793 1.79581357 0.68026603 1.91446718 2.51071463
- 0.33061692 4.23998811 3.47755066 1.60362213 3.22710953 0.53292806
- 4.55008638 6.82369399 2.02257319 4.19158662 0.88866894 5.4510524
- 1.83810094 1.12653475 4.69767347 0.20939222 5.20965196 0.03793426
- 4.27150505 1.43795326 4.75608322 6.06481157 1.59367953 3.5327105
- 3.75749799 3.78058166 1.40996099 6.01789757 3.79321988 6.30582335
- 4.40557873 1.8825534  5.12703137 2.47991324 5.54832305 3.700869  ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [ 1.21229424  2.37673218  5.12308532  0.84852325  6.73274898 -0.01966532
+  6.19689584  3.1423948   6.67287657  3.9498565   4.51108     0.31163935
+  1.83252597  0.75028997  1.80189266  0.70596155  2.16591705  2.57212013
+  0.4623822   4.36338685  3.58036243  1.63015039  3.25234852  0.47332923
+  4.50407751  6.83946258  1.8940881   4.18426036  0.82936523  5.24172044
+  1.80822247  1.15559603  4.65638683  0.17748706  5.24712173 -0.20475047
+  4.34574779  1.36921457  4.72884992  6.15502257  1.66304896  3.70424815
+  3.88155819  3.71196697  1.48214425  6.09247646  2.86079978  6.41580378
+  4.43651627  1.78021704  5.03841802  2.57294654  5.81589456  3.64872041]
 </pre></div>
 </div>
 <img alt="_images/vqc_machine_learning_16_1.png" src="_images/vqc_machine_learning_16_1.png" />
@@ -763,6 +764,7 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <div class="section" id="a-id-susy-a">
 <h2><a class="toc-backref" href="#id17">素粒子現象の探索への応用<a id='susy'></a></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
 <p>次の実習課題では、（<strong>標準模型</strong>と呼ばれる）素粒子現象の基本理論を超える新しい物理現象として、<strong>超対称性理論</strong>（<em>Supersymmetry</em>、略してSUSY）から予言される新粒子の探索を考えてみます。下の図はSUSY信号（左側）と標準模型でのバックグラウンド（右側）のファインマンダイアグラムを表していて、この二つの物理過程を量子機械学習で分類することを試みます。</p>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/susy_bg.png"><img alt="susy_bg" class="bg-primary mb-1 align-center" src="_images/susy_bg.png" style="width: 700px;" /></a>
 <p>(図の引用：参考文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>)</p>
 <div class="section" id="a-id-susy-data-a">
 <h3><a class="toc-backref" href="#id18">学習データの準備<a id='susy_data'></a></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>

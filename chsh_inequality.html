@@ -193,7 +193,7 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
-   実習に必要なもの
+   実習の準備
   </a>
  </li>
  <li class="toctree-l1">
@@ -665,6 +665,13 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 <span class="n">circuit</span><span class="o">.</span><span class="n">cry</span><span class="p">(</span><span class="n">theta3</span> <span class="o">-</span> <span class="n">theta2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># C[Ry]　1が制御で0が標的</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># C[Z] 0が制御で1が標的（実はC[Z]ではどちらが制御でも結果は同じ）</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This circuit has&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="s1">&#39;qubits and&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="s1">&#39;operations&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This circuit has 2 qubits and 6 operations
 </pre></div>
 </div>
 </div>
@@ -759,7 +766,7 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f9e7265f040&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7ff3e74825b0&gt;
 </pre></div>
 </div>
 </div>
