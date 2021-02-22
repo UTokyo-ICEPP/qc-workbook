@@ -764,8 +764,8 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;mod 15による制御ゲートをかける&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,7,8,11 or 13&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,4,7,8,11,13 or 14&quot;</span><span class="p">)</span>
 
     <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">power</span><span class="p">):</span>
@@ -777,10 +777,10 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
             <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">11</span><span class="p">]:</span>
             <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
                 <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
@@ -817,7 +817,7 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
         <span class="n">qc</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
-            <span class="n">qc</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">qc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
         <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
     <span class="n">qc</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;QFT^dagger&quot;</span>
     <span class="k">return</span> <span class="n">qc</span>
@@ -851,10 +851,6 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ipython-input-5-14d320fe0c24&gt;:9: DeprecationWarning: The QuantumCircuit.cu1 method is deprecated as of 0.16.0. It will be removed no earlier than 3 months after the release date. You should use the QuantumCircuit.cp method instead, which acts identically.
-  qc.cu1(-np.pi/float(2**(j-m)), m, j)
-</pre></div>
-</div>
 <div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">      ┌───┐                                                            »
  q_0: ┤ H ├───────■────────────────────────────────────────────────────»
       ├───┤       │                                                    »
