@@ -708,7 +708,6 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1</span>
-<span class="c1"># tabulate 0.8.7 needed</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -717,7 +716,6 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span>
 <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 </pre></div>
 </div>
@@ -977,23 +975,24 @@ q_11: ┤ X ├┤3            ├┤3            ├┤3            ├┤3    
     <span class="n">decimal</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 10進数に変換</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">decimal</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">)</span>
     <span class="n">measured_phases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
-    <span class="c1"># これらの値をテーブルの行に追加します：</span>
+    <span class="c1"># これらの値をテーブルの行に追加：</span>
     <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">),</span>
                  <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2"> = </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">,</span> <span class="n">phase</span><span class="p">)])</span>
-<span class="c1"># tabulateを使って、ASCIIテーブルとして行を印刷します：</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span>
-               <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Register Output (Dec)&quot;</span><span class="p">,</span> <span class="s2">&quot;Phase&quot;</span><span class="p">],</span>
-               <span class="n">colalign</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span><span class="s2">&quot;right&quot;</span><span class="p">)))</span>
+<span class="c1"># 結果を表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Register Output              Phase&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----------------------------------&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%15s</span><span class="s1"> </span><span class="si">%18s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Register Output (Dec)           Phase
------------------------  --------------
-                      0    0/256 = 0.00
-                     64   64/256 = 0.25
-                    128  128/256 = 0.50
-                    192  192/256 = 0.75
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Register Output              Phase
+----------------------------------
+              0       0/256 = 0.00
+             64      64/256 = 0.25
+            128     128/256 = 0.50
+            192     192/256 = 0.75
 </pre></div>
 </div>
 </div>
@@ -1005,20 +1004,22 @@ q_11: ┤ X ├┤3            ├┤3            ├┤3            ├┤3    
 <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">measured_phases</span><span class="p">:</span>
     <span class="n">frac</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
     <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">phase</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">frac</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">),</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">])</span>
-<span class="c1"># ASCIIテーブルを表示</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span>
-               <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Phase&quot;</span><span class="p">,</span> <span class="s2">&quot;Fraction&quot;</span><span class="p">,</span> <span class="s2">&quot;Guess for r&quot;</span><span class="p">],</span>
-               <span class="n">colalign</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">)))</span>
+
+<span class="c1"># 結果を表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;     Phase   Fraction     Guess for r&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-------------------------------------&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Phase    Fraction    Guess for r
--------  ----------  -------------
-      0         0/1              1
-   0.25         1/4              4
-    0.5         1/2              2
-   0.75         3/4              4
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Phase   Fraction     Guess for r
+-------------------------------------
+       0.0        0/1               1
+      0.25        1/4               4
+       0.5        1/2               2
+      0.75        3/4               4
 </pre></div>
 </div>
 </div>
