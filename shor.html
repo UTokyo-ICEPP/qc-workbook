@@ -726,7 +726,7 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 <p>まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。</p>
 <p><span class="math notranslate nohighlight">\(N\)</span>を正の整数として、関数<span class="math notranslate nohighlight">\(f(x)=a^x\;(\text{mod}\;N)\)</span>の振る舞いを考えます。<a class="reference external" href="#shor_algo_fig">ショアのアルゴリズム</a>に立ち返ってみると、
 ここで<span class="math notranslate nohighlight">\(a\)</span>は<span class="math notranslate nohighlight">\(N\)</span>と互いに素な<span class="math notranslate nohighlight">\(N\)</span>未満の正の整数で、位数<span class="math notranslate nohighlight">\(r\)</span>は<span class="math notranslate nohighlight">\(a^r=1\;(\text{mod}\;N)\)</span>を満たす非ゼロの最小の整数でした。
-以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものであり、x印の間の中間値を表していないことに注意してください。</p>
+以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものです。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">35</span>
@@ -757,31 +757,26 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 </div>
 <div class="section" id="a-id-imp-oracle-a">
 <h3><a class="toc-backref" href="#id16">オラクルの実装 <a id='imp_oracle'></a></a><a class="headerlink" href="#a-id-imp-oracle-a" title="Permalink to this headline">¶</a></h3>
-<p>以下では、<span class="math notranslate nohighlight">\(N=15\)</span>を素因数に分解してみます。まず上で説明したように、<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;N)\rangle\)</span>となるユニタリーを<span class="math notranslate nohighlight">\(x\)</span>回繰り返すことで、オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を実装します。<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;N)\rangle\)</span>を実装する関数U_amod15は以下のようになります。</p>
+<p>以下では、<span class="math notranslate nohighlight">\(N=15\)</span>を素因数に分解してみます。上で説明したように、<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;N)\rangle\)</span>となるユニタリーを<span class="math notranslate nohighlight">\(x\)</span>回繰り返すことで、オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を実装します。</p>
+<p>練習問題として、<span class="math notranslate nohighlight">\(U|m\rangle=|am\;(\text{mod}\;15)\rangle\)</span>を実行する関数U_amod15を以下に実装してください（U_amod15は制御ゲートですが、標的ビットのユニタリー演算に対応する部分を書いてみてください）。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;mod 15による制御ゲートをかける&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;mod 15による制御ゲート&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,4,7,8,11,13 or 14&quot;</span><span class="p">)</span>
 
     <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">power</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">11</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-                <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
+    <span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">    この部分を書く</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 以下で制御ゲートに変換</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
     <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">^</span><span class="si">%i</span><span class="s2"> mod 15&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
     <span class="n">c_U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
@@ -799,12 +794,13 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify variables</span>
 <span class="n">n_count</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># number of counting qubits</span>
+
 <span class="n">a</span> <span class="o">=</span> <span class="mi">7</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>次に、逆QFTの回路を与えます（量子フーリエ変換の詳細についてはXXを参照）。</p>
+<p>次に、逆QFTの回路を与えます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
@@ -990,9 +986,6 @@ q_11: ┤ X ├┤3            ├┤3            ├┤3            ├┤3    
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Register Output              Phase
 ----------------------------------
               0       0/256 = 0.00
-             64      64/256 = 0.25
-            128     128/256 = 0.50
-            192     192/256 = 0.75
 </pre></div>
 </div>
 </div>
@@ -1017,9 +1010,6 @@ q_11: ┤ X ├┤3            ├┤3            ├┤3            ├┤3    
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Phase   Fraction     Guess for r
 -------------------------------------
        0.0        0/1               1
-      0.25        1/4               4
-       0.5        1/2               2
-      0.75        3/4               4
 </pre></div>
 </div>
 </div>
