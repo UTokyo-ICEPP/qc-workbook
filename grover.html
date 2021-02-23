@@ -671,8 +671,8 @@ G^r|s\rangle=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\e
 </div>
 </div>
 </div>
-<p>グローバー反復を一回実行する量子回路は以下のような構成になりますが、赤枠で囲んだ部分（オラクルとDiffuserの中の2|0\rangle\langle0|-Iの部分）を実装する量子回路を書いてください。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_6bits_45.png"><img alt="grover_6bits_45" class="bg-primary mb-1 align-center" src="_images/grover_6bits_45.png" style="width: 700px;" /></a>
+<p>グローバー反復を一回実行する量子回路は以下のような構成になりますが、赤枠で囲んだ部分（オラクルとDiffuserの中の<span class="math notranslate nohighlight">\(2|0\rangle\langle0|-I\)</span>の部分）を実装する量子回路を書いてください。</p>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_6bits_45.png"><img alt="grover_6bits_45" class="bg-primary mb-1 align-center" src="_images/grover_6bits_45.png" style="width: 600px;" /></a>
 <p>一様な重ね合わせ状態<span class="math notranslate nohighlight">\(|s\rangle\)</span>を生成した後に、オラクルを実装します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -702,7 +702,7 @@ G^r|s\rangle=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\e
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fb4caaa6250&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fb94918b190&gt;
 </pre></div>
 </div>
 </div>
@@ -789,7 +789,7 @@ meas: 6/════════════════════════
 <img alt="_images/grover_24_0.png" src="_images/grover_24_0.png" />
 </div>
 </div>
-<p>この結果から、<span class="math notranslate nohighlight">\(|101101\rangle=|45\rangle\)</span>の状態が高い確率で測定できたことが分かります。</p>
+<p>正しく回路が実装できていれば、<span class="math notranslate nohighlight">\(|101101\rangle=|45\rangle\)</span>の状態が高い確率で測定できる様子を見ることができるでしょう。</p>
 <p>しかし、上での議論からも分かるように、<span class="math notranslate nohighlight">\(N=2^6\)</span>の探索では一回のグローバー反復では正しくない答えも無視できない確率で現れてきます。グローバーの反復を複数回繰り返すことで、正しい答えがより高い確率で得られることを課題として見ることにします。</p>
 </div>
 <div class="section" id="a-id-imp-qc-a">
@@ -843,6 +843,7 @@ meas: 6/════════════════════════
 <img alt="_images/grover_34_0.png" src="_images/grover_34_0.png" />
 </div>
 </div>
+<p>シミュレータに比べると結果は非常に悪いですね。。。残念ながら、今の量子コンピュータをそのまま使うとこういう結果になってしまいます。しかし、エラー緩和等のテクニックを使うことである程度改善することはできます。エラー緩和についてはこの実習では触れませんが、興味のある方は調べてみてください。</p>
 </div>
 </div>
 <div class="section" id="a-id-grover-application-a">
