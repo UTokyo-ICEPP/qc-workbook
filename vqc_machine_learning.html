@@ -509,14 +509,14 @@
 <p>機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>と<span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>からなるデータ（<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>を要素とするベクトル、<span class="math notranslate nohighlight">\(i\)</span>は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数<span class="math notranslate nohighlight">\(x_i\)</span>を引数とする関数<span class="math notranslate nohighlight">\(f\)</span>を考え、その出力<span class="math notranslate nohighlight">\(\tilde{y_i}=f(x_i)\)</span>が<span class="math notranslate nohighlight">\(\tilde{y}_i\simeq y_i\)</span>となるような関数<span class="math notranslate nohighlight">\(f\)</span>をデータから近似的に求めることに対応します。
 一般的に、この関数<span class="math notranslate nohighlight">\(f\)</span>は変数<span class="math notranslate nohighlight">\(x\)</span>以外のパラメータを持っているでしょう。なので、そのパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>をうまく調整して、<span class="math notranslate nohighlight">\(y_i\simeq\tilde{y}_i\)</span>となる関数<span class="math notranslate nohighlight">\(f=f(x,\boldsymbol{w}^*)\)</span>とパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めることが機械学習の鍵になります。</p>
 <p>関数<span class="math notranslate nohighlight">\(f\)</span>を近似する方法の一つとして、現在主流になっているのが脳のニューロン構造を模式化したニューラルネットワークです。下図に示しているのは、ニューラルネットの基本的な構造です。丸で示しているのが構成ユニット（ニューロン）で、ニューロンを繋ぐ情報の流れを矢印で表しています。ニューラルネットには様々な構造が考えられますが、基本になるのは図に示したような層構造で、前層にあるニューロンの出力が次の層にあるニューロンへの入力になります。入力データ<span class="math notranslate nohighlight">\(x\)</span>を受ける入力層と出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>を出す出力層に加え、中間に複数の”隠れ層”を持つものを総称して深層ニューラルネットワークと呼びます。</p>
-<img src="figs/neural_net.png" width=50%>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/neural_net.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/neural_net.png" style="width: 500px;" /></a>
 <p>では、もう少し数学的なモデルを見てみましょう。<span class="math notranslate nohighlight">\(l\)</span>層目にある<span class="math notranslate nohighlight">\(j\)</span>番目のユニット<span class="math notranslate nohighlight">\(u_j^l\)</span>に対して、前層（<span class="math notranslate nohighlight">\(l-1\)</span>番目）から<span class="math notranslate nohighlight">\(n\)</span>個の入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span> (<span class="math notranslate nohighlight">\(k=1,2,\cdots n\)</span>) がある場合、入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span>への重みパラメータ<span class="math notranslate nohighlight">\(w_k^l\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
 o_j^l=g\left(\sum_{k=1}^n o_k^{l-1}w_k^l\right)
 \]</div>
 <p>となる出力<span class="math notranslate nohighlight">\(o_j^l\)</span>を考えます。図で示すと</p>
-<img src="figs/neuron.png" width=35%>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/neuron.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/neuron.png" style="width: 350px;" /></a>
 <p>になります。関数<span class="math notranslate nohighlight">\(g\)</span>は活性化関数と呼ばれ、入力に対して非線形な出力を与えます。活性化関数としては、一般的にはシグモイド関数やReLU（Rectified Linear Unit）等の関数が用いられることが多いです。</p>
 <p>関数<span class="math notranslate nohighlight">\(f(x,\boldsymbol{w}^*)\)</span>を求めるために、最適なパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を決定するプロセス（学習と呼ばれる）が必要です。そのために、出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>とターゲットとなる変数<span class="math notranslate nohighlight">\(y\)</span>の差を測定する関数<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を考えます（一般に損失関数やコスト関数と呼ばれます）。</p>
 <div class="math notranslate nohighlight">
@@ -744,15 +744,15 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [ 1.29264779  2.2964985   5.21055596  0.82528438  6.63119868 -0.1315997
-  6.1598702   3.08688556  6.67221446  3.72243674  4.56981097  0.17715964
-  1.69373659  0.7389427   1.83686228  0.2231497   2.8149559   2.54098572
-  0.33114136  4.27589084  3.4983935   1.61495887  3.24620897  0.53297701
-  4.57820133  6.84008718  1.97089165  4.19332696  0.83029058  5.48679373
-  1.8118023   1.14610869  4.68490546  0.10734864  5.20165737  0.02323304
-  4.2245806   1.68852592  4.38398645  6.00661721  1.64984528  3.61565649
-  3.68234273  3.57879254  1.44769912  5.9752669   2.56100931  6.25664198
-  4.38663345  1.94185471  5.0917344   2.4368312   5.7862532   3.65208753]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [1.23606938 2.33083935 5.08320732 0.81973158 6.81279661 0.11275816
+ 6.17611694 3.06614913 6.66795327 3.67972154 4.62049253 0.32212914
+ 1.79785326 0.75647463 1.82799755 0.55461686 1.95399063 2.67759293
+ 0.36295961 4.18849698 3.52476815 1.62201677 3.25176226 0.62240256
+ 4.61288654 6.79669773 2.00099286 4.18620157 0.95617754 5.41576662
+ 1.70519018 1.03066548 5.05870795 0.41485579 5.06534069 0.13487027
+ 4.21499344 1.84454933 4.74238388 6.10105299 1.69796766 3.81359076
+ 3.81234073 3.65402089 1.50214891 6.1753955  3.0510507  5.41955054
+ 4.48390513 3.04592717 5.09174965 2.36247568 5.57725297 3.66020858]
 </pre></div>
 </div>
 <img alt="_images/vqc_machine_learning_16_1.png" src="_images/vqc_machine_learning_16_1.png" />
@@ -779,7 +779,7 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <span class="kn">from</span> <span class="nn">qiskit.aqua.utils</span> <span class="kn">import</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">,</span> <span class="n">map_label_to_class_name</span>
 
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data_files/SUSY_1K.csv&quot;</span><span class="p">,</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
                  <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;MT2&#39;</span><span class="p">,</span><span class="s1">&#39;S_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">,</span><span class="s1">&#39;dPhi_r_b&#39;</span><span class="p">,</span><span class="s1">&#39;cos_theta_r1&#39;</span><span class="p">))</span>
@@ -817,10 +817,10 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="n">dab88436b74f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="n">bee1f1ee21d8</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">6</span> 
 <span class="g g-Whitespace">      </span><span class="mi">7</span> 
-<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data_files/SUSY_1K.csv&quot;</span><span class="p">,</span>
+<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
 <span class="g g-Whitespace">      </span><span class="mi">9</span>                  <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
 <span class="g g-Whitespace">     </span><span class="mi">10</span>                         <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
 
@@ -873,7 +873,7 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <span class="g g-Whitespace">    </span><span class="mi">643</span><span class="s2">                 handle,</span>
 <span class="g g-Whitespace">    </span><span class="mi">644</span><span class="s2">                 ioargs.mode,</span>
 
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;data_files/SUSY_1K.csv&#39;
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;data/SUSY_1K.csv&#39;
 </pre></div>
 </div>
 </div>
