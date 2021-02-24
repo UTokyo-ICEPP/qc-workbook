@@ -947,7 +947,7 @@ C^3 = 0
 <p>実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して “<em>Noisy</em> intermediate-scale quantum (NISQ) device” と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。</p>
 <p>逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>で紹介する変分量子回路を用いた最適化などがその候補として注目されています。</p>
 <p>さて、それでは最後にCHSH不等式の破れを確認してみましょう。<span class="math notranslate nohighlight">\(C^{0}, C^{1}, C^{2}, C^{3}\)</span>を計算して<span class="math notranslate nohighlight">\(S\)</span>を求めます。</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
@@ -959,13 +959,6 @@ C^3 = 0
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;S =&#39;</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">S</span> <span class="o">&gt;</span> <span class="mf">2.</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Yes, we are using a quantum computer!&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C: [0.613525390625, -0.615234375, 0.59814453125, 0.635498046875]
-S = 2.46240234375
-Yes, we are using a quantum computer!
 </pre></div>
 </div>
 </div>
