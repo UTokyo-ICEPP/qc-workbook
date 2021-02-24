@@ -40,5 +40,12 @@ build.callback(path_source='{}/{}'.format(options.source, options.lang),
                individualpages=False)
 
 if not options.keep_reports:
-    shutil.rmtree('{}/_build/html/reports'.format(options.target))
-    os.remove('{}/_build/html/.buildinfo'.format(options.target))
+    try:
+        shutil.rmtree('{}/_build/html/reports'.format(options.target))
+    except:
+        pass
+
+    try:
+        os.remove('{}/_build/html/.buildinfo'.format(options.target))
+    except:
+        pass
