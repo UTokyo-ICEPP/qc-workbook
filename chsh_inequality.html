@@ -735,6 +735,8 @@ meas: 2/════════════════════════
 <div class="section" id="id12">
 <h2><a class="toc-backref" href="#id24">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「Bell状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。Bell状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
+<p>Bell状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作るので、ループを回して<code class="docutils literal notranslate"><span class="pre">circuits</span></code>という配列に回路を足していきます。</p>
+<p>CHSH不等式の検証用の観測量を作るために、量子ビット1に対し、回路0と2では測定の直前に<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を同じく測定の直前に作用させます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
@@ -743,79 +745,39 @@ meas: 2/════════════════════════
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-    
-<span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_18_0.png" src="_images/chsh_inequality_18_0.png" />
-</div>
-</div>
-<p>量子ビット1に対し、回路0と2では<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を作用させます。</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
+    <span class="n">circuit</span><span class="p">()</span>
+
+<span class="c1"># draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる</span>
+<span class="c1"># 一つのノートブックセルで複数プロットしたい時などに便利</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7efcbd171760&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_21_0.png" src="_images/chsh_inequality_21_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_22_0.png" src="_images/chsh_inequality_22_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_23_0.png" src="_images/chsh_inequality_23_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_24_0.png" src="_images/chsh_inequality_24_0.png" />
-</div>
-</div>
-<p>最後に全ての回路に測定を組み込みます。</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="n">d62292c4566a</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span> 
+<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">17</span>     <span class="n">circuit</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> 
+<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="c1"># draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる</span>
+
+<span class="ne">TypeError</span>: &#39;QuantumCircuit&#39; object is not callable
 </pre></div>
 </div>
 </div>
@@ -927,53 +889,38 @@ C^3 = 0
 </div>
 </div>
 <p>回路をバックエンドに送るには、<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数を使います。引数<code class="docutils literal notranslate"><span class="pre">shots</span></code>で回路の実行と測定を何回繰り返すか指定します。バックエンドごとに一度のジョブでの最大ショット数が決められていますが、大半の場合8192 (=2<sup>13</sup>)回となっています。</p>
+<p>一つのジョブで複数の回路を<code class="docutils literal notranslate"><span class="pre">shots</span></code>回ずつ実行できます。一度に送れる回路の数はバックエンドごとに決まっています。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 
-<span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
-    <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
+
+<span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>これで回路がジョブとしてバックエンドに送られ、キューに入りました。ジョブの実行結果は<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数の返り値であるジョブオブジェクトから参照します。</p>
 <p>IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。</p>
-<p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>のホーム画面の右側で確認できます。また、自分の投じたジョブのステータスは左のツールバーのうちのJobsボタンから確認できます。</p>
-<p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら以下のようにします。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
-<span class="n">job_monitor</span><span class="p">(</span><span class="n">jobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 最後に送ったジョブのステータスを2秒ごとにチェックする</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>のホーム画面の右側で確認できます。この右側のコラムでバックエンドを一つクリックすると詳細が表示され、一番下の Your access providers という欄でバックエンドの最大ショット数と最大ジョブ数を確認できます。</p>
+<p>また、自分の投じたジョブのステータスは左のツールバーのうちのJobsボタンから確認できます。</p>
+<p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように<code class="docutils literal notranslate"><span class="pre">job_monitor</span></code>を使います。</p>
 </div>
 <div class="section" id="id14">
 <h2><a class="toc-backref" href="#id26">量子測定結果の解析</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>ジョブオブジェクトの<code class="docutils literal notranslate"><span class="pre">result()</span></code>というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">job</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">jobs</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+<span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
     <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;00&#39;: 3339, &#39;01&#39;: 720, &#39;10&#39;: 863, &#39;11&#39;: 3270}
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -983,45 +930,20 @@ C^3 = 0
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 
-<span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
+    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_43_0.png" src="_images/chsh_inequality_43_0.png" />
+<img alt="_images/chsh_inequality_33_0.png" src="_images/chsh_inequality_33_0.png" />
+<img alt="_images/chsh_inequality_33_1.png" src="_images/chsh_inequality_33_1.png" />
+<img alt="_images/chsh_inequality_33_2.png" src="_images/chsh_inequality_33_2.png" />
+<img alt="_images/chsh_inequality_33_3.png" src="_images/chsh_inequality_33_3.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_44_0.png" src="_images/chsh_inequality_44_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_45_0.png" src="_images/chsh_inequality_45_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_46_0.png" src="_images/chsh_inequality_46_0.png" />
-</div>
-</div>
-<p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>,, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
+<p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
 <p>実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して “<em>Noisy</em> intermediate-scale quantum (NISQ) device” と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。</p>
 <p>逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>で紹介する変分量子回路を用いた最適化などがその候補として注目されています。</p>
 <p>さて、それでは最後にCHSH不等式の破れを確認してみましょう。<span class="math notranslate nohighlight">\(C^{0}, C^{1}, C^{2}, C^{3}\)</span>を計算して<span class="math notranslate nohighlight">\(S\)</span>を求めます。</p>
