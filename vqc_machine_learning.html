@@ -581,6 +581,10 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 <span class="n">c_depth</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="p">;</span> <span class="n">x_max</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">num_x_train</span> <span class="o">=</span> <span class="mi">30</span>
 
+<span class="c1"># パラメータ数の設定</span>
+<span class="n">num_vars</span> <span class="o">=</span> <span class="n">nqubit</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">c_depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_vars</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
 <span class="c1"># 関数の定義</span>
 <span class="n">func_to_learn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
 <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_x_train</span><span class="p">)</span>
@@ -615,10 +619,21 @@ U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
         <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">angle_y</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
         <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">angle_z</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 
+    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_in&quot;</span>
     <span class="k">return</span> <span class="n">U</span>
+
+<span class="n">U_in</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">      ┌──────────────┐┌────────────┐
+q0_0: ┤ RY(-0.62149) ├┤ RZ(1.2249) ├
+      ├──────────────┤├────────────┤
+q0_1: ┤ RY(-0.62149) ├┤ RZ(1.2249) ├
+      ├──────────────┤├────────────┤
+q0_2: ┤ RY(-0.62149) ├┤ RZ(1.2249) ├
+      └──────────────┘└────────────┘</pre></div></div>
 </div>
 </div>
 <div class="section" id="a-id-func-variational-form-a">
@@ -668,11 +683,49 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
             <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-
+    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_out&quot;</span>
     <span class="k">return</span> <span class="n">U</span>
+
+<span class="n">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">      ┌────────────┐┌────────────┐┌────────────┐         ┌────────────┐»
+q1_0: ┤ RY(3.4483) ├┤ RZ(3.4236) ├┤ RY(2.7494) ├─■─────■─┤ RY(2.4092) ├»
+      ├────────────┤├────────────┤├────────────┤ │     │ ├────────────┤»
+q1_1: ┤ RY(4.4937) ├┤ RZ(2.6619) ├┤ RY(5.6032) ├─■──■──┼─┤ RY(4.9746) ├»
+      ├────────────┤├────────────┤├────────────┤    │  │ ├────────────┤»
+q1_2: ┤ RY(3.7873) ├┤ RZ(4.0583) ├┤ RY(6.0549) ├────■──■─┤ RY(3.3231) ├»
+      └────────────┘└────────────┘└────────────┘         └────────────┘»
+«       ┌────────────┐┌─────────────┐         ┌────────────┐┌────────────┐»
+«q1_0: ─┤ RZ(3.5691) ├┤ RY(0.54745) ├─■─────■─┤ RY(4.8893) ├┤ RZ(5.0213) ├»
+«       ├────────────┤├─────────────┤ │     │ ├────────────┤├────────────┤»
+«q1_1: ─┤ RZ(5.8157) ├┤ RY(0.12704) ├─■──■──┼─┤ RY(5.4664) ├┤ RZ(2.8996) ├»
+«      ┌┴────────────┤└┬────────────┤    │  │ ├────────────┤├────────────┤»
+«q1_2: ┤ RZ(0.44633) ├─┤ RY(5.2315) ├────■──■─┤ RY(6.1488) ├┤ RZ(4.9042) ├»
+«      └─────────────┘ └────────────┘         └────────────┘└────────────┘»
+«      ┌─────────────┐         ┌────────────┐┌────────────┐ ┌────────────┐   »
+«q1_0: ┤ RY(0.74314) ├─■─────■─┤ RY(5.9355) ├┤ RZ(1.6623) ├─┤ RY(3.5716) ├─■─»
+«      └┬────────────┤ │     │ ├────────────┤├────────────┤┌┴────────────┤ │ »
+«q1_1: ─┤ RY(4.0207) ├─■──■──┼─┤ RY(3.2789) ├┤ RZ(4.8647) ├┤ RY(0.11806) ├─■─»
+«      ┌┴────────────┤    │  │ ├────────────┤├────────────┤└┬────────────┤   »
+«q1_2: ┤ RY(0.90072) ├────■──■─┤ RY(2.6054) ├┤ RZ(2.8661) ├─┤ RY(3.8807) ├───»
+«      └─────────────┘         └────────────┘└────────────┘ └────────────┘   »
+«            ┌────────────┐┌───────────┐  ┌────────────┐         »
+«q1_0: ────■─┤ RY(3.8459) ├┤ RZ(4.284) ├──┤ RY(4.3833) ├─■─────■─»
+«          │ ├────────────┤├───────────┴┐┌┴────────────┤ │     │ »
+«q1_1: ─■──┼─┤ RY(3.8763) ├┤ RZ(2.2589) ├┤ RY(0.37841) ├─■──■──┼─»
+«       │  │ ├────────────┤├───────────┬┘└┬────────────┤    │  │ »
+«q1_2: ─■──■─┤ RY(5.9297) ├┤ RZ(2.746) ├──┤ RY(4.1894) ├────■──■─»
+«            └────────────┘└───────────┘  └────────────┘         »
+«       ┌────────────┐┌────────────┐ ┌────────────┐
+«q1_0: ─┤ RY(4.2137) ├┤ RZ(1.9819) ├─┤ RY(2.7558) ├
+«       ├────────────┤├────────────┤ ├────────────┤
+«q1_1: ─┤ RY(1.3219) ├┤ RZ(2.2853) ├─┤ RY(6.2101) ├
+«      ┌┴────────────┤├────────────┤┌┴────────────┤
+«q1_2: ┤ RY(0.81007) ├┤ RZ(3.5827) ├┤ RY(0.64117) ├
+«      └─────────────┘└────────────┘└─────────────┘</pre></div></div>
 </div>
 </div>
 </div>
@@ -696,8 +749,24 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 
     <span class="k">return</span> <span class="n">circ</span>
 
-
-<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s2">&quot;qasm_simulator&quot;</span><span class="p">)</span>
+<span class="n">pred_circ</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">     ┌───────┐┌────────┐┌─┐
+q_0: ┤0      ├┤0       ├┤M├
+     │       ││        │└╥┘
+q_1: ┤1 U_in ├┤1 U_out ├─╫─
+     │       ││        │ ║ 
+q_2: ┤2      ├┤2       ├─╫─
+     └───────┘└────────┘ ║ 
+c: 1/════════════════════╩═
+                         0 </pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s2">&quot;qasm_simulator&quot;</span><span class="p">)</span>
 <span class="n">NUM_SHOTS</span> <span class="o">=</span> <span class="mi">10000</span>
 
 <span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
@@ -719,10 +788,7 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <p>では、最後にこの回路を実行して、結果を見てみましょう。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_vars</span> <span class="o">=</span> <span class="n">nqubit</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">c_depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_vars</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
 <span class="n">ret</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">num_vars</span><span class="o">=</span><span class="n">num_vars</span><span class="p">,</span> <span class="n">objective_function</span><span class="o">=</span><span class="n">objective_function</span><span class="p">,</span> <span class="n">initial_point</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ret[0] =&#39;</span><span class="p">,</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -744,18 +810,18 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [1.23606938 2.33083935 5.08320732 0.81973158 6.81279661 0.11275816
- 6.17611694 3.06614913 6.66795327 3.67972154 4.62049253 0.32212914
- 1.79785326 0.75647463 1.82799755 0.55461686 1.95399063 2.67759293
- 0.36295961 4.18849698 3.52476815 1.62201677 3.25176226 0.62240256
- 4.61288654 6.79669773 2.00099286 4.18620157 0.95617754 5.41576662
- 1.70519018 1.03066548 5.05870795 0.41485579 5.06534069 0.13487027
- 4.21499344 1.84454933 4.74238388 6.10105299 1.69796766 3.81359076
- 3.81234073 3.65402089 1.50214891 6.1753955  3.0510507  5.41955054
- 4.48390513 3.04592717 5.09174965 2.36247568 5.57725297 3.66020858]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [3.38938502 5.52648946 3.91238487 4.44988791 2.69313437 4.0011341
+ 2.33783844 5.6492038  6.08593817 2.42660989 4.97803094 3.29730376
+ 3.61455528 5.89251799 0.44395183 0.53904202 0.04890607 5.16576069
+ 4.89687567 5.46879243 6.19273104 5.0120655  2.87007208 4.90714394
+ 1.74148308 4.24202243 0.91725361 5.94430885 3.39642111 3.02639174
+ 1.61265071 5.01824585 4.04139536 3.60195765 0.13093587 3.89023409
+ 3.86173259 3.85232747 5.95659268 4.29634052 2.3126746  3.77922204
+ 4.36415369 0.38983057 4.18373884 4.2335363  1.32963934 0.78905552
+ 1.96271171 2.27308077 4.61517125 2.71620692 6.24081284 0.89707922]
 </pre></div>
 </div>
-<img alt="_images/vqc_machine_learning_16_1.png" src="_images/vqc_machine_learning_16_1.png" />
+<img alt="_images/vqc_machine_learning_17_1.png" src="_images/vqc_machine_learning_17_1.png" />
 </div>
 </div>
 <p>生成された図を確認してください。ノイズを印加した学習データの分布から、元の関数<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>をほぼ導き出せていることが分かると思います。</p>
@@ -814,69 +880,6 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="n">bee1f1ee21d8</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> 
-<span class="g g-Whitespace">      </span><span class="mi">7</span> 
-<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>                  <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span>                         <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, dialect, error_bad_lines, warn_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">608</span>     <span class="n">kwds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds_defaults</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">609</span> 
-<span class="ne">--&gt; </span><span class="mi">610</span>     <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">611</span> 
-<span class="g g-Whitespace">    </span><span class="mi">612</span> 
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">460</span> 
-<span class="g g-Whitespace">    </span><span class="mi">461</span>     <span class="c1"># Create the parser.</span>
-<span class="ne">--&gt; </span><span class="mi">462</span>     <span class="n">parser</span> <span class="o">=</span> <span class="n">TextFileReader</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">463</span> 
-<span class="g g-Whitespace">    </span><span class="mi">464</span>     <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">or</span> <span class="n">iterator</span><span class="p">:</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">__init__</span><span class="nt">(self, f, engine, **kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">817</span>             <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">818</span> 
-<span class="ne">--&gt; </span><span class="mi">819</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_engine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">820</span> 
-<span class="g g-Whitespace">    </span><span class="mi">821</span>     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">_make_engine</span><span class="nt">(self, engine)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1048</span>             <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="c1"># error: Too many arguments for &quot;ParserBase&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1050</span>         <span class="k">return</span> <span class="n">mapping</span><span class="p">[</span><span class="n">engine</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>  <span class="c1"># type: ignore[call-arg]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1051</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1052</span>     <span class="k">def</span> <span class="nf">_failover_to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">__init__</span><span class="nt">(self, src, **kwds)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1865</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1866</span>         <span class="c1"># open handles</span>
-<span class="ne">-&gt; </span><span class="mi">1867</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_open_handles</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1868</span>         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="g g-Whitespace">   </span><span class="mi">1869</span>         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;storage_options&quot;</span><span class="p">,</span> <span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="s2">&quot;memory_map&quot;</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">):</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/parsers.py</span> in <span class="ni">_open_handles</span><span class="nt">(self, src, kwds)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1360</span>         <span class="n">Let</span> <span class="n">the</span> <span class="n">readers</span> <span class="nb">open</span> <span class="n">IOHanldes</span> <span class="n">after</span> <span class="n">they</span> <span class="n">are</span> <span class="n">done</span> <span class="k">with</span> <span class="n">their</span> <span class="n">potential</span> <span class="n">raises</span><span class="o">.</span>
-<span class="g g-Whitespace">   </span><span class="mi">1361</span>         <span class="s2">&quot;&quot;&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1362</span><span class="s2">         self.handles = get_handle(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1363</span><span class="s2">             src,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1364</span><span class="s2">             &quot;r&quot;,</span>
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/pandas/io/common.py</span> in <span class="ni">get_handle</span><span class="nt">(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">640</span><span class="s2">                 errors = &quot;replace&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">641</span><span class="s2">             # Encoding</span>
-<span class="ne">--&gt; </span><span class="mi">642</span><span class="s2">             handle = open(</span>
-<span class="g g-Whitespace">    </span><span class="mi">643</span><span class="s2">                 handle,</span>
-<span class="g g-Whitespace">    </span><span class="mi">644</span><span class="s2">                 ioargs.mode,</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;data/SUSY_1K.csv&#39;
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="a-id-susy-state-preparation-a">
@@ -915,6 +918,17 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     ┌──────────┐┌──────────┐      ┌──────────┐┌──────────┐             
+q_0: ┤ RY(θ[0]) ├┤ RZ(θ[3]) ├─■──■─┤ RY(θ[6]) ├┤ RZ(θ[9]) ├─────────────
+     ├──────────┤├──────────┤ │  │ └──────────┘├──────────┤┌───────────┐
+q_1: ┤ RY(θ[1]) ├┤ RZ(θ[4]) ├─■──┼──────■──────┤ RY(θ[7]) ├┤ RZ(θ[10]) ├
+     ├──────────┤├──────────┤    │      │      ├──────────┤├───────────┤
+q_2: ┤ RY(θ[2]) ├┤ RZ(θ[5]) ├────■──────■──────┤ RY(θ[8]) ├┤ RZ(θ[11]) ├
+     └──────────┘└──────────┘                  └──────────┘└───────────┘
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="a-id-susy-measurement-a">
@@ -942,6 +956,496 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">quantum_instance</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; --- Testing success ratio: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;testing_accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:40,192:qiskit.aqua.quantum_instance:INFO: 
+Qiskit Terra version: 0.16.4
+Backend: &#39;qasm_simulator (AerProvider)&#39;, with following setting:
+{&#39;basis_gates&#39;: [&#39;ccx&#39;, &#39;cp&#39;, &#39;cswap&#39;, &#39;csx&#39;, &#39;cu1&#39;, &#39;cu2&#39;, &#39;cu3&#39;, &#39;cx&#39;, &#39;cy&#39;, &#39;cz&#39;, &#39;delay&#39;, &#39;diagonal&#39;, &#39;h&#39;, &#39;id&#39;, &#39;initialize&#39;, &#39;kraus&#39;, &#39;mcp&#39;, &#39;mcr&#39;, &#39;mcrx&#39;, &#39;mcry&#39;, &#39;mcrz&#39;, &#39;mcswap&#39;, &#39;mcsx&#39;, &#39;mcu1&#39;, &#39;mcu2&#39;, &#39;mcu3&#39;, &#39;mcx&#39;, &#39;mcy&#39;, &#39;mcz&#39;, &#39;multiplexer&#39;, &#39;p&#39;, &#39;r&#39;, &#39;roerror&#39;, &#39;rx&#39;, &#39;rxx&#39;, &#39;ry&#39;, &#39;ryy&#39;, &#39;rz&#39;, &#39;rzx&#39;, &#39;rzz&#39;, &#39;s&#39;, &#39;sdg&#39;, &#39;snapshot&#39;, &#39;swap&#39;, &#39;sx&#39;, &#39;t&#39;, &#39;tdg&#39;, &#39;u&#39;, &#39;u1&#39;, &#39;u2&#39;, &#39;u3&#39;, &#39;unitary&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;], &#39;coupling_map&#39;: None}
+{&#39;initial_layout&#39;: None, &#39;seed_transpiler&#39;: 10598, &#39;optimization_level&#39;: None}
+RunConfig(max_credits=10, seed_simulator=10598, shots=1024)
+{&#39;timeout&#39;: None}
+{}
+{}
+Measurement mitigation: None
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:40,193:qiskit.aqua.algorithms.vq_algorithm:INFO: Starting optimizer.
+bounds=[(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None)]
+initial point=[ 1.71580745  0.07172071 -0.83600432 -0.81714095  0.60885535 -0.2375976
+  0.13552384 -0.13944701 -1.30223325  0.81571848 -1.83584238  1.15582992]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:40,700:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.729976696862912
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:41,008:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6840437970185317
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:41,301:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6840437970185317
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:41,589:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6840437970185317
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:41,894:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6883990104700147
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:42,337:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6442276664368628
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:42,632:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6621597339701297
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:42,944:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6520308510848963
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:43,254:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.634388839678129
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:43,546:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6718191072103403
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:44,045:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6421456699887818
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:44,344:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8799209634002189
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:44,671:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.634388839678129
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:44,975:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5774885311730447
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:45,275:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5692543639989591
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:45,693:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5639084916960865
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:46,002:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5823246909637205
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:46,311:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5639084916960865
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:46,612:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5466770214979882
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:46,901:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5380900758955584
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:47,326:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6083624460774383
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:47,631:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5454532944943514
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:47,928:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5424314590801445
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:48,242:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5403742177155257
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:48,534:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5481495700165671
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:48,963:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5389137435665827
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:49,255:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5489097398640904
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:49,552:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5465315314955792
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:49,858:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5363282288218942
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:50,169:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5361153608729236
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:50,482:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5361153608729236
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:50,909:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.53057037336613
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:51,190:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5332300988153236
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:51,478:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5306801080955224
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:51,785:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.531483921918244
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:52,083:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394827530652215
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:52,609:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5461056864723379
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:52,923:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5259841010928046
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:53,225:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5282626805380237
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:53,524:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5288104278475916
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:53,819:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5246880764041685
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:54,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5278955874793316
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:54,563:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5261959499157854
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:54,867:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5246880764041685
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:55,162:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5252906646389428
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:55,467:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5264141987565321
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:55,945:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5268497520293467
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:56,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5264938052369231
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:56,572:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5282261729755837
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:56,880:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5241818443755194
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:57,188:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5256753557363962
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:57,492:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5257142557008875
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:57,923:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5232576044252341
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:58,230:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5223482344320564
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:58,526:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5232406153803375
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:58,833:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5214764289699454
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:59,124:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.521971167995703
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:59,520:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5215479820236874
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:11:59,828:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.521956427320041
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:00,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.520627450610747
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:00,421:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5221911850880492
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:00,734:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5216686276347064
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:01,225:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5221172212341223
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:01,520:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5228065300618706
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:01,828:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207822150199689
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:02,118:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5212715020679868
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:02,410:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207807940038446
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:02,704:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207186453909968
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:03,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5210939074841282
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:03,439:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5201374566631365
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:03,741:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5211530024515586
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:04,055:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.520870811784227
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:04,533:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5206205171390592
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:04,855:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5208345725235295
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:05,151:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5206042360374431
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:05,442:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5211421161723748
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:05,740:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5214261004009705
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:06,037:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5201325779818464
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:06,447:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5203411688110952
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:06,740:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207956602418999
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:07,061:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5208618272326065
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:07,367:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5200819166695221
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:07,651:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5212766435946576
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:08,060:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5209030572140569
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:08,353:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207378912825489
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:08,651:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5207326165917757
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:08,955:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5204658942013786
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:09,262:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198372022682708
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:09,777:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.519847302075507
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:10,069:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5204813409454541
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:10,380:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5203277661004753
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:10,699:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5203980529343099
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:11,021:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5200442050067048
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:11,325:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5204574356295423
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:11,759:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198239731742407
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:12,069:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5203872231312396
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:12,380:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198228459102052
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:12,684:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5201280129786005
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:13,195:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5205251365351741
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:13,506:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5200116385105116
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:13,810:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198577490764074
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:14,114:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5202297591907218
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:14,407:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5199623445238306
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:14,706:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5200634071686656
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:15,126:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5202142013889087
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:15,419:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.520023662496652
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:15,701:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.519841117458612
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:16,000:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196965747238732
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:16,285:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5200702774615853
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:16,711:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5199306756191316
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:17,019:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198299266322725
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:17,316:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197710320594611
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:17,611:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197320608902288
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:17,915:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.520035543142122
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:18,355:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198790423349136
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:18,653:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197392149524462
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:18,961:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196965747238732
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:19,266:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.51996095760053
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:19,564:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197278052088838
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:19,855:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198179534686593
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:20,268:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5198656833917156
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:20,590:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197710320594611
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:20,888:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197355458931054
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:21,191:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197355458931054
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:21,656:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197355458931054
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:21,953:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:22,248:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:22,564:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:22,864:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:23,166:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:23,586:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5197108041549303
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:23,878:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:24,183:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:24,467:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:24,755:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196965747238732
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:25,199:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196965747238732
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:25,503:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:25,789:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:26,083:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:26,382:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196965747238732
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:26,888:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:27,190:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:27,496:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:27,802:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:28,101:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:28,396:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:28,824:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:29,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:29,432:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:29,732:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,219:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,515:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196611388568488
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,516:qiskit.aqua.algorithms.classifiers.vqc:INFO: Optimization complete in 50.3228075504303 seconds.
+Found opt_params [ 2.86247354  0.24488221 -0.98383656 -1.22456835  1.56179392 -1.0735823
+  0.18971613  1.07017702 -2.04075254  0.75188264 -3.10104417  1.02802408] in 152 evals
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,855:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch accuracy: 62.50%
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,856:qiskit.aqua.algorithms.classifiers.vqc:INFO: Accuracy is 62.50%
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> --- Testing success ratio:  0.625
 </pre></div>
 </div>
 </div>
@@ -975,6 +1479,15 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:30,870:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-02-24 14:12:31,217:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+</pre></div>
+</div>
+<img alt="_images/vqc_machine_learning_27_2.png" src="_images/vqc_machine_learning_27_2.png" />
 </div>
 </div>
 </div>

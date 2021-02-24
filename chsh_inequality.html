@@ -578,7 +578,7 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># レジスタを介さずビット数を指定して回路を作成することもできます</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># その場合、ゲートにはregister[0]ではなく直接量子ビットの番号を指定します</span>
-<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#　θ = -π/2</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#　θ = π/2</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
@@ -593,7 +593,7 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 </div>
 </div>
 <p>最後のプリント文で、ゲートが3つなのにも関わらず “5 operations” と出てくるのは、各量子ビットの測定も一つのオペレーションとして数えられるからです。</p>
-<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(-\pi/2), X\)</span>という順の操作で第1ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていくので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
+<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(\pi/2), X\)</span>という順の操作で第1ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていくので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -620,7 +620,7 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 \end{align}
 \end{split}\]</div>
 <p>です。</p>
-<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>はCXやCNOTとも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートは<span class="math notranslate nohighlight">\(CNOT\)</span>と1量子ビットゲートの組み合わせに分解できます。</p>
+<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>はCXやCNOTとも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートはCNOTと1量子ビットゲートの組み合わせに分解できます。</p>
 <table class="table">
 <colgroup>
 <col style="width: 33%" />
@@ -646,8 +646,8 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\theta\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(R_y\)</span>を作用させる。</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.cry(theta,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R_{z}\)</span></p></td>
-<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(R_y\)</span>を作用させる。</p></td>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(C^i_j[R_{z}]\)</span></p></td>
+<td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i\)</span>が1である計算基底において、ビット<span class="math notranslate nohighlight">\(j\)</span>に<span class="math notranslate nohighlight">\(R_z\)</span>を作用させる。</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.crz(phi,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
 </tr>
 </tbody>
@@ -752,21 +752,21 @@ meas: 2/════════════════════════
 <img alt="_images/chsh_inequality_18_0.png" src="_images/chsh_inequality_18_0.png" />
 </div>
 </div>
-<p>量子ビット1に対し、回路0と2では<span class="math notranslate nohighlight">\(R_y(\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(\pi/2)\)</span>を作用させます。</p>
+<p>量子ビット1に対し、回路0と2では<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を作用させます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f89c03a6b20&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7efcbd171760&gt;
 </pre></div>
 </div>
 </div>
@@ -825,8 +825,8 @@ meas: 2/════════════════════════
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-R_{y1}\left(\frac{\pi}{4}\right) C^0_1[X] H_0 \ket{0}_1\ket{0}_0 = &amp; R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_1(c\ket{0}_0 + s\ket{1}_0) + \ket{1}_1(-s\ket{0}_0 + c\ket{1}_0)\right]\\
+R_{y1}\left(-\frac{\pi}{4}\right) C^0_1[X] H_0 \ket{0}_1\ket{0}_0 = &amp; R_{y1}\left(-\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
+= &amp; \frac{1}{\sqrt{2}} \left[(c\ket{0}_1 - s\ket{1}_1)\ket{0}_0 + (s\ket{0}_1 + c\ket{1}_1)\ket{1}_0\right]\\
 = &amp; \frac{1}{\sqrt{2}} (c\ket{00} + s\ket{01} - s\ket{10} + c\ket{11}).
 \end{align}
 \end{split}\]</div>
@@ -840,7 +840,7 @@ P^0_{01} = P^0_{10} = \frac{s^2}{2}
 <p>同様に、回路1の状態は</p>
 <div class="math notranslate nohighlight">
 \[
-R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
+R_{y1}\left(-\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
 \]</div>
 <p>で確率<span class="math notranslate nohighlight">\(P^1_{l}\)</span>は</p>
 <div class="math notranslate nohighlight">
@@ -852,8 +852,8 @@ P^1_{01} = P^1_{10} = \frac{c^2}{2}
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
-= &amp; \frac{1}{\sqrt{2}} \left[ \frac{1}{\sqrt{2}} (\ket{0}_1 + \ket{1}_1) (c\ket{0}_0 + s\ket{1}_0) + \frac{1}{\sqrt{2}} (-\ket{0}_1 + \ket{1}_1) (-s\ket{0}_0 + c\ket{1}_0) \right] \\
+&amp; R_{y1}\left(-\frac{\pi}{4}\right) R_{y0}\left(-\frac{\pi}{2}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
+= &amp; \frac{1}{\sqrt{2}} \left[ \frac{1}{\sqrt{2}} (c\ket{0}_1 - s\ket{1}_1) (\ket{0}_0 - \ket{1}_0) + \frac{1}{\sqrt{2}} (s\ket{0}_1 + c\ket{1}_1) (\ket{0}_0 + \ket{1}_0) \right] \\
 = &amp; \frac{1}{2} \left[ (s+c)\ket{00} + (s-c)\ket{01} - (s-c)\ket{10} + (s+c)\ket{11} \right]
 \end{align}
 \end{split}\]</div>
@@ -867,7 +867,7 @@ P^2_{01} = P^2_{10} = \frac{(s - c)^2}{4}
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; R_{y0}\left(\frac{\pi}{2}\right)R_{y1}\left(\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
+&amp; R_{y1}\left(-\frac{3\pi}{4}\right) R_{y0}\left(-\frac{\pi}{2}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
 = &amp; \frac{1}{2} \left[ (s+c)\ket{00} - (s-c)\ket{01} + (s-c)\ket{10} + (s+c)\ket{11} \right]
 \end{align}
 \end{split}\]</div>
