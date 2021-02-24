@@ -755,7 +755,7 @@ meas: 2/════════════════════════
 <span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">circuit</span><span class="p">()</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
 <span class="c1"># draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる</span>
 <span class="c1"># 一つのノートブックセルで複数プロットしたい時などに便利</span>
@@ -768,18 +768,10 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="n">d62292c4566a</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> 
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">17</span>     <span class="n">circuit</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> 
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="c1"># draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる</span>
-
-<span class="ne">TypeError</span>: &#39;QuantumCircuit&#39; object is not callable
-</pre></div>
-</div>
+<img alt="_images/chsh_inequality_18_0.png" src="_images/chsh_inequality_18_0.png" />
+<img alt="_images/chsh_inequality_18_1.png" src="_images/chsh_inequality_18_1.png" />
+<img alt="_images/chsh_inequality_18_2.png" src="_images/chsh_inequality_18_2.png" />
+<img alt="_images/chsh_inequality_18_3.png" src="_images/chsh_inequality_18_3.png" />
 </div>
 </div>
 <p>それぞれの回路で2ビットレジスタの基底<span class="math notranslate nohighlight">\(\ket{00}, \ket{01}, \ket{10}, \ket{11}\)</span>が現れる確率を計算してみましょう。</p>
