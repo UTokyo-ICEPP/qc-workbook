@@ -589,7 +589,9 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <p>まずは回路の量子状態を表示する<code class="docutils literal notranslate"><span class="pre">show_state</span></code>という関数を定義します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;\pi&#39;</span><span class="p">)):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;\pi&#39;</span><span class="p">),</span> <span class="n">terms_per_row</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">draw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print the quantum state of the circuit in latex markdown.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -598,7 +600,13 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="sd">            (numeric devisor, unit in latex)</span>
 <span class="sd">        phase_norm (None or tuple): If not None, specify the normalization of the phases by</span>
 <span class="sd">            (numeric devisor, unit in latex)</span>
+<span class="sd">        terms_per_row (int): Number of terms to show per row.</span>
+<span class="sd">        draw (bool): If True, call draw(&#39;mpl&#39;) on the circuit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 
     <span class="c1"># Run the circuit in statevector_simulator and obtain the final state statevector</span>
     <span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
@@ -613,12 +621,10 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
     <span class="c1"># Set the numerical tolerance for various comparisons</span>
     <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">1.e-3</span>
         
-    <span class="c1"># Final latex string</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    
-    <span class="k">if</span> <span class="n">amp_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">state</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> \left(&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">amp_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    
+    <span class="c1"># List to be concatenated into the final latex string</span>
+    <span class="n">str_rows</span> <span class="o">=</span> <span class="p">[[]]</span>
+    <span class="n">str_terms</span> <span class="o">=</span> <span class="n">str_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  
     <span class="c1"># Sign of each term (initialized to 0 so the first term doesn&#39;t get a + in front)</span>
     <span class="n">sign</span> <span class="o">=</span> <span class="mi">0</span>
     
@@ -631,12 +637,12 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
             <span class="k">continue</span>
 
         <span class="c1"># Latex string for this term</span>
-        <span class="n">basis_term</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">basis_unsigned</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="c1"># Write the amplitude</span>
         <span class="k">if</span> <span class="n">amp_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># No amplitude normalization -&gt; just write as a raw float</span>
-            <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># With amplitude normalization</span>
             <span class="n">a</span> <span class="o">/=</span> <span class="n">amp_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -644,10 +650,10 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
                 <span class="c1"># Amplitude is integer * norm</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
-                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+                    <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Otherwise float * norm</span>
-                <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
         <span class="c1"># Write the phase</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
@@ -665,45 +671,65 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
                 <span class="c1"># Multiple of pi/2</span>
                 <span class="n">twopbypi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">pbypi</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">twopbypi</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;i&#39;</span>
+                    <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;i&#39;</span>
                 <span class="k">if</span> <span class="n">twopbypi</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                     <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;e^{&#39;</span>
+                <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;e^{&#39;</span>
                 <span class="k">if</span> <span class="n">phase_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># No phase normalization -&gt; write as exp(raw float * i)</span>
-                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># With phase normalization -&gt; write as exp(divident * norm * i)</span>
                     <span class="n">p</span> <span class="o">/=</span> <span class="n">phase_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     
                     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
-                            <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+                            <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                        <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> \cdot &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
-                    <span class="n">basis_term</span> <span class="o">+=</span> <span class="n">phase_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="n">phase_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-                <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; i}&#39;</span>
+                <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; i}&#39;</span>
                 
-        <span class="n">basis_term</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; |</span><span class="si">{}</span><span class="s1">\rangle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">basis_unsigned</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; |</span><span class="si">{}</span><span class="s1">\rangle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">state</span> <span class="o">+=</span> <span class="s1">&#39; + &#39;</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="s1">&#39; + &#39;</span> <span class="o">+</span> <span class="n">basis_unsigned</span>
         <span class="k">elif</span> <span class="n">sign</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">state</span> <span class="o">+=</span> <span class="s1">&#39; - &#39;</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">basis_unsigned</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="n">basis_unsigned</span>
             
-        <span class="n">state</span> <span class="o">+=</span> <span class="n">basis_term</span>
-        
+        <span class="n">str_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_terms</span><span class="p">)</span> <span class="o">==</span> <span class="n">terms_per_row</span><span class="p">:</span>
+            <span class="n">str_rows</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="n">str_terms</span> <span class="o">=</span> <span class="n">str_rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+        <span class="c1"># All terms except the very first are signed</span>
         <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># Remove empty row</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">str_rows</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_rows</span><span class="p">)</span>
         
     <span class="k">if</span> <span class="n">amp_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">state</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;\right)&#39;</span>
+        <span class="n">str_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> \left(&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">amp_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">num_rows</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">str_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\right.&#39;</span><span class="p">)</span>
+            <span class="n">str_rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\left.&#39;</span><span class="p">)</span>
+
+        <span class="n">str_rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\right)&#39;</span><span class="p">)</span>
     
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">num_rows</span><span class="p">])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;xx-large&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">irow</span><span class="p">,</span> <span class="n">str_terms</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_rows</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_rows</span> <span class="o">-</span> <span class="n">irow</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;$</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">str_terms</span><span class="p">)),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -932,7 +958,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">##################</span>
 <span class="c1">#for i in range(num_qubits):</span>
 <span class="c1">#    circuit.h(i)</span>
-    
+<span class="c1">#</span>
 <span class="c1"># circuit.?</span>
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
