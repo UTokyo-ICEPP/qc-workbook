@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import Aer, execute
 
-def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes=None, terms_per_row=8, binary=False, draw=True, return_fig=False):
+def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, draw=True, return_fig=False):
     """Print the quantum state of the circuit in latex markdown.
     
     Args:
@@ -11,6 +11,8 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
             (numeric devisor, unit in latex)
         phase_norm (None or tuple): If not None, specify the normalization of the phases by
             (numeric devisor, unit in latex)
+        global_phase (None or float or str): If not None, specify the phase to factor out by
+            numeric offset or 'mean'
         register_sizes (None or array_like): If not None, specify the sizes of the registers as
             a list of ints.
         terms_per_row (int): Number of terms to show per row.
@@ -20,7 +22,11 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
     
     # Run the circuit in statevector_simulator and obtain the final state statevector
     simulator = Aer.get_backend('statevector_simulator')
-    simulator.set_options(method='statevector_gpu')
+    try:
+        simulator.set_options(method='statevector_gpu')
+    except:
+        simulator.set_options(method='statevector')
+
     statevector = execute(circuit, simulator).result().data()['statevector']
 
     # Absolute value and the phase of the amplitudes
@@ -56,6 +62,15 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
     absamp = absamp[indices]
     phase = phase[indices]
 
+    phase_offset = 0.
+    if global_phase is not None:
+        if global_phase == 'mean':
+            phase_offset = np.mean(phase)
+        else:
+            phase_offset = global_phase
+
+        phase -= phase_offset
+
     if amp_norm is not None:
         absamp /= amp_norm[0]
         rounded_amp = np.round(absamp).astype(int)
@@ -69,12 +84,12 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
     semireduced_phase = reduced_phase * 2.
     rounded_semireduced_phase = np.round(semireduced_phase).astype(int)
     phase_is_halfpi_multiple = np.asarray(np.abs(semireduced_phase - rounded_semireduced_phase) < tolerance, dtype=bool)
-    
+
     if phase_norm is not None:
         phase /= phase_norm[0]
         rounded_phase = np.round(phase).astype(int)
         phase_is_int = np.asarray(np.abs(phase - rounded_phase) < tolerance, dtype=bool)
-        
+       
     if register_sizes is not None:
         register_sizes = np.array(register_sizes)
         cumul_register_sizes = np.roll(np.cumsum(register_sizes), 1)
@@ -96,7 +111,8 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
 
         if amp_norm is None:
             # No amplitude normalization -> just write as a raw float
-            basis_unsigned += '{:.2f}'.format(a)
+            if np.abs(a - 1.) > tolerance:
+                basis_unsigned += '{:.2f}'.format(a)
         else:
             # With amplitude normalization
             if amp_is_int[iterm]:
@@ -115,7 +131,6 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
                     sign = -1
 
             elif phase_is_halfpi_multiple[iterm]:
-                twopbypi = np.round(2. * pbypi).astype(int)
                 if rounded_semireduced_phase[iterm] % 2 == 1:
                     basis_unsigned += 'i'
                 if rounded_semireduced_phase[iterm] % 4 == 3:
@@ -166,15 +181,34 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), register_sizes
         str_rows.pop()
         
     num_rows = len(str_rows)
-        
-    if amp_norm is not None:
-        str_rows[0].insert(0, r'{} \left('.format(amp_norm[1]))
+
+    if amp_norm is not None or phase_offset != 0.:
+        str_rows[0].insert(0, r'\left(')
 
         if num_rows != 1:
             str_rows[0].append(r'\right.')
             str_rows[-1].insert(0, r'\left.')
 
         str_rows[-1].append(r'\right)')
+
+    if phase_offset != 0.:
+        if phase_norm is not None:
+            phase_offset /= phase_norm[0]
+            rounded_phase_offset = np.round(phase_offset).astype(int)
+            if np.abs(phase_offset - rounded_phase_offset) < tolerance:
+                if rounded_phase_offset == 1:
+                    phase_value_expr = phase_norm[1]
+                else:
+                    phase_value_expr = '{:d} \cdot {}'.format(rounded_phase_offset, phase_norm[1])
+            else:
+                phase_value_expr = '{:.2f} \cdot {}'.format(phase_offset, phase_norm[1])
+        else:
+            phase_value_expr = '{:.2f}'.format(phase_offset)
+            
+        str_rows[0].insert(0, 'e^{{{} i}}'.format(phase_value_expr))
+
+    if amp_norm is not None:
+        str_rows[0].insert(0, amp_norm[1])
  
     if draw:
         circuit_height = 12. * ((circuit.depth() - 1) // 70 + 1)
