@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>1兆個の足し算を同時に行う &#8212; 量子コンピューティング・ワークブック</title>
+    <title>4兆通りの足し算を同時に行う &#8212; 量子コンピューティング・ワークブック</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output,.cell_output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -123,7 +125,7 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   1兆個の足し算を同時に行う
+   4兆通りの足し算を同時に行う
   </a>
  </li>
  <li class="toctree-l1">
@@ -299,6 +301,47 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simd">
+   巨大SIMDマシンとしての量子コンピュータ
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   量子フーリエ変換による足し算
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   足し算の並列化
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   実機での実行
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     トランスパイルと物理的回路
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     回路の比較
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -307,7 +350,481 @@
               <div>
                 
   <div class="section" id="id1">
-<h1>1兆個の足し算を同時に行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>4兆通りの足し算を同時に行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>実習の第二回では、量子コンピュータの<strong>並列性</strong>に着目します。前半で量子コンピュータにおける並列計算とは具体的にどういうことかを確認してから、後半で並列計算の代表的な利用例として物理系のダイナミクスシミュレーションを取り上げます。</p>
+<div class="contents local topic" id="id2">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#simd" id="id10">巨大SIMDマシンとしての量子コンピュータ</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id11">量子フーリエ変換による足し算</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id12">足し算の並列化</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id13">実機での実行</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id7" id="id14">トランスパイルと物理的回路</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id15">回路の比較</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
+<div class="section" id="simd">
+<h2><a class="toc-backref" href="#id10">巨大SIMDマシンとしての量子コンピュータ</a><a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h2>
+<p>SIMD (single instruction multiple data)とは並列計算パラダイムの一つで、プロセッサの命令（instruction）が多数のデータに同時に適用されるケースを指します。私達の身の回りの（古典）コンピュータのプロセッサにもSIMD用のインストラクションセットが搭載されており、例えば（2021年2月現在）最先端の商用CPUでは、16個の単精度浮動小数点数に対し同時に四則演算や平方根の計算を行えます。</p>
+<p>量子コンピュータでは、第一回の実習で触れられたように、すべてのゲートがすべての計算基底に作用します。ゲート操作を命令、各計算基底の振幅をデータとして解釈すれば、これは常に<span class="math notranslate nohighlight">\(2^n\)</span>個のデータに命令を与えながら計算をしていることにあたります。量子コンピュータは巨大SIMDマシンとも考えられるのです。</p>
+<p>ただし、これもすでに触れられたことですが、巨大並列計算ができたとしても、そのデータをすべて引き出すことはできません<a class="footnote-reference brackets" href="#and-you-dont-want-to" id="id3">1</a>ので、古典計算機のSIMDとはいろいろな意味で単純に比較できるものではありません。</p>
+<p>とはいえ、並列計算を行っているんだということを実感できると、より量子コンピュータを使う感覚が身に付いてくると思われるので、今回は最も単純に「足し算」をたくさん並列に行う回路を書いてみましょう。</p>
+</div>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id11">量子フーリエ変換による足し算</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>第一回でいろいろな量子状態を作ったり課題で入力波形のフーリエ変換を行ったりしましたが、もっと単純であるはずの四則演算のやりかたについて触れていませんでした。理由は、実は量子コンピュータでは四則演算がそんなに単純でないから、です。</p>
+<p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
+<p>まずは計算の流れを数式で追ってみましょう。整数<span class="math notranslate nohighlight">\(a\)</span>と<span class="math notranslate nohighlight">\(b\)</span>の足し算を考えます。まず、2つのレジスタをそれぞれ状態<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>に用意します。以下のように、第3のレジスタ（初期状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>）の状態が和<span class="math notranslate nohighlight">\(a+b\)</span>を表すようにすることが目標です。それぞれのレジスタは十分に大きい（レジスタ<span class="math notranslate nohighlight">\(i\)</span>のビット数を<span class="math notranslate nohighlight">\(n_i\)</span>として<span class="math notranslate nohighlight">\(2^{n_1} &gt; a\)</span>, <span class="math notranslate nohighlight">\(2^{n_2} &gt; b\)</span>, <span class="math notranslate nohighlight">\(2^{n_3} &gt; a + b\)</span>）とします。</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{a}\ket{b}\ket{0} \rightarrow \ket{a}\ket{b}\ket{a+b}
+\]</div>
+<p>量子フーリエ変換は、ビット数<span class="math notranslate nohighlight">\(n\)</span>のレジスタの計算基底<span class="math notranslate nohighlight">\(\ket{j}\)</span>を</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{j} \xrightarrow{\text{Q.F.T.}} \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
+\]</div>
+<p>という状態に変える操作でした。では、その逆を考えると、整数<span class="math notranslate nohighlight">\(a+b &lt; 2^n\)</span>について</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i (a+b)k/2^n} \ket{k} \xrightarrow{\text{Q.F.T.}^{-1}} \ket{a+b}
+\]</div>
+<p>ができることがわかります。すべての量子ゲートには逆操作が存在するので、すべての量子サブルーチンは逆回しできます。</p>
+<p>左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。整数<span class="math notranslate nohighlight">\(a, b, k\)</span>の二進分解</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+a = \sum_{m=0}^{n_1-1} 2^m a_m \\
+b = \sum_{m=0}^{n_2-1} 2^m b_m \\
+k = \sum_{m=0}^{n_3-1} 2^m k_m
+\end{split}\]</div>
+<p>を用いて、</p>
+<div class="math notranslate nohighlight">
+\[
+\exp\left(2\pi i \frac{(a+b)k}{2^{n_3}}\right) = \left[\prod_{l=0}^{n_1-1}\prod_{m=0}^{n_3-1} \exp\left(2\pi i \frac{2^{l+m} a_l k_m}{2^{n_3}}\right)\right]\left[\prod_{l=0}^{n_2-1}\prod_{m=0}^{n_3-1} \exp\left(2\pi i \frac{2^{l+m} b_l k_m}{2^{n_3}}\right)\right]
+\]</div>
+<p>と書けることを利用します。つまり、レジスタ1または2の各ビットとレジスタ3の各ビットを一つずつ組み合わせて、両方のビットが1である（<span class="math notranslate nohighlight">\(a_l = k_m = 1\)</span>または<span class="math notranslate nohighlight">\(b_l = k_m = 1\)</span>の）ときに対応する分（<span class="math notranslate nohighlight">\(2\pi 2^{l + m} / 2^{n_3}\)</span>）位相を進めれば、左辺の状態ができあがります。</p>
+<p>具体的には、まずレジスタ3をequal superpositionに用意し、レジスタ1の各ビットを制御、レジスタ3の各ビットを標的とした<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートをかけていきます。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\ket{a}\ket{b}\ket{0} &amp; \xrightarrow{H^{\otimes n_3}} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \ket{k} \\
+&amp; \xrightarrow{C^{1;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k_0}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{1;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+\cdots &amp; \\
+&amp; \xrightarrow{C^{1;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{1;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k + 2a_1 k_0}{2^{n_3}} \right) \ket{k} \\
+\cdots &amp; \\
+&amp; \xrightarrow{C^{1;n_1 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_1-1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a k}{2^{n_3}} \right) \ket{k}
+\end{align}
+\end{split}\]</div>
+<p>続いてレジスタ2のビットを制御として、同様の<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートをかけていくと、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; \xrightarrow{C^{2;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 k_0}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{2;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+\cdots &amp; \\
+&amp; \xrightarrow{C^{2;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{2;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k + 2b_1 k_0}{2^{n_3}} \right) \ket{k} \\
+\cdots &amp; \\
+&amp; \xrightarrow{C^{2;n_2 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_2 - 1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b) k}{2^{n_3}} \right) \ket{k}
+\end{align}
+\end{split}\]</div>
+<p>となり、めでたく<span class="math notranslate nohighlight">\(\ket{a+b}\)</span>のフーリエ変換状態が実現されました。</p>
+<p>では以上の操作をQiskitで実装してみましょう。レジスタ1と2は4ビットとして、<span class="math notranslate nohighlight">\(a=9, b=13\)</span>を考えます。後の便利のために、まずは足し算のサブルーチン部分だけを関数化します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up an addition subroutine to a circuit with three registers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Equal superposition in register 3</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">)</span>
+
+    <span class="c1"># Smallest unit of phi</span>
+    <span class="n">dphi</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">reg3</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="c1"># Loop over reg1 and reg2</span>
+    <span class="k">for</span> <span class="n">reg_ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">]:</span>
+        <span class="c1"># Loop over qubits in the control register (reg1 or reg2)</span>
+        <span class="k">for</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="n">reg_ctrl</span><span class="p">:</span>
+            <span class="c1"># Loop over qubits in the target register (reg3)</span>
+            <span class="k">for</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="n">reg3</span><span class="p">:</span>
+                <span class="c1"># C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}</span>
+                <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">qctrl</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">qtarg</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
+
+    <span class="c1"># Insert a barrier for better visualization</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="c1"># Inverse QFT</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">reg3</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">reg3</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">reg3</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">j</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">itarg</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">reg3</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ictrl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">itarg</span><span class="p">):</span>
+            <span class="n">power</span> <span class="o">=</span> <span class="n">ictrl</span> <span class="o">-</span> <span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">reg3</span><span class="o">.</span><span class="n">size</span>
+            <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">),</span> <span class="n">reg3</span><span class="p">[</span><span class="n">ictrl</span><span class="p">],</span> <span class="n">reg3</span><span class="p">[</span><span class="n">itarg</span><span class="p">])</span>
+        
+        <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">[</span><span class="n">itarg</span><span class="p">])</span>
+        
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Defined function setup_addition&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>回路を作り、レジスタ1と2を入力9と13を表すように初期化します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">13</span>
+
+<span class="c1"># Calculate the necessary register sizes</span>
+<span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">n3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n1 =&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="s1">&#39;n2 =&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;n3 =&#39;</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+
+<span class="n">reg1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">)</span>
+<span class="n">reg2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">)</span>
+<span class="n">reg3</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="s1">&#39;r3&#39;</span><span class="p">)</span>
+
+<span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+
+<span class="c1"># Set register 1 to state |a&gt;</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg1</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="c1"># Set register 2 to state |b&gt;</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        
+<span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">fold</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>再び<code class="docutils literal notranslate"><span class="pre">show_state</span></code>関数を使って終状態を確認してみましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Notebooks in mybinder.org starts in the root directory of the repository</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;source&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/source&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+    
+<span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">),</span> <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/extreme_simd_8_0.png" src="_images/extreme_simd_8_0.png" />
+</div>
+</div>
+<p>ここで、<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>というオプション引数を渡して、13ビットの回路を<span class="math notranslate nohighlight">\(n_1 + n_2 + n_3\)</span>ビットに分けて解釈するよう指定しました。結果表示された状態は期待通り単一の計算基底<span class="math notranslate nohighlight">\(22:13:9\)</span>、つまりレジスタ1, 2, 3がそれぞれ<span class="math notranslate nohighlight">\(\ket{9}, \ket{13}, \ket{22}\)</span>となっている状態です（回路全体でビットを右から書いて状態を表示するため、レジスタも右から左に並びます）。つまり、めでたく状態の変遷</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{9}\ket{13}\ket{0} \rightarrow \ket{9}\ket{13}\ket{22}
+\]</div>
+<p>が実現しました。</p>
+</div>
+<div class="section" id="id5">
+<h2><a class="toc-backref" href="#id12">足し算の並列化</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>上では小学一年生ができる足し算を一回行うために13個の量子ビットと67個のゲートを利用しました。しかし、出来上がった回路は入力の値（9と13）によらず、4ビットで表現できる2つの整数すべてに対して成り立ちます（一般に2つの<span class="math notranslate nohighlight">\(n\)</span>ビット数の和は<span class="math notranslate nohighlight">\(n+1\)</span>ビットに収まるので、レジスタ3の大きさにも不足はありません）。さらに、量子演算は線形（つまり演算<span class="math notranslate nohighlight">\(U\)</span>について<span class="math notranslate nohighlight">\(U(\sum_{k} c_k \ket{k}) = \sum_{k} c_k U\ket{k}\)</span>）なので、初期状態としてレジスタ1と2がどんな計算基底の重ね合わせにあっても、それぞれの組み合わせに対してレジスタ3の状態が和を表してくれます。特に、初期状態がequal superpositionであれば、この回路は</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{0} \rightarrow \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{j+k}
+\]</div>
+<p>を行うので、<span class="math notranslate nohighlight">\(\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)\)</span>個のゲートで<span class="math notranslate nohighlight">\(2^{n_1+n_2}\)</span>通りの足し算を並列に行います。実際にこれを確認してみましょう。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">reg1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">)</span>
+<span class="n">reg2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">)</span>
+<span class="n">reg3</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="s1">&#39;r3&#39;</span><span class="p">)</span>
+
+<span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+
+<span class="c1"># Set register 1 and 2 to equal superpositions</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
+        
+<span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">),</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">)),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt{2^{n_1 + n_2}}}&#39;</span><span class="p">),</span> <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>65量子ビットのマシンを最大限利用するならば、<span class="math notranslate nohighlight">\(n_1 = n_2 = 21, n_3 = 22\)</span>で<span class="math notranslate nohighlight">\(2^{42}\)</span>通り、つまり約4兆通りの足し算を同時に行うことができます。</p>
+<p>もちろん、上で書いたようにここには重要な但し書きがあって、実機でこの計算をして測定から答えを得ようとすると、毎回の測定でどの組み合わせが得られるかをコントロールできないので、これはあまり実用的とは言えない回路です。強いて言えば毎日ランダムに6桁＋6桁の正しい足し算を教えてくれる「日めくり足し算カレンダー」にくらいは使えます。4兆通りなので100億年程度使い続けられます。</p>
+</div>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id13">実機での実行</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>上の足し算回路の結果がランダムに出る様子をシミュレーションと実機で確認しましょう。ただし、上の実装では非効率的でエラーが出すぎるので、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/optimized_additions.py">こちらの効率化した回路</a>を代わりに使用します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils.optimized_additions</span> <span class="kn">import</span> <span class="n">optimized_additions</span>
+
+<span class="c1"># 実機で実行するために、元の回路に測定を加える</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+<span class="n">circuit_original</span> <span class="o">=</span> <span class="n">circuit</span>
+
+<span class="c1"># 効率化した回路（測定付き）</span>
+<span class="n">circuit_optimized</span> <span class="o">=</span> <span class="n">optimized_additions</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>回路の効率化とは具体的にどういうことでしょうか。もともとの回路と効率化したものとを比べてみましょう。まずは、単純にオペレーションの数を比較します。ゲート一つ一つで一定の確率でエラーが起こるということは、同じことをする回路ならゲートの数が少ないほうがより正確な計算をしてくれます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the original circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_original</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the optimized circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_optimized</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of operations in the original circuit: 83
+Number of operations in the optimized circuit: 331
+</pre></div>
+</div>
+</div>
+</div>
+<p>効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。</p>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id14">トランスパイルと物理的回路</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>でも少し触れましたが、回路が実機で実行される前には、トランスパイルという回路の変換が行われ、様々な組み合わせゲートからなる「論理的」な回路から、実機のハードウェアに実装されている基本ゲートのみで書かれる「物理的」な回路が作られます<a class="footnote-reference brackets" href="#physical" id="id8">2</a>。論理的な回路はどのようにでも書ける（例えば回路全体を一つのゲートと呼んでしまうこともできる）ので、回路の効率の比較はトランスパイル後でなければ意味がありません。</p>
+<p>いい機会なので、実機での量子計算について少し詳細に考えてみましょう。トランスパイルがまさに論理的なアルゴリズムの世界と物理的実装の世界のインターフェースとなるので、この過程に注目します。</p>
+<p>トランスパイル時には、以下のような回路の変換が起こります。</p>
+<ul class="simple">
+<li><p>冗長なゲートの削除</p></li>
+<li><p>多重制御ゲートのCNOTと1量子ビットゲートへの分解</p></li>
+<li><p>実機のトポロジーに即した量子ビットのマッピング（詳細は下）</p></li>
+<li><p>物理的に隣接しない量子ビット間の制御ゲートを実行するためのSWAPの挿入</p></li>
+<li><p>1量子ビットゲートの基本ゲートへの分解</p></li>
+<li><p>物理的回路の最適化</p></li>
+</ul>
+<p>実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲート（IBMQではCNOT）が実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば後で使うibmq_16_melbourneというマシンは以下のようなトポロジーを持っています。</p>
+<a class="reference internal image-reference" href="_images/melbourne_topology.png" id="ibmq-16-melbourne"><img alt="_images/melbourne_topology.png" id="ibmq-16-melbourne" src="_images/melbourne_topology.png" style="height: 200px;" /></a>
+<p>図中、数字のついた丸が量子ビットを表し、線が量子ビット同士の繋がりを表します。</p>
+<p>直接接続のない量子ビット間で制御ゲートを実行する場合、SWAPを使って2つの量子ビットが隣り合うように状態を遷移させていく必要があります。例えば上のibmq_16_melbourneでビット2と6の間のCNOTが必要なら、（いくつか方法がありますが）2↔3, 3↔4, 4↔5とSWAPを繰り返して、5と6の間でCNOTを行い、ビットの並びを元に戻す必要があれば再度5↔4, 4↔3, 3↔2とSWAPをすることになります。</p>
+<p><a class="reference internal" href="circuit_from_scratch.html#other-single-and-double-qubit-gates"><span class="std std-ref">ゲートの解説</span></a>に出てきたように、SWAPは3つのCNOTに分解されます。つまり、直接接続のない量子ビット同士の制御ゲートが多出するような回路があると、莫大な数のCNOTが使われることになります。<strong>CNOTのエラーレートは1量子ビットゲートのエラーレートより一桁ほど高い</strong>ので、これは大きな問題になります。そこで、論理的回路の量子ビットと実機の量子ビットとのマッピング（SWAPが発生すれば対応は変わっていくので、あくまで初期対応）と、回路中にどうSWAPを挿入していくかというルーティングの両方を上手に決めるということが、トランスパイルにおける中心的な課題です。</p>
+<p>しかし、実は一般の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。</p>
+</div>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id15">回路の比較</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>上を踏まえて、改めて2つの足し算回路を比較してみましょう。</p>
+<p>これまで実機で回路を実行するときは<code class="docutils literal notranslate"><span class="pre">execute</span></code>という関数を利用していましたが、実はこの関数にトランスパイル前の回路を渡すと、自動で標準設定のトランスパイルがなされていました。しかし<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を使い、トランスパイルを明示的に行うこともできます。この関数は主にトランスパイルの設定を細かくコントロールしたいときなどに使います。今回の効率化した回路は特定のマッピングのために作られているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。</p>
+<p>IBMQのマシンはチップごとに異なるトポロジーを持っているので、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数にも引数としてバックエンドを指定し、そのバックエンド専用の物理的回路を作ります。</p>
+<div class="cell tag_remove-output tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">transpile</span>
+
+<span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+
+<span class="c1"># 4 + 4 + 5 = 13量子ビット以上のマシンで ibm-q/open/main からアクセス可能なのはibmq_16_melbourneのみ（2021年3月現在）</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;ibmq_16_melbourne&#39;</span><span class="p">)</span>
+
+<span class="c1"># オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る</span>
+<span class="n">circuit_original_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_original</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># 効率化した回路をトランスパイルする。ibmq_16_melbourneのうち、一直線に繋がった量子ビット列にマッピングする</span>
+<span class="n">initial_layout</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">circuit_optimized_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_optimized</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">routing_method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">initial_layout</span><span class="o">=</span><span class="n">initial_layout</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the original circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the optimized circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上のセルを実行すると、今度は効率化回路のオペレーションの数が元の回路の半数以下という結果になることがわかります。このマシンの基本ゲート<span class="math notranslate nohighlight">\(R_z, X\)</span>, SX, CNOTに分解した内訳でも、エラーの多いCNOTゲートの数が大幅に削減されています（両回路とも<span class="math notranslate nohighlight">\(X\)</span>ゲートは0個です）。</p>
+<p>回路を実機に送る前にシミュレータで理想的な結果を確認しましょう。<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を使って「手動で」トランスパイルを行った回路を<code class="docutils literal notranslate"><span class="pre">execute</span></code>に渡すと再び標準設定でトランスパイルされてしまうので、別の手続きを踏みます。</p>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">assemble</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+
+<span class="c1"># Will call assemble() and backend.run() instead of execute()</span>
+<span class="n">qobj_original</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj_original</span><span class="p">)</span>
+<span class="n">counts_original</span> <span class="o">=</span> <span class="n">job_original</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="n">qobj_optimized</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj_optimized</span><span class="p">)</span>
+<span class="n">counts_optimized</span> <span class="o">=</span> <span class="n">job_optimized</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="c1"># Keys of counts are single binaries; need to split them into three parts and interpret as decimals</span>
+<span class="k">def</span> <span class="nf">interpret_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+    <span class="n">heights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">heights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">x1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">:</span><span class="o">-</span><span class="n">n1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> + </span><span class="si">{}</span><span class="s1"> = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_original</span><span class="p">,</span> <span class="n">ax_optimized</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">interpret_counts</span><span class="p">(</span><span class="n">counts_original</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">interpret_counts</span><span class="p">(</span><span class="n">counts_optimized</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">ax_optimized</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax_optimized</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax_optimized</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+<span class="n">ax_optimized</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>正しい足し算の式がランダムに出現することを確認してください。最後に実機にジョブを投げますが、実は効率化した回路でもまだゲートの数が多すぎて答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、<span class="math notranslate nohighlight">\((n_1, n_2)\)</span>の値として(4, 4)以外に(3, 3)、(2, 2)、(1, 1)も同時に試すことにしましょう。</p>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">ClassicalRegister</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+
+<span class="k">def</span> <span class="nf">make_original_circuit</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+    <span class="n">n3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">reg1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">)</span>
+    <span class="n">reg2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">)</span>
+    <span class="n">reg3</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="s1">&#39;r3&#39;</span><span class="p">)</span>
+    <span class="n">creg</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">+</span> <span class="n">n3</span><span class="p">)</span>
+
+    <span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">,</span> <span class="n">creg</span><span class="p">)</span>
+
+    <span class="c1"># Set register 1 and 2 to equal superpositions</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg1</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
+
+    <span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">ibit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">creg</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">ibit</span><span class="p">,</span> <span class="n">ibit</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">circuit</span>
+        
+<span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original circuit with n1, n2 = </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">))</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">make_original_circuit</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Transpiling..&#39;</span><span class="p">)</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Done. Ops: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;original_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimized circuit with n1, n2 = </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">))</span>    
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">optimized_additions</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Transpiling..&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">initial_layout</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">initial_layout</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">initial_layout</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">initial_layout</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">routing_method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">initial_layout</span><span class="o">=</span><span class="n">initial_layout</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Done. Ops: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;optimized_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Submitting </span><span class="si">{}</span><span class="s1"> circuits to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">),</span> <span class="n">backend</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+<span class="n">qobj</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>    
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj</span><span class="p">)</span>
+
+<span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">counts_list</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ジョブが返ってきたら、8192ショットのうち正しい足し算を表しているものがどれだけあるか調べてみましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">icirc</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]:</span>
+    <span class="k">for</span> <span class="n">iexp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icirc</span><span class="p">,</span> <span class="n">icirc</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">correct_additions</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">counts_list</span><span class="p">[</span><span class="n">iexp</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">:</span><span class="o">-</span><span class="n">n1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">x3</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">==</span> <span class="n">x3</span><span class="p">:</span>
+                <span class="n">correct_additions</span> <span class="o">+=</span> <span class="n">value</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Circuit&#39;</span><span class="p">,</span> <span class="n">iexp</span><span class="p">,</span> <span class="s1">&#39;correct additions&#39;</span><span class="p">,</span> <span class="n">correct_additions</span><span class="p">,</span> <span class="s1">&#39;/ 8192 =&#39;</span><span class="p">,</span> <span class="n">correct_additions</span> <span class="o">/</span> <span class="mf">8192.</span><span class="p">)</span>
+        
+    <span class="n">icirc</span> <span class="o">+=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Circuit 0 correct additions 281 / 8192 = 0.0343017578125
+Circuit 1 correct additions 288 / 8192 = 0.03515625
+Circuit 2 correct additions 514 / 8192 = 0.062744140625
+Circuit 3 correct additions 526 / 8192 = 0.064208984375
+Circuit 4 correct additions 1066 / 8192 = 0.130126953125
+Circuit 5 correct additions 1102 / 8192 = 0.134521484375
+</pre></div>
+</div>
+</div>
+</div>
+<p>回路が均一にランダムに<span class="math notranslate nohighlight">\(0\)</span>から<span class="math notranslate nohighlight">\(2^{n_1 + n_2 + n_3} - 1\)</span>までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は<span class="math notranslate nohighlight">\(2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}\)</span>となります。実機の結果と比べてみると、残念ながら元の回路も効率化した回路も正答率がほとんどこの値に近くなっているのがわかります。</p>
+<dl class="footnote brackets">
+<dt class="label" id="and-you-dont-want-to"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p>そもそも、例えば65量子ビットの計算機からすべてのデータを保存しようと思うと、各振幅を128（古典）ビットの浮動小数点複素数で表現したとすれば512EiB (エクサバイト)のストレージが必要です。これはだいたい現在インターネットを行き来する情報二ヶ月分に相当するので、保存するファシリティを作るにはそれなりの投資が必要です。</p>
+</dd>
+<dt class="label" id="physical"><span class="brackets"><a class="fn-backref" href="#id8">2</a></span></dt>
+<dd><p>「物理的」な回路もまだ実は論理的な存在であり、本当にハードウェアが理解するインストラクションに変換するには、さらに基本ゲートを特定のマイクロ波パルス列に直す必要があります。</p>
+</dd>
+</dl>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">

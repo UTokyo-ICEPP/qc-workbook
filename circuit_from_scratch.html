@@ -125,7 +125,7 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   1兆個の足し算を同時に行う
+   4兆通りの足し算を同時に行う
   </a>
  </li>
  <li class="toctree-l1">
@@ -317,7 +317,7 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id5">
+    <a class="reference internal nav-link" href="#other-single-and-double-qubit-gates">
      1、2量子ビット
     </a>
    </li>
@@ -391,7 +391,7 @@
 <li><p><a class="reference internal" href="#id3" id="id14">シミュレータで量子状態を調べる</a></p></li>
 <li><p><a class="reference internal" href="#id4" id="id15">その他のゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id5" id="id16">1、2量子ビット</a></p></li>
+<li><p><a class="reference internal" href="#other-single-and-double-qubit-gates" id="id16">1、2量子ビット</a></p></li>
 <li><p><a class="reference internal" href="#id6" id="id17">3量子ビット以上</a></p></li>
 </ul>
 </li>
@@ -457,8 +457,8 @@
 <img alt="_images/circuit_from_scratch_5_0.png" src="_images/circuit_from_scratch_5_0.png" />
 </div>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
 <p>回路に測定操作(<code class="docutils literal notranslate"><span class="pre">measure_all()</span></code>)を加えてしまうと、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を利用して測定前の回路の量子状態を確認することができなくなります。</p>
 </div>
 <p>シミュレーションを実行する際も、実機のバックエンドと同様に<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく「状態ベクトル」（＝量子振幅の配列）を得るので<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">result.data()['statevector']</span></code>を参照します。</p>
@@ -509,8 +509,8 @@
 <div class="section" id="id4">
 <h2><a class="toc-backref" href="#id15">その他のゲート</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>前半でよく使われる1量子ビットゲートと2量子ビット制御ゲートを紹介しましたが、他にも知っておくと便利なゲートがいくつかあります。</p>
-<div class="section" id="id5">
-<h3><a class="toc-backref" href="#id16">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="other-single-and-double-qubit-gates">
+<span id="id5"></span><h3><a class="toc-backref" href="#id16">1、2量子ビット</a><a class="headerlink" href="#other-single-and-double-qubit-gates" title="Permalink to this headline">¶</a></h3>
 <table class="table">
 <colgroup>
 <col style="width: 25%" />
@@ -526,12 +526,21 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(P\)</span></p></td>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\sqrt{X}\)</span>, SX</p></td>
+<td><p>1</p></td>
+<td><p>計算基底それぞれに対して、以下の変換をする。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\sqrt{X} \ket{0} = \frac{1}{2} \left[(1 + i) \ket{0} + (1 - i) \ket{1}\right] \\
+\sqrt{X} \ket{1} = \frac{1}{2} \left[(1 - i) \ket{0} + (1 + i) \ket{1}\right]\end{split}\]</div>
+</td>
+<td><p>circuit.sx(i)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(P\)</span></p></td>
 <td><p>1</p></td>
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、<span class="math notranslate nohighlight">\(\ket{1}\)</span>に位相<span class="math notranslate nohighlight">\(e^{i\phi}\)</span>をかける。<span class="math notranslate nohighlight">\(P(\phi)\)</span>は<span class="math notranslate nohighlight">\(R_{z}(\phi)\)</span>と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られる。</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.p(phi,</span> <span class="pre">i)</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(U_3\)</span></p></td>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(U_3\)</span></p></td>
 <td><p>1</p></td>
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\theta, \phi, \lambda\)</span>を取り、単一量子ビットの任意の状態を実現する。</p>
 <div class="math notranslate nohighlight">
@@ -540,7 +549,7 @@ U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\righ
 </td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.u3(theta,</span> <span class="pre">phi,</span> <span class="pre">lambda,</span> <span class="pre">i)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C^i_j[U_1]\)</span>, <span class="math notranslate nohighlight">\(C^i_j[P]\)</span></p></td>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(C^i_j[U_1]\)</span>, <span class="math notranslate nohighlight">\(C^i_j[P]\)</span></p></td>
 <td><p>2</p></td>
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i, j\)</span>が1であるような計算基底の位相を<span class="math notranslate nohighlight">\(\phi\)</span>前進させる。</p>
 <div class="math notranslate nohighlight">
@@ -551,7 +560,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.cp(phi,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>SWAP</p></td>
+<tr class="row-even"><td><p>SWAP</p></td>
 <td><p>2</p></td>
 <td><p>二つの量子ビットの量子状態を交換する。CNOT三回で実装できる。</p>
 <div class="math notranslate nohighlight">
@@ -586,10 +595,16 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <div class="section" id="id7">
 <h2><a class="toc-backref" href="#id18">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。</p>
-<p>まずは回路の量子状態を表示する<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_state</span></code>という関数</a>をこのワークブックのレポジトリからインポートします。</p>
+<p>まずは回路の量子状態を表示する<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_state</span></code>という関数</a>をこのワークブックのレポジトリからインポートします。この関数は内部で<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を利用して回路の状態ベクトルを読み出しています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Notebooks in mybinder.org starts in the root directory of the repository</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;source&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/source&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+    
+<span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
 </pre></div>
 </div>
 </div>
@@ -898,7 +913,7 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </div>
 </div>
 <p>この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。</p>
-<p>古典コンピュータで離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません。QFTは量子超越が実現されている計算の好例です。</p>
+<p>古典コンピュータで離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。QFTは量子超越が実現されている計算の好例です。</p>
 <p><strong>解答</strong></p>
 <div class="toggle docutils container">
 <p>前の問題同様、基本は<span class="math notranslate nohighlight">\(H\)</span>ゲート<span class="math notranslate nohighlight">\(P\)</span>ゲートを使っていきますが、今回は<span class="math notranslate nohighlight">\(\ket{j}\)</span>という「入力」があるので、制御ゲートを利用する必要があります。</p>
