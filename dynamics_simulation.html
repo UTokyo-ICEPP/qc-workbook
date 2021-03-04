@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output,.cell_output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -299,6 +301,47 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   量子系のダイナミクスとは
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     例：核磁気の歳差運動
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     量子コンピュータ上での表現
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     ハミルトニアンの対角化
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     鈴木-トロッター分解
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#next-topics">
+     Next topics
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -308,6 +351,186 @@
                 
   <div class="section" id="id1">
 <h1>量子ダイナミクスシミュレーション<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>第二回の後半は、量子コンピュータの並列性を利用した計算の代表例として、量子系のダイナミクスシミュレーションについて学びます。</p>
+<div class="contents local topic" id="id2">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#id3" id="id10">量子系のダイナミクスとは</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id4" id="id11">例：核磁気の歳差運動</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id12">量子コンピュータ上での表現</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id13">ハミルトニアンの対角化</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id14">鈴木-トロッター分解</a></p></li>
+<li><p><a class="reference internal" href="#next-topics" id="id15">Next topics</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id10">量子系のダイナミクスとは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>量子力学について少しでも聞いたことのある方は、量子力学の根幹にシュレーディンガー方程式というものが存在することを知っているかと思います。この方程式は</p>
+<div class="math notranslate nohighlight">
+\[
+i \hbar \frac{\partial}{\partial t} \ket{\psi (t)} = H \ket{\psi (t)}
+\]</div>
+<p>などと表現され、時刻<span class="math notranslate nohighlight">\(t\)</span>のある系の状態<span class="math notranslate nohighlight">\(\ket{\psi (t)}\)</span>の時間微分（左辺）が<span class="math notranslate nohighlight">\(\ket{\psi (t)}\)</span>へのハミルトニアンという演算子の作用で定まる（右辺）ということを表しています。ただしこの「微分形」の方程式は我々の目的には少し使いづらいので、ここでは等価な「積分形」にして</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi (t_1)} = \exp \left( -\frac{i}{\hbar} \int_{t_0}^{t_1} H dt \right) \ket{\psi (t_0)}
+\]</div>
+<p>と書いておきます。特に、ハミルトニアン<span class="math notranslate nohighlight">\(H\)</span>が直接時間に依存しない場合は</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi (t_1)} = \exp \left( -\frac{i}{\hbar} (t_1 - t_0) H \right) \ket{\psi (t_0)}
+\]</div>
+<p>です。以下このケースのみを考えます。量子状態に対する演算子（線形演算子）の指数関数もまた演算子なので、積分形のシュレーディンガー方程式は「<span class="math notranslate nohighlight">\(e^{-i/\hbar (t_1-t_0) H}\)</span>という演算子が系を時刻<span class="math notranslate nohighlight">\(t_0\)</span>の初期状態<span class="math notranslate nohighlight">\(\ket{\psi(t_0)}\)</span>から時刻<span class="math notranslate nohighlight">\(t_1\)</span>の状態<span class="math notranslate nohighlight">\(\ket{\psi(t_1)}\)</span>に発展させる」と読めます。さらに、定義上ハミルトニアンは「エルミート演算子」であり、それに虚数単位をかけて指数の冪にした<span class="math notranslate nohighlight">\(e^{-i/\hbar t H}\)</span>（以下これを時間発展演算子<span class="math notranslate nohighlight">\(U(t)\)</span>と呼びます）は「ユニタリ演算子」です（このあたりの線形代数の用語にあまり馴染みがなくても、そういうものかと思ってもらえれば結構です）。</p>
+<p>ユニタリ演算子は量子計算の言葉で言えばゲートにあたります。したがって、ある量子系に関して、その初期状態を量子レジスタで表現でき、時間発展演算子を量子コンピュータの基本ゲートの組み合わせで実装できれば、その系のダイナミクス（＝時間発展）シミュレーションを量子コンピュータで行うことができます。</p>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id11">例：核磁気の歳差運動</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><span class="math notranslate nohighlight">\(\newcommand{\upket}{\ket{\!\uparrow}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\downket}{\ket{\!\downarrow}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\rightket}{\ket{\!\rightarrow}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\leftket}{\ket{\!\leftarrow}}\)</span></p>
+<p>シミュレーションの詳しい話をする前に、これまで量子力学と疎遠だった方のために、ハミルトニアンや時間発展とは具体的にどういうことか、簡単な例を使って説明します。</p>
+<p>空間中に固定されたスピン<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>原子核一つを考えます。ある方向（Z方向とします）のスピン<span class="math notranslate nohighlight">\(\pm \frac{1}{2}\)</span>の状態をそれぞれ<span class="math notranslate nohighlight">\(\upket, \downket\)</span>で表します。量子力学に馴染みのない方のための説明例で大いに量子力学的な概念を使っていますが、何の話かわからなければ「2つの基底ケットで表現される、量子ビットのような物理系がある」と考えてください。量子ビットのような物理系なので、系の状態は一般に<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>の重ね合わせになります。</p>
+<p>時刻<span class="math notranslate nohighlight">\(t_0\)</span>で系が<span class="math notranslate nohighlight">\(\ket{\psi(t_0)} = \upket\)</span>にあるとします。時刻<span class="math notranslate nohighlight">\(t_1\)</span>での系の状態を求めることは</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi (t_1)} = \alpha (t_1) \upket + \beta (t_1) \downket
+\]</div>
+<p>の<span class="math notranslate nohighlight">\(\alpha (t_1)\)</span>と<span class="math notranslate nohighlight">\(\beta (t_1)\)</span>を求めることに相当します。ここで<span class="math notranslate nohighlight">\(\alpha (t_0) = 1, \beta (t_0) = 0\)</span>です。</p>
+<p>この原子核に<span class="math notranslate nohighlight">\(X\)</span>方向の一定磁場をかけます。非ゼロのスピンを持つ粒子はスピンベクトル<span class="math notranslate nohighlight">\(\vec{\sigma}\)</span>と平行な磁気モーメント<span class="math notranslate nohighlight">\(\vec{\mu}\)</span>を持ち、磁場<span class="math notranslate nohighlight">\(\vec{B}\)</span>のもとでエネルギー<span class="math notranslate nohighlight">\(-\vec{B}\cdot\vec{\mu}\)</span>を得ます。ハミルトニアンとは実は系のエネルギーを表す演算子なので、この一定磁場だけに注目した場合の系のハミルトニアンは、何かしらの定数<span class="math notranslate nohighlight">\(\omega\)</span>とスピンベクトルの<span class="math notranslate nohighlight">\(X\)</span>成分<span class="math notranslate nohighlight">\(\sigma_X\)</span>を用いて<span class="math notranslate nohighlight">\(H = \hbar \omega \sigma_X\)</span>と書けます。</p>
+<p>量子力学では<span class="math notranslate nohighlight">\(\sigma_X\)</span>は演算子であり、<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>に対して</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\sigma_X \upket = \downket \\
+\sigma_X \downket = \upket
+\end{split}\]</div>
+<p>と作用します。時間発展演算子<span class="math notranslate nohighlight">\(U(t)\)</span>は</p>
+<div class="math notranslate nohighlight">
+\[
+U(t) = \exp (-i \omega t \sigma_X) = \sum_{n=0}^{\infty} \frac{1}{n!} (-i \omega t)^n \sigma_X^n = I + (-i \omega t) \sigma_X + \frac{1}{2} (-i \omega t)^2 \sigma_X^2 + \frac{1}{6} (-i \omega t)^3 \sigma_X^3 \cdots
+\]</div>
+<p>ですが（<span class="math notranslate nohighlight">\(I\)</span>は恒等演算子）、上の<span class="math notranslate nohighlight">\(\sigma_X\)</span>の定義からわかるように<span class="math notranslate nohighlight">\(\sigma_X^2 = I\)</span>なので</p>
+<div class="math notranslate nohighlight" id="equation-exp-sigmax">
+<span class="eqno">(1)<a class="headerlink" href="#equation-exp-sigmax" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+\exp (-i \omega t \sigma_X) &amp; = \left[ 1 + \frac{1}{2} (-i \omega t)^2 + \cdots \right] I + \left[(-i \omega t) + \frac{1}{6} (-i \omega t)^3 + \cdots \right] \sigma_X \\
+&amp; = \cos(\omega t) I - i \sin(\omega t) \sigma_X
+\end{align}\end{split}\]</div>
+<p>と書けます。したがって、</p>
+<div class="math notranslate nohighlight" id="equation-spin-exact">
+<span class="eqno">(2)<a class="headerlink" href="#equation-spin-exact" title="Permalink to this equation">¶</a></span>\[\ket{\psi (t_1)} = U(t_1 - t_0) \ket{\psi (t_0)} = \exp [-i \omega (t_1 - t_0) \sigma_X] \upket = \cos[\omega (t_1 - t_0)] \upket - i \sin[\omega (t_1 - t_0)] \downket\]</div>
+<p>です。任意の時刻<span class="math notranslate nohighlight">\(t_1\)</span>のスピンの状態が基底<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>の重ね合わせとして表現されました。</p>
+<p>このように、系のエネルギーの表式からハミルトニアンが決まり、その指数関数を初期状態に作用させることで時間発展後の系の状態が求まります。</p>
+<p>ちなみに、<span class="math notranslate nohighlight">\(\ket{\psi (t_1)}\)</span>は<span class="math notranslate nohighlight">\(t_1 = t_0\)</span>で<span class="math notranslate nohighlight">\(\upket\)</span>、<span class="math notranslate nohighlight">\(t_1 = t_0 + \pi / (2 \omega)\)</span>で<span class="math notranslate nohighlight">\((-i)\downket\)</span>となり、以降<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>を周期的に繰り返します。実は、その間の状態はスピンが<span class="math notranslate nohighlight">\(Y\)</span>-<span class="math notranslate nohighlight">\(Z\)</span>平面内を向いている状態に相当します。スピンが0でない原子核に磁場をかけると、スピンと磁場の方向が揃っていなければ磁場の方向を軸にスピンが歳差運動（すりこぎ運動）をします。これはコマが重力中で起こす運動と同じで、核磁気共鳴（NMR、さらに医学応用のMRI）の原理に深く関わります。</p>
+</div>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id12">量子コンピュータ上での表現</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>すでに触れましたが、上の例で核のスピンは量子ビットのように2つの基底ケットを持ちます（2次元量子系です）。さらに、お気づきの方も多いと思いますが、<span class="math notranslate nohighlight">\(\sigma_X\)</span>の<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>への作用は<span class="math notranslate nohighlight">\(X\)</span>ゲートの<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>への作用そのものです。このことから、核磁気の歳差運動が極めて自然に量子コンピュータでシミュレートできることがわかるかと思います。</p>
+<p>実際には、時間発展演算子は<span class="math notranslate nohighlight">\(\sigma_X\)</span>そのものではなくその指数関数なので、量子コンピュータでも<span class="math notranslate nohighlight">\(\exp (-i \theta/2 X)\)</span>に対応する<span class="math notranslate nohighlight">\(R_{x} (\theta)\)</span>ゲートを利用します。これまで紹介されませんでしたが、<span class="math notranslate nohighlight">\(R_{x}\)</span>ゲートはパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>をとり、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+R_{x}(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} - i\sin\frac{\theta}{2}\ket{1} \\
+R_{x}(\theta)\ket{1} = -i\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}
+\end{split}\]</div>
+<p>という変換を行います。上の核スピン系を量子コンピュータでシミュレートするには、1量子ビットで<span class="math notranslate nohighlight">\(R_{x} (2 \omega (t_1 - t_0)) \ket{0}\)</span>を計算する以下の回路を書けばいいだけです。</p>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<img alt="_images/dynamics_simulation_4_0.png" src="_images/dynamics_simulation_4_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id13">ハミルトニアンの対角化</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>再び量子コンピュータを離れて、量子・古典に関わらずデジタル計算機で量子ダイナミクスのシミュレーションをする際の一般論をします。</p>
+<p>上の核スピンの例ではハミルトニアンが単純だったので、式<a class="reference internal" href="#equation-spin-exact">(2)</a>のように厳密解が求まりました。特に、導出において<span class="math notranslate nohighlight">\(\sigma_X^2 = I\)</span>という恒等式が非常に重要でした。しかし、一般のハミルトニアンでは、何乗しても恒等演算子の定数倍にたどり着く保証がありません。</p>
+<p>累乗して恒等演算子にならないようなハミルトニアンであっても、系の次元が小さい場合は「対角化」という作業で厳密解を得られます。ハミルトニアンの対角化とは、ハミルトニアンの作用が実数をかけることと等しくなるようなケットを探してくること、つまり</p>
+<div class="math notranslate nohighlight">
+\[
+H\ket{\phi_j} = \hbar \omega_j \ket{\phi_j}, \quad \omega_j \in \mathbb{R}
+\]</div>
+<p>が成り立つような<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を見つけることを指します。このような<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を「固有値<span class="math notranslate nohighlight">\(\hbar \omega_j\)</span>を持つ<span class="math notranslate nohighlight">\(H\)</span>の固有ベクトル」と呼びます。系の次元が<span class="math notranslate nohighlight">\(N\)</span>であれば、独立な固有ベクトルが<span class="math notranslate nohighlight">\(N\)</span>個存在します。</p>
+<p>例えば上の例では<span class="math notranslate nohighlight">\(H = \hbar \omega \sigma_X\)</span>ですが、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\rightket := \frac{1}{\sqrt{2}}(\upket + \downket) \\
+\leftket := \frac{1}{\sqrt{2}}(\upket - \downket)
+\end{split}\]</div>
+<p>という2つの状態を考えると</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\sigma_X \rightket = \rightket \\
+\sigma_X \leftket = -\leftket
+\end{split}\]</div>
+<p>なので、これらが固有値<span class="math notranslate nohighlight">\(\pm \hbar \omega\)</span>の<span class="math notranslate nohighlight">\(H\)</span>の固有ベクトルとなっていることがわかります。</p>
+<p>ハミルトニアンの固有値<span class="math notranslate nohighlight">\(\hbar \omega_j\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>に対して、時間発展演算子は</p>
+<div class="math notranslate nohighlight">
+\[
+U(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \exp (-i \omega_j t) \ket{\phi_j}
+\]</div>
+<p>のように作用するので、系の初期状態<span class="math notranslate nohighlight">\(\ket{\psi (t_0)}\)</span>が</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi (t_0)} = \sum_{j=0}^{N} c_j \ket{\phi_j}
+\]</div>
+<p>であれば、時刻<span class="math notranslate nohighlight">\(t_1\)</span>での状態は</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi (t_1)} = \sum_{j=0}^{N} c_j U(t_1 - t_0) \ket{\phi_j} = \sum_{j=0}^{N} e^{-i \omega_j (t_1 - t_0)} c_j \ket{\phi_j},
+\]</div>
+<p>つまり、各固有ベクトルの振幅に、対応する位相因子をかけるだけで求まります。</p>
+<p>再び核スピンの例を見ると、初期状態<span class="math notranslate nohighlight">\(\ket{\psi(t_0)} = \upket = 1/\sqrt{2} (\rightket + \leftket)\)</span>なので、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\ket{\psi(t_1)} &amp; = \frac{1}{\sqrt{2}} \left( e^{-i\omega (t_1 - t_0)} \rightket + e^{i\omega (t_1 - t_0)} \leftket \right) \\
+&amp; = \frac{1}{2} \left[ \left( e^{-i\omega (t_1 - t_0)} + e^{i\omega (t_1 - t_0)} \right) \upket + \left( e^{-i\omega (t_1 - t_0)} - e^{i\omega (t_1 - t_0)} \right) \downket \right] \\
+&amp; = \cos [\omega (t_1-t_0)] \upket - i \sin [\omega (t_1-t_0)] \downket
+\end{align}
+\end{split}\]</div>
+<p>となり、式<a class="reference internal" href="#equation-spin-exact">(2)</a>が再導出できます。</p>
+<p>このように、ハミルトニアンの対角化さえできれば、量子ダイナミクスのシミュレーションは位相をかけて足し算をするだけの問題に帰着します。しかし、上で言及したように、計算量の問題から、ハミルトニアンが対角化できるのは主に系の次元が小さいときに限ります。「対角化」という言葉が示唆するように、この操作は行列演算（対角化）を伴い、その際の行列の大きさは<span class="math notranslate nohighlight">\(N \times N\)</span>です。上の核スピンの例では<span class="math notranslate nohighlight">\(N=2\)</span>でしたが、もっと実用的なシミュレーションの場合、系の量子力学的次元は一般的に関係する自由度の数（粒子数など）の指数関数的に増加します。比較的小規模な系でもすぐに対角化にスーパーコンピュータが必要なスケールになってしまいます。</p>
+</div>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id14">鈴木-トロッター分解</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>ハミルトニアンが対角化できない場合、ダイナミクスシミュレーションをするには、結局式<a class="reference internal" href="#equation-spin-exact">(2)</a>のように初期状態に時間発展演算子を愚直にかけていくことになります。式<a class="reference internal" href="#equation-exp-sigmax">(1)</a>のように<span class="math notranslate nohighlight">\(U(t)\)</span>を閉じた形式で厳密に書けないなら、数値的に近似していく必要があります。その場合の定石は、行いたい時間発展<span class="math notranslate nohighlight">\((t_1 - t_0)\)</span>を短い時間</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta t = \frac{t_1 - t_0}{M}, \quad M \gg 1
+\]</div>
+<p>に分割し、<span class="math notranslate nohighlight">\(\Delta t\)</span>だけの時間発展<span class="math notranslate nohighlight">\(U(\Delta t)\)</span>を近似する演算子<span class="math notranslate nohighlight">\(\tilde{U}_{\Delta t}\)</span>を考えることです。この<span class="math notranslate nohighlight">\(\tilde{U}_{\Delta t}\)</span>での状態の遷移の様子がわかるのであれば、それを<span class="math notranslate nohighlight">\(M\)</span>回繰り返すことで、求める終状態が近似できます。</p>
+<p>通常<span class="math notranslate nohighlight">\(H\)</span>はわかっており、任意の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対して<span class="math notranslate nohighlight">\(H\ket{\psi}\)</span>が計算できるので、例えば<span class="math notranslate nohighlight">\(\mathcal{O}((\Delta t)^2)\)</span>を無視する近似で</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{U}_{\Delta t} = I - \frac{i \Delta t}{\hbar} H
+\]</div>
+<p>とすれば、まず<span class="math notranslate nohighlight">\(H\ket{\psi(t_0)}\)</span>を計算し、それを<span class="math notranslate nohighlight">\(i\Delta t/\hbar\)</span>倍して<span class="math notranslate nohighlight">\(\ket{\psi(t_0)}\)</span>から引き、その結果にまた<span class="math notranslate nohighlight">\(H\)</span>をかけて、…という具合に<span class="math notranslate nohighlight">\(\ket{\psi(t_1)}\)</span>が近似計算できます<a class="footnote-reference brackets" href="#exact-at-limit" id="id8">1</a>。</p>
+<p>しかし、このスキームは量子コンピュータでの実装に向いていません。上で述べたように量子コンピュータのゲートはユニタリ演算子に対応するのに対して、<span class="math notranslate nohighlight">\(I - i\Delta t / \hbar H\)</span>はユニタリでないからです。代わりに、量子コンピュータでのダイナミクスシミュレーションでよく用いられるのが鈴木・トロッター分解という近似法です。</p>
+<p>鈴木・トロッター分解は、ハミルトニアンを<span class="math notranslate nohighlight">\(H = H_0 + H_1 + H_2 + \cdots\)</span>とエルミート演算子の和に分解したときに、</p>
+<div class="math notranslate nohighlight">
+\[
+\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)
+\]</div>
+<p>が成り立つという定理に基づきます。個々の<span class="math notranslate nohighlight">\(H_k\)</span>について<span class="math notranslate nohighlight">\(\exp (-i/\hbar \Delta t H_k)\)</span>の量子ゲートによる実装が知られていれば、右辺の第一項が実装できるので、ステップ数<span class="math notranslate nohighlight">\(M\)</span>で決まる精度でダイナミクスが近似できます。</p>
+<p>さらに、<span class="math notranslate nohighlight">\(2^n\)</span>次元線形空間に作用するエルミート演算子はすべてパウリ行列<span class="math notranslate nohighlight">\(\{I, \sigma_X, \sigma_Y, \sigma_Z\}\)</span>の積の線形和に分解できます。上で<span class="math notranslate nohighlight">\(\sigma_X\)</span>と<span class="math notranslate nohighlight">\(X\)</span>ゲートとの対応について触れましたが、同様に<span class="math notranslate nohighlight">\(\sigma_Y\)</span>と<span class="math notranslate nohighlight">\(\sigma_Z\)</span>もそれぞれ<span class="math notranslate nohighlight">\(Y\)</span><a class="footnote-reference brackets" href="#ygate" id="id9">2</a>と<span class="math notranslate nohighlight">\(Z\)</span>ゲートに対応し、これらの指数関数はそれぞれ<span class="math notranslate nohighlight">\(R_x, R_y, R_z\)</span>ゲートに対応します。</p>
+</div>
+<div class="section" id="next-topics">
+<h3><a class="toc-backref" href="#id15">Next topics</a><a class="headerlink" href="#next-topics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>How this is actually a parallel computation problem</p></li>
+<li><p>Trotter decomposition</p></li>
+</ul>
+<dl class="footnote brackets">
+<dt class="label" id="exact-at-limit"><span class="brackets"><a class="fn-backref" href="#id8">1</a></span></dt>
+<dd><p>実際、この手続きは<span class="math notranslate nohighlight">\(M \rightarrow \infty\)</span>の極限で厳密に<span class="math notranslate nohighlight">\(U(t_1 - t_0)\)</span>による時間発展となります。</p>
+</dd>
+<dt class="label" id="ygate"><span class="brackets"><a class="fn-backref" href="#id9">2</a></span></dt>
+<dd><p><span class="math notranslate nohighlight">\(Y\)</span>ゲートは変換<span class="math notranslate nohighlight">\(Y\ket{0} = i\ket{1}\)</span>、<span class="math notranslate nohighlight">\(Y\ket{1} = -i\ket{0}\)</span>を引き起こします。</p>
+</dd>
+</dl>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
