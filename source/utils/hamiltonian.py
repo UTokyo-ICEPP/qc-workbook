@@ -31,9 +31,15 @@ def make_hamiltonian(paulis, coeffs=None):
         np.ndarray(shape=(2 ** n, 2 ** n), dtype=np.complex128): The numerical Hamiltonian matrix. The first qubit
         corresponds to the least significant digit.
     """
+    
+    if len(paulis) == 0:
+        return np.array([[0.]], dtype=np.complex128)
 
     qubit_nums = set(len(term) for term in paulis)
     assert len(qubit_nums) == 1, 'List of paulis must all have the same length.'
+
+    if coeffs is None:
+        coeffs = [1.] * len(paulis)
 
     num_qubits = qubit_nums.pop()
 
@@ -55,7 +61,7 @@ def make_hamiltonian(paulis, coeffs=None):
             sys.stderr.write('Invalid operator {} in term {}\n'.format(err.args[0], iterm))
             raise
 
-        hamiltonian += tensor_product(ops)
+        hamiltonian += coeffs[iterm] * tensor_product(ops)
 
     return hamiltonian
 
@@ -71,7 +77,7 @@ def diagonalized_evolution(hamiltonian, initial_state, time, num_steps=100):
         
     Returns:
         np.ndarray(shape=(T,), dtype=float): Time points.
-        np.ndarray(shape=(T, D), dtype=np.complex128): State vector as a function of time.
+        np.ndarray(shape=(D, T), dtype=np.complex128): State vector as a function of time.
     """
 
     num_dim = hamiltonian.shape[0]
