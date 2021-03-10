@@ -509,7 +509,7 @@
 <h3><a class="toc-backref" href="#id7"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定 <a id='qpe_nqubit'></a></a><a class="headerlink" href="#n-a-id-qpe-nqubit-a" title="Permalink to this headline">¶</a></h3>
 <p>そこで、上側のレジスタを<span class="math notranslate nohighlight">\(n\)</span>量子ビットに拡張した量子回路（下図）を考えてみましょう。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe_wo_iqft.png"><img alt="qpe_wo_iqft" class="bg-primary mb-1 align-center" src="_images/qpe_wo_iqft.png" style="width: 500px;" /></a>
-<p>それに応じて、下側のレジスタにも<span class="math notranslate nohighlight">\(U\)</span>を繰り返し適用することになります。そのための準備として、<span class="math notranslate nohighlight">\(U^{2^x}|\psi\rangle\)</span>が以下のように書けることに留意しておきます。</p>
+<p>それに応じて、下側のレジスタにも<span class="math notranslate nohighlight">\(U\)</span>を繰り返し適用することになりますが、鍵になるのは<span class="math notranslate nohighlight">\(U\)</span>を2の羃乗回適用するところです。それがどういう意味を持つのかを理解するために、準備として<span class="math notranslate nohighlight">\(U^{2^x}|\psi\rangle\)</span>が以下のように書けることを見ておきます（まあ当然と言えば当然ですが）。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
@@ -520,21 +520,21 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 &amp;=e^{2\pi i\theta2^x}|\psi\rangle
 \end{aligned}
 \end{split}\]</div>
-<p>この量子回路に対して、ステップ 1, 2, … <span class="math notranslate nohighlight">\(n+1\)</span>での量子状態は以下のようになることが分かります。</p>
+<p>この量子回路に対して、同様に1, 2, … <span class="math notranslate nohighlight">\(n+1\)</span>の各ステップでの量子状態を追跡していくと、以下のようになることが分かります。</p>
 <ul class="simple">
 <li><p>ステップ 1 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+|1\rangle)^{\otimes n}|\psi\rangle\)</span></p></li>
 <li><p>ステップ 2 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+e^{2\pi i\theta2^{n-1}}|1\rangle)(|0\rangle+|1\rangle)^{\otimes n-1}|\psi\rangle\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></li>
 <li><p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span> : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+e^{2\pi i\theta2^{n-1}}|1\rangle)(|0\rangle+e^{2\pi i\theta2^{n-2}}|1\rangle)\cdots(|0\rangle+e^{2\pi i\theta2^0}|1\rangle)|\psi\rangle\)</span></p></li>
 </ul>
-<p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態をよく見ると、この状態はQFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を施せば、状態<span class="math notranslate nohighlight">\(|2^n\theta\rangle\)</span>が得られることになります。この状態を測定することで、<span class="math notranslate nohighlight">\(2^n\theta\)</span>、つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができるというのがQPEです（下図）。</p>
+<p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態をよく見ると、この状態はQFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用すれば、状態<span class="math notranslate nohighlight">\(|2^n\theta\rangle\)</span>が得られるわけです! この状態を測定すれば、<span class="math notranslate nohighlight">\(2^n\theta\)</span>、つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができるというのがQPEです（下図）。</p>
 <p><a id='qpe_nqubit_fig'></a></p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe.png"><img alt="qpe" class="bg-primary mb-1 align-center" src="_images/qpe.png" style="width: 700px;" /></a>
 </div>
 </div>
 <div class="section" id="a-id-shor-a">
 <h2><a class="toc-backref" href="#id8">ショアのアルゴリズム <a id='shor'></a></a><a class="headerlink" href="#a-id-shor-a" title="Permalink to this headline">¶</a></h2>
-<p>では、ショアのアルゴリズムの本題に入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数<span class="math notranslate nohighlight">\(N\)</span>を、自明ではない素数の積<span class="math notranslate nohighlight">\(N=qp\)</span>に分解する」という問題です。</p>
+<p>では、そろそろ本題であるショアのアルゴリズムに入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数<span class="math notranslate nohighlight">\(N\)</span>を、自明ではない素数の積<span class="math notranslate nohighlight">\(N=qp\)</span>に分解する」という問題です。</p>
 <p>まず、整数の剰余についての表記法をおさらいしておきます。以下のような整数<span class="math notranslate nohighlight">\(x\)</span>の並びを考えたとき、例えば3で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
 <thead>
@@ -566,15 +566,15 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 </tr>
 </tbody>
 </table>
-<p>になります。この時、<span class="math notranslate nohighlight">\(x=y\;(\text{mod}\;3)\)</span>と書くものとします（<span class="math notranslate nohighlight">\(k\)</span>を0以上の整数とすれば、<span class="math notranslate nohighlight">\(x=3k+y\)</span>と書くこともできます）。</p>
-<p>ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。アルゴリズムの一部でしか量子計算を使わないのはなぜ？と思うかもしれませんが、この青地の部分を古典計算で実行するのが難しいというのがその理由です。つまり、古典計算で十分なところは古典計算にまかして、古典計算では難しい部分を量子計算でというのがその発想の大元にあります。なぜ青地の部分が古典計算では難しいのかは追々明らかになります。</p>
+<p>ですね。この時、<span class="math notranslate nohighlight">\(x=y\;(\text{mod}\;3)\)</span>と書くものとします（<span class="math notranslate nohighlight">\(k\)</span>を0以上の整数とすれば、<span class="math notranslate nohighlight">\(x=3k+y\)</span>と書くこともできます）。</p>
+<p>ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。「アルゴリズムの一部でしか量子計算を使わないのはなぜ？」と思うかもしれませんが、この青地の部分を古典計算で実行するのが難しいというのがその理由です。つまり、古典計算で十分なところは古典計算にまかして、古典計算では難しい部分を量子計算で実行するというのがその発想の大元にあります。なぜ青地の部分が古典計算では難しいのかは追々明らかになります。</p>
 <p><a id='shor_algo_fig'></a></p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/shor_flow.png"><img alt="shor_flow" class="bg-primary mb-1 align-center" src="_images/shor_flow.png" style="width: 500px;" /></a>
 <p><a id='factoring_example'></a></p>
 <div class="section" id="id3">
 <h3><a class="toc-backref" href="#id9">素因数分解の例</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>簡単な例として、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解をこのアルゴリズムに沿って考えてみましょう。</p>
-<p>例えば、15に素な数として<span class="math notranslate nohighlight">\(a=7\)</span>を選んだとします。そこで<span class="math notranslate nohighlight">\(7^x\)</span>を15で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
+<p>例えば、15に素な数として仮に<span class="math notranslate nohighlight">\(a=7\)</span>を選んだとします。そこで<span class="math notranslate nohighlight">\(7^x\)</span>を15で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="head"><p>x</p></th>
@@ -601,13 +601,13 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 </tr>
 </tbody>
 </table>
-<p>のようになります。つまり、<span class="math notranslate nohighlight">\(7^r=1\;(\text{mod}\;15)\)</span>を満たす最小の<span class="math notranslate nohighlight">\(r\)</span>は4になることが分かります。
+<p>のようになります。つまり、<span class="math notranslate nohighlight">\(7^r=1\;(\text{mod}\;15)\)</span>を満たす最小の非自明な<span class="math notranslate nohighlight">\(r\)</span>は4になることが分かります。
 <span class="math notranslate nohighlight">\(r=4\)</span>は偶数なので、<span class="math notranslate nohighlight">\(x\equiv7^{4/2}\; (\text{mod}\; 15)=4\)</span>と定義すると、<span class="math notranslate nohighlight">\(x+1=5\neq0\;(\text{mod}\; 15)\)</span>なので、</p>
 <div class="math notranslate nohighlight">
 \[
 \{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}
 \]</div>
-<p>となって、<span class="math notranslate nohighlight">\(15=5\times3\)</span>が得られました。</p>
+<p>となって、<span class="math notranslate nohighlight">\(15=5\times3\)</span>が得られました!</p>
 </div>
 <div class="section" id="a-id-shor-circuit-a">
 <h3><a class="toc-backref" href="#id10">量子回路 <a id='shor_circuit'></a></a><a class="headerlink" href="#a-id-shor-circuit-a" title="Permalink to this headline">¶</a></h3>
@@ -617,8 +617,8 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 <p>上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つづつなのは、15が4ビット（<span class="math notranslate nohighlight">\(n=4\)</span>）で表現できるからです（15の2進数表記 = [1111]）。状態は全て<span class="math notranslate nohighlight">\(|0\rangle\)</span>に初期化されているものとして、測定用ビットの状態を<span class="math notranslate nohighlight">\(|x\rangle\)</span>、作業用ビットの状態を<span class="math notranslate nohighlight">\(|w\rangle\)</span>とします。
 <span class="math notranslate nohighlight">\(U_f\)</span>は以下のようなオラクル</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/shor_oracle2.png"><img alt="shor_oracle2" class="bg-primary mb-1 align-center" src="_images/shor_oracle2.png" style="width: 300px;" /></a>
-<p>で、作業用ビットの出力状態が<span class="math notranslate nohighlight">\(|w\oplus f(x)\rangle\)</span>になるものと理解しておきます（詳細は後で説明します）。関数<span class="math notranslate nohighlight">\(f(x)\)</span>は<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>で定義されるものとします。</p>
-<p>では、回路のステップ 1-5ごとに量子状態を見ていきましょう。まずステップ 1で測定用量子ビットの重ね合わせ状態を生成します。</p>
+<p>で、作業用ビットの出力状態が<span class="math notranslate nohighlight">\(|w\oplus f(x)\rangle\)</span>になるものと理解しておきます（詳細は後で説明します）。関数<span class="math notranslate nohighlight">\(f(x)\)</span>は<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>とします。</p>
+<p>では、同様に回路のステップ 1-5ごとに量子状態を見ていきましょう。まずステップ 1で測定用量子ビットの等しい重ね合わせ状態を生成します。各計算基底は0から15までの整数で書いておくことにします。</p>
 <ul class="simple">
 <li><p>ステップ 1 :<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^4}}\left[\sum_{j=0}^{2^4-1}|j\rangle\right]|0\rangle^{\otimes 4} = \frac{1}{4}\left[|0\rangle+|1\rangle+\cdots+|15\rangle\right]|0\rangle^{\otimes 4}\)</span></p></li>
 </ul>
