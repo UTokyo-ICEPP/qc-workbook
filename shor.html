@@ -445,7 +445,7 @@
                 
   <div class="section" id="id1">
 <h1>ショアの素因数分解アルゴリズムを学習する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>ここでは<strong>ショアのアルゴリズム</strong>を学習します。アルゴリズムの元になっている<strong>量子位相推定</strong>の手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
+<p>この実習では<strong>ショアのアルゴリズム</strong>を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズムは最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている<strong>量子位相推定</strong>と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
@@ -478,27 +478,32 @@
 </div>
 <div class="section" id="a-id-introduction-a">
 <h2><a class="toc-backref" href="#id4">はじめに <a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
-<p>古典計算の能力をはるかに上回る量子計算の一つの例として、最も有名なものがショアの量子計算アルゴリズムでしょう。このアルゴリズムは、大きな正の数を二つの素数の積に分解するというものです。古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると<strong>指数関数的に計算量が増える</strong>と予想されています。ショアのアルゴリズムを用いれば、同じ問題を<strong>多項式時間で解くことができる</strong>と考えられています。
-古典計算での素因数分解の難しさは鍵暗号技術の元になっており、指数関数的に高速なショアのアルゴリズムが大きく注目される理由もそこにあります。</p>
+<p>古典計算をはるかに上回る能力を持つ量子計算の一つの例として、最も広く知られているのがショアの量子計算アルゴリズムでしょう。このアルゴリズムが考える問題は、大きな正の数を二つの素数の積に分解するというもので、問題自体はシンプルです。しかし、古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると<strong>指数関数的に計算量が増える</strong>と予想されています。
+ショアのアルゴリズムを用いれば、同じ問題を<strong>多項式時間で解くことができる</strong>と考えられています（一般的に、問題のサイズに対して多項式で増える計算時間で解くことができれば、それは有効なアルゴリズムだと見なされます）。</p>
+<p>古典計算での素因数分解の難しさは、現在広く使われている鍵暗号技術の元になっています。なので、指数関数的に高速なショアのアルゴリズムが量子コンピュータで実現されれば、秘密の情報が暴かれる可能性があります。ショアのアルゴリズムが大きく注目される理由はそこにあります。</p>
 </div>
 <div class="section" id="a-id-qpe-a">
 <h2><a class="toc-backref" href="#id5">量子位相推定 <a id='qpe'></a></a><a class="headerlink" href="#a-id-qpe-a" title="Permalink to this headline">¶</a></h2>
-<p>まず、ショアのアルゴリズムの元になっている「<strong>量子位相推定」</strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう（実際、ショアのアルゴリズムはほぼQPEそのものであることが追々分かります）。
-QPEの理解には「<strong>量子フーリエ変換</strong>」（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについては、この<a class="reference internal" href="circuit_from_scratch.html"><span class="doc std std-doc">実習</span></a>の問題7もしくは参考文献[1]を参照してください。</p>
-<p>QPEが考える問題は、あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？という問題です。</p>
+<p>まず、ショアのアルゴリズムの元になっている「<strong>量子位相推定」</strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「<strong>量子フーリエ変換</strong>」（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについては、この<a class="reference internal" href="circuit_from_scratch.html"><span class="doc std std-doc">実習</span></a>の問題7、もしくは参考文献[1]を参照してください。</p>
+<p>QPEはとても大事な計算手法で、ショアのアルゴリズムだけでなく、いろいろな量子アルゴリズムのサブルーチンとしても使われています（モンテカルロサンプラーの<a class="reference internal" href="mc_sampler.html"><span class="doc std std-doc">実習</span></a>でも出てきます）。</p>
+<p>QPEが考える問題は、「あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？」という問題です。</p>
 <div class="section" id="a-id-qpe-1qubit-a">
 <h3><a class="toc-backref" href="#id6">1量子ビットの位相推定 <a id='qpe_1qubit'></a></a><a class="headerlink" href="#a-id-qpe-1qubit-a" title="Permalink to this headline">¶</a></h3>
-<p>まず、下図にあるような量子回路を考えてみましょう。</p>
+<p>まず、下図にあるような量子回路を考えてみましょう。上側の量子ビットは<span class="math notranslate nohighlight">\(|0\rangle\)</span>、下側の量子ビットには<span class="math notranslate nohighlight">\(U\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>が初期状態として与えられているとします。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe_1qubit.png"><img alt="qpe_1qubit" class="bg-primary mb-1 align-center" src="_images/qpe_1qubit.png" style="width: 300px;" /></a>
-<p>この場合、量子回路のステップ 1-3での量子状態は以下のようになります。</p>
+<p>この場合、量子回路の1-3の各ステップでの量子状態は、以下のように表現できます。</p>
 <ul class="simple">
 <li><p>ステップ 1 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}}(|0\rangle|\psi\rangle+|1\rangle|\psi\rangle)\)</span></p></li>
 <li><p>ステップ 2 : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}}(|0\rangle|\psi\rangle+|1\rangle e^{2\pi i\theta}|\psi\rangle)\)</span></p></li>
 <li><p>ステップ 3 : <span class="math notranslate nohighlight">\(\frac{1}{2}\left[(1+e^{2\pi i\theta})|0\rangle+(1-e^{2\pi i\theta})|1\rangle\right]|\psi\rangle\)</span></p></li>
 </ul>
 <p>この状態で上側の量子ビットを測定すると、<span class="math notranslate nohighlight">\(|(1+e^{2\pi i\theta})/2|^2\)</span>の確率で0、<span class="math notranslate nohighlight">\(|(1-e^{2\pi i\theta})/2|^2\)</span>の確率で1を測定するでしょう。つまり、この確率の値から位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるわけです。
-しかし、<span class="math notranslate nohighlight">\(\theta\)</span>の値が小さい場合、ほぼ100%の確率で0を、ほぼ0％の確率で1を測定することになるため、100%あるいは0%からのずれを精度良く決めるためには多数回の測定が必要になります。</p>
-<p>少ない測定回数でも精度良く位相を決める方法は、何か考えられるでしょうか。。</p>
+しかし、<span class="math notranslate nohighlight">\(\theta\)</span>の値が小さい場合（<span class="math notranslate nohighlight">\(\theta\ll1\)</span>）、ほぼ100%の確率で0を測定し、ほぼ0％の確率で1を測定することになるため、100%あるいは0%からのずれを精度良く決めるためには測定を何度も繰り返す必要が出てきます。これではあまり優位性を感じませんね。。</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>この制御<span class="math notranslate nohighlight">\(U\)</span>ゲートの部分がショアのアルゴリズムの「オラクル」に対応しています。その後ろには逆量子フーリエ変換が来ますが、1量子ビットの場合は<span class="math notranslate nohighlight">\(H\)</span>ゲート（<span class="math notranslate nohighlight">\(H=H^\dagger\)</span>）です。つまり、1量子ビットの量子フーリエ変換は<span class="math notranslate nohighlight">\(H\)</span>ゲートそのものということですね。</p>
+</div>
+<p>本題に戻って、では少ない測定回数でも精度良く位相を決める方法は、何か考えられるでしょうか。。</p>
 </div>
 <div class="section" id="n-a-id-qpe-nqubit-a">
 <h3><a class="toc-backref" href="#id7"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定 <a id='qpe_nqubit'></a></a><a class="headerlink" href="#n-a-id-qpe-nqubit-a" title="Permalink to this headline">¶</a></h3>
