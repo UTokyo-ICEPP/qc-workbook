@@ -527,7 +527,7 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 <li><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></li>
 <li><p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span> : <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^n}}(|0\rangle+e^{2\pi i\theta2^{n-1}}|1\rangle)(|0\rangle+e^{2\pi i\theta2^{n-2}}|1\rangle)\cdots(|0\rangle+e^{2\pi i\theta2^0}|1\rangle)|\psi\rangle\)</span></p></li>
 </ul>
-<p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態をよく見ると、この状態はQFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用すれば、状態<span class="math notranslate nohighlight">\(|2^n\theta\rangle\)</span>が得られるわけです! この状態を測定すれば、<span class="math notranslate nohighlight">\(2^n\theta\)</span>、つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができるというのがQPEです（下図）。</p>
+<p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態をよく見ると、この状態はQFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用すれば、状態<span class="math notranslate nohighlight">\(|2^n\theta\rangle\)</span>が得られるわけです! この状態を測定すれば、<span class="math notranslate nohighlight">\(2^n\theta\)</span>つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができるというのがQPEです（下図）。</p>
 <p><a id='qpe_nqubit_fig'></a></p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe.png"><img alt="qpe" class="bg-primary mb-1 align-center" src="_images/qpe.png" style="width: 700px;" /></a>
 </div>
@@ -622,7 +622,7 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 <ul class="simple">
 <li><p>ステップ 1 :<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2^4}}\left[\sum_{j=0}^{2^4-1}|j\rangle\right]|0\rangle^{\otimes 4} = \frac{1}{4}\left[|0\rangle+|1\rangle+\cdots+|15\rangle\right]|0\rangle^{\otimes 4}\)</span></p></li>
 </ul>
-<p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を適用した後の状態は</p>
+<p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を適用した後の状態は、オラクルの定義から以下のようになります。</p>
 <ul class="simple">
 <li><p>ステップ 2 :</p></li>
 </ul>
@@ -633,11 +633,11 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 =&amp;\frac{1}{4}\left[|0\rangle|1\rangle+|1\rangle|7\rangle+|2\rangle|4\rangle+|3\rangle|13\rangle+|4\rangle|1\rangle+\cdots+|15\rangle|13\rangle\right]
 \end{aligned}
 \end{split}\]</div>
-<p>ステップ 2の後に作業用ビットを測定します。<span class="math notranslate nohighlight">\(|w\rangle\)</span>は<span class="math notranslate nohighlight">\(|1\rangle\)</span>, <span class="math notranslate nohighlight">\(|7\rangle\)</span>, <span class="math notranslate nohighlight">\(|4\rangle\)</span>, <span class="math notranslate nohighlight">\(|13\rangle\)</span>のどれかなので、例えば測定の結果13が得られたとします。その場合、測定用ビットの状態は</p>
+<p>ステップ 2の後に作業用ビットを測定します。<span class="math notranslate nohighlight">\(|w\rangle\)</span>は<span class="math notranslate nohighlight">\(|7^x\;(\text{mod}\;15)\rangle\)</span>、つまり<span class="math notranslate nohighlight">\(|1\rangle\)</span>, <span class="math notranslate nohighlight">\(|7\rangle\)</span>, <span class="math notranslate nohighlight">\(|4\rangle\)</span>, <span class="math notranslate nohighlight">\(|13\rangle\)</span>のどれかなので、例えば測定の結果13が得られたとします。その場合、測定用ビットの状態は</p>
 <ul class="simple">
 <li><p>ステップ 3 :<span class="math notranslate nohighlight">\(\frac{1}{2}\left[|3\rangle+|7\rangle+|11\rangle+|15\rangle\right]\)</span></p></li>
 </ul>
-<p>となります。次に、測定用ビットに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用します。逆フーリエ変換はある状態<span class="math notranslate nohighlight">\(|j\rangle\)</span>を<span class="math notranslate nohighlight">\(|j\rangle \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}|k\rangle\)</span>に変換するので、</p>
+<p>となります。次に、測定用ビットに逆量子フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用します。逆量子フーリエ変換はある状態<span class="math notranslate nohighlight">\(|j\rangle\)</span>を<span class="math notranslate nohighlight">\(|j\rangle \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}|k\rangle\)</span>に変換するので、</p>
 <ul class="simple">
 <li><p>ステップ 4 :</p></li>
 </ul>
@@ -649,15 +649,16 @@ U^{2^x}|\psi\rangle&amp;=U^{2^x-1}U|\psi\rangle\\
 =&amp;\frac{1}{8}\left[4|0\rangle+4i|4\rangle-4|8\rangle-4i|12\rangle\right]
 \end{aligned}
 \end{split}\]</div>
+<p>となります。ここで、状態として<span class="math notranslate nohighlight">\(|0\rangle\)</span>, <span class="math notranslate nohighlight">\(|4\rangle\)</span>, <span class="math notranslate nohighlight">\(|8\rangle\)</span>, <span class="math notranslate nohighlight">\(|12\rangle\)</span>しか出てこないところが鍵で、量子状態の干渉を使って不要な答えの振幅を小さくしているわけです。</p>
 <ul class="simple">
-<li><p>ステップ 5 :測定用ビットを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。</p></li>
+<li><p>ステップ 5 :最後に測定用ビットを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。</p></li>
 </ul>
 <p>ステップ 2で<span class="math notranslate nohighlight">\(7^x\;(\text{mod}\;15)\)</span>を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。</p>
 </div>
 <div class="section" id="a-id-shor-measurement-a">
 <h3><a class="toc-backref" href="#id11">測定結果の解析 <a id='shor_measurement'></a></a><a class="headerlink" href="#a-id-shor-measurement-a" title="Permalink to this headline">¶</a></h3>
-<p>この測定結果の意味を考察してみましょう。ショアのアルゴリズムの<a class="reference external" href="#shor_circuit_fig">回路</a>と<span class="math notranslate nohighlight">\(n\)</span>量子ビット位相推定の<a class="reference external" href="#qpe_nqubit_fig">回路</a>の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を<span class="math notranslate nohighlight">\(2^4=16\)</span>倍したものになっているはずです。つまり、例えば測定用レジスタを測定した結果が4の場合、位相<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=4/16=0.25\)</span>です。この位相は何を意味しているのでしょうか？</p>
-<p>ショアのアルゴリズムの量子回路として、私たちは<span class="math notranslate nohighlight">\(|w\rangle=|0\rangle^{\otimes n}\)</span>を初期状態として<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span> <span class="math notranslate nohighlight">\((f(x)\equiv a^x\;(\text{mod}\;N))\)</span> となるオラクル<span class="math notranslate nohighlight">\(U_f\)</span>を考えました。この<span class="math notranslate nohighlight">\(U_f\)</span>を実装するために、以下のようなユニタリー演算子<span class="math notranslate nohighlight">\(U\)</span>を考えてみます。</p>
+<p>この測定結果の意味を考察してみましょう。ショアのアルゴリズムの<a class="reference external" href="#shor_circuit_fig">回路</a>と<span class="math notranslate nohighlight">\(n\)</span>量子ビット位相推定の<a class="reference external" href="#qpe_nqubit_fig">回路</a>の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を<span class="math notranslate nohighlight">\(2^4=16\)</span>倍したものになっているはずです。つまり、例えば測定用レジスタを測定した結果が仮に4の場合、位相<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=4/16=0.25\)</span>です。この位相の値は何を意味しているのでしょうか？</p>
+<p>ショアのアルゴリズムの量子回路として、これまで<span class="math notranslate nohighlight">\(|w\rangle=|0\rangle^{\otimes n}\)</span>を初期状態として、<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span> <span class="math notranslate nohighlight">\((f(x)\equiv a^x\;(\text{mod}\;N))\)</span> となるオラクル<span class="math notranslate nohighlight">\(U_f\)</span>を考えてきました。この<span class="math notranslate nohighlight">\(U_f\)</span>を実装するために、以下のようなユニタリー演算子<span class="math notranslate nohighlight">\(U\)</span>を考えてみます。</p>
 <div class="math notranslate nohighlight">
 \[
 U|m\rangle=|am\;(\text{mod}\;N)\rangle
@@ -666,11 +667,12 @@ U|m\rangle=|am\;(\text{mod}\;N)\rangle
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
-U_f|x\rangle|0\rangle&amp;=|x\rangle|a^x\;(\text{mod}\;N)\rangle\\
+U_f|x\rangle|0\rangle&amp;=|x\rangle|0 \oplus a^x\;(\text{mod}\;N)\rangle\\
+&amp;=|x\rangle|a^x\;(\text{mod}\;N)\rangle\\
 &amp;=U^x|x\rangle|1\rangle
 \end{aligned}
 \end{split}\]</div>
-<p>ここで</p>
+<p>ここで、天下り的ではありますが</p>
 <div class="math notranslate nohighlight">
 \[
 |\psi_s\rangle \equiv \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1}e^{-2\pi isk/r}|a^k\;(\text{mod}\;N)\rangle
@@ -685,17 +687,17 @@ U_f|x\rangle|0\rangle&amp;=|x\rangle|a^x\;(\text{mod}\;N)\rangle\\
 \[
 U|\psi_s\rangle=e^{2\pi is/r}|\psi_s\rangle
 \]</div>
-<p>つまり、ショアのアルゴリズムのオラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作は、固有値<span class="math notranslate nohighlight">\(e^{2\pi is/r}\)</span>を持つ固有ベクトル<span class="math notranslate nohighlight">\(|\psi_s\rangle\)</span>の重ね合わせ状態<span class="math notranslate nohighlight">\(|1\rangle\)</span>にユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回適用することと同等であり、その後に逆QFTを掛けるということは、まさにQPEの操作を行っていることに対応しています。</p>
-<p>QPEで導出する位相を思い出すと、それは<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>なるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>と固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対する固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>に含まれる位相<span class="math notranslate nohighlight">\(\theta\)</span>でした。以上のことから、ショアのアルゴリズムから得られる位相<span class="math notranslate nohighlight">\(\theta\)</span>は、<span class="math notranslate nohighlight">\(s/r\)</span>（の整数倍）の意味を持つことも分かるでしょう。</p>
+<p>つまり、ショアのアルゴリズムのオラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作は、固有値<span class="math notranslate nohighlight">\(e^{2\pi is/r}\)</span>を持つ固有ベクトル<span class="math notranslate nohighlight">\(|\psi_s\rangle\)</span>の重ね合わせ状態<span class="math notranslate nohighlight">\(|1\rangle\)</span>にユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回適用することと同等なわけです。量子位相推定の<a class="reference external" href="#qpe_nqubit_fig">回路</a>と比較すれば、やっていることはほぼ同じですね。その後に逆QFTを掛けるということまで考えれば、まさにQPEそのものの操作を行っていることに対応しています。</p>
+<p>QPEで得られる位相は何だったかを思い出すと、それは<span class="math notranslate nohighlight">\(U|\psi\rangle=e^{2\pi i\theta}|\psi\rangle\)</span>なるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>と固有ベクトル<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対する固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>に含まれる位相<span class="math notranslate nohighlight">\(\theta\)</span>でした。以上のことから、ショアのアルゴリズムから得られる位相<span class="math notranslate nohighlight">\(\theta\)</span>は、<span class="math notranslate nohighlight">\(s/r\)</span>（の整数倍）の意味を持つことも分かるでしょう。</p>
 </div>
 <div class="section" id="a-id-continued-fractions-a">
 <h3><a class="toc-backref" href="#id12">連分数展開 <a id='continued_fractions'></a></a><a class="headerlink" href="#a-id-continued-fractions-a" title="Permalink to this headline">¶</a></h3>
-<p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（[1]にもp.80-82に記述があります）、この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
+<p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（[1]にもp.80-82に記述があります）。この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
 <p>例えば<span class="math notranslate nohighlight">\(\theta=0.25\)</span>の場合、<span class="math notranslate nohighlight">\(r=4\)</span>が得られます（頻度は小さいですが<span class="math notranslate nohighlight">\(r=8\)</span>が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（<a class="reference external" href="#factoring_example">ここ</a>を参照）。</p>
 </div>
 <div class="section" id="a-id-modular-exponentiation-a">
 <h3><a class="toc-backref" href="#id13">剰余指数化 <a id='modular_exponentiation'></a></a><a class="headerlink" href="#a-id-modular-exponentiation-a" title="Permalink to this headline">¶</a></h3>
-<p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span>をもう少し考えてみましょう。<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>は、<span class="math notranslate nohighlight">\(x\)</span>の2進数表記</p>
+<p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作<span class="math notranslate nohighlight">\(U_f|x\rangle|w\rangle=|x\rangle|w\oplus f(x)\rangle\)</span>とはどういうものか、もう少し考えてみましょう。<span class="math notranslate nohighlight">\(f(x)\equiv a^x\;(\text{mod}\;N)\)</span>は、<span class="math notranslate nohighlight">\(x\)</span>の2進数表記</p>
 <div class="math notranslate nohighlight">
 \[
 x=[x_1x_2\cdots x_n]=2^{n-1}x_1+2^{n-2}x_2+\cdots+2^0x_n
@@ -711,7 +713,7 @@ f(x)&amp;\equiv a^x\;(\text{mod}\;N)\\
 \end{split}\]</div>
 <p>と書くことができます。つまり、この関数は以下のようなユニタリー演算を考えれば実装することができます。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/shor_oracle.png"><img alt="shor_oracle" class="bg-primary mb-1 align-center" src="_images/shor_oracle.png" style="width: 600px;" /></a>
-<p><span class="math notranslate nohighlight">\(n\)</span>量子ビットQPEの<a class="reference external" href="#qpe_nqubit_fig">回路</a>と比較すれば、このユニタリーはQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、<span class="math notranslate nohighlight">\(a^x\;(\text{mod}\;N)\)</span>を掛けてQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実現する手法を、<strong>剰余指数化</strong>と呼びます。</p>
+<p><span class="math notranslate nohighlight">\(n\)</span>量子ビットQPEの<a class="reference external" href="#qpe_nqubit_fig">回路</a>と比較すれば、このユニタリーはQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された<span class="math notranslate nohighlight">\(a^x\;(\text{mod}\;N)\)</span>を適用してQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実現する手法を、<strong>剰余指数化</strong>と呼びます。</p>
 </div>
 </div>
 <div class="section" id="a-id-imp-a">
