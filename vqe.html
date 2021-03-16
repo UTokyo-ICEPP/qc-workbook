@@ -329,7 +329,7 @@
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#a-id-backgroundmath-a">
-     数学的背景
+     背景
      <a id="backgroundmath">
      </a>
     </a>
@@ -408,7 +408,7 @@
 <li><p><a class="reference internal" href="#a-id-introduction-a" id="id3">はじめに<a id='introduction'></a></a></p></li>
 <li><p><a class="reference internal" href="#a-id-varmethod-a" id="id4">量子力学における変分法<a id='varmethod'></a></a></p>
 <ul>
-<li><p><a class="reference internal" href="#a-id-backgroundmath-a" id="id5">数学的背景<a id='backgroundmath'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-backgroundmath-a" id="id5">背景<a id='backgroundmath'></a></a></p></li>
 <li><p><a class="reference internal" href="#a-id-groundstate-a" id="id6">基底状態の近似<a id='groundstate'></a></a></p></li>
 </ul>
 </li>
@@ -425,26 +425,27 @@
 </div>
 <div class="section" id="a-id-introduction-a">
 <h2><a class="toc-backref" href="#id3">はじめに<a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
-<p>行列で表現されるある物理系に対して、その固有値の最小値を見つけるという操作は、多くのアプリケーションで必要となる重要な技術です。例えば化学では、分子を特徴づけるエルミート行列の最小固有値は、そのシステムの基底状態のエネルギーになります。最小固有値を見つけるには「<strong>量子位相推定</strong>」[1]と呼ばれる手法（この<a class="reference external" href="shor.ipynb#qpe">ノートブック</a>を参照）を使うことができますが、実用的な応用問題の実装に必要な回路は、NISQコンピュータでは実現できないほど長くなることが知られています。そのために、短い量子回路を利用して分子の基底状態エネルギーを推定する手法として、<strong>変分量子固有値ソルバー法</strong>（<em>Variational Quantum Eigensolver</em>, VQE）が提案されました <a class="reference external" href="https://www.nature.com/articles/ncomms5213">[2]</a>。</p>
-<p>まず、VQEの元になる関係を形式的に表現してみましょう。何か分からない最小固有値<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>とその固有状態<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>をもったエルミート行列<span class="math notranslate nohighlight">\(H\)</span>が与えられたとして、VQEはエネルギーの下限である<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>の近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求める手法です。つまり</p>
+<p>行列で表現されるある物理系に対して、その最も小さい固有値を見つけるという操作は、多くのアプリケーションで必要となる重要な技術です。例えば化学の計算では、分子を特徴づけるエルミート行列の最小固有値はそのシステムの最もエネルギーの低い状態（基底状態）のエネルギーになります。最小固有値を見つけるには「<strong>量子位相推定</strong>」[1]と呼ばれる手法（この<a class="reference external" href="shor.ipynb#qpe">ノートブック</a>を参照）を使うことができますが、この手法を使って実用的な問題を解こうとすると、そのために必要な量子回路はNISQコンピュータでは実現できないほど長くなることが知られています。そのために、短い量子回路を利用して分子の基底状態エネルギーを推定する手法として、<strong>変分量子固有値ソルバー法</strong>（<em>Variational Quantum Eigensolver</em>, VQE）が提案されました <a class="reference external" href="https://www.nature.com/articles/ncomms5213">[2]</a>。</p>
+<p>まず、VQEの元になる関係を形式的に表現してみましょう。何か分からない最小固有値<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>とその固有状態<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>をもったエルミート行列<span class="math notranslate nohighlight">\(H\)</span>が与えられたとして、VQEはその系のエネルギーの下限である<span class="math notranslate nohighlight">\(\lambda_{min}\)</span>の近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求める手法です。つまり</p>
 <div class="math notranslate nohighlight">
 \[
 \begin{aligned}
     \lambda_{min} \le \lambda_{\theta} \equiv \langle \psi(\theta) |H|\psi(\theta) \rangle
 \end{aligned}
 \]</div>
-<p>を満たす、できるだけ小さい<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求めることに対応します。ここで<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle\)</span>は近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>に対応する固有状態で、<span class="math notranslate nohighlight">\(\theta\)</span>はパラメータです。つまり、適当な初期状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に<span class="math notranslate nohighlight">\(U(\theta)\)</span>で表現されるパラメータ化された回路を適用することで、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>を近似する状態<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle \equiv U(\theta)|\psi\rangle\)</span>を得ようというアイデアです。最適なパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>の値は、期待値 <span class="math notranslate nohighlight">\(\langle \psi(\theta) |H|\psi(\theta) \rangle\)</span>が最小になるように古典計算を繰り返しながら求めていくことになります。</p>
+<p>を満たす、できるだけ小さい<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>を求めることに対応します。ここで<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle\)</span>は近似解<span class="math notranslate nohighlight">\(\lambda_{\theta}\)</span>に対応する固有状態で、<span class="math notranslate nohighlight">\(\theta\)</span>はパラメータです。つまり、適当な初期状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>にユニタリー<span class="math notranslate nohighlight">\(U(\theta)\)</span>で表現されるパラメータ化された回路を適用することで、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>を近似する状態<span class="math notranslate nohighlight">\(|\psi(\theta)\rangle \equiv U(\theta)|\psi\rangle\)</span>を得ようというアイデアです。最適なパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>の値は、期待値 <span class="math notranslate nohighlight">\(\langle \psi(\theta) |H|\psi(\theta) \rangle\)</span>が最小になるように古典計算を繰り返しながら求めていくことになります。</p>
 </div>
 <div class="section" id="a-id-varmethod-a">
 <h2><a class="toc-backref" href="#id4">量子力学における変分法<a id='varmethod'></a></a><a class="headerlink" href="#a-id-varmethod-a" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="a-id-backgroundmath-a">
-<h3><a class="toc-backref" href="#id5">数学的背景<a id='backgroundmath'></a></a><a class="headerlink" href="#a-id-backgroundmath-a" title="Permalink to this headline">¶</a></h3>
-<p>VQEは量子力学の<strong>変分法</strong>を応用した手法です。変分法をより良く理解するために、基礎的な数学的背景を説明します。行列<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>とその固有値<span class="math notranslate nohighlight">\(\lambda_i\)</span>は、<span class="math notranslate nohighlight">\(A |\psi_i\rangle = \lambda_i |\psi_i\rangle\)</span>の関係にあります。行列<span class="math notranslate nohighlight">\(H\)</span>がエルミート行列<span class="math notranslate nohighlight">\(H = H^{\dagger}\)</span>の場合、スペクトル定理から<span class="math notranslate nohighlight">\(H\)</span>の固有値は実数になります（<span class="math notranslate nohighlight">\(\lambda_i = \lambda_i^*\)</span>）。測定できる量は実数である必要があるため、量子系のハミルトニアンを記述するためにはエルミート行列が適切です。さらに、<span class="math notranslate nohighlight">\(H\)</span>は以下のように表現できます。</p>
+<h3><a class="toc-backref" href="#id5">背景<a id='backgroundmath'></a></a><a class="headerlink" href="#a-id-backgroundmath-a" title="Permalink to this headline">¶</a></h3>
+<p>VQEは量子力学の<strong>変分法</strong>を応用した手法です。変分法をより良く理解するために、基礎的な数学的背景を見てみましょう。</p>
+<p>行列<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>とその固有値<span class="math notranslate nohighlight">\(\lambda_i\)</span>は、<span class="math notranslate nohighlight">\(A |\psi_i\rangle = \lambda_i |\psi_i\rangle\)</span>という関係を持っていますね。行列<span class="math notranslate nohighlight">\(H\)</span>がエルミート行列<span class="math notranslate nohighlight">\(H = H^{\dagger}\)</span>の場合、スペクトル定理から<span class="math notranslate nohighlight">\(H\)</span>の固有値は実数になります（<span class="math notranslate nohighlight">\(\lambda_i = \lambda_i^*\)</span>）。実際に実験で測定できる量は実数である必要があるため、量子系のハミルトニアンを記述するためにはエルミート行列が適切です。さらに、<span class="math notranslate nohighlight">\(H\)</span>は以下のように表現することもできます。</p>
 <div class="math notranslate nohighlight">
 \[
 H = \sum_{i = 1}^{N} \lambda_i |\psi_i\rangle \langle \psi_i |
 \]</div>
-<p>ここで、各<span class="math notranslate nohighlight">\(\lambda_i\)</span>は対応する固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>の固有値です。任意の量子状態に対して観測量<span class="math notranslate nohighlight">\(H\)</span>を測定した場合の期待値は、以下の式で求められます。</p>
+<p>ここで、各<span class="math notranslate nohighlight">\(\lambda_i\)</span>は固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>に対応する固有値です。任意の量子状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対して観測量<span class="math notranslate nohighlight">\(H\)</span>を測定した時の期待値は、以下の式で与えられます。</p>
 <div class="math notranslate nohighlight">
 \[
 \langle H \rangle_{\psi} \equiv \langle \psi | H | \psi \rangle
@@ -458,12 +459,12 @@ H = \sum_{i = 1}^{N} \lambda_i |\psi_i\rangle \langle \psi_i |
 &amp;= \sum_{i = 1}^{N} \lambda_i | \langle \psi_i | \psi\rangle |^2
 \end{aligned}
 \end{split}\]</div>
-<p>になります。最後の式は、任意の状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対する<span class="math notranslate nohighlight">\(H\)</span>の期待値は、<span class="math notranslate nohighlight">\(\lambda_i\)</span>を重みとした固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>と<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>の内積（の絶対値の二乗）の線形結合として与えられることを示しています。この式から、<span class="math notranslate nohighlight">\(| \langle \psi_i | \psi\rangle |^2 \ge 0\)</span> であるために</p>
+<p>になります。最後の式は、任意の状態<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>に対する<span class="math notranslate nohighlight">\(H\)</span>の期待値は、<span class="math notranslate nohighlight">\(\lambda_i\)</span>を重みとした固有ベクトル<span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span>と<span class="math notranslate nohighlight">\(|\psi\rangle\)</span>の内積（の絶対値二乗）の線形結合として与えられることを示しています。この式から、<span class="math notranslate nohighlight">\(| \langle \psi_i | \psi\rangle |^2 \ge 0\)</span> であるために</p>
 <div class="math notranslate nohighlight">
 \[
 \lambda_{min} \le \langle H \rangle_{\psi} = \langle \psi | H | \psi \rangle = \sum_{i = 1}^{N} \lambda_i | \langle \psi_i | \psi\rangle |^2
 \]</div>
-<p>が成り立つことは明らかです。上記の式が<strong>変分法</strong>と呼ばれるもの（テキストによっては<strong>変分原理</strong>と呼ぶ）[3]で、<span class="math notranslate nohighlight">\(H\)</span>の最小固有値を下限として、任意の波動関数の期待値を近似的に求めることができることを表しています。この式から、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>状態の期待値は<span class="math notranslate nohighlight">\(\langle \psi_{min}|H|\psi_{min}\rangle = \langle \psi_{min}|\lambda_{min}|\psi_{min}\rangle = \lambda_{min}\)</span>になることも分かるでしょう。</p>
+<p>が成り立つことは明らかです。上記の式が<strong>変分法</strong>と呼ばれるもの（テキストによっては<strong>変分原理</strong>と呼ぶ）[3]で、波動関数を”うまく取る”ことで、ハミルトニアン<span class="math notranslate nohighlight">\(H\)</span>の期待値の下限として最小固有値を近似的に求めることができることを表しています。この式から、<span class="math notranslate nohighlight">\(|\psi_{min}\rangle\)</span>状態の期待値は<span class="math notranslate nohighlight">\(\langle \psi_{min}|H|\psi_{min}\rangle = \langle \psi_{min}|\lambda_{min}|\psi_{min}\rangle = \lambda_{min}\)</span>になることも分かるでしょう。</p>
 </div>
 <div class="section" id="a-id-groundstate-a">
 <h3><a class="toc-backref" href="#id6">基底状態の近似<a id='groundstate'></a></a><a class="headerlink" href="#a-id-groundstate-a" title="Permalink to this headline">¶</a></h3>
@@ -576,9 +577,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution: [0.51357006 0.48642994]
-Obtained Distribution: [0.5028, 0.4972]
-Output Error (L1-Distance): 0.028259881261160802
-Parameters Found: [1.53821574 1.43739731 0.64684648]
+Obtained Distribution: [0.5006, 0.4994]
+Output Error (L1-Distance): 0.0341401187388391
+Parameters Found: [ 1.55869265 -0.07388632  0.6558424 ]
 </pre></div>
 </div>
 </div>
