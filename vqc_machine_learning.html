@@ -58,7 +58,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="実習の準備" href="prerequisites.html" />
-    <link rel="prev" title="[課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する" href="vqe_tracking.html" />
+    <link rel="prev" title="[課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける" href="vqe_tracking.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -176,7 +176,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する
+   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -805,15 +805,15 @@ c: 1/════════════════════╩═
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [3.39513304 5.48946487 3.79107903 4.42316932 2.65493646 4.04819701
- 2.75762983 5.58125448 6.04582054 2.43941478 4.98097053 3.31543173
- 3.20039719 6.05562792 0.07296528 0.63206513 0.13253035 5.22579615
- 4.88473387 5.47699375 6.15198266 5.01903867 2.89328363 4.89755792
- 1.73742644 4.01522617 0.89926542 5.93964777 3.2723264  2.60303718
- 1.66628437 4.87862531 4.09911948 3.57108183 0.02044389 3.89290641
- 3.84110542 3.87526269 5.93453199 4.2934981  3.26031828 3.74119333
- 4.37247567 0.37093885 4.18577075 4.21263394 1.32506492 0.81812023
- 1.9881965  2.29048972 3.59075921 2.76436288 6.20139457 0.71183607]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ret[0] = [ 3.44285385  5.5456285   3.95234764  4.44401696  2.60719346  4.11534033
+  2.75331152  5.55063385  6.02819656  2.3898155   4.94518463  3.38365506
+  3.26269573  5.98653467 -0.10304549  0.71623649  0.17481716  5.26374265
+  4.88614989  5.53352539  6.1896892   5.19126983  2.89062776  4.88099039
+  1.83095934  3.95977221  0.8955921   5.92896578  3.25286458  2.58768593
+  1.66234168  4.89438054  3.92987313  3.6652001   0.13854411  3.97812181
+  3.82263296  3.86355272  5.96611563  4.28442776  3.27658049  3.75784616
+  4.34956369  0.4705779   4.17237491  4.21446956  2.58931001  0.43776732
+  1.99057118  1.97330828  3.55008215  2.79493405  7.25626433  0.62636402]
 </pre></div>
 </div>
 <img alt="_images/vqc_machine_learning_16_1.png" src="_images/vqc_machine_learning_16_1.png" />
@@ -955,7 +955,7 @@ q_2: ┤ RY(θ[2]) ├┤ RZ(θ[5]) ├────■──────■─�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:02,457:qiskit.aqua.quantum_instance:INFO: 
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:45,144:qiskit.aqua.quantum_instance:INFO: 
 Qiskit Terra version: 0.16.4
 Backend: &#39;qasm_simulator (AerProvider)&#39;, with following setting:
 {&#39;basis_gates&#39;: [&#39;ccx&#39;, &#39;cp&#39;, &#39;cswap&#39;, &#39;csx&#39;, &#39;cu1&#39;, &#39;cu2&#39;, &#39;cu3&#39;, &#39;cx&#39;, &#39;cy&#39;, &#39;cz&#39;, &#39;delay&#39;, &#39;diagonal&#39;, &#39;h&#39;, &#39;id&#39;, &#39;initialize&#39;, &#39;kraus&#39;, &#39;mcp&#39;, &#39;mcr&#39;, &#39;mcrx&#39;, &#39;mcry&#39;, &#39;mcrz&#39;, &#39;mcswap&#39;, &#39;mcsx&#39;, &#39;mcu1&#39;, &#39;mcu2&#39;, &#39;mcu3&#39;, &#39;mcx&#39;, &#39;mcy&#39;, &#39;mcz&#39;, &#39;multiplexer&#39;, &#39;p&#39;, &#39;r&#39;, &#39;roerror&#39;, &#39;rx&#39;, &#39;rxx&#39;, &#39;ry&#39;, &#39;ryy&#39;, &#39;rz&#39;, &#39;rzx&#39;, &#39;rzz&#39;, &#39;s&#39;, &#39;sdg&#39;, &#39;snapshot&#39;, &#39;swap&#39;, &#39;sx&#39;, &#39;t&#39;, &#39;tdg&#39;, &#39;u&#39;, &#39;u1&#39;, &#39;u2&#39;, &#39;u3&#39;, &#39;unitary&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;], &#39;coupling_map&#39;: None}
@@ -967,474 +967,489 @@ RunConfig(max_credits=10, seed_simulator=10598, shots=1024)
 Measurement mitigation: None
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:02,458:qiskit.aqua.algorithms.vq_algorithm:INFO: Starting optimizer.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:45,146:qiskit.aqua.algorithms.vq_algorithm:INFO: Starting optimizer.
 bounds=[(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None)]
-initial point=[ 1.25332411 -0.63173868 -0.70709106 -0.40069909  0.44216748  0.47547899
- -0.55336983 -0.26132716 -0.19836405 -2.02652435  0.26786638  0.75480349]
+initial point=[ 2.06428865 -0.71095785 -0.74565952  0.89836458  1.227291   -0.07573388
+  0.65323744  1.85440811  0.52553215 -1.40469019 -0.33785508 -1.10986367]
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:02,753:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.0813091560680805
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:45,657:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.1307051620641537
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:03,012:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.0370177456381533
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:45,973:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9898028752559032
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:03,376:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.0370177456381533
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:46,308:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9898028752559032
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:03,610:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.0370177456381533
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:46,633:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9898028752559032
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:03,847:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9679135729657593
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:46,962:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9439623851515181
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:04,087:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.1143555290855338
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:47,419:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8912063294918579
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:04,322:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9741434175863098
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:47,746:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9084003783927734
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:04,566:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9580869439934332
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:48,066:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9046680317279389
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:04,928:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9423177995875245
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:48,394:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9046165229278038
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:05,176:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8301176498590449
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:48,732:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9074673870993413
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:05,414:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9407127083612788
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:49,242:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 1.00009316624261
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:05,663:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8017983576310688
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:49,563:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8512213050967953
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:05,900:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8017983576310688
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:49,892:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.8512213050967953
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:06,331:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6973751544369413
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:50,232:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7821678915829163
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:06,581:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6478704860684587
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:50,559:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7231172178458409
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:06,833:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.665344244434069
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:51,006:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6740111265341859
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:07,079:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6478704860684587
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:51,335:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7202438225349601
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:07,321:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6621203670119368
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:51,655:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6740111265341859
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:07,569:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.668284427760431
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:51,972:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6783495270815413
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:07,931:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6572855820737409
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:52,299:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6934731345039162
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:08,185:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6512454027662551
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:52,741:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6226074588681499
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:08,418:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6682709357008486
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:53,055:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.601914183977371
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:08,661:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6655035614792312
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:53,393:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6137398373325005
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:09,064:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6391749635801963
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:53,764:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5708566327880147
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:09,317:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.694764759660045
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:54,131:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6077572677295907
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:09,553:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6143428670554794
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:54,594:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5784645586432736
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:09,797:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6857610008949988
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:54,918:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6536294399902717
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:10,048:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6142650424438949
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:55,241:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5747007234763256
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:10,297:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5606149762598618
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:55,561:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5547725006688309
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:10,664:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5944274960193168
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:55,886:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5649979875421811
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:10,901:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5581537244490723
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:56,211:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.561261476236447
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:11,144:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5613470253526025
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:56,685:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5547725006688309
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:11,390:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.562140352536471
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:57,020:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5678830776080994
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:11,650:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5731133306936705
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:57,370:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5641147749456576
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:11,996:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5583922469539411
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:57,699:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.570325338658581
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:12,239:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5607964733179279
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:58,018:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5725689456379243
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:12,479:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5699650522982417
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:58,501:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5566294017689046
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:12,727:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5563677883685939
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:58,846:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5645638743117688
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:12,978:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.547617394283276
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:59,170:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5677672830924493
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:13,416:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5591966939529589
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:59,503:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5626562717700867
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:13,654:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5484620725042775
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:23:59,823:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5680148243156754
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:13,893:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5754738019563825
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:00,140:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5461061014049903
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:14,144:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5496491355495536
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:00,593:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5447600152852634
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:14,387:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.555265307141202
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:00,932:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.548081885590987
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:14,632:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5505047781983011
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:01,256:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5474209819447126
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:14,985:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5398933651246753
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:01,582:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5456751432273113
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:15,220:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.545488492544718
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:02,087:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5505459281695453
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:15,464:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5388100504014457
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:02,408:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5437821765033132
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:15,714:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5420089234776035
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:02,759:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5514482352038071
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:16,108:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5328749245347719
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:03,090:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5437821765033132
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:16,361:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5324980117595036
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:03,408:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5451350006297903
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:16,611:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5348440429369227
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:03,733:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5477039341542305
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:16,868:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5325153521469916
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:04,208:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.544814002564852
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:17,121:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.542713287054279
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:04,538:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5438237747375035
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:17,364:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5335386641887965
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:04,878:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5448406007267218
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:17,719:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396667260277899
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:05,198:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5429435876154625
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:17,955:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5354052587172445
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:05,527:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5443758905703364
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:18,197:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.533841166981507
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:05,981:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5444286650367521
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:18,447:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5346610235636031
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:06,316:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5397869969966248
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:18,704:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5344246691605197
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:06,636:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5448781488655856
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:19,061:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.534987731793892
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:06,957:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5419697874607607
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:19,306:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5345892792867163
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:07,293:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5407307128852464
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:19,552:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5383508169121561
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:07,813:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5418694277330771
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:19,803:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5326725687778147
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:08,169:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.54074829558795
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:20,053:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5333366293576234
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:08,503:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5408294619683545
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:20,481:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.532611781990174
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:08,839:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.540690083899839
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:20,726:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5329369482569304
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:09,176:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5401583670208616
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:20,977:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5327953373034082
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:09,496:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5409106541498712
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:21,230:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5338574610972737
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:09,946:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5430900347771953
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:21,475:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5324184963119247
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:10,266:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5413225652082103
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:21,724:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5325732159449368
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:10,594:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.54139105222319
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:22,089:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5327430291155208
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:10,923:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5417850671656691
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:22,335:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5337902219525346
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:11,438:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5407171056149
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:22,578:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5327421414230764
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:11,793:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.54126692274382
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:22,830:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.531982901175666
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:12,123:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5406679910693848
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:23,243:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5328655099106703
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:12,465:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5401852362984949
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:23,492:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5312992936674038
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:12,817:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.540248815671176
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:23,743:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5328750452814084
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:13,164:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5398231343171134
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:23,996:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5325778521302936
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:13,621:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5415766035696674
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:24,238:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5328672876933693
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:13,947:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5402839103008737
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:24,504:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5320908924266153
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:14,273:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5405612527085355
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:24,864:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.532553389142934
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:14,614:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5403091247742896
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:25,113:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5325608123317476
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:14,943:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5398838853717696
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:25,354:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5317676937121117
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:15,391:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5399271149547674
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:25,597:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5324865876535799
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:15,733:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394796640726928
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:25,842:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5309899192062432
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:16,058:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5400261374407999
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:26,186:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5320678909519975
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:16,385:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5400082126871214
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:26,431:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5314197358719106
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:16,727:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394363214046201
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:26,668:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5315218619718297
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:17,245:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5397365205410898
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:26,914:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5310967120662362
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:17,578:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395481205023026
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:27,160:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5322978786883729
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:17,913:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396183621861882
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:27,564:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5318007004239241
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:18,229:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394969351124163
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:27,805:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5320887093999563
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:18,556:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396525048415575
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:28,069:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.531873744161545
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:18,904:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395602421728585
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:28,315:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5320181169046846
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:19,350:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5397832572164684
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:28,558:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5315292172717323
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:19,693:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394116915801183
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:28,813:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5313115709880896
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:20,023:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396169245936344
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:29,186:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5314641692408097
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:20,389:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395259861222846
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:29,448:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5317851273938938
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:20,890:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5398345385079081
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:29,696:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5311165327318788
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:21,230:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.539466554663025
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:29,938:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530797318357682
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:21,565:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393109376873804
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:30,393:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5310607194558149
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:21,901:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5399083313187827
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:30,651:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5311989565802543
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:22,246:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5397268824839611
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:30,909:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5315817885742007
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:22,565:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5398489167055107
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:31,162:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5316403968331823
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:23,026:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396649986244653
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:31,407:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5312554333291226
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:23,351:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.539472550994733
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:31,763:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5310505100336277
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:23,704:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394979705557398
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:32,014:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5309087788394049
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:24,027:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394876119021585
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:32,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5314478723298907
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:24,356:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396398146339056
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:32,499:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530988047856575
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:24,809:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.539339393250032
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:32,754:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5317722434640222
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:25,167:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396875550551682
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:33,010:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5312061460416666
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:25,488:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394009679185829
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:33,373:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5310375644514342
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:25,831:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5397077337094721
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:33,627:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.53138306253942
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:26,195:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395004011484691
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:33,878:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5310962451212283
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:26,707:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395564361423265
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:34,121:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:27,047:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394563658671995
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:34,374:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308725156017144
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:27,401:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396086952373967
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:34,769:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530737587531004
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:27,733:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396317258220265
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:35,014:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307448443716022
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:28,064:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396475102697642
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:35,262:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530831333675382
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:28,394:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395717510766112
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:35,501:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308855027290083
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:28,849:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396908058273161
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:35,900:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308301972049058
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:29,177:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396789341105358
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:36,145:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308388097800065
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:29,498:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396049656280638
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:36,435:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307640515530394
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:29,824:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5395296114805215
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:36,681:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308030999691112
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:30,327:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5396164557113453
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:36,932:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308157165367475
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:30,648:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393328737600704
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:37,196:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308234415430788
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:30,976:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394580326029687
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:37,550:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307493797044502
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:31,303:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394326913937251
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:37,798:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5309941172596865
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:31,649:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394598872696559
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:38,035:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5309025997038066
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:32,110:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393350513655768
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:38,281:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308282654293004
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:32,442:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:38,535:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308707857779579
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:32,797:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5394002575413313
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:38,889:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308664042620214
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:33,121:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:39,145:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:33,462:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393470909836303
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:39,394:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5309365440403182
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:33,791:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:39,629:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:34,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393541984269518
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:39,878:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530797318357682
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:34,596:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393109376873804
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:40,305:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308703111102654
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:34,923:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.539379524836024
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:40,551:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307591795249611
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:35,248:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393109376873804
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:40,802:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:35,577:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393414069172335
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:41,046:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:36,029:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393109376873804
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:41,291:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:36,359:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5393350513655768
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:41,532:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:36,685:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:41,884:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308137862730046
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:37,033:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:42,133:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307989054729019
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:37,531:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:42,378:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307591795249611
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:37,864:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:42,638:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:38,200:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,035:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307640515530394
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:38,538:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,278:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5307259127203185
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:38,863:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,529:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.530886779025588
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:39,320:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,531:qiskit.aqua.algorithms.classifiers.vqc:INFO: Optimization complete in 41.07256817817688 seconds.
-Found opt_params [ 3.10116508 -1.26599766 -1.09602731  2.17694728 -1.33597111  1.17450152
-  0.51681963  0.25919331  2.28949582 -2.49430056  0.18205813 -0.04421444] in 150 evals
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:39,642:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,824:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch accuracy: 57.50%
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:39,964:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,825:qiskit.aqua.algorithms.classifiers.vqc:INFO: Accuracy is 57.50%
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:40,282:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> --- Testing success ratio:  0.575
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:40,601:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:40,935:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5392620618164853
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:40,936:qiskit.aqua.algorithms.classifiers.vqc:INFO: Optimization complete in 55.79024052619934 seconds.
+Found opt_params [ 3.86728811 -0.82472043 -0.40092091  3.19678866  2.70065815 -0.7468168
+ -0.93750811  0.26906096 -0.01184985 -2.8605371   2.01453543 -2.17736768] in 155 evals
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:41,424:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch accuracy: 55.00%
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:41,425:qiskit.aqua.algorithms.classifiers.vqc:INFO: Accuracy is 55.00%
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> --- Testing success ratio:  0.55
 </pre></div>
 </div>
 </div>
@@ -1470,10 +1485,10 @@ Found opt_params [ 3.10116508 -1.26599766 -1.09602731  2.17694728 -1.33597111  1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:43,838:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:41,439:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 12:27:44,096:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-22 13:24:41,769:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
 </pre></div>
 </div>
 <img alt="_images/vqc_machine_learning_26_2.png" src="_images/vqc_machine_learning_26_2.png" />
@@ -1523,7 +1538,7 @@ Found opt_params [ 3.10116508 -1.26599766 -1.09602731  2.17694728 -1.33597111  1
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">[課題] 高エネルギー実験で生成される荷電粒子の飛跡を、変分量子回路を使って再構成する</a>
+    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">[課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける</a>
     <a class='right-next' id="next-link" href="prerequisites.html" title="next page">実習の準備</a>
 
     </div>
