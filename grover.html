@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>グローバーのアルゴリズムを使って、データベース検索を行う &#8212; 量子コンピューティング・ワークブック</title>
+    <title>データベース検索を行う &#8212; 量子コンピューティング・ワークブック</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -159,7 +159,7 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   グローバーのアルゴリズムを使って、データベース検索を行う
+   データベース検索を行う
   </a>
  </li>
 </ul>
@@ -452,7 +452,7 @@
               <div>
                 
   <div class="section" id="id1">
-<h1>グローバーのアルゴリズムを使って、データベース検索を行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>データベース検索を行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>ここでは、<strong>グローバーのアルゴリズム</strong>の紹介と、そのアルゴリズムを使用して構造化されていないデータベースを検索する問題を考えます。アルゴリズムを説明した後に、Qiskitを使用してグローバーのアルゴリズムを実装します。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -710,7 +710,7 @@ G^r|s\rangle=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\e
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fd9697ec340&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fe49436d160&gt;
 </pre></div>
 </div>
 </div>
@@ -859,12 +859,17 @@ meas: 6/════════════════════════
 <p>グローバーのアルゴリズムを適用し、振幅が変化していく過程を可視化することを試みます。また検索に必要な反復回数と量子ビット数との関係も調べてみます。</p>
 <ol class="simple">
 <li><p><span class="math notranslate nohighlight">\(n=6\)</span>個の量子ビットからなるリスト（<span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素、<span class="math notranslate nohighlight">\(0\leq x&lt;64\)</span>）から適当な整数<span class="math notranslate nohighlight">\(x\)</span>を一つ選び、その数<span class="math notranslate nohighlight">\(x\)</span>を見つけるグローバーのアルゴリズムを実装する。</p></li>
-<li><p>グローバーの反復を複数回繰り返すプログラムを作成する。</p></li>
+<li><p>グローバーの反復を任意の回数繰り返すプログラムを作成する。</p></li>
 <li><p>実装した回路を繰り返し実行し、求める解<span class="math notranslate nohighlight">\(x\)</span>を観測した回数と反復した回数との相関関係を図にする。</p></li>
 <li><p>計算で求めた検索に必要な反復回数と、測定で求めた最適な反復回数が一致することを確認する。</p></li>
 <li><p>同じ要素リストから2つの整数<span class="math notranslate nohighlight">\(x_1\)</span>と<span class="math notranslate nohighlight">\(x_2\)</span>を見つける問題へ量子回路を拡張し、3.と同様に、求める解を観測した回数と反復した回数との相関関係を図にする。</p></li>
-<li><p>リストのサイズを<span class="math notranslate nohighlight">\(n=4\)</span>から<span class="math notranslate nohighlight">\(n=10\)</span>?まで変えて、測定で求めた最適な反復回数が<span class="math notranslate nohighlight">\(n\)</span>とどういう相関関係にあるか図で示す（解が一つの場合）。</p></li>
+<li><p>解が一つの場合で、リストのサイズを<span class="math notranslate nohighlight">\(n=4\)</span>から<span class="math notranslate nohighlight">\(n=10\)</span>まで変えた時に、測定で求めた最適な反復回数が<span class="math notranslate nohighlight">\(n\)</span>とどういう相関関係にあるか図で示す。また、その結果を考察する。</p></li>
 </ol>
+<p>提出するもの：</p>
+<ul class="simple">
+<li><p>1と2のコード</p></li>
+<li><p>3, 5, 6の結果の図と、6の結果の考察</p></li>
+</ul>
 </div>
 <div class="section" id="a-id-references-a">
 <h2><a class="toc-backref" href="#id19">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
