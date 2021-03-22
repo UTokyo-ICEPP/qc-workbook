@@ -147,7 +147,7 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
-   ショアの素因数分解アルゴリズムを学習する
+   素因数分解アルゴリズムを学習する
   </a>
  </li>
 </ul>
@@ -514,7 +514,7 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>測定は量子レジスタの状態を「覗き見る」ような操作ですが、一回の測定操作で具体的に起きることは、各量子ビットに対して0もしくは1という値が得られるというだけです。つまり、量子状態が<span class="math notranslate nohighlight">\(2^n\)</span>個の計算基底の複雑な重ね合わせであったとしても、測定をすると一つの計算基底に対応するビット列が出てくるだけということになります。しかも、一度測定してしまった量子ビットはもう状態を変えてしまっていて、複雑な重ね合わせは失われてしまいます。</p>
 <p>ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を何度も実行して測定を繰り返すと、その都度ランダムにビット列が決まります。ただし、このランダムさには法則があって、<strong>特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗</strong>となっています。つまり、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>があるとき、測定でビット列<span class="math notranslate nohighlight">\(k\)</span>が得られる確率は<span class="math notranslate nohighlight">\(|c_k|^2\)</span>です。</p>
 <p>したがって、回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていき、レジスタがどんな量子状態にあるのか見えてきます。しかしわかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
-<p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">ショアの素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
+<p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
 </div>
 <div class="section" id="id8">
 <h3><a class="toc-backref" href="#id20">よく使うゲート</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
