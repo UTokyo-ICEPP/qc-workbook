@@ -119,3 +119,21 @@ def optimized_additions(n1, n2, measure=True, barrier=False):
             circuit.measure(iq, n1 + n2 + iq)
 
     return circuit
+
+
+def get_initial_layout(backend, n1, n2):
+    if backend.name() == 'ibmq_16_melbourne':
+        if n1 + n2 == 8:
+            return [1, 0, 14, 13, 12, 11, 10, 9, 8, 6, 5, 4, 3]
+        elif n1 + n2 == 6:
+            return [6, 8, 9, 10, 4, 3, 2, 1, 0, 14]
+        elif n1 + n2 == 4:
+            return [6, 8, 9, 10, 11, 12, 13]
+        elif n1 + n2 == 2:
+            return [9, 10, 11, 12]
+    elif backend.configuration().processor_type['family'] == 'Falcon' and \
+        backend.configuration().n_qubits == 5:
+        if n1 + n2 == 2:
+            return [0, 1, 2, 3]
+    
+    raise NotImplementedError('Unsupported backend or n1+n2')

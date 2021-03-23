@@ -28,7 +28,7 @@ if options.checkout:
 try:
     os.environ['PYTHONPATH'] += ':{}'.format(options.source)
 except KeyError:
-    os.environ['PYTHONPATH'] += options.source
+    os.environ['PYTHONPATH'] = options.source
 
 build.callback(path_source='{}/{}'.format(options.source, options.lang),
                path_output=options.target,
