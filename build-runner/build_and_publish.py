@@ -25,6 +25,11 @@ if options.checkout:
     # Can think about installing gitpython if needed
     subprocess.Popen(['git', 'clone', '-b', options.branch, 'https://github.com/{}/qc-workbook'.format(options.account)]).wait()
 
+try:
+    os.environ['PYTHONPATH'] += ':{}'.format(options.source)
+except KeyError:
+    os.environ['PYTHONPATH'] += options.source
+
 build.callback(path_source='{}/{}'.format(options.source, options.lang),
                path_output=options.target,
                config=None,
