@@ -437,15 +437,15 @@
 <div class="section" id="a-id-introduction-a">
 <h2><a class="toc-backref" href="#id3">はじめに<a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
 <p><strong>変分量子固有値ソルバー法</strong>（<em>Variational Quantum Eigensolver</em>, VQE）を紹介した<a class="reference internal" href="vqe.html"><span class="doc std std-doc">ノートブック</span></a>で、VQEの考え方と変分量子回路の基本的な実装の方法を学びました。ここでは、VQEの高エネルギー物理への応用を考えてみます。</p>
-<p>高エネルギー実験では、高いエネルギーに加速した粒子（例えば陽子）を人工的に衝突させ、生成された多数の二次粒子を検出器で測定することで、その生成過程をつかさどる基礎物理反応を理解していきます。そのためには、検出器で測定された信号から生成粒子を同定し、そのエネルギーや運動量を正しく再構成することがとても重要です。この実習では、生成した物理反応を再構成するための最初のステップとして、「荷電粒子飛跡の再構成」をVQEで実現する方法について学んでいきます。</p>
+<p>高エネルギー実験では、高いエネルギーに加速した粒子（例えば陽子）を人工的に衝突させ、生成された多数の二次粒子を検出器で測定することで、その生成過程をつかさどる基礎物理反応を理解していきます。そのためには、検出器で測定された信号から生成粒子を同定し、そのエネルギーや運動量を正しく再構成することがとても重要です。この実習では、生成した物理反応を再構成するための最初のステップとして、「<strong>荷電粒子飛跡の再構成</strong>」をVQEで実現する方法について学んでいきます。</p>
 </div>
 <div class="section" id="a-id-hep-a">
 <h2><a class="toc-backref" href="#id4">高エネルギー実験<a id='hep'></a></a><a class="headerlink" href="#a-id-hep-a" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="lhc-a-id-hep-lhc-a">
 <h3><a class="toc-backref" href="#id5">LHC実験の概要<a id='hep_LHC'></a></a><a class="headerlink" href="#lhc-a-id-hep-lhc-a" title="Permalink to this headline">¶</a></h3>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/LHC_ATLAS.png"><img alt="LHC_ATLAS" class="bg-primary mb-1 align-center" src="_images/LHC_ATLAS.png" style="width: 1000px;" /></a>
-<p>LHC（大型ハドロン加速器 Large Hadron Collider）は、スイスとフランスの国境に位置する欧州原子核研究機構（CERN）で運転されている円形の加速器です。地下約100 mに掘られた周長27 kmのトンネルの中に置かれ、6.5 TeVのエネルギーまで陽子を加速することができます。その加速された陽子を正面衝突させることで、世界最高エネルギーである13 TeV での陽子衝突実験を実現しています（最も左の写真）。左から2番目の写真は、地下トンネルに設置されたLHCの写真です。</p>
-<p>LHCでは4つの実験（ATLAS, CMS, ALICE, LHCb）が進行中ですが、その中でもATLASとCMSは大型の汎用検出器を備えた実験です（右から2番目の写真が実際のATLAS検出器）。陽子衝突で発生した二次粒子を周囲に設置した高精度の検出器で観測することで、さまざまな素粒子反応の観測や新しい現象の探索などを行っています。最も右の写真は、2012年にATLASとCMSで発見されたヒッグス粒子の候補となる生成反応を示したものです。</p>
+<p>LHC（大型ハドロン加速器 Large Hadron Collider）は、スイスとフランスの国境に位置する欧州原子核研究機構（CERN）で運転されている円形の加速器です。地下約100 mに掘られた周長27 kmのトンネルの中に置かれ、6.5 TeVのエネルギーまで陽子を加速することができます（1 TeVは<span class="math notranslate nohighlight">\(10^{12}\)</span> eV）。その加速された陽子を正面衝突させることで、世界最高エネルギーである13 TeV での陽子衝突実験を実現しています（左上の写真）。右上の写真は、地下トンネルに設置されたLHCの写真です。</p>
+<p>LHCでは4つの実験（ATLAS, CMS, ALICE, LHCb）が進行中ですが、その中でもATLASとCMSは大型の汎用検出器を備えた実験です（左下の写真が実際のATLAS検出器）。陽子衝突で発生した二次粒子を周囲に設置した高精度の検出器で観測することで、さまざまな素粒子反応の観測や新しい現象の探索などを行っています。右下の絵はATLAS検出器で実際に記録した粒子生成反応の一つで、これは2012年にATLASとCMSで発見されたヒッグス粒子の候補を示したものです（ヒッグス粒子は単体で測定されるわけではなく、その崩壊の結果出てきた多数の粒子を観測するのでこのように見えます）。</p>
 </div>
 <div class="section" id="a-id-hep-detect-a">
 <h3><a class="toc-backref" href="#id6">荷電粒子の測定<a id='hep_detect'></a></a><a class="headerlink" href="#a-id-hep-detect-a" title="Permalink to this headline">¶</a></h3>
