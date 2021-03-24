@@ -107,13 +107,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   [課題]量子状態で計算をするとは？
+  <a class="reference internal" href="nonlocal_correlations.html">
+   【課題】量子相関を調べる
   </a>
  </li>
 </ul>
@@ -124,10 +119,27 @@
 </p>
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    4兆通りの足し算を同時に行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_computation.html">
+   【課題】量子計算
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子ダイナミクスシミュレーション
+ </span>
+</p>
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    量子ダイナミクスシミュレーション
@@ -473,12 +485,12 @@
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/track_segment.png"><img alt="track_segment" class="bg-primary mb-1 align-center" src="_images/track_segment.png" style="width: 350px;" /></a>
 <p>こうして選び出したセグメントのリストを作り、そのリストから任意のペアを選んで、その<strong>相互作用の強さ</strong>を考えます。この相互作用は物理的な力ではなく、二つのセグメントが<strong>同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか</strong>を表す指標だと考えてください。この指標の決め方ですが、セグメントのペアが同一飛跡に近くなるにつれ、相互作用の強さは-1に近づくように設定されています。相互作用が+1の場合は、セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているため（図中で赤で示したケースに相当）、飛跡の候補としては適切でないことになります。なぜかと言うと、赤で示したような「枝分かれ」した飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。</p>
 <p>また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは異なるため、相互作用の強さは-1より大きな値に設定しています。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で粒子の軌道が曲がるからです。このような理由で、この相互作用の強さは緑のケースに相当するセグメントのペアが最も-1に近くなるように決められていて、このようなペアを選び出すことがここでの目標です。</p>
-<p>この段階まで処理されたデータを、“data_files/QUBO_05pct_input.txt”というファイルで提供しています。ファイルの中を見ると分かりますが、個々のセグメントは”23749_38657_45525”のような名前がついており、セグメントの対をキーとする辞書型のデータとして格納されています（例えば、最初のデータは”(‘23749_38657_45525’, ‘23749_38657_45525’): 0.01112655792777395”となっています）。同じセグメントの対をキーとするデータがなぜこういう値をもっているのかは、前処理に使うモデルの詳細に依るのでここでは説明を省略します（ここでの課題には影響ありません）。</p>
+<p>この段階まで処理されたデータを、“data/QUBO_05pct_input.txt”というファイルで提供しています。ファイルの中を見ると分かりますが、個々のセグメントは”23749_38657_45525”のような名前がついており、セグメントの対をキーとする辞書型のデータとして格納されています（例えば、最初のデータは”(‘23749_38657_45525’, ‘23749_38657_45525’): 0.01112655792777395”となっています）。同じセグメントの対をキーとするデータがなぜこういう値をもっているのかは、前処理に使うモデルの詳細に依るのでここでは説明を省略します（ここでの課題には影響ありません）。</p>
 <p>以上のデータから、VQEで用いるハミルトニアンを構成してみてください。</p>
 <p>ヒント：この形式のデータを以下のコードを使って読み込むとします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_r</span> <span class="o">=</span> <span class="s1">&#39;data_files/QUBO_05pct_input.txt&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_r</span> <span class="o">=</span> <span class="s1">&#39;data/QUBO_05pct_input.txt&#39;</span>
 <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_r</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -612,7 +624,7 @@ O(a,b,T) = \sum_{i=1}^N\sum_{j=1}^Nb_{ij}T_iT_j
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hepqpr.qallse</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">input_path</span> <span class="o">=</span> <span class="s1">&#39;./data_files/event000001000-hits.csv&#39;</span>
+<span class="n">input_path</span> <span class="o">=</span> <span class="s1">&#39;./data/event000001000-hits.csv&#39;</span>
 <span class="n">dw</span> <span class="o">=</span> <span class="n">DataWrapper</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
 
 <span class="c1"># get the results</span>

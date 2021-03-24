@@ -57,7 +57,7 @@
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="単純な量子回路をゼロから書く" href="circuit_from_scratch.html" />
+    <link rel="next" title="【課題】量子相関を調べる" href="nonlocal_correlations.html" />
     <link rel="prev" title="Welcome" href="welcome.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -107,13 +107,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   [課題]量子状態で計算をするとは？
+  <a class="reference internal" href="nonlocal_correlations.html">
+   【課題】量子相関を調べる
   </a>
  </li>
 </ul>
@@ -124,10 +119,27 @@
 </p>
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
    4兆通りの足し算を同時に行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_computation.html">
+   【課題】量子計算
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子ダイナミクスシミュレーション
+ </span>
+</p>
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    量子ダイナミクスシミュレーション
@@ -422,7 +434,7 @@
 </div>
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id16">CHSH不等式とは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>CHSH不等式やその根本であるBell不等式の意義については、<a class="reference internal" href="quantum_basics.html"><span class="doc">量子力学の基礎</span></a>を参照してください。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用していると言えることになります。</p>
+<p>CHSH不等式やその根本であるベル不等式の意義については、<a class="reference internal" href="quantum_basics.html"><span class="doc">量子力学の基礎</span></a>を参照してください。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用していると言えることになります。</p>
 <p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザ一つしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>を利用します。</p>
 </div>
 <div class="section" id="qiskit">
@@ -578,12 +590,24 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 </tbody>
 </table>
 <p>それでは、2量子ビットレジスタの第1ビットに<span class="math notranslate nohighlight">\(H, R_y, X\)</span>の順にゲートをかけて、最後に測定をする回路をQiskitで書いてみましょう。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは必要になるpythonモジュールをすべてインポートしておく</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># レジスタを介さずビット数を指定して回路を作成することもできます</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># レジスタを介さずビット数を指定して回路を作成することもできます</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># その場合、ゲートにはregister[0]ではなく直接量子ビットの番号を指定します</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#　θ = π/2</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -717,7 +741,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_13_0.png" src="_images/chsh_inequality_13_0.png" />
+<img alt="_images/chsh_inequality_14_0.png" src="_images/chsh_inequality_14_0.png" />
 </div>
 </div>
 <p>ここで<code class="docutils literal notranslate"><span class="pre">draw()</span></code>の引数<code class="docutils literal notranslate"><span class="pre">'mpl'</span></code>はmatplotlibライブラリを使ってカラーで描くことを指定しています。実行環境によっては対応していないこともあるので、その場合は引数なしの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>を使います。結果は<code class="docutils literal notranslate"><span class="pre">mpl</span></code>の場合に比べて見劣りしますが、内容は同じです。</p>
@@ -741,8 +765,8 @@ meas: 2/════════════════════════
 </div>
 <div class="section" id="id12">
 <h2><a class="toc-backref" href="#id24">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
-<p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「Bell状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。Bell状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
-<p>Bell状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作るので、ループを回して<code class="docutils literal notranslate"><span class="pre">circuits</span></code>という配列に回路を足していきます。</p>
+<p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「ベル状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。ベル状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
+<p>ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作るので、ループを回して<code class="docutils literal notranslate"><span class="pre">circuits</span></code>という配列に回路を足していきます。</p>
 <p>CHSH不等式の検証用の観測量を作るために、量子ビット1に対し、回路0と2では測定の直前に<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を同じく測定の直前に作用させます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -766,8 +790,6 @@ meas: 2/════════════════════════
 
 <span class="c1"># draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる</span>
 <span class="c1"># 一つのノートブックセルで複数プロットしたい時などに便利</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
 <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
@@ -775,10 +797,10 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_18_0.png" src="_images/chsh_inequality_18_0.png" />
-<img alt="_images/chsh_inequality_18_1.png" src="_images/chsh_inequality_18_1.png" />
-<img alt="_images/chsh_inequality_18_2.png" src="_images/chsh_inequality_18_2.png" />
-<img alt="_images/chsh_inequality_18_3.png" src="_images/chsh_inequality_18_3.png" />
+<img alt="_images/chsh_inequality_19_0.png" src="_images/chsh_inequality_19_0.png" />
+<img alt="_images/chsh_inequality_19_1.png" src="_images/chsh_inequality_19_1.png" />
+<img alt="_images/chsh_inequality_19_2.png" src="_images/chsh_inequality_19_2.png" />
+<img alt="_images/chsh_inequality_19_3.png" src="_images/chsh_inequality_19_3.png" />
 </div>
 </div>
 <p>それぞれの回路で2ビットレジスタの基底<span class="math notranslate nohighlight">\(\ket{00}, \ket{01}, \ket{10}, \ket{11}\)</span>が現れる確率を計算してみましょう。</p>
@@ -844,10 +866,10 @@ P^3_{01} = P^3_{10} = \frac{(s - c)^2}{4}
 C^0 = c^2 - s^2 = \cos\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
 C^1 = s^2 - c^2 = -\frac{1}{\sqrt{2}} \\
 C^2 = 2sc = \sin\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
-C^3 = \frac{1}{\sqrt{2}}
+C^3 = 2sc = \frac{1}{\sqrt{2}}
 \end{split}\]</div>
 <p>なので、これらの組み合わせ<span class="math notranslate nohighlight">\(S = C^0 - C^1 + C^2 + C^3\)</span>の値は<span class="math notranslate nohighlight">\(2\sqrt{2}\)</span>です。</p>
-<p>実は、エンタングルメントが起こらない場合、この観測量<span class="math notranslate nohighlight">\(S\)</span>の値は2を超えられないことが知られています。例えば<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかける前の状態がBell状態ではなく、確率<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>で<span class="math notranslate nohighlight">\(\ket{11}\)</span>という「混合状態」である場合、</p>
+<p>実は、エンタングルメントが起こらない場合、この観測量<span class="math notranslate nohighlight">\(S\)</span>の値は2を超えられないことが知られています。例えば<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかける前の状態がベル状態ではなく、確率<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>で<span class="math notranslate nohighlight">\(\ket{11}\)</span>という「混合状態」である場合、</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 C^0 = \frac{1}{\sqrt{2}} \\
@@ -863,9 +885,7 @@ C^3 = 0
 <p>まずは<a class="reference internal" href="prerequisites.html#qiskit-token"><span class="std std-ref">トークン</span></a>を使ってIBMQに接続します。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
-
-<span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -873,9 +893,7 @@ C^3 = 0
 <p>認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
-
-<span class="c1"># IBMQプロバイダ（実機へのアクセスを管理するオブジェクト）</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IBMQプロバイダ（実機へのアクセスを管理するオブジェクト）</span>
 <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 
 <span class="c1"># バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得し、一番空いているものを選ぶ</span>
@@ -891,10 +909,7 @@ C^3 = 0
 <p>一つのジョブで複数の回路を<code class="docutils literal notranslate"><span class="pre">shots</span></code>回ずつ実行できます。一度に送れる回路の数はバックエンドごとに決まっています。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">execute</span>
-<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
-
-<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
 
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -916,8 +931,8 @@ C^3 = 0
 
 <span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">cnt</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-    <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
     
 <span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </pre></div>
@@ -936,19 +951,17 @@ C^3 = 0
 <p>Qiskitから提供されている<code class="docutils literal notranslate"><span class="pre">plot_histogram</span></code>関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
-
-<span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
-    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_31_0.png" src="_images/chsh_inequality_31_0.png" />
-<img alt="_images/chsh_inequality_31_1.png" src="_images/chsh_inequality_31_1.png" />
-<img alt="_images/chsh_inequality_31_2.png" src="_images/chsh_inequality_31_2.png" />
-<img alt="_images/chsh_inequality_31_3.png" src="_images/chsh_inequality_31_3.png" />
+<img alt="_images/chsh_inequality_32_0.png" src="_images/chsh_inequality_32_0.png" />
+<img alt="_images/chsh_inequality_32_1.png" src="_images/chsh_inequality_32_1.png" />
+<img alt="_images/chsh_inequality_32_2.png" src="_images/chsh_inequality_32_2.png" />
+<img alt="_images/chsh_inequality_32_3.png" src="_images/chsh_inequality_32_3.png" />
 </div>
 </div>
 <p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
@@ -958,8 +971,8 @@ C^3 = 0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
-    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cnt</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cnt</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cnt</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cnt</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">8192.</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">8192.</span><span class="p">)</span>
     
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
@@ -1019,7 +1032,7 @@ Yes, we are using a quantum computer!
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="welcome.html" title="previous page">Welcome</a>
-    <a class='right-next' id="next-link" href="circuit_from_scratch.html" title="next page">単純な量子回路をゼロから書く</a>
+    <a class='right-next' id="next-link" href="nonlocal_correlations.html" title="next page">【課題】量子相関を調べる</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
