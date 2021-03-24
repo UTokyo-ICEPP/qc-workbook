@@ -375,6 +375,22 @@
      <a id="hamiltonian_form">
      </a>
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-pre-processing-a">
+       前準備
+       <a id="pre_processing">
+       </a>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-problem-a">
+       問題
+       <a id="problem">
+       </a>
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#vqe-a-id-tracking-vqe-a">
@@ -426,12 +442,17 @@
 <li><p><a class="reference internal" href="#a-id-tracking-a" id="id7">飛跡の再構成<a id='tracking'></a></a></p>
 <ul>
 <li><p><a class="reference internal" href="#trackml-a-id-ml-challenge-a" id="id8">TrackMLチャレンジ<a id='ML_challenge'></a></a></p></li>
-<li><p><a class="reference internal" href="#vqe-a-id-hamiltonian-form-a" id="id9">[課題] ハミルトニアンの構成とVQEの実行<a id='hamiltonian_form'></a></a></p></li>
-<li><p><a class="reference internal" href="#vqe-a-id-tracking-vqe-a" id="id10">VQEによる近似解の探索<a id='tracking_vqe'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-omake-a" id="id11">おまけ<a id='omake'></a></a></p></li>
+<li><p><a class="reference internal" href="#vqe-a-id-hamiltonian-form-a" id="id9">[課題] ハミルトニアンの構成とVQEの実行<a id='hamiltonian_form'></a></a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-id-pre-processing-a" id="id10">前準備<a id='pre_processing'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-problem-a" id="id11">問題<a id='problem'></a></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#a-id-references-a" id="id12">参考文献<a id='references'></a></a></p></li>
+<li><p><a class="reference internal" href="#vqe-a-id-tracking-vqe-a" id="id12">VQEによる近似解の探索<a id='tracking_vqe'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-omake-a" id="id13">おまけ<a id='omake'></a></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#a-id-references-a" id="id14">参考文献<a id='references'></a></a></p></li>
 </ul>
 </div>
 <div class="section" id="a-id-introduction-a">
@@ -481,13 +502,18 @@
 <div class="section" id="vqe-a-id-hamiltonian-form-a">
 <h3><a class="toc-backref" href="#id9">[課題] ハミルトニアンの構成とVQEの実行<a id='hamiltonian_form'></a></a><a class="headerlink" href="#vqe-a-id-hamiltonian-form-a" title="Permalink to this headline">¶</a></h3>
 <p>課題として考えるのは、<strong>Trackingを実現するためのハミルトニアンを構成し、それをVQEに実装して実行する</strong>ことです。</p>
-<p>この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここではセグメントと呼ぶことにします）。この時検出器中心から発生した粒子を優先的に選び出せるように、セグメントが検出器中心の方を向いているものを選びます。</p>
+<div class="section" id="a-id-pre-processing-a">
+<h4><a class="toc-backref" href="#id10">前準備<a id='pre_processing'></a></a><a class="headerlink" href="#a-id-pre-processing-a" title="Permalink to this headline">¶</a></h4>
+<p>この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここでは「セグメント」と呼ぶことにします）。この時検出器中心から発生した粒子を優先的に選び出せるように、セグメントが検出器中心の方を向いているものを選びます。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/track_segment.png"><img alt="track_segment" class="bg-primary mb-1 align-center" src="_images/track_segment.png" style="width: 350px;" /></a>
-<p>こうして選び出したセグメントのリストを作り、そのリストから任意のペアを選んで、その<strong>相互作用の強さ</strong>を考えます。この相互作用は物理的な力ではなく、二つのセグメントが<strong>同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか</strong>を表す指標だと考えてください。この指標の決め方ですが、セグメントのペアが同一飛跡に近くなるにつれ、相互作用の強さは-1に近づくように設定されています。相互作用が+1の場合は、セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているため（図中で赤で示したケースに相当）、飛跡の候補としては適切でないことになります。なぜかと言うと、赤で示したような「枝分かれ」した飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。</p>
-<p>また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは異なるため、相互作用の強さは-1より大きな値に設定しています。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で粒子の軌道が曲がるからです。このような理由で、この相互作用の強さは緑のケースに相当するセグメントのペアが最も-1に近くなるように決められていて、このようなペアを選び出すことがここでの目標です。</p>
+<p>こうして選び出したセグメントのリストを作り、そのリストから任意のペアを選んで、その<strong>相互作用の強さ</strong>を考えます。この相互作用は物理的な力ではなく、二つのセグメントが<strong>同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか</strong>を表す指標だと考えてください。この指標の決め方ですが、セグメントのペアが同一飛跡に近くなるにつれ、相互作用の強さは-1に近づくように設定されています。セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているケース（図中で赤で示した場合に相当）は、飛跡の候補としては適切でないので相互作用は+1になっています。なぜかと言うと、赤で示したような「枝分かれ」あるいは「収束」したような飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。</p>
+<p>また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは言えないため、相互作用の強さは-1より大きな値に設定しています。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で粒子の軌道が曲がるからです。以上のような理由から、この相互作用の強さは緑のケースに相当するセグメントのペアが最も-1に近くなるように決められていて、このようなペアを選び出すことがここでの目標になります。</p>
 <p>この段階まで処理されたデータを、“data/QUBO_05pct_input.txt”というファイルで提供しています。ファイルの中を見ると分かりますが、個々のセグメントは”23749_38657_45525”のような名前がついており、セグメントの対をキーとする辞書型のデータとして格納されています（例えば、最初のデータは”(‘23749_38657_45525’, ‘23749_38657_45525’): 0.01112655792777395”となっています）。同じセグメントの対をキーとするデータがなぜこういう値をもっているのかは、前処理に使うモデルの詳細に依るのでここでは説明を省略します（ここでの課題には影響ありません）。</p>
+</div>
+<div class="section" id="a-id-problem-a">
+<h4><a class="toc-backref" href="#id11">問題<a id='problem'></a></a><a class="headerlink" href="#a-id-problem-a" title="Permalink to this headline">¶</a></h4>
 <p>以上のデータから、VQEで用いるハミルトニアンを構成してみてください。</p>
-<p>ヒント：この形式のデータを以下のコードを使って読み込むとします。</p>
+<p><strong>ヒント</strong>：この形式のデータを以下のコードを使って読み込むとします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_r</span> <span class="o">=</span> <span class="s1">&#39;data/QUBO_05pct_input.txt&#39;</span>
@@ -559,10 +585,11 @@ O(a,b,T) = \sum_{i=1}^N\sum_{j=1}^Nb_{ij}T_iT_j
 </div>
 </div>
 </div>
-<p>このコードの部分を課題として提出するしてください。</p>
+<p>このコードの部分を課題として提出してください。</p>
+</div>
 </div>
 <div class="section" id="vqe-a-id-tracking-vqe-a">
-<h3><a class="toc-backref" href="#id10">VQEによる近似解の探索<a id='tracking_vqe'></a></a><a class="headerlink" href="#vqe-a-id-tracking-vqe-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">VQEによる近似解の探索<a id='tracking_vqe'></a></a><a class="headerlink" href="#vqe-a-id-tracking-vqe-a" title="Permalink to this headline">¶</a></h3>
 <p>上で定義したハミルトニアンを元に、VQEを使ってエネルギーの最小固有値（の近似解）を求めていきます。ただその前に、このハミルトニアンの行列を対角化してエネルギーの最小固有値とその固有ベクトルを厳密に計算した場合の答えを出してみましょう。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -618,8 +645,8 @@ O(a,b,T) = \sum_{i=1}^N\sum_{j=1}^Nb_{ij}T_iT_j
 </div>
 </div>
 <div class="section" id="a-id-omake-a">
-<h3><a class="toc-backref" href="#id11">おまけ<a id='omake'></a></a><a class="headerlink" href="#a-id-omake-a" title="Permalink to this headline">¶</a></h3>
-<p>Trackingがうまく行っても、この答えでは面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。</p>
+<h3><a class="toc-backref" href="#id13">おまけ<a id='omake'></a></a><a class="headerlink" href="#a-id-omake-a" title="Permalink to this headline">¶</a></h3>
+<p>Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。</p>
 <p>このコードは、QUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面でプロットして、どのヒットが選ばれたかを分かりやすく可視化したものです。緑の線が実際に見つかった飛跡で、青の線を含めたものが全体の飛跡の候補です。この実習では限られた数の量子ビットしか使っていないため、大部分の飛跡は見つけられていませんが、緑の線から計算に使った3点ヒットからは正しく飛跡が見つかっていることが分かると思います。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -658,7 +685,7 @@ O(a,b,T) = \sum_{i=1}^N\sum_{j=1}^Nb_{ij}T_iT_j
 </div>
 </div>
 <div class="section" id="a-id-references-a">
-<h2><a class="toc-backref" href="#id12">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li><p>Nielsen, Michael A and Chuang, Isaac L, “Quantum Computation and Quantum Information”, Cambridge University Pres, 2000.</p></li>
 <li><p>Peruzzo, Alberto, et al., “A variational eigenvalue solver on a photonic quantum processor”, <a class="reference external" href="https://www.nature.com/articles/ncomms5213">Nature commun. 5, 4213 (2014)</a>.</p></li>
