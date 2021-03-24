@@ -456,7 +456,7 @@
 </div>
 <div class="section" id="a-id-tracking-a">
 <h2><a class="toc-backref" href="#id7">飛跡の再構成<a id='tracking'></a></a><a class="headerlink" href="#a-id-tracking-a" title="Permalink to this headline">¶</a></h2>
-<p>この実習で目指すのは、高エネルギー粒子の衝突で発生する<strong>荷電粒子の飛跡を再構成する</strong>こと（<strong>Tracking</strong>と呼ぶ）です。ただし、現在の量子コンピュータでは大きなサイズの問題を解くことはまだ難しいため、サイズの小さい問題（つまり少数の生成粒子が生成された場合）に絞って検討を行います。</p>
+<p>この実習で目指すのは、高エネルギー粒子の衝突で発生する<strong>荷電粒子の飛跡を再構成する</strong>こと（<strong>Tracking</strong>と呼ぶ）です。ただし、現在の量子コンピュータでは大きなサイズの問題を解くことはまだ難しいため、サイズの小さい問題、つまり少数の生成粒子が生成された場合に絞って検討を行います。</p>
 <p>まず、必要なライブラリを最初にインポートします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -476,11 +476,11 @@
 </div>
 <div class="section" id="trackml-a-id-ml-challenge-a">
 <h3><a class="toc-backref" href="#id8">TrackMLチャレンジ<a id='ML_challenge'></a></a><a class="headerlink" href="#trackml-a-id-ml-challenge-a" title="Permalink to this headline">¶</a></h3>
-<p>データとしては、2018年に行われた<a class="reference external" href="https://www.kaggle.com/c/trackml-particle-identification">TrackML Particle Trackingチャレンジ</a>で提供されたオープンデータを活用します。このチャレンジは、CERNで予定されている高輝度LHC計画（2027年に開始予定）での実験環境を想定し、Trackingを高度化するための解析技術を開発することを目指して行われました。</p>
+<p>データとしては、2018年に行われた<a class="reference external" href="https://www.kaggle.com/c/trackml-particle-identification">TrackML Particle Trackingチャレンジ</a>で提供されたオープンデータを活用します。CERNでは、将来の加速器計画として「高輝度LHC」（2027年に開始予定）と呼ばれるLHCの増強計画を進めています。高輝度LHCでは陽子の衝突頻度が現在の数倍に上がるため、Trackingは非常にチャレンジングになることが予想されています。その克服のために高輝度LHCの環境を擬似的に作り、そこでの有効なTracking技術の開発を目指して行われたのがTrackMLチャレンジです。</p>
 </div>
 <div class="section" id="vqe-a-id-hamiltonian-form-a">
 <h3><a class="toc-backref" href="#id9">[課題] ハミルトニアンの構成とVQEの実行<a id='hamiltonian_form'></a></a><a class="headerlink" href="#vqe-a-id-hamiltonian-form-a" title="Permalink to this headline">¶</a></h3>
-<p>課題として考えるのは、Trackingを実現するためのハミルトニアンを構成し、それをVQEに実装して実行することです。</p>
+<p>課題として考えるのは、<strong>Trackingを実現するためのハミルトニアンを構成し、それをVQEに実装して実行する</strong>ことです。</p>
 <p>この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここではセグメントと呼ぶことにします）。この時検出器中心から発生した粒子を優先的に選び出せるように、セグメントが検出器中心の方を向いているものを選びます。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/track_segment.png"><img alt="track_segment" class="bg-primary mb-1 align-center" src="_images/track_segment.png" style="width: 350px;" /></a>
 <p>こうして選び出したセグメントのリストを作り、そのリストから任意のペアを選んで、その<strong>相互作用の強さ</strong>を考えます。この相互作用は物理的な力ではなく、二つのセグメントが<strong>同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか</strong>を表す指標だと考えてください。この指標の決め方ですが、セグメントのペアが同一飛跡に近くなるにつれ、相互作用の強さは-1に近づくように設定されています。相互作用が+1の場合は、セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているため（図中で赤で示したケースに相当）、飛跡の候補としては適切でないことになります。なぜかと言うと、赤で示したような「枝分かれ」した飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。</p>
