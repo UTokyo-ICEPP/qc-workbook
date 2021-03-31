@@ -179,6 +179,11 @@
    データベース検索を行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="amplitude_amplification.html">
+   【課題】振幅増幅を確認する
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -193,7 +198,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -396,7 +401,7 @@
 </li>
 </ul>
 </div>
-<p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id11">量子計算の特徴</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>量子計算をするとはどういうことかを一概に決めることはできませんし、それ自体がまだ世界中で盛んに研究されているトピックです。ただ、現在知られている量子コンピュータの実用法に共通する大まかな特徴を挙げるならば、以下の2点になります。</p>
@@ -480,7 +485,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span><span class="p">,</span> <span class="n">assemble</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 <span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
 <span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
@@ -720,13 +725,11 @@ Number of operations in the optimized circuit: 331
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
-<span class="c1"># Will call assemble() and backend.run() instead of execute()</span>
-<span class="n">qobj_original</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj_original</span><span class="p">)</span>
+<span class="c1"># Will call backend.run() instead of execute()</span>
+<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">counts_original</span> <span class="o">=</span> <span class="n">job_original</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
-<span class="n">qobj_optimized</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj_optimized</span><span class="p">)</span>
+<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">counts_optimized</span> <span class="o">=</span> <span class="n">job_optimized</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="c1"># Keys of counts are single binaries; need to split them into three parts and interpret as decimals</span>

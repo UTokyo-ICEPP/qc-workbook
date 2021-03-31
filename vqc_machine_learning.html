@@ -58,7 +58,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="実習の準備" href="prerequisites.html" />
-    <link rel="prev" title="[課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける" href="vqe_tracking.html" />
+    <link rel="prev" title="【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける" href="vqe_tracking.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -179,6 +179,11 @@
    データベース検索を行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="amplitude_amplification.html">
+   【課題】振幅増幅を確認する
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -193,7 +198,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -389,12 +394,12 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id3">
+      <a class="reference internal nav-link" href="#id9">
        2量子ビットゲートの作成
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id4">
+      <a class="reference internal nav-link" href="#id10">
        回転ゲートと
        <span class="math notranslate nohighlight">
         \(U(\boldsymbol{\theta})\)
@@ -457,13 +462,6 @@
    </a>
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-references-a">
-   参考文献
-   <a id="references">
-   </a>
-  </a>
- </li>
 </ul>
 
         </nav>
@@ -477,49 +475,50 @@
                 
   <div class="section" id="id1">
 <h1>量子機械学習を使って、新しい素粒子現象の発見を目指す<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、量子コンピュータを応用することで古典機械学習の性能を向上するという観点から提案された、<strong>変分量子回路</strong>を使った学習手法 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>です。</p>
-<div class="contents local topic" id="id2">
+<p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、量子コンピュータを応用することで古典機械学習の性能を向上するという観点から提案された、<strong>変分量子回路</strong>を使った学習手法<a href="#id2"><span class="problematic" id="id3">:cite:`PhysRevA.98.032309`</span></a>です。</p>
+<div class="contents local topic" id="id4">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a-id-introduction-a" id="id5">はじめに <a id='introduction'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-ml-a" id="id6">機械学習と深層学習 <a id='ml'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-qml-a" id="id7">量子機械学習<a id='qml'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-example-a" id="id8">初歩的な例<a id='example'></a></a></p>
+<li><p><a class="reference internal" href="#a-id-introduction-a" id="id17">はじめに <a id='introduction'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-ml-a" id="id18">機械学習と深層学習 <a id='ml'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-qml-a" id="id19">量子機械学習<a id='qml'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-example-a" id="id20">初歩的な例<a id='example'></a></a></p>
 <ul>
-<li><p><a class="reference internal" href="#a-id-func-data-a" id="id9">学習データの準備<a id='func_data'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-func-state-preparation-a" id="id10">量子状態の生成<a id='func_state_preparation'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-func-variational-form-a" id="id11">変分フォームを使った状態変換<a id='func_variational_form'></a></a></p>
+<li><p><a class="reference internal" href="#a-id-func-data-a" id="id21">学習データの準備<a id='func_data'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-func-state-preparation-a" id="id22">量子状態の生成<a id='func_state_preparation'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-func-variational-form-a" id="id23">変分フォームを使った状態変換<a id='func_variational_form'></a></a></p>
 <ul>
-<li><p><a class="reference internal" href="#u-boldsymbol-theta" id="id12">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id13">2量子ビットゲートの作成</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id14">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a></p></li>
+<li><p><a class="reference internal" href="#u-boldsymbol-theta" id="id24">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id25">2量子ビットゲートの作成</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id26">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#a-id-func-measurement-a" id="id15">測定とモデル出力<a id='func_measurement'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-func-measurement-a" id="id27">測定とモデル出力<a id='func_measurement'></a></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#a-id-susy-a" id="id16">素粒子現象の探索への応用<a id='susy'></a></a></p>
+<li><p><a class="reference internal" href="#a-id-susy-a" id="id28">素粒子現象の探索への応用<a id='susy'></a></a></p>
 <ul>
-<li><p><a class="reference internal" href="#a-id-susy-data-a" id="id17">学習データの準備<a id='susy_data'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-susy-state-preparation-a" id="id18">量子状態の生成<a id='susy_state_preparation'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-susy-variational-form-a" id="id19">変分フォームを使った状態変換<a id='susy_variational_form'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-susy-measurement-a" id="id20">測定とモデル出力<a id='susy_measurement'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-data-a" id="id29">学習データの準備<a id='susy_data'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-state-preparation-a" id="id30">量子状態の生成<a id='susy_state_preparation'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-variational-form-a" id="id31">変分フォームを使った状態変換<a id='susy_variational_form'></a></a></p></li>
+<li><p><a class="reference internal" href="#a-id-susy-measurement-a" id="id32">測定とモデル出力<a id='susy_measurement'></a></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#vqe-a-id-vqe-application-a" id="id21">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a></p></li>
-<li><p><a class="reference internal" href="#a-id-references-a" id="id22">参考文献<a id='references'></a></a></p></li>
+<li><p><a class="reference internal" href="#vqe-a-id-vqe-application-a" id="id33">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a></p></li>
 </ul>
 </div>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}\)</span></p>
 <div class="section" id="a-id-introduction-a">
-<h2><a class="toc-backref" href="#id5">はじめに <a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">はじめに <a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
 <p>近年、機械学習の分野において<strong>深層学習</strong>（<strong>ディープラーニング</strong>）が注目を浴びています。ディープラーニングは<strong>ニューラルネットワーク</strong>の隠れ層を多層にすることで、入力と出力の間の複雑な関係を学習することができます。その学習結果を使って、新しい入力データに対して出力を予測することが可能になります。ここで学習する量子機械学習アルゴリズムは、このニューラルネットワークの部分を変分量子回路に置き換えたものです。つまり、ニューラルネットワークでの各ニューロン層への重みを調節する代わりに、変分量子回路のパラメータ（例えば回転ゲートの回転角）を調整することで入力と出力の関係を学習しようという試みです。
 量子力学の重ね合わせの原理から、<strong>指数関数的に増える多数の計算基底</strong>を使って状態を表現できることが量子コンピュータの強みです。この強みを生かすことで、データ間の複雑な相関を学習できる可能性が生まれます。そこに量子機械学習の最も大きな強みがあると考えられています。</p>
-<p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>として出版されています。</p>
+<p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<a href="#id5"><span class="problematic" id="id6">:cite:`quantum_svm`</span></a>として出版されています。</p>
 </div>
 <div class="section" id="a-id-ml-a">
-<h2><a class="toc-backref" href="#id6">機械学習と深層学習 <a id='ml'></a></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
-<p>機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>と<span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>からなるデータ（<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>を要素とするベクトル、<span class="math notranslate nohighlight">\(i\)</span>は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数<span class="math notranslate nohighlight">\(x_i\)</span>を引数とする関数<span class="math notranslate nohighlight">\(f\)</span>を考え、その出力<span class="math notranslate nohighlight">\(\tilde{y_i}=f(x_i)\)</span>が<span class="math notranslate nohighlight">\(\tilde{y}_i\simeq y_i\)</span>となるような関数<span class="math notranslate nohighlight">\(f\)</span>をデータから近似的に求めることに対応します。
-一般的に、この関数<span class="math notranslate nohighlight">\(f\)</span>は変数<span class="math notranslate nohighlight">\(x\)</span>以外のパラメータを持っているでしょう。なので、そのパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>をうまく調整して、<span class="math notranslate nohighlight">\(y_i\simeq\tilde{y}_i\)</span>となる関数<span class="math notranslate nohighlight">\(f=f(x,\boldsymbol{w}^*)\)</span>とパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めることが機械学習の鍵になります。</p>
+<h2><a class="toc-backref" href="#id18">機械学習と深層学習 <a id='ml'></a></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
+<p>機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>と<span class="math notranslate nohighlight">\(\mathbf{y}\)</span>からなるデータ（<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>を要素とするベクトル、<span class="math notranslate nohighlight">\(i\)</span>は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数<span class="math notranslate nohighlight">\(x_i\)</span>を引数とする関数<span class="math notranslate nohighlight">\(f\)</span>を考え、その出力<span class="math notranslate nohighlight">\(\tilde{y_i}=f(x_i)\)</span>が<span class="math notranslate nohighlight">\(\tilde{y}_i\simeq y_i\)</span>となるような関数<span class="math notranslate nohighlight">\(f\)</span>をデータから近似的に求めることに対応します。
+一般的に、この関数<span class="math notranslate nohighlight">\(f\)</span>は変数<span class="math notranslate nohighlight">\(x\)</span>以外のパラメータを持っているでしょう。なので、そのパラメータ<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>をうまく調整して、<span class="math notranslate nohighlight">\(y_i\simeq\tilde{y}_i\)</span>となる関数<span class="math notranslate nohighlight">\(f=f(x,\mathbf{w}^*)\)</span>とパラメータ<span class="math notranslate nohighlight">\(\mathbf{w}^*\)</span>を求めることが機械学習の鍵になります。</p>
 <p>関数<span class="math notranslate nohighlight">\(f\)</span>を近似する方法の一つとして、現在主流になっているのが脳のニューロン構造を模式化したニューラルネットワークです。下図に示しているのは、ニューラルネットの基本的な構造です。丸で示しているのが構成ユニット（ニューロン）で、ニューロンを繋ぐ情報の流れを矢印で表しています。ニューラルネットには様々な構造が考えられますが、基本になるのは図に示したような層構造で、前層にあるニューロンの出力が次の層にあるニューロンへの入力になります。入力データ<span class="math notranslate nohighlight">\(x\)</span>を受ける入力層と出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>を出す出力層に加え、中間に複数の”隠れ層”を持つものを総称して深層ニューラルネットワークと呼びます。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/neural_net.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/neural_net.png" style="width: 500px;" /></a>
 <p>では、もう少し数学的なモデルを見てみましょう。<span class="math notranslate nohighlight">\(l\)</span>層目にある<span class="math notranslate nohighlight">\(j\)</span>番目のユニット<span class="math notranslate nohighlight">\(u_j^l\)</span>に対して、前層（<span class="math notranslate nohighlight">\(l-1\)</span>番目）から<span class="math notranslate nohighlight">\(n\)</span>個の入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span> (<span class="math notranslate nohighlight">\(k=1,2,\cdots n\)</span>) がある場合、入力<span class="math notranslate nohighlight">\(o_k^{l-1}\)</span>への重みパラメータ<span class="math notranslate nohighlight">\(w_k^l\)</span>を使って</p>
@@ -530,31 +529,31 @@ o_j^l=g\left(\sum_{k=1}^n o_k^{l-1}w_k^l\right)
 <p>となる出力<span class="math notranslate nohighlight">\(o_j^l\)</span>を考えます。図で示すと</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/neuron.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/neuron.png" style="width: 350px;" /></a>
 <p>になります。関数<span class="math notranslate nohighlight">\(g\)</span>は活性化関数と呼ばれ、入力に対して非線形な出力を与えます。活性化関数としては、一般的にはシグモイド関数やReLU（Rectified Linear Unit）等の関数が用いられることが多いです。</p>
-<p>関数<span class="math notranslate nohighlight">\(f(x,\boldsymbol{w}^*)\)</span>を求めるために、最適なパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を決定するプロセス（学習と呼ばれる）が必要です。そのために、出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>とターゲットとなる変数<span class="math notranslate nohighlight">\(y\)</span>の差を測定する関数<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を考えます（一般に損失関数やコスト関数と呼ばれます）。</p>
+<p>関数<span class="math notranslate nohighlight">\(f(x,\mathbf{w}^*)\)</span>を求めるために、最適なパラメータ<span class="math notranslate nohighlight">\(\mathbf{w}^*\)</span>を決定するプロセス（学習と呼ばれる）が必要です。そのために、出力<span class="math notranslate nohighlight">\(\tilde{y}\)</span>とターゲットとなる変数<span class="math notranslate nohighlight">\(y\)</span>の差を測定する関数<span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>を考えます（一般に損失関数やコスト関数と呼ばれます）。</p>
 <div class="math notranslate nohighlight">
 \[
-L(\boldsymbol{w}) = \frac{1}{N}\sum_{i=1}^N L(f(x_i,\boldsymbol{w}),y_i)
+L(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^N L(f(x_i,\mathbf{w}),y_i)
 \]</div>
-<p><span class="math notranslate nohighlight">\(N\)</span>は<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>データの数です。この損失関数<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を最小化するパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{w}^*\)</span>を求めたいわけですが、それには誤差逆伝搬法と呼ばれる手法を使うことができることが知られています。この手法は、<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>の各<span class="math notranslate nohighlight">\(w\)</span>に対する微分係数<span class="math notranslate nohighlight">\(\Delta_w L(\boldsymbol{w})\)</span>を求めて、</p>
+<p><span class="math notranslate nohighlight">\(N\)</span>は<span class="math notranslate nohighlight">\((x_i, y_i)\)</span>データの数です。この損失関数<span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>を最小化するパラメータ<span class="math notranslate nohighlight">\(\mathbf{w}^*\)</span>を求めたいわけですが、それには誤差逆伝搬法と呼ばれる手法を使うことができることが知られています。この手法は、<span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>の各<span class="math notranslate nohighlight">\(w\)</span>に対する微分係数<span class="math notranslate nohighlight">\(\Delta_w L(\mathbf{w})\)</span>を求めて、</p>
 <div class="math notranslate nohighlight">
 \[
-w'=w-\epsilon\Delta_w L(\boldsymbol{w})
+w'=w-\epsilon\Delta_w L(\mathbf{w})
 \]</div>
-<p>のように<span class="math notranslate nohighlight">\(w\)</span>を更新することで、<span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span>を最小化するというものです（<span class="math notranslate nohighlight">\(w\)</span>と<span class="math notranslate nohighlight">\(w'\)</span>は更新前と更新後のパラメータ）。<span class="math notranslate nohighlight">\(\epsilon\:(&gt;0)\)</span>は学習率と呼ばれるパラメータで、これは基本的には私たちが手で決めてやる必要があります。</p>
+<p>のように<span class="math notranslate nohighlight">\(w\)</span>を更新することで、<span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>を最小化するというものです（<span class="math notranslate nohighlight">\(w\)</span>と<span class="math notranslate nohighlight">\(w'\)</span>は更新前と更新後のパラメータ）。<span class="math notranslate nohighlight">\(\epsilon\:(&gt;0)\)</span>は学習率と呼ばれるパラメータで、これは基本的には私たちが手で決めてやる必要があります。</p>
 </div>
 <div class="section" id="a-id-qml-a">
-<h2><a class="toc-backref" href="#id7">量子機械学習<a id='qml'></a></a><a class="headerlink" href="#a-id-qml-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id19">量子機械学習<a id='qml'></a></a><a class="headerlink" href="#a-id-qml-a" title="Permalink to this headline">¶</a></h2>
 <p>変分量子回路を用いた量子機械学習アルゴリズムは、一般的には以下のような順番で量子回路に実装され、計算が行われます。</p>
 <ol class="simple">
-<li><p><strong>学習データ</strong><span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i, y_i)\}\)</span>を用意する。<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は入力データのベクトル、<span class="math notranslate nohighlight">\(y_i\)</span>は入力データに対する真の値（教師データ）とする（<span class="math notranslate nohighlight">\(i\)</span>は学習データのサンプルを表す添字）。</p></li>
-<li><p>入力<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>から何らかの規則で決まる回路<span class="math notranslate nohighlight">\(U_{\text{in}}(\boldsymbol{x})\)</span>（<strong>特徴量マップ</strong>と呼ぶ）を用意し、<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>の情報を埋め込んだ入力状態<span class="math notranslate nohighlight">\(|\psi_{\rm in}(\boldsymbol{x}_i)\rangle = U_{\text{in}}(\boldsymbol{x}_i)|0\rangle\)</span>を作る。</p></li>
-<li><p>入力状態にパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>に依存したゲート<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>（<strong>変分フォーム</strong>）を掛けたものを出力状態<span class="math notranslate nohighlight">\(|\psi_{\rm out}(\boldsymbol{x}_i,\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta})|\psi_{\rm in}(\boldsymbol{x}_i)\rangle\)</span>とする。</p></li>
-<li><p>出力状態のもとで何らかの<strong>観測量</strong>を測定し、測定値<span class="math notranslate nohighlight">\(O\)</span>を得る。例えば、最初の量子ビットで測定したパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の期待値<span class="math notranslate nohighlight">\(\langle Z_1\rangle = \langle \psi_{\rm out} |Z_1|\psi_{\rm out} \rangle\)</span>などを考える。</p></li>
-<li><p><span class="math notranslate nohighlight">\(F\)</span>を適当な関数として、<span class="math notranslate nohighlight">\(F(O)\)</span>をモデルの出力<span class="math notranslate nohighlight">\(y(\boldsymbol{x}_i,\boldsymbol{\theta})\)</span>とする。</p></li>
-<li><p>真の値<span class="math notranslate nohighlight">\(y_i\)</span>と出力<span class="math notranslate nohighlight">\(y(\boldsymbol{x}_i,\boldsymbol{\theta})\)</span>の間の乖離を表す<strong>コスト関数</strong><span class="math notranslate nohighlight">\(L(\boldsymbol{\theta})\)</span>を定義し、古典計算でコスト関数を計算する。</p></li>
+<li><p><strong>学習データ</strong><span class="math notranslate nohighlight">\(\{(\mathbf{x}_i, y_i)\}\)</span>を用意する。<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>は入力データのベクトル、<span class="math notranslate nohighlight">\(y_i\)</span>は入力データに対する真の値（教師データ）とする（<span class="math notranslate nohighlight">\(i\)</span>は学習データのサンプルを表す添字）。</p></li>
+<li><p>入力<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>から何らかの規則で決まる回路<span class="math notranslate nohighlight">\(U_{\text{in}}(\mathbf{x})\)</span>（<strong>特徴量マップ</strong>と呼ぶ）を用意し、<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>の情報を埋め込んだ入力状態<span class="math notranslate nohighlight">\(\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}\)</span>を作る。</p></li>
+<li><p>入力状態にパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>に依存したゲート<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>（<strong>変分フォーム</strong>）を掛けたものを出力状態<span class="math notranslate nohighlight">\(\ket{\psi_{\text{out}}(\mathbf{x}_i,\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x}_i)}\)</span>とする。</p></li>
+<li><p>出力状態のもとで何らかの<strong>観測量</strong>を測定し、測定値<span class="math notranslate nohighlight">\(O\)</span>を得る。例えば、最初の量子ビットで測定したパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の期待値<span class="math notranslate nohighlight">\(\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}\)</span>などを考える。</p></li>
+<li><p><span class="math notranslate nohighlight">\(F\)</span>を適当な関数として、<span class="math notranslate nohighlight">\(F(O)\)</span>をモデルの出力<span class="math notranslate nohighlight">\(y(\mathbf{x}_i,\boldsymbol{\theta})\)</span>とする。</p></li>
+<li><p>真の値<span class="math notranslate nohighlight">\(y_i\)</span>と出力<span class="math notranslate nohighlight">\(y(\mathbf{x}_i,\boldsymbol{\theta})\)</span>の間の乖離を表す<strong>コスト関数</strong><span class="math notranslate nohighlight">\(L(\boldsymbol{\theta})\)</span>を定義し、古典計算でコスト関数を計算する。</p></li>
 <li><p><span class="math notranslate nohighlight">\(L(\boldsymbol{\theta})\)</span>が小さくなるように<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>を更新する。</p></li>
 <li><p>3-7のプロセスを繰り返すことで、コスト関数を最小化する<span class="math notranslate nohighlight">\(\boldsymbol{\theta}=\boldsymbol{\theta^*}\)</span>を求める。</p></li>
-<li><p><span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta^*})\)</span>が学習によって得られた<strong>予測モデル</strong>になる。</p></li>
+<li><p><span class="math notranslate nohighlight">\(y(\mathbf{x},\boldsymbol{\theta^*})\)</span>が学習によって得られた<strong>予測モデル</strong>になる。</p></li>
 </ol>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/var_circuit.png"><img alt="var_circuit" class="bg-primary mb-1 align-center" src="_images/var_circuit.png" style="width: 700px;" /></a>
 <p>この順に量子機械学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。</p>
@@ -562,15 +561,18 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">QuantumInstance</span><span class="p">,</span> <span class="n">set_qiskit_aqua_logging</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.algorithms</span> <span class="kn">import</span> <span class="n">VQC</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.utils</span> <span class="kn">import</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">,</span> <span class="n">map_label_to_class_name</span>
 <span class="kn">from</span> <span class="nn">qiskit.aqua.components.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">set_qiskit_aqua_logging</span>
 <span class="n">set_qiskit_aqua_logging</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>  <span class="c1"># choose INFO, DEBUG to see the log</span>
 </pre></div>
 </div>
@@ -578,10 +580,10 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 </div>
 </div>
 <div class="section" id="a-id-example-a">
-<h2><a class="toc-backref" href="#id8">初歩的な例<a id='example'></a></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id20">初歩的な例<a id='example'></a></a><a class="headerlink" href="#a-id-example-a" title="Permalink to this headline">¶</a></h2>
 <p>ある入力<span class="math notranslate nohighlight">\(\{x_i\}\)</span>と、既知の関数<span class="math notranslate nohighlight">\(f\)</span>による出力<span class="math notranslate nohighlight">\(y_i=f(x_i)\)</span>が学習データとして与えられた時に、そのデータから関数<span class="math notranslate nohighlight">\(f\)</span>を近似的に求める問題を考えてみます。例として、<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>としてみます。</p>
 <div class="section" id="a-id-func-data-a">
-<h3><a class="toc-backref" href="#id9">学習データの準備<a id='func_data'></a></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">学習データの準備<a id='func_data'></a></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
 <p>まず、学習データを準備します。<span class="math notranslate nohighlight">\(x_{\text{min}}\)</span>と<span class="math notranslate nohighlight">\(x_{\text{max}}\)</span>の範囲でデータをnum_x_train個ランダムに取った後、正規分布に従うノイズを追加しておきます。nqubitが量子ビット数、c_depthが変分フォーム回路の深さ（後述）を表します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -611,13 +613,13 @@ w'=w-\epsilon\Delta_w L(\boldsymbol{w})
 </div>
 </div>
 <div class="section" id="a-id-func-state-preparation-a">
-<h3><a class="toc-backref" href="#id10">量子状態の生成<a id='func_state_preparation'></a></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
-<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(|0\rangle^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\rm in}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献 <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">[1]</a>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
+<h3><a class="toc-backref" href="#id22">量子状態の生成<a id='func_state_preparation'></a></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献<a href="#id7"><span class="problematic" id="id8">:cite:`PhysRevA.98.032309`</span></a>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
-U_{\rm in}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
+U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 \]</div>
-<p>と定義します。この<span class="math notranslate nohighlight">\(U_{\rm in}(x_i)\)</span>をゼロの標準状態に適用することで、入力<span class="math notranslate nohighlight">\(x_i\)</span>は<span class="math notranslate nohighlight">\(|\psi_{\rm in}(x_i)\rangle=U_{\rm in}(x_i)|0\rangle^{\otimes n}\)</span>という量子状態に変換されることになります。</p>
+<p>と定義します。この<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>をゼロの標準状態に適用することで、入力<span class="math notranslate nohighlight">\(x_i\)</span>は<span class="math notranslate nohighlight">\(\ket{\psi_{\text{in}}(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}\)</span>という量子状態に変換されることになります。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">U_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">):</span>
@@ -649,9 +651,9 @@ q0_2: ┤ RY(-0.62149) ├┤ RZ(1.2249) ├
 </div>
 </div>
 <div class="section" id="a-id-func-variational-form-a">
-<h3><a class="toc-backref" href="#id11">変分フォームを使った状態変換<a id='func_variational_form'></a></a><a class="headerlink" href="#a-id-func-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">変分フォームを使った状態変換<a id='func_variational_form'></a></a><a class="headerlink" href="#a-id-func-variational-form-a" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="u-boldsymbol-theta">
-<h4><a class="toc-backref" href="#id12">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a><a class="headerlink" href="#u-boldsymbol-theta" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id24">変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の構成</a><a class="headerlink" href="#u-boldsymbol-theta" title="Permalink to this headline">¶</a></h4>
 <p>次に、最適化すべき変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を作っていきます。これは以下の3つの手順で行います。</p>
 <ol class="simple">
 <li><p>2量子ビットゲートの作成（<span class="math notranslate nohighlight">\(\to\)</span> 量子ビットをエンタングルさせる）</p></li>
@@ -659,12 +661,12 @@ q0_2: ┤ RY(-0.62149) ├┤ RZ(1.2249) ├
 <li><p>1.と2.のゲートを交互に組み合わせ、1つの大きな変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を作る</p></li>
 </ol>
 </div>
-<div class="section" id="id3">
-<h4><a class="toc-backref" href="#id13">2量子ビットゲートの作成</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id9">
+<h4><a class="toc-backref" href="#id25">2量子ビットゲートの作成</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
 <p>ここではControlled-<span class="math notranslate nohighlight">\(Z\)</span>ゲート（<span class="math notranslate nohighlight">\(CZ\)</span>）を使ってエンタングルさせ、モデルの表現能力を上げることを目指します。</p>
 </div>
-<div class="section" id="id4">
-<h4><a class="toc-backref" href="#id14">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id10">
+<h4><a class="toc-backref" href="#id26">回転ゲートと<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>の作成</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
 <p><span class="math notranslate nohighlight">\(CZ\)</span>ゲートを使ってエンタングルメントを生成する回路<span class="math notranslate nohighlight">\(U_{\text{ent}}\)</span>と、<span class="math notranslate nohighlight">\(j \:(=1,2,\cdots n)\)</span>番目の量子ビットに適用する回転ゲート</p>
 <div class="math notranslate nohighlight">
 \[
@@ -742,8 +744,8 @@ q1_2: ┤ RY(3.7873) ├┤ RZ(4.0583) ├┤ RY(6.0549) ├────■─�
 </div>
 </div>
 <div class="section" id="a-id-func-measurement-a">
-<h3><a class="toc-backref" href="#id15">測定とモデル出力<a id='func_measurement'></a></a><a class="headerlink" href="#a-id-func-measurement-a" title="Permalink to this headline">¶</a></h3>
-<p>モデルの出力（予測値）として、状態<span class="math notranslate nohighlight">\(|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle=U(\boldsymbol{\theta})|\psi_{\rm in}(\boldsymbol{x})\rangle\)</span>の元で最初の量子ビットを<span class="math notranslate nohighlight">\(Z\)</span>基底で測定した時の期待値を使うことにします。つまり<span class="math notranslate nohighlight">\(y(\boldsymbol{x},\boldsymbol{\theta}) = \langle Z_0(\boldsymbol{x},\boldsymbol{\theta}) \rangle = \langle \psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})|Z_0|\psi_{\rm out}(\boldsymbol{x},\boldsymbol{\theta})\rangle\)</span>です。</p>
+<h3><a class="toc-backref" href="#id27">測定とモデル出力<a id='func_measurement'></a></a><a class="headerlink" href="#a-id-func-measurement-a" title="Permalink to this headline">¶</a></h3>
+<p>モデルの出力（予測値）として、状態<span class="math notranslate nohighlight">\(\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}\)</span>の元で最初の量子ビットを<span class="math notranslate nohighlight">\(Z\)</span>基底で測定した時の期待値を使うことにします。つまり<span class="math notranslate nohighlight">\(y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}\)</span>です。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
@@ -830,9 +832,9 @@ c: 1/════════════════════╩═
  3.56912924 5.8156952  0.44633272 0.54744954 0.12703594 5.23150478
  4.88930306 5.46644755 6.14884039 5.02126135 2.89956035 4.90420945
  1.74314013 4.02074236 0.90071527 5.93552986 3.27886971 2.60539781
- 1.66225193 4.86465374 2.86607707 3.57157584 0.1180598  3.88071828
- 3.84591085 3.87631062 5.92974406 4.28400329 2.25885476 2.74595275
- 4.38334608 0.3784078  4.18941883 4.21374201 1.32187262 0.81006782
+ 1.66225193 4.86465374 3.86607707 3.57157584 0.1180598  3.88071828
+ 3.84591085 3.87631062 5.92974406 4.28400329 3.25885476 3.74595275
+ 4.38334608 0.3784078  4.18941883 4.21374201 1.32187262 1.81006782
  1.98189478 2.28526217 3.58265197 2.75581459 6.21013598 0.64116646]
 </pre></div>
 </div>
@@ -844,25 +846,19 @@ c: 1/════════════════════╩═
 </div>
 </div>
 <div class="section" id="a-id-susy-a">
-<h2><a class="toc-backref" href="#id16">素粒子現象の探索への応用<a id='susy'></a></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id28">素粒子現象の探索への応用<a id='susy'></a></a><a class="headerlink" href="#a-id-susy-a" title="Permalink to this headline">¶</a></h2>
 <p>次の実習課題では、素粒子物理の基本理論（<strong>標準模型</strong>と呼ばれる）を超える新しい理論の枠組みとして知られている「<strong>超対称性理論</strong>」（<em>Supersymmetry</em>、略してSUSY）で存在が予言されている新粒子の探索を考えてみます。</p>
 <p>左下の図は、グルーオン<span class="math notranslate nohighlight">\(g\)</span>が相互作用してヒッグス粒子<span class="math notranslate nohighlight">\(h\)</span>を作り、それが2つのSUSY粒子<span class="math notranslate nohighlight">\(\chi^+\chi^-\)</span>に崩壊する過程を示しています。<span class="math notranslate nohighlight">\(\chi^+\)</span>粒子はさらに崩壊し、最終的には<span class="math notranslate nohighlight">\(\ell^+\ell^-\nu\nu\chi^0\chi^0\)</span>という終状態に落ち着くとします。右下の図は標準模型で存在が知られている過程を表していて、クォーク<span class="math notranslate nohighlight">\(q\)</span>と反クォーク<span class="math notranslate nohighlight">\(\bar{q}\)</span>が相互作用して<span class="math notranslate nohighlight">\(W\)</span>ボソン対を作り、それが<span class="math notranslate nohighlight">\(\ell^+\ell^-\nu\nu\)</span>に崩壊しています。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/susy_bg.png"><img alt="susy_bg" class="bg-primary mb-1 align-center" src="_images/susy_bg.png" style="width: 700px;" /></a>
-<p>(図の引用：参考文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>)</p>
+<p>(図の引用：参考文献<a href="#id11"><span class="problematic" id="id12">:cite:`dl_susy`</span></a>)</p>
 <p>左と右の過程を比べると、終状態の違いは<span class="math notranslate nohighlight">\(\chi^0\chi^0\)</span>が存在しているかどうかだけですね。この<span class="math notranslate nohighlight">\(\chi^0\)</span>という粒子は検出器と相互作用しないと考えられているので、この二つの過程の違いは（大雑把に言うと）実際の検出器では観測できないエネルギーの大きさにしかなく、探索することが難しい問題と考えることができます。以上のような状況で、この二つの物理過程を量子機械学習で分類できるかどうかを試みます。</p>
 <div class="section" id="a-id-susy-data-a">
-<h3><a class="toc-backref" href="#id17">学習データの準備<a id='susy_data'></a></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
-<p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<a class="reference external" href="https://www.nature.com/articles/ncomms5308">[3]</a>に委ねますが、ある特定のSUSY粒子生成反応と、それに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
+<h3><a class="toc-backref" href="#id29">学習データの準備<a id='susy_data'></a></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
+<p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<a href="#id13"><span class="problematic" id="id14">:cite:`susy_dl`</span></a>に委ねますが、ある特定のSUSY粒子生成反応と、それに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
 <p>探索に役立つ運動学的変数をどう選ぶかはそれ自体が大事な研究トピックですが、ここでは簡単のため、前もって役立つことを経験上知っている変数を使います。以下で、学習に使う運動学的変数を選んで、その変数を指定したサンプルを訓練用とテスト用に準備します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
-<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
-<span class="kn">from</span> <span class="nn">qiskit.aqua.algorithms</span> <span class="kn">import</span> <span class="n">VQC</span>
-<span class="kn">from</span> <span class="nn">qiskit.aqua.utils</span> <span class="kn">import</span> <span class="n">split_dataset_to_data_and_labels</span><span class="p">,</span> <span class="n">map_label_to_class_name</span>
-
-<span class="c1"># ファイルから変数を読み出す</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ファイルから変数を読み出す</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
                  <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
@@ -909,16 +905,16 @@ c: 1/════════════════════╩═
 </div>
 </div>
 <div class="section" id="a-id-susy-state-preparation-a">
-<h3><a class="toc-backref" href="#id18">量子状態の生成<a id='susy_state_preparation'></a></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
-<p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\rm in}(\boldsymbol{x}_i)\)</span>の作成ですが、ここでは参考文献<a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">[2]</a>に従い、</p>
+<h3><a class="toc-backref" href="#id30">量子状態の生成<a id='susy_state_preparation'></a></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
+<p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(\mathbf{x}_i)\)</span>の作成ですが、ここでは参考文献<a href="#id15"><span class="problematic" id="id16">:cite:`quantum_svn`</span></a>に従い、</p>
 <div class="math notranslate nohighlight">
 \[
-U_{\phi_{\{k\}}}(\boldsymbol{x}_i)=\exp\left(i\phi_{\{k\}}(\boldsymbol{x}_i)Z_k\right)
+U_{\phi_{\{k\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
 \]</div>
-<p>とします（<span class="math notranslate nohighlight">\(k\)</span>は入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>のベクトル要素の添字）。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\boldsymbol{x}_i)=x_i^k\)</span>と決めて（<span class="math notranslate nohighlight">\(x_i^k\)</span>は<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、入力値<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>を<span class="math notranslate nohighlight">\(k\)</span>個の量子ビットに埋め込みます。この<span class="math notranslate nohighlight">\(U_{\phi_{\{k\}}}(x)\)</span>にアダマール演算子を組み合わせることで、全体として</p>
+<p>とします（<span class="math notranslate nohighlight">\(k\)</span>は入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>のベクトル要素の添字）。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\mathbf{x}_i)=x_i^k\)</span>と決めて（<span class="math notranslate nohighlight">\(x_i^k\)</span>は<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>を<span class="math notranslate nohighlight">\(k\)</span>個の量子ビットに埋め込みます。この<span class="math notranslate nohighlight">\(U_{\phi_{\{k\}}}(x)\)</span>にアダマール演算子を組み合わせることで、全体として</p>
 <div class="math notranslate nohighlight">
 \[
-U_{\rm in}(\boldsymbol{x}_i) = U_{\phi}(\boldsymbol{x}_i) H^{\otimes n},\:\:U_{\phi}(\boldsymbol{x}_i) = \exp\left(i \sum_{k=1}^n \phi_{\{k\}}(\boldsymbol{x}_i)Z_k\right)
+U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i) H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i \sum_{k=1}^n \phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
 \]</div>
 <p>が得られます。</p>
 <div class="cell docutils container">
@@ -930,7 +926,7 @@ U_{\rm in}(\boldsymbol{x}_i) = U_{\phi}(\boldsymbol{x}_i) H^{\otimes n},\:\:U_{\
 </div>
 </div>
 <div class="section" id="a-id-susy-variational-form-a">
-<h3><a class="toc-backref" href="#id19">変分フォームを使った状態変換<a id='susy_variational_form'></a></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id31">変分フォームを使った状態変換<a id='susy_variational_form'></a></a><a class="headerlink" href="#a-id-susy-variational-form-a" title="Permalink to this headline">¶</a></h3>
 <p>変分量子回路<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして</p>
 <div class="math notranslate nohighlight">
 \[
@@ -958,7 +954,7 @@ q_2: ┤ RY(θ[2]) ├┤ RZ(θ[5]) ├────■──────■─�
 </div>
 </div>
 <div class="section" id="a-id-susy-measurement-a">
-<h3><a class="toc-backref" href="#id20">測定とモデル出力<a id='susy_measurement'></a></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id32">測定とモデル出力<a id='susy_measurement'></a></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
 <p>測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのAPIを用いるので、プログラムはかなり簡略化されています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -986,7 +982,7 @@ q_2: ┤ RY(θ[2]) ├┤ RZ(θ[5]) ├────■──────■─�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:23,405:qiskit.aqua.quantum_instance:INFO: 
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:52,818:qiskit.aqua.quantum_instance:INFO: 
 Qiskit Terra version: 0.16.4
 Backend: &#39;qasm_simulator (AerProvider)&#39;, with following setting:
 {&#39;basis_gates&#39;: [&#39;ccx&#39;, &#39;cp&#39;, &#39;cswap&#39;, &#39;csx&#39;, &#39;cu1&#39;, &#39;cu2&#39;, &#39;cu3&#39;, &#39;cx&#39;, &#39;cy&#39;, &#39;cz&#39;, &#39;delay&#39;, &#39;diagonal&#39;, &#39;h&#39;, &#39;id&#39;, &#39;initialize&#39;, &#39;kraus&#39;, &#39;mcp&#39;, &#39;mcr&#39;, &#39;mcrx&#39;, &#39;mcry&#39;, &#39;mcrz&#39;, &#39;mcswap&#39;, &#39;mcsx&#39;, &#39;mcu1&#39;, &#39;mcu2&#39;, &#39;mcu3&#39;, &#39;mcx&#39;, &#39;mcy&#39;, &#39;mcz&#39;, &#39;multiplexer&#39;, &#39;p&#39;, &#39;r&#39;, &#39;roerror&#39;, &#39;rx&#39;, &#39;rxx&#39;, &#39;ry&#39;, &#39;ryy&#39;, &#39;rz&#39;, &#39;rzx&#39;, &#39;rzz&#39;, &#39;s&#39;, &#39;sdg&#39;, &#39;snapshot&#39;, &#39;swap&#39;, &#39;sx&#39;, &#39;t&#39;, &#39;tdg&#39;, &#39;u&#39;, &#39;u1&#39;, &#39;u2&#39;, &#39;u3&#39;, &#39;unitary&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;], &#39;coupling_map&#39;: None}
@@ -998,324 +994,324 @@ RunConfig(max_credits=10, seed_simulator=10598, shots=1024)
 Measurement mitigation: None
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:23,406:qiskit.aqua.algorithms.vq_algorithm:INFO: Starting optimizer.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:52,819:qiskit.aqua.algorithms.vq_algorithm:INFO: Starting optimizer.
 bounds=[(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None), (None, None)]
-initial point=[ 0.63208918  0.05501114 -0.6518237  -0.22278387 -1.2289979   1.81140743
-  1.86966858 -0.5227861  -0.87764129 -0.5162146   0.53972718  3.99211813]
+initial point=[ 0.92463417 -0.42107511  2.01650831 -1.15438515 -0.57094931 -1.2657452
+  0.18441595 -0.59836654 -0.29753817 -1.00172395 -0.38014771 -2.84533866]
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:23,738:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5907874536046591
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:53,124:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7282410463230045
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:23,979:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6166924402166453
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:53,382:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7451564416605487
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:24,335:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5907874536046591
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:53,761:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7282410463230045
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:24,579:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5907874536046591
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:54,011:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7282410463230045
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:24,831:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6558593377934455
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:54,255:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7951410934549936
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:25,077:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6425130426970085
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:54,506:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.9100357409183584
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:25,331:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5715354413271697
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:54,754:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7265612711962509
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:25,697:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5631607142367446
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:55,003:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7743526359074286
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:25,941:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5670407142357669
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:55,377:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.7138700396571991
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:26,192:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.603672036338551
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:55,626:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6467019866301401
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:26,436:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.55670399386522
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:55,886:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6576208017153877
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:26,684:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6836607787180393
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:56,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6270698765756693
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:27,105:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.55670399386522
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:56,380:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6270698765756693
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:27,348:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5531291818266523
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:56,636:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5938632445344298
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:27,598:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5537536900741257
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:57,007:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5838134659589851
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:27,846:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5566539196442037
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:57,260:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5967531238586373
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:28,093:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5773016233369705
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:57,506:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6212403978431595
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:28,342:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5531291818266523
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:57,763:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5838134659589851
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:28,705:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5730510288029238
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:58,010:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5788806409466696
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:28,960:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5531291818266523
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:58,258:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5788806409466696
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:29,225:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5469532893326708
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:58,628:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5727173510463269
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:29,494:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5477012576148772
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:58,879:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5956952748248925
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:29,901:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5447877599810953
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:59,126:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6151875216230336
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:30,148:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5449310259927047
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:59,373:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5938139798176645
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:30,403:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5553666551830976
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:59,624:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.6065123928626981
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:30,654:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5436959656238246
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:48:59,879:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5727173510463269
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:30,905:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5607752131264154
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:00,250:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5252382332902471
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:31,158:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5436959656238246
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:00,496:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.519970051507346
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:31,515:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.534629824525554
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:00,743:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5764580412838077
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:31,777:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5301626233441278
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:00,990:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5339387148717116
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:32,018:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5301626233441278
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:01,241:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5296380323943966
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:32,266:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5258200523445478
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:01,491:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5177137028074782
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:32,522:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5258200523445478
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:01,865:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5177137028074782
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:32,872:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5215365762552361
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:02,116:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5196855117621881
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:33,127:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5308278874226817
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:02,361:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5202090649509843
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:33,374:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5214257122591699
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:02,613:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.526406273894903
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:33,616:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136398645328456
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:02,862:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5177137028074782
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:33,874:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5324826770146835
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:03,109:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5249704427981282
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:34,264:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5159600720901842
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:03,483:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5162030208172717
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:34,513:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5265938735747824
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:03,730:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5244739251607531
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:34,759:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136398645328456
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:03,980:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5205363604051326
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:35,013:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5284429131194007
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:04,228:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5289755214327672
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:35,265:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5199338068376276
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:04,478:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5157198841514734
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:35,528:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5144994086947985
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:04,728:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5275998299884389
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:35,886:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136398645328456
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:05,095:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5122814145221251
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:36,138:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5172239008183136
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:05,347:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5166002581181162
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:36,385:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136398645328456
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:05,596:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5129461628399254
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:36,630:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5199464494114777
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:05,843:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5133935898260937
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:37,016:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5142819423104319
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:06,096:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5116956786341549
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:37,272:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5162349601257589
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:06,348:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5141376640099891
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:37,518:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5150129888934897
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:06,725:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5124135503371964
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:37,762:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5131199882510642
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:06,981:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5119072757799131
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:38,011:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.514982225888173
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:07,238:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5127943251189049
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:38,265:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5150590164009001
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:07,485:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5114207734584706
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:38,619:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5139613002572021
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:07,734:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5120996298912734
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:38,864:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5131199882510642
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:07,984:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5115446538745501
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:39,128:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5152991188803698
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:08,353:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5127194669999293
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:39,373:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.512988051316924
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:08,615:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5137436734744469
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:39,621:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5135784599625159
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:08,866:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5097770308127494
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:39,985:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.512988051316924
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:09,120:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5118873919564508
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:40,240:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5137462194033899
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:09,372:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5105343125133363
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:40,487:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.512988051316924
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:09,631:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5106209720629824
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:40,751:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136297264658549
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:10,007:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5099334560480685
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:40,999:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5133592912111568
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:10,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5100183447492533
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:41,390:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5147471146174529
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:10,513:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.511253525891013
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:41,642:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5131668862191424
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:10,763:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.511124567604164
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:41,883:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5130796432631766
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:11,014:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5101686239894633
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:42,143:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5132138681803109
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:11,265:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5101580773583068
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:42,395:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5129275093363772
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:11,636:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5104818899681092
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:42,652:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.513954480166273
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:11,881:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5114188109136075
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:43,006:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5128035838691138
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:12,149:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5100392346029914
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:43,269:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5132309417763425
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:12,392:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.50982570790217
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:43,515:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5128877053701416
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:12,643:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.50852988788768
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:43,762:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5136251924563846
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:12,888:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.508866887542592
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:44,167:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5128190081691791
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:13,258:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.509313394427054
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:44,428:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5140086636950919
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:13,510:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5096282210452086
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:44,682:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.513120549257518
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:13,765:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5097365613844327
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:44,927:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5131376265191454
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:14,007:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5091319891325035
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:45,175:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5129045099190768
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:14,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5085727935443348
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:45,524:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5128035838691138
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:14,506:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5086398324021898
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:45,774:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5125031649851046
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:14,877:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5089851365448901
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:46,023:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5127292182938932
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:15,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5090653538982102
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:46,286:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5130390039863496
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:15,376:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5089891551971885
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:46,534:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5126538797228555
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:15,627:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5085501492761871
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:46,790:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5127030725081736
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:15,878:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5084768973392885
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:47,145:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5127014898950929
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:16,130:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5083325092593839
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:47,393:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5128147146643547
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:16,499:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5086217201307267
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:47,643:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5126464609112026
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:16,750:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5092740344628328
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:47,895:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5123906633564665
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:17,002:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5084965597216986
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:48,148:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5126887163270057
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:17,259:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5087692170231126
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:48,496:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.512326212159552
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:17,512:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5095622371802438
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:48,740:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.512399636879796
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:17,765:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5092797104541421
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:49,000:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5123041723701587
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:18,129:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5085885913248946
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:49,249:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5125226665889381
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:18,378:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5085023848309729
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:49,663:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5123567979138409
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:18,633:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5090683254604657
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:49,910:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5126851033964582
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:18,888:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5086206928659485
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:50,163:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5121841800951664
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:19,144:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5087845507622359
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:50,409:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5123752773320113
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:19,414:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5081496273260383
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:50,664:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5123009798021851
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:19,794:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5081869377081742
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:50,914:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5124859925794797
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,042:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch cost: 0.5081641996985482
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:50,915:qiskit.aqua.algorithms.classifiers.vqc:INFO: Optimization complete in 27.50923466682434 seconds.
-Found opt_params [-0.16577439  0.03667373 -0.6677329   0.15892246 -1.35742576  2.65606479
-  2.62494516 -0.53267133 -1.86231018  1.02796043  0.33470948  3.99630904] in 100 evals
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,044:qiskit.aqua.algorithms.classifiers.vqc:INFO: Optimization complete in 27.224238395690918 seconds.
+Found opt_params [ 0.69896821 -0.3013557   1.80371554 -3.03895692 -1.55512855 -0.46577603
+  0.31511841  1.26167967  1.37421959 -0.94869965  0.1990129  -3.07589857] in 100 evals
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:51,301:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch accuracy: 47.50%
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,328:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Intermediate batch accuracy: 52.50%
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:51,302:qiskit.aqua.algorithms.classifiers.vqc:INFO: Accuracy is 47.50%
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,329:qiskit.aqua.algorithms.classifiers.vqc:INFO: Accuracy is 52.50%
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> --- Testing success ratio:  0.475
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> --- Testing success ratio:  0.525
 </pre></div>
 </div>
 </div>
@@ -1352,10 +1348,10 @@ Found opt_params [-0.16577439  0.03667373 -0.6677329   0.15892246 -1.35742576  2
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:51,314:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,342:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 01:44:51,574:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-03-31 17:49:20,594:qiskit.aqua.algorithms.classifiers.vqc:DEBUG: Predicting batch 0
 </pre></div>
 </div>
 <img alt="_images/vqc_machine_learning_28_2.png" src="_images/vqc_machine_learning_28_2.png" />
@@ -1367,16 +1363,8 @@ Found opt_params [-0.16577439  0.03667373 -0.6677329   0.15892246 -1.35742576  2
 </div>
 </div>
 <div class="section" id="vqe-a-id-vqe-application-a">
-<h2><a class="toc-backref" href="#id21">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a><a class="headerlink" href="#vqe-a-id-vqe-application-a" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id33">[課題] 素粒子実験へのVQEの応用 <a id='vqe_application'></a></a><a class="headerlink" href="#vqe-a-id-vqe-application-a" title="Permalink to this headline">¶</a></h2>
 <p>ここでは、高エネルギー物理実験にVQEを応用できるかどうかを考えます。その応用例と課題をこの<a class="reference internal" href="vqe_tracking.html"><span class="doc std std-doc">ノートブック</span></a>に準備しました。最後にある課題をレポートとして提出してください。</p>
-</div>
-<div class="section" id="a-id-references-a">
-<h2><a class="toc-backref" href="#id22">参考文献<a id='references'></a></a><a class="headerlink" href="#a-id-references-a" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li><p>K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii, “Quantum circuit learning”, <a class="reference external" href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.032309">Phys. Rev. A 98, 032309 (2018)</a></p></li>
-<li><p>V. Havlicek <em>et al.</em> , “Supervised learning with quantum-enhanced feature spaces”, <a class="reference external" href="https://www.nature.com/articles/s41586-019-0980-2">Nature 567, 209–212 (2019)</a></p></li>
-<li><p>P. Baldi, P. Sadowski, and D. Whiteson, “Searching for exotic particles in high-energy physics with deep learning”, <a class="reference external" href="https://www.nature.com/articles/ncomms5308">Nature Commun. 5, 4308 (2014)</a></p></li>
-</ol>
 </div>
 </div>
 
@@ -1408,7 +1396,7 @@ Found opt_params [-0.16577439  0.03667373 -0.6677329   0.15892246 -1.35742576  2
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">[課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける</a>
+    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a>
     <a class='right-next' id="next-link" href="prerequisites.html" title="next page">実習の準備</a>
 
     </div>

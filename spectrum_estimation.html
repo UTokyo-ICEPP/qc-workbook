@@ -179,6 +179,11 @@
    データベース検索を行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="amplitude_amplification.html">
+   【課題】振幅増幅を確認する
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -193,7 +198,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -378,7 +383,7 @@
 <li><p><a class="reference internal" href="#id7" id="id13">問題2: 非自明な系の振る舞いを調べる</a></p></li>
 </ul>
 </div>
-<p><span class="math notranslate nohighlight">\(\newcommand{ket}[1]{|#1\rangle}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id9">エネルギースペクトルを求める</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="vqe.html"><span class="doc">後の実習</span></a>にも現れるように、物理学や化学において、系のエネルギー固有値（スペクトル）と対応する固有状態を求めるということは非常に重要な問題です。系のエネルギースペクトルを求めることとは、系を表すハミルトニアンを決め、それを対角化することに対応します。</p>
@@ -393,7 +398,7 @@
 H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \quad (J &gt; 0)
 \]</div>
 <p>というものでした。このハミルトニアンが表しているのは、空間中で一列に並んだスピンを持つ粒子が、隣接粒子間で相互作用を及ぼしているような系でした。ここで相互作用は、スピンの向きが揃っているときにエネルギーが低くなるようなものでした。したがって、全てののスピンが同じ方向を向いているときにエネルギーが最も低くなることが予想されました。</p>
-<p>今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を<span class="math notranslate nohighlight">\(-Z\)</span>方向にかけるとすれば、ハミルトニアンは</p>
+<p>今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を<span class="math notranslate nohighlight">\(+Z\)</span>方向にかけるとすれば、ハミルトニアンは</p>
 <div class="math notranslate nohighlight">
 \[
 H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1} + g \sigma^Z_j)
@@ -491,18 +496,18 @@ U_H(-\tau) \ket{\psi} = \exp\left(i\omega \tau \Theta\right) \ket{\psi}
 \]</div>
 <p>となります。したがって、<span class="math notranslate nohighlight">\(\Theta\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\{\ket{\phi_m}\}\)</span>で<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-spectral-decomposition">
-<span class="eqno">(10)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
+<span class="eqno">(11)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
 <p>と書けるなら、対応する固有値を<span class="math notranslate nohighlight">\(\{\theta_m\}\)</span>とし、<span class="math notranslate nohighlight">\(\kappa_m = 2^{n_R} \theta_m\)</span>を用いて</p>
 <div class="math notranslate nohighlight" id="equation-spectrum-estimation-final">
-<span class="eqno">(11)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(12)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
 \text{QFT}_R \Gamma \ket{0}_R \ket{\psi}_S &amp; = \frac{1}{2^{n_R}} \sum_{k=0}^{2^{n_R} - 1} \sum_{j=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m \exp\left[\frac{2 \pi i j}{2^{n_R}} (\kappa_m - k)\right] \ket{k}_R \ket{\phi_m}_S \\
 &amp; = \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S.
 \end{align}\end{split}\]</div>
-<p>二つめの等号で、<span class="math notranslate nohighlight">\(f(\kappa_m - k) := 1/2^{n_R} \sum_{j} \exp (2 \pi i j (\kappa_m - k) / 2^{n_R})\)</span>と定義しました。</p>
+<p>ただし、二つめの等号で、<span class="math notranslate nohighlight">\(f(\kappa_m - k) := \frac{1}{2^{n_R}} \sum_{j} \exp \left[2 \pi i j (\kappa_m - k) / 2^{n_R}\right]\)</span>と定義しました。</p>
 <p>最後にこの状態を測定し、Rに現れるビット列から推定される<span class="math notranslate nohighlight">\(\theta_m = 2^{-n_R} \kappa_m\)</span>に<span class="math notranslate nohighlight">\(\hbar \omega\)</span>をかければ、<span class="math notranslate nohighlight">\(H\)</span>のエネルギー固有値がわかります。</p>
 <p>なんだか掴みどころのない<span class="math notranslate nohighlight">\(\omega\)</span>や<span class="math notranslate nohighlight">\(\tau\)</span>といったパラメータが登場して、結局何をしたのか分かりにくいという方のために、別の見方で問題を整理しましょう。結局上で行ったことは、ハミルトニアン<span class="math notranslate nohighlight">\(H\)</span>を与えられたときに、</p>
 <ol class="simple">
-<li><p>固有値が<span class="math notranslate nohighlight">\(\lesssim 1\)</span>（負の値があり得る場合は、絶対値が<span class="math notranslate nohighlight">\(\lesssim \frac{1}{2}\)</span>）になるように<span class="math notranslate nohighlight">\(H\)</span>を規格化する（規格化の定数は記録しておく）</p></li>
+<li><p>固有値が<span class="math notranslate nohighlight">\(\lesssim 1\)</span>（負の値があり得る場合は、その絶対値が<span class="math notranslate nohighlight">\(\lesssim \frac{1}{2}\)</span>）になるように<span class="math notranslate nohighlight">\(H\)</span>を規格化する（規格化の定数は記録しておく）</p></li>
 <li><p>規格化した結果の演算子を<span class="math notranslate nohighlight">\(\Theta\)</span>として、<span class="math notranslate nohighlight">\(U = \exp(-2 \pi i \Theta)\)</span>の位相推定をする</p></li>
 <li><p>位相推定から得られた<span class="math notranslate nohighlight">\(\Theta\)</span>の固有値に、1.の規格化定数をかけてエネルギー固有値を得る</p></li>
 </ol>
@@ -518,8 +523,8 @@ H = \sum_{k} h_k \sigma_k
 \[
 \mu = \min_{s_k = \pm 1} \left| \sum_{k} s_k h_k \right|
 \]</div>
-<p>以上です。この値を求めるには原理的には<span class="math notranslate nohighlight">\(2^{m}\)</span>（<span class="math notranslate nohighlight">\(m\)</span>はハミルトニアンの項数）通りの組み合わせを調べる必要がありますが、実際のハミルトニアンは通常そこまで複雑な形をしていないので、これも難しくないと考えられます。レジスタRには<span class="math notranslate nohighlight">\(2^{n_R}\mu/(\hbar \omega)\)</span>が精度良く読める程度のビット数が最大で必要となります。</p>
-<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(10)</a>で<span class="math notranslate nohighlight">\(c_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
+<p>以上です。この値を求めるには原理的には<span class="math notranslate nohighlight">\(2^{L}\)</span>（<span class="math notranslate nohighlight">\(L\)</span>はハミルトニアンの項数）通りの組み合わせを調べる必要がありますが、実際のハミルトニアンは通常そこまで複雑な形をしていないので、これも難しくないと考えられます。レジスタRのビット数<span class="math notranslate nohighlight">\(n_R\)</span>は<span class="math notranslate nohighlight">\(2^{n_R}\mu/(\hbar \omega)\)</span>が読みだせるように設定します。</p>
+<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(11)</a>で<span class="math notranslate nohighlight">\(\psi_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
 <p>一方、系の最低エネルギー<span class="math notranslate nohighlight">\(\hbar \omega \theta_0\)</span>なら、<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>の手法などを用いて最低エネルギー状態の近似を実現し、それをSの初期状態とすることで、比較的に安定して求めることは可能です。そのため、上の手法は原理的にはスペクトルの完全な分解に使えますが、実際には最低エネルギーとその固有ベクトルを正確に求めるために利用することが多いと考えられます。</p>
 </div>
 <div class="section" id="id6">
@@ -638,7 +643,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 <p>まずは、上で厳密解を求めた<span class="math notranslate nohighlight">\(n=2, g=0\)</span>のケースを調べます。状態レジスタの初期状態を</p>
 <div class="math notranslate nohighlight" id="equation-two-qubit-init">
-<span class="eqno">(12)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
+<span class="eqno">(13)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
 <p>とします。ここで<span class="math notranslate nohighlight">\(\ket{\phi_i}\)</span>は最初に求めた固有ベクトルの4つの厳密解です。</p>
 <p>今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を<span class="math notranslate nohighlight">\(\hbar \omega = 16J\)</span>として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が<span class="math notranslate nohighlight">\(2^{n_R} (6/16)\)</span>なので、<span class="math notranslate nohighlight">\(n_R = 1 + 3\)</span>とすればオーバーフローを回避できます。</p>
 <div class="cell tag_remove-output docutils container">
@@ -679,7 +684,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 </div>
 </div>
-<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(12)</a>なので、回路の終状態は</p>
+<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(13)</a>なので、回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \frac{1}{2} \ket{-2}_{R} \ket{00}_{S} - \frac{1}{2\sqrt{2}} \ket{-2}_{R} \left( \ket{01}_{S} + \ket{10}_{S} \right) + \frac{1}{2} \ket{-2}_{R} \ket{11}_{S} - \frac{1}{2\sqrt{2}} \ket{6}_{R} \left( \ket{01}_{S} - \ket{10}_{S} \right)
@@ -696,18 +701,18 @@ H = \sum_{k} h_k \sigma_k
 <h2><a class="toc-backref" href="#id13">問題2: 非自明な系の振る舞いを調べる</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>今度は<span class="math notranslate nohighlight">\(n=4\)</span>のハイゼンベルグモデルで、全エネルギースペクトルを<span class="math notranslate nohighlight">\(g\)</span>の関数として求めてみましょう。<span class="math notranslate nohighlight">\(n=4\)</span>なので最初にやったような対角化もまだ簡単にできますが、ここではあえて量子計算のみに頼ってみます。</p>
 <p>全てのエネルギー固有値を知るためにはSの初期状態を工夫しなければいけませんが、今回は事前の情報がないので、しらみつぶし戦略をとります。つまり、計算基底<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{15}\)</span>までをそれぞれ初期状態としてスペクトル推定を繰り返し、得られる情報をつなぎ合わせて全体のスペクトルを求めます。</p>
-<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(11)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l} (l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
+<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(12)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l}\)</span> <span class="math notranslate nohighlight">\((l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
 <div class="math notranslate nohighlight" id="equation-phim-decomposition">
-<span class="eqno">(13)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m} c^l_m \ket{\phi_m}\]</div>
+<span class="eqno">(14)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}\]</div>
 <p>とします。すると回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} c^l_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S
 \]</div>
-<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(13)</a>が成り立つとき</p>
+<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(14)</a>が成り立つとき</p>
 <div class="math notranslate nohighlight" id="equation-l-decomposition">
-<span class="eqno">(14)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l} c^{l*}_m \ket{l}\]</div>
-<p>も成り立つので、終状態の回路をRとSの計算基底で測定し、<span class="math notranslate nohighlight">\(k, h\)</span>を得る確率を<span class="math notranslate nohighlight">\(P_l(k, h)\)</span>とすると</p>
+<span class="eqno">(15)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}\]</div>
+<p>も成り立つ<a class="footnote-reference brackets" href="#unitarity" id="id8">1</a>ので、終状態の回路をRとSの計算基底で測定し、<span class="math notranslate nohighlight">\(k, h\)</span>を得る確率を<span class="math notranslate nohighlight">\(P_l(k, h)\)</span>とすると</p>
 <div class="math notranslate nohighlight">
 \[
 P_l(k, h) = \left| \sum_{m=0}^{2^{n_S} - 1} c^l_m c^{h*}_m f(\kappa_m - k) \right|^2
@@ -719,7 +724,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 \]</div>
 <p>を得る方法を考えてみてください。</p>
 <p><span class="math notranslate nohighlight">\(|f(\kappa_m - k)|\)</span>は<span class="math notranslate nohighlight">\(\kappa_m\)</span>近傍で鋭いピークを持つ分布なので、<span class="math notranslate nohighlight">\(P(k)\)</span>を<span class="math notranslate nohighlight">\(k\)</span>に対してプロットすれば、<span class="math notranslate nohighlight">\(m\)</span>個の（部分的に重なり合っている可能性のある）ピークが見られ、そこからエネルギー固有値が算出できます。</p>
-<p>試しに<span class="math notranslate nohighlight">\(n=2, g=0, \hbar \omega = 16J, n_R=4\)</span>で<span class="math notranslate nohighlight">\(P(k)\)</span>をプロットすると以下のようになります。ただし、負の固有値がわかりやすいように、<span class="math notranslate nohighlight">\(P(k - 2^{n_R}) = P(k)\)</span>として、<span class="math notranslate nohighlight">\(-2^{n_R - 1} \leq k &lt; 2^{n_R - 1}\)</span>の範囲を表示しています。</p>
+<p>試しに<span class="math notranslate nohighlight">\(n=2, g=0, \hbar \omega = 20J, n_R=4\)</span>で<span class="math notranslate nohighlight">\(P(k)\)</span>をプロットすると以下のようになります（問題1と異なり<span class="math notranslate nohighlight">\(\hbar \omega = 20J\)</span>なので、<span class="math notranslate nohighlight">\(\kappa_m\)</span>が整数ではありません）。ただし、負の固有値がわかりやすいように、<span class="math notranslate nohighlight">\(P(k - 2^{n_R}) = P(k)\)</span>として、<span class="math notranslate nohighlight">\(-2^{n_R - 1} \leq k &lt; 2^{n_R - 1}\)</span>の範囲を表示しています。</p>
 <a class="reference internal image-reference" href="_images/spectrum_estimation_example.png"><img alt="spectrum_estimation_example" class="align-center" src="_images/spectrum_estimation_example.png" style="width: 500px;" /></a>
 <p>このようなプロットを<span class="math notranslate nohighlight">\(n=4\)</span>で<span class="math notranslate nohighlight">\(g\)</span>の値を0から0.5まで0.1刻みに変えながら作ってみましょう。</p>
 <p>まずは計算基底と<span class="math notranslate nohighlight">\(g\)</span>の値を引数に取り、終状態の確率分布を返す関数を定義します。シミュレータとして<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を用いるほうがより実用に近くなりますが、実行時間や統計誤差の問題から、デフォルトでは<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を使うことにします。</p>
@@ -788,7 +793,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 </div>
 </div>
 </div>
-<p>読み出しレジスタのビット数を決めます。スピンの数が4なので、<span class="math notranslate nohighlight">\(\hbar \omega = 8(3 + |g|)J\)</span>と取ります。すると、<span class="math notranslate nohighlight">\(g=0\)</span>のとき、上の議論では<span class="math notranslate nohighlight">\(\Theta\)</span>の固有値の予想される最小絶対値は<span class="math notranslate nohighlight">\(1/24\)</span>ですが、実は系の対称性からその4倍の<span class="math notranslate nohighlight">\(1/6\)</span>が最小値になると予測できます。<span class="math notranslate nohighlight">\(|g| \ll 1\)</span>しか考えないので、外部磁場を摂動として考えて、結局<span class="math notranslate nohighlight">\(2^{n_R} / 6\)</span>が1より十分大きくなるように<span class="math notranslate nohighlight">\(n_R=5\)</span>とします。</p>
+<p>読み出しレジスタのビット数を決めます。スピンの数が4なので、<span class="math notranslate nohighlight">\(\hbar \omega = 8(3 + |g|)J\)</span>と取ります。すると、<span class="math notranslate nohighlight">\(g=0\)</span>のとき、上の議論によると<span class="math notranslate nohighlight">\(\Theta\)</span>の固有値の予想される最小絶対値は<span class="math notranslate nohighlight">\(1/24\)</span>ですが、実は系の対称性からその<span class="math notranslate nohighlight">\(n=4\)</span>倍の<span class="math notranslate nohighlight">\(1/6\)</span>が最小値になると予測できます。<span class="math notranslate nohighlight">\(|g| \ll 1\)</span>しか考えないので、外部磁場を摂動として考えて、結局<span class="math notranslate nohighlight">\(2^{n_R} / 6\)</span>が1より十分大きくなるように<span class="math notranslate nohighlight">\(n_R=5\)</span>とします。</p>
 <p>回路のパラメータが決まったので、<span class="math notranslate nohighlight">\(g\)</span>を引数として<span class="math notranslate nohighlight">\(2^{n}\)</span>通りの計算基底に対して<code class="docutils literal notranslate"><span class="pre">get_spectrum_for_comp_basis</span></code>関数を呼ぶ関数を定義し、<span class="math notranslate nohighlight">\(g=0\)</span>について実行します（時間がかかります）。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -847,8 +852,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">energy_eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">g_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n_state</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy_eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">g_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n_state</span><span class="p">))</span>
 
 <span class="c1"># Extract the energy eigenvalues from spectra and fill the array</span>
 <span class="c1">##################</span>
@@ -874,12 +878,12 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 </ul>
 <p><strong>ヒント</strong></p>
 <p>（<span class="math notranslate nohighlight">\(P(k)\)</span>の導出に関して）
-式<a class="reference internal" href="#equation-phim-decomposition">(13)</a>と<a class="reference internal" href="#equation-l-decomposition">(14)</a>を眺めると、</p>
+式<a class="reference internal" href="#equation-phim-decomposition">(14)</a>と<a class="reference internal" href="#equation-l-decomposition">(15)</a>を眺めると、</p>
 <div class="math notranslate nohighlight">
 \[
-\sum_{l} c^l_m c^{l*}_n = \delta_{mn}
+\sum_{l=0}^{2^{n_S} - 1} c^l_m c^{l*}_n = \delta_{mn}
 \]</div>
-<p>が成り立つことがわかります。ここで<span class="math notranslate nohighlight">\(\delta_{mn}\)</span>はクロネッカーの<span class="math notranslate nohighlight">\(\delta\)</span>記号で、<span class="math notranslate nohighlight">\(m=n\)</span>のとき1、それ以外では0の値を持つ因子です<a class="footnote-reference brackets" href="#unitarity" id="id8">1</a>。</p>
+<p>が成り立つことがわかります。ここで<span class="math notranslate nohighlight">\(\delta_{mn}\)</span>はクロネッカーの<span class="math notranslate nohighlight">\(\delta\)</span>記号で、<span class="math notranslate nohighlight">\(m=n\)</span>のとき1、それ以外では0の値を持つ因子です。</p>
 <dl class="footnote brackets">
 <dt class="label" id="unitarity"><span class="brackets"><a class="fn-backref" href="#id8">1</a></span></dt>
 <dd><p>これは<span class="math notranslate nohighlight">\(\{\ket{l}\}\)</span>と<span class="math notranslate nohighlight">\(\{\ket{\phi_m}\}\)</span>がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。</p>

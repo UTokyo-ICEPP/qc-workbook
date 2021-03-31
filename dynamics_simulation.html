@@ -179,6 +179,11 @@
    データベース検索を行う
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="amplitude_amplification.html">
+   【課題】振幅増幅を確認する
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -193,7 +198,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -383,7 +388,7 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id19">
+    <a class="reference internal nav-link" href="#measurement-error-mitigation">
      おまけ：測定エラーの緩和
     </a>
    </li>
@@ -420,7 +425,7 @@
 <li><p><a class="reference internal" href="#id14" id="id28">モデルのハミルトニアン</a></p></li>
 <li><p><a class="reference internal" href="#id16" id="id29">量子ゲートでの表現</a></p></li>
 <li><p><a class="reference internal" href="#id18" id="id30">回路実装</a></p></li>
-<li><p><a class="reference internal" href="#id19" id="id31">おまけ：測定エラーの緩和</a></p></li>
+<li><p><a class="reference internal" href="#measurement-error-mitigation" id="id31">おまけ：測定エラーの緩和</a></p></li>
 </ul>
 </li>
 </ul>
@@ -567,9 +572,9 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 \]</div>
 <p>とすれば、まず<span class="math notranslate nohighlight">\(H\ket{\psi(t_0)}\)</span>を計算し、それを<span class="math notranslate nohighlight">\(i\Delta t/\hbar\)</span>倍して<span class="math notranslate nohighlight">\(\ket{\psi(t_0)}\)</span>から引き、その結果にまた<span class="math notranslate nohighlight">\(H\)</span>をかけて、…という具合に<span class="math notranslate nohighlight">\(\ket{\psi(t_1)}\)</span>が近似計算できます<a class="footnote-reference brackets" href="#exact-at-limit" id="id8">1</a>。</p>
 <p>しかし、このスキームは量子コンピュータでの実装に向いていません。上で述べたように量子コンピュータのゲートはユニタリ演算子に対応するのに対して、<span class="math notranslate nohighlight">\(I - i\Delta t / \hbar H\)</span>はユニタリでないからです。代わりに、量子コンピュータでのダイナミクスシミュレーションでよく用いられるのが鈴木・トロッター分解という近似法です。</p>
-<p>鈴木・トロッター分解は、ハミルトニアンを<span class="math notranslate nohighlight">\(H = H_1 + H_2 + H_3 + \cdots\)</span>とエルミート演算子の和に分解したときに、</p>
+<p>鈴木・トロッター分解は、ハミルトニアンを<span class="math notranslate nohighlight">\(H = \sum_{k=1}^{L} H_k\)</span>と<span class="math notranslate nohighlight">\(L\)</span>個のエルミート演算子<span class="math notranslate nohighlight">\(H_k\)</span>の和に分解したときに、</p>
 <div class="math notranslate nohighlight" id="equation-trotter-formula">
-<span class="eqno">(6)<a class="headerlink" href="#equation-trotter-formula" title="Permalink to this equation">¶</a></span>\[\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)\]</div>
+<span class="eqno">(6)<a class="headerlink" href="#equation-trotter-formula" title="Permalink to this equation">¶</a></span>\[\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)\]</div>
 <p>が成り立つという定理に基づきます。個々の<span class="math notranslate nohighlight">\(H_k\)</span>について<span class="math notranslate nohighlight">\(U_{H_k}(\Delta t) = \exp (-i/\hbar \Delta t H_k)\)</span>の量子ゲートによる実装が知られていれば、右辺の第一項が実装できるので、ステップ数<span class="math notranslate nohighlight">\(M\)</span>で決まる精度でダイナミクスが近似できます。</p>
 <p>やや立ち入った話になりますが、この定理の重要なポイントは、一般に線形演算子<span class="math notranslate nohighlight">\(A, B\)</span>に対して、特殊な条件が満たされる（<span class="math notranslate nohighlight">\(A\)</span>と<span class="math notranslate nohighlight">\(B\)</span>が「可換」である）場合を除いて</p>
 <div class="math notranslate nohighlight">
@@ -677,6 +682,8 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <div class="section" id="id18">
 <h3><a class="toc-backref" href="#id30">回路実装</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>やっと準備が整ったので、シミュレーションを実装しましょう。実機で走らせられるように、<span class="math notranslate nohighlight">\(n=5\)</span>, <span class="math notranslate nohighlight">\(M=10\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = 0.1\)</span>とします。上で決めたように、ビット0以外が<span class="math notranslate nohighlight">\(\upket\)</span>、ビット0が<span class="math notranslate nohighlight">\(\rightket\)</span>という初期状態から始めます。各<span class="math notranslate nohighlight">\(\Delta t\)</span>ステップごとに回路のコピーをとり、それぞれのコピーで測定を行うことで、時間発展の様子を観察します。</p>
+<div class="cell tag_remove-input docutils container">
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
@@ -752,7 +759,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/dynamics_simulation_18_0.png" src="_images/dynamics_simulation_18_0.png" />
+<img alt="_images/dynamics_simulation_19_0.png" src="_images/dynamics_simulation_19_0.png" />
 </div>
 </div>
 <p>ビット0でのスピンの不整合が徐々に他のビットに伝搬していく様子が観察できました。</p>
@@ -783,8 +790,8 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 </div>
 </div>
 </div>
-<div class="section" id="id19">
-<h3><a class="toc-backref" href="#id31">おまけ：測定エラーの緩和</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="measurement-error-mitigation">
+<span id="id19"></span><h3><a class="toc-backref" href="#id31">おまけ：測定エラーの緩和</a><a class="headerlink" href="#measurement-error-mitigation" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="quantum_computation.html"><span class="doc">第二回の課題</span></a>でも触れましたが、実機ではCNOTゲートと測定で主にエラーが起きます。課題ではCNOTを極力減らす回路を書きましたが、今回のシミュレーションではなかなかこれ以上CNOTを減らす工夫のしようがなさそうです。</p>
 <p>そこで、今度は測定エラーに注目します。測定エラーは統計的にだいたい再現性がある（あるビット列<span class="math notranslate nohighlight">\(x\)</span>が得られるべき状態から別のビット列<span class="math notranslate nohighlight">\(y\)</span>が得られる確率が、状態の生成法に依存しにくい）ので、事後的に緩和（部分的補正）できます。そのためには<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの<span class="math notranslate nohighlight">\(2^n\)</span>個すべての計算基底状態について、相当するビット列が100%の確率で得られるべき回路を作成し、それを測定した結果を利用します。</p>
 <p>例えば<span class="math notranslate nohighlight">\(n=2\)</span>で状態<span class="math notranslate nohighlight">\(\ket{x} \, (x = 00, 01, 10, 11)\)</span>を測定してビット列<span class="math notranslate nohighlight">\(y\)</span>を得る確率が<span class="math notranslate nohighlight">\(\epsilon^x_y\)</span>だとします。このとき実際の量子計算をして測定で得られた確率分布が<span class="math notranslate nohighlight">\(\{p_y\}\)</span>であったとすると、その計算で本来得られるべき確率分布<span class="math notranslate nohighlight">\(\{P_x\}\)</span>は連立方程式</p>

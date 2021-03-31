@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>量子力学の基礎 &#8212; 量子コンピューティング・ワークブック</title>
+    <title>【課題】振幅増幅を確認する &#8212; 量子コンピューティング・ワークブック</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -57,6 +57,8 @@
     <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="変分法と変分量子固有値ソルバー法を学習する" href="vqe.html" />
+    <link rel="prev" title="データベース検索を行う" href="grover.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -171,10 +173,15 @@
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   【課題】振幅増幅を確認する
   </a>
  </li>
 </ul>
@@ -191,7 +198,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="vqe_tracking.html">
-   [課題] 高エネルギー実験で生成された荷電粒子の飛跡を見つける
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
   </a>
  </li>
 </ul>
@@ -263,7 +270,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/quantum_basics.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/amplitude_amplification.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
@@ -283,7 +290,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         
-        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/quantum_basics.ipynb"><button
+        <a class="edit-button" href="https://github.com/UTokyo-ICEPP/qc-workbook/edit/master/source/ja/amplitude_amplification.ipynb"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -303,7 +310,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/quantum_basics.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=tree/source/ja/amplitude_amplification.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -323,20 +330,6 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
-        </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
-   測定
-  </a>
- </li>
-</ul>
-
-        </nav>
-        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -345,15 +338,21 @@
               <div>
                 
   <div class="section" id="id1">
-<h1>量子力学の基礎<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id2">
-<h2>測定<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>偏光の決まった（良質のレーザーなどから出る）光を偏光板に通す実験を考えましょう。偏光板はA, Bの2枚用意し、それぞれ縦（角度0）と横（角度<span class="math notranslate nohighlight">\(\pi/2\)</span>）の光が100%透過するように設置します。レーザーの偏光角が0であれば、Aは光を透過させますがBは遮断します。レーザーを<span class="math notranslate nohighlight">\(\pi/4\)</span>だけ回すと、今度はA, Bともに元の50%の強度で光を透過させるようになります。偏向角を<span class="math notranslate nohighlight">\(\pi/6\)</span>にすると、透過率はAで75%, Bで25%となります。</p>
-<p>Image</p>
-<p>実はこの偏光板による光の透過実験は、量子力学における「測定」という操作に対応しています。偏光板を透過する光の強度は、光のビームを成す個々の光子が偏光板を透過する確率に比例しています。
-さらに、光子を偏光板に当てることは光子の偏光を測定することと同じで、
-測定の結果、偏光が偏光板の向きと一致していれば光子は透過し、</p>
-</div>
+<h1>【課題】振幅増幅を確認する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>グローバーのアルゴリズムを適用し、振幅が変化していく過程を可視化することを試みます。また検索に必要な反復回数と量子ビット数との関係も調べてみます。</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(n=6\)</span>個の量子ビットからなるリスト（<span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素、<span class="math notranslate nohighlight">\(0\leq x&lt;64\)</span>）から適当な整数<span class="math notranslate nohighlight">\(x\)</span>を一つ選び、その数<span class="math notranslate nohighlight">\(x\)</span>を見つけるグローバーのアルゴリズムを実装する。</p></li>
+<li><p>グローバーの反復を任意の回数繰り返すプログラムを作成する。</p></li>
+<li><p>実装した回路を繰り返し実行し、求める解<span class="math notranslate nohighlight">\(x\)</span>を観測した回数と反復した回数との相関関係を図にする。</p></li>
+<li><p>計算で求めた検索に必要な反復回数と、測定で求めた最適な反復回数が一致することを確認する。</p></li>
+<li><p>同じ要素リストから2つの整数<span class="math notranslate nohighlight">\(x_1\)</span>と<span class="math notranslate nohighlight">\(x_2\)</span>を見つける問題へ量子回路を拡張し、3.と同様に、求める解を観測した回数と反復した回数との相関関係を図にする。</p></li>
+<li><p>解が一つの場合で、リストのサイズを<span class="math notranslate nohighlight">\(n=4\)</span>から<span class="math notranslate nohighlight">\(n=10\)</span>まで変えた時に、測定で求めた最適な反復回数が<span class="math notranslate nohighlight">\(n\)</span>とどういう相関関係にあるか図で示す。また、その結果を考察する。</p></li>
+</ol>
+<p><strong>提出するもの</strong></p>
+<ul class="simple">
+<li><p>1と2のコード</p></li>
+<li><p>3, 5, 6の結果の図と、6の結果の考察</p></li>
+</ul>
 </div>
 
     <script type="text/x-thebe-config">
@@ -384,6 +383,8 @@
     
     <div class='prev-next-bottom'>
         
+    <a class='left-prev' id="prev-link" href="grover.html" title="previous page">データベース検索を行う</a>
+    <a class='right-next' id="next-link" href="vqe.html" title="next page">変分法と変分量子固有値ソルバー法を学習する</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
