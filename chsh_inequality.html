@@ -142,12 +142,12 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
-   量子ダイナミクスシミュレーション
+   物理系を表現する
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
-   [課題]量子ダイナミクスシミュレーション・続
+   【課題】量子ダイナミクスシミュレーション・続
   </a>
  </li>
 </ul>
@@ -160,6 +160,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
   </a>
  </li>
 </ul>
@@ -216,8 +221,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="quantum_basics.html">
-   量子力学の基礎
+  <a class="reference internal" href="numerics.html">
+   数値表現
   </a>
  </li>
 </ul>
@@ -332,7 +337,7 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
-   CHSH不等式とは
+   CHSH不等式
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -342,50 +347,50 @@
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id4">
-     量子ビット
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id7">
-     ゲート、回路、測定
+     量子ビット、量子レジスタ
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id8">
+     ゲート、回路、測定
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
      よく使うゲート
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id9">
+      <a class="reference internal nav-link" href="#id10">
        1量子ビットの操作
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id10">
+      <a class="reference internal nav-link" href="#id11">
        2量子ビットの操作
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id11">
+    <a class="reference internal nav-link" href="#id12">
      回路図の書き方と読み方
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id12">
+  <a class="reference internal nav-link" href="#id13">
    CHSH不等式を計算する回路を書く
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
+  <a class="reference internal nav-link" href="#id14">
    回路を実機で実行する
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id14">
+  <a class="reference internal nav-link" href="#id15">
    量子測定結果の解析
   </a>
  </li>
@@ -406,43 +411,43 @@
 <div class="contents local topic" id="id1">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id2" id="id15">本当に量子コンピュータなのか？</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id16">CHSH不等式とは</a></p></li>
-<li><p><a class="reference internal" href="#qiskit" id="id17">Qiskitの基本構造</a></p>
+<li><p><a class="reference internal" href="#id2" id="id16">本当に量子コンピュータなのか？</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id17">CHSH不等式</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id18">Qiskitの基本構造</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id4" id="id18">量子ビット</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id19">ゲート、回路、測定</a></p></li>
-<li><p><a class="reference internal" href="#id8" id="id20">よく使うゲート</a></p>
+<li><p><a class="reference internal" href="#id4" id="id19">量子ビット、量子レジスタ</a></p></li>
+<li><p><a class="reference internal" href="#id8" id="id20">ゲート、回路、測定</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id21">よく使うゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id9" id="id21">1量子ビットの操作</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id22">2量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id22">1量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id23">2量子ビットの操作</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id11" id="id23">回路図の書き方と読み方</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id24">回路図の書き方と読み方</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id12" id="id24">CHSH不等式を計算する回路を書く</a></p></li>
-<li><p><a class="reference internal" href="#id13" id="id25">回路を実機で実行する</a></p></li>
-<li><p><a class="reference internal" href="#id14" id="id26">量子測定結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id25">CHSH不等式を計算する回路を書く</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id26">回路を実機で実行する</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id27">量子測定結果の解析</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id15">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>このワークブックの主旨が量子コンピュータ（QC）を使おう、ということですが、QCなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソースとして使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQCなのでしょうか。どうしたらそれが調べられるでしょうか。</p>
 <p>QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。</p>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id16">CHSH不等式とは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>CHSH不等式やその根本であるベル不等式の意義については、<a class="reference internal" href="quantum_basics.html"><span class="doc">量子力学の基礎</span></a>を参照してください。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用していると言えることになります。</p>
+<h2><a class="toc-backref" href="#id17">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
 <p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザ一つしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>を利用します。</p>
 </div>
 <div class="section" id="qiskit">
-<h2><a class="toc-backref" href="#id17">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
 <p>IBM Q System OneのQCで量子計算を実行するには、IBMの提供する<a class="reference external" href="https://qiskit.org/">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
 <ol class="simple">
-<li><p>空っぽの量子回路を定義する。</p></li>
-<li><p>回路に量子計算の操作（ゲート）を足していく。</p></li>
+<li><p>使用する量子ビットの数を決める</p></li>
+<li><p>量子ビットに量子計算の操作（ゲート）をかけて、量子回路を作る</p></li>
 <li><p>回路を実行して計算結果を得る。ここでは二通りのオプションがあり、</p>
 <ul class="simple">
 <li><p>回路をQCの実機に送り、実行させる。</p></li>
@@ -451,17 +456,17 @@
 </li>
 <li><p>計算結果を解析する。</p></li>
 </ol>
-<p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>を参照してください。</p>
+<p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="nonlocal_correlations.html"><span class="doc">第一回の課題</span></a>を参照してください。</p>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id18">量子ビット</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。量子ビットや量子レジスタ（量子ビットを並べたもの）は量子コンピュータ中で常に一つの「状態」にあります。</p>
-<p>量子レジスタの状態を物理学の習わしに従ってしばしば「ケット」という<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>のような記号で表しますが、これ自体はただの記号なので特に意味はありません。別に「枠」なしで<span class="math notranslate nohighlight">\(\psi\)</span>と書いても、絵文字を使って🔱と書いても、何でも構いません。</p>
-<p>重要なのは各量子ビットに対して2つの<strong>基底状態</strong>が定義できることで、量子計算の習わしではそれらを<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>で表し、「計算基底」とも呼びます<a class="footnote-reference brackets" href="#basis" id="id5">1</a>。そして、量子ビットの任意の状態は、2つの複素数<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を使って</p>
+<h3><a class="toc-backref" href="#id19">量子ビット、量子レジスタ</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。そして、量子ビットの集まりを量子レジスタと呼びます。</p>
+<p>量子レジスタは量子コンピュータ中で常に一つの「状態」にあります。量子レジスタの状態を物理学の習わしに従ってしばしば「ケット」という<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>のような記号で表します<a class="footnote-reference brackets" href="#mixed-state" id="id5">1</a>。量子力学に不慣れな方はこの記法で怯んでしまうかもしれませんが、ケット自体はただの記号なのであまり気にしないでください。別に「枠」なしで<span class="math notranslate nohighlight">\(\psi\)</span>と書いても、絵文字を使って🔱と書いても、何でも構いません。</p>
+<p>重要なのは各量子ビットに対して2つの<strong>基底状態</strong>が定義できることで、量子計算の習わしではそれらを<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>で表し、「計算基底」とも呼びます<a class="footnote-reference brackets" href="#basis" id="id6">2</a>。そして、量子ビットの任意の状態は、2つの複素数<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
 \alpha \ket{0} + \beta \ket{1}
 \]</div>
-<p>と2つの基底の「重ね合わせ」で表せます。ここで<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を確率振幅や単に<strong>振幅</strong>（amplitude）と呼ぶこともあります。繰り返しですが別に表記法自体に深い意味はなく、例えば同じ状態を<span class="math notranslate nohighlight">\([\alpha, \beta]\)</span>と書いてもいいわけです<a class="footnote-reference brackets" href="#complexarray" id="id6">2</a>。</p>
+<p>と2つの基底の「重ね合わせ」で表せます。ここで<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を確率振幅、もしくは単に<strong>振幅</strong>（amplitude）と呼びます。繰り返しですが別に表記法自体に深い意味はなく、例えば同じ状態を<span class="math notranslate nohighlight">\([\alpha, \beta]\)</span>と書いてもいいわけです<a class="footnote-reference brackets" href="#complexarray" id="id7">3</a>。</p>
 <p>量子ビットの任意の状態が2つの複素数で表せるということは、逆に言えば一つの量子ビットには2つの複素数に相当する情報を記録できるということになります。ただこれには少し注釈があって、量子力学の決まりごとから、<span class="math notranslate nohighlight">\(\alpha\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>は</p>
 <div class="math notranslate nohighlight">
 \[
@@ -473,10 +478,10 @@
 \alpha \ket{0} + \beta \ket{1} \sim e^{i\theta} (\alpha \ket{0} + \beta \ket{1})
 \]</div>
 <p>（ここで <span class="math notranslate nohighlight">\(\sim\)</span> は「同じ量子状態を表す」という意味）という制約があります。</p>
-<p>複素数1つは実数2つで書けるので<span class="math notranslate nohighlight">\(\alpha\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>をあわせて実数4つ分の情報が入っているようですが、2つの拘束条件があるため、実際の自由度は 4-2=2 個です。自由度の数をあらわにして量子ビットの状態を記述するときは、</p>
+<p>複素数1つは実数2つで書けるので、<span class="math notranslate nohighlight">\(\alpha\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>をあわせて実数4つ分の情報が入っているようですが、2つの拘束条件があるため、実際の自由度は 4-2=2 個です。自由度の数をあらわにして量子ビットの状態を記述するときは、</p>
 <div class="math notranslate nohighlight">
 \[
-e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
+e^{-i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{i\phi/2}\sin\frac{\theta}{2}\ket{1}
 \]</div>
 <p>と書いたりもします。この表記法をブロッホ球表現と呼ぶこともあります（詳細は<a class="reference internal" href="quantum_basics.html"><span class="doc">量子力学の基礎</span></a>にて）。</p>
 <p>面白くなるのは量子ビットが複数ある場合です。例えば量子ビット2つなら、それぞれに<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}\)</span>の計算基底があるので、任意の状態は</p>
@@ -496,7 +501,7 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 \alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11} \sim e^{i\theta} (\alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11})
 \]</div>
 <p>となります。量子ビットがいくつあっても拘束条件は2つだけです。</p>
-<p>つまり、量子ビット<span class="math notranslate nohighlight">\(n\)</span>個レジスタでは、基底の数が<span class="math notranslate nohighlight">\(2^n\)</span>個で、それぞれに複素数の振幅がかかるので、実数<span class="math notranslate nohighlight">\(2 \times 2^n - 2\)</span>個分の情報が記録できることになります。これが量子計算に関して「指数関数的」という表現がよく用いられる所以です。</p>
+<p>つまり、量子ビット<span class="math notranslate nohighlight">\(n\)</span>個のレジスタでは、基底の数が<span class="math notranslate nohighlight">\(2^n\)</span>個で、それぞれに複素数の振幅がかかるので、実数<span class="math notranslate nohighlight">\(2 \times 2^n - 2\)</span>個分の情報が記録できることになります。これが量子計算に関して「指数関数的」という表現がよく用いられる所以です。</p>
 <p>量子レジスタの計算基底状態の表記法としては、上に書いたようにケットを<span class="math notranslate nohighlight">\(n\)</span>個並べたり<span class="math notranslate nohighlight">\(n\)</span>個の0/1を一つのケットの中に並べたりする方法がありますが、さらにコンパクトなのが、0/1の並び（ビット列）を二進数とみなして、対応する（十進数の）数字で表現する方法です。例えば4量子ビットのレジスタで状態<span class="math notranslate nohighlight">\(\ket{0000}\)</span>と<span class="math notranslate nohighlight">\(\ket{1111}\)</span>はそれぞれ<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{15}\)</span>と書けます。</p>
 <p>ただし、ここで注意すべきなのは、左右端のどちらが「1の位」なのか事前に約束しないといけないことです。<span class="math notranslate nohighlight">\(\ket{0100}\)</span>を<span class="math notranslate nohighlight">\(\ket{4}\)</span>（右端が1の位）とするか<span class="math notranslate nohighlight">\(\ket{2}\)</span>（左端が1の位）とするかは約束次第です。このワークブックでは、Qiskitでの定義に従って、右端を1の位とします。同時に、レジスタの最初の量子ビットが1の位に対応するようにしたいので、ケットや0/1を並べて計算基底を表現するときは、右から順にレジスタの量子ビットを並べていくことにします。</p>
 <p>Qiskitには量子レジスタオブジェクトがあり、</p>
@@ -506,8 +511,8 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 </div>
 <p>のように量子ビット数（この場合4）と名前（<code class="docutils literal notranslate"><span class="pre">'myregister'</span></code>）を指定して初期化します。初期状態では、量子ビットはすべて<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態にあります。レジスタオブジェクトはこのままではあまり使い道がなく、基本的には次に紹介する量子回路の一部として利用します。</p>
 </div>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id19">ゲート、回路、測定</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id20">ゲート、回路、測定</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>量子計算とは、端的に言えば、量子レジスタに特定の状態を生成し、その振幅を利用することと言えます。</p>
 <p>とは言っても、いきなり「えいや」と好きな量子状態を作れるわけではなく、パターンの決まった単純操作（<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える、ブロッホ球表現での位相角度<span class="math notranslate nohighlight">\(\phi\)</span>を増減させる、など）を順番に組み合わせて複雑な状態を作っていきます。この単純操作のオペレーションのことを一般に量子<strong>ゲート</strong>といい、ゲートの種類や順番を指定したプログラムに相当するものを量子<strong>回路</strong>と呼びます。</p>
 <p>Qiskitでは、量子回路を<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトで表します。</p>
@@ -517,7 +522,7 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 </pre></div>
 </div>
 <p>という具合です。</p>
-<p>作られた量子回路は、量子ビットの数は決まっているもののゲートが一つもない「空っぽ」の状態なので、そこにゲートをかけていきます。例えば下で説明するアダマールゲートをレジスタの2個目の量子ビットに作用させるには</p>
+<p>作られた量子回路は、量子ビットの数が決まっているもののゲートが一つもない「空っぽ」の状態なので、そこにゲートをかけていきます。例えば下で説明するアダマールゲートをレジスタの2個目の量子ビットに作用させるには</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">register</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -525,14 +530,14 @@ e^{i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{-i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>上で「振幅を利用する」という曖昧な表現をしましたが、それはいろいろな利用の仕方があるからです。しかし、どんな方法であっても、必ず量子レジスタの<strong>測定</strong>という操作を行います。量子コンピュータから何かしらの情報を得るための唯一の方法が測定です。</p>
 <p>測定は量子レジスタの状態を「覗き見る」ような操作ですが、一回の測定操作で具体的に起きることは、各量子ビットに対して0もしくは1という値が得られるというだけです。つまり、量子状態が<span class="math notranslate nohighlight">\(2^n\)</span>個の計算基底の複雑な重ね合わせであったとしても、測定をすると一つの計算基底に対応するビット列が出てくるだけということになります。しかも、一度測定してしまった量子ビットはもう状態を変えてしまっていて、複雑な重ね合わせは失われてしまいます。</p>
 <p>ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を何度も実行して測定を繰り返すと、その都度ランダムにビット列が決まります。ただし、このランダムさには法則があって、<strong>特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗</strong>となっています。つまり、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>があるとき、測定でビット列<span class="math notranslate nohighlight">\(k\)</span>が得られる確率は<span class="math notranslate nohighlight">\(|c_k|^2\)</span>です。</p>
-<p>したがって、回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていき、レジスタがどんな量子状態にあるのか見えてきます。しかしわかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
+<p>したがって、回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていき、レジスタがどんな量子状態にあるのか見えてきます。しかし、わかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
 <p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
 </div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id20">よく使うゲート</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明できます。</p>
 <div class="section" id="id9">
-<h4><a class="toc-backref" href="#id21">1量子ビットの操作</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id21">よく使うゲート</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明できます。</p>
+<div class="section" id="id10">
+<h4><a class="toc-backref" href="#id22">1量子ビットの操作</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
 <p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。（表中コードの<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>は量子ビットの番号）</p>
 <table class="table">
 <colgroup>
@@ -589,7 +594,7 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 </tr>
 </tbody>
 </table>
-<p>それでは、2量子ビットレジスタの第1ビットに<span class="math notranslate nohighlight">\(H, R_y, X\)</span>の順にゲートをかけて、最後に測定をする回路をQiskitで書いてみましょう。</p>
+<p>それでは、2量子ビットレジスタの第0ビットに<span class="math notranslate nohighlight">\(H, R_y, X\)</span>の順にゲートをかけて、最後に測定をする回路をQiskitで書いてみましょう。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは必要になるpythonモジュールをすべてインポートしておく</span>
@@ -624,7 +629,7 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 </div>
 </div>
 <p>最後のプリント文で、ゲートが3つなのにも関わらず “5 operations” と出てくるのは、各量子ビットの測定も一つのオペレーションとして数えられるからです。</p>
-<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(\pi/2), X\)</span>という順の操作で第1ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていくので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
+<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(\pi/2), X\)</span>という順の操作で第0ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていくので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -637,10 +642,10 @@ X R_y\left(\frac{\pi}{2}\right) H \ket{0} &amp; = X R_y\left(\frac{\pi}{2}\right
 \end{split}\]</div>
 <p>なので、結局<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態に戻る操作でした。</p>
 </div>
-<div class="section" id="id10">
-<h4><a class="toc-backref" href="#id22">2量子ビットの操作</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id11">
+<h4><a class="toc-backref" href="#id23">2量子ビットの操作</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
 <p>2量子ビットの操作は、量子ビットの超電導素子での実装の都合上、全て「制御ゲート」（controlled gates）という方式で行われます。この方式では、2つのビットのうち片方を制御（control）、もう片方を標的（target）として、制御ビットが1の時だけ標的ビットに何らかの操作がかかります。</p>
-<p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。ケットの添字でビットの番号を表して（reminder: 並べて書くときは左が第2で右が第1です）</p>
+<p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。ケットの添字でビットの番号を表して（reminder: 並べて書くときは右から順に番号を振ります）</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -651,7 +656,7 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 \end{align}
 \end{split}\]</div>
 <p>です。</p>
-<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>はCXやCNOTとも呼ばれ、特に重要な2量子ビットゲートです。全ての2量子ビット制御ゲートはCNOTと1量子ビットゲートの組み合わせに分解できます。</p>
+<p>上で紹介した頻出する1ビットゲート<span class="math notranslate nohighlight">\(X, Z, H, R_y, R_z\)</span>のうち、<span class="math notranslate nohighlight">\(H\)</span>以外は制御ゲート化バージョンもよく使われます。特に<span class="math notranslate nohighlight">\(C[X]\)</span>はCXやCNOTとも呼ばれ、量子計算の基本要素として多様されます。実際、全ての2量子ビット制御ゲートはCNOTと1量子ビットゲートの組み合わせに分解できます。</p>
 <table class="table">
 <colgroup>
 <col style="width: 33%" />
@@ -731,8 +736,8 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 <p>最後に<span class="math notranslate nohighlight">\(C[Z]\)</span>をかけると、<span class="math notranslate nohighlight">\(\ket{11}\)</span>だけ符号が反転します。</p>
 </div>
 </div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id23">回路図の書き方と読み方</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id24">回路図の書き方と読み方</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p>量子回路を可視化する方法として、「回路図」の標準的な描き方が決まっています。Qiskitでは<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>というメソッドを使って自動描画できます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -760,11 +765,11 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 meas: 2/═════════════════════════════════════╩══╩═
                                              0  1 </pre></div></div>
 </div>
-<p>回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第1、第2量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」に対応し、測定結果の0/1が記録される部分です。</p>
+<p>回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第0、第1量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」に対応し、測定結果の0/1が記録される部分です。</p>
 </div>
 </div>
-<div class="section" id="id12">
-<h2><a class="toc-backref" href="#id24">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h2><a class="toc-backref" href="#id25">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「ベル状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。ベル状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
 <p>ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作るので、ループを回して<code class="docutils literal notranslate"><span class="pre">circuits</span></code>という配列に回路を足していきます。</p>
 <p>CHSH不等式の検証用の観測量を作るために、量子ビット1に対し、回路0と2では測定の直前に<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を同じく測定の直前に作用させます。</p>
@@ -880,8 +885,8 @@ C^3 = 0
 <p>となり、<span class="math notranslate nohighlight">\(S = \sqrt{2} &lt; 2\)</span>です。これがCHSH不等式です。</p>
 <p>それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から<span class="math notranslate nohighlight">\(S\)</span>の値を計算して確認してみましょう。</p>
 </div>
-<div class="section" id="id13">
-<h2><a class="toc-backref" href="#id25">回路を実機で実行する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2><a class="toc-backref" href="#id26">回路を実機で実行する</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>まずは<a class="reference internal" href="prerequisites.html#qiskit-token"><span class="std std-ref">トークン</span></a>を使ってIBMQに接続します。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -909,7 +914,9 @@ C^3 = 0
 <p>一つのジョブで複数の回路を<code class="docutils literal notranslate"><span class="pre">shots</span></code>回ずつ実行できます。一度に送れる回路の数はバックエンドごとに決まっています。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shots</span> <span class="o">=</span> <span class="mi">8192</span>
+
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -922,8 +929,8 @@ C^3 = 0
 <p>また、自分の投じたジョブのステータスは左のツールバーのうちのJobsボタンから確認できます。</p>
 <p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように<code class="docutils literal notranslate"><span class="pre">job_monitor</span></code>を使います。</p>
 </div>
-<div class="section" id="id14">
-<h2><a class="toc-backref" href="#id26">量子測定結果の解析</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2><a class="toc-backref" href="#id27">量子測定結果の解析</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <p>ジョブオブジェクトの<code class="docutils literal notranslate"><span class="pre">result()</span></code>というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -949,20 +956,10 @@ C^3 = 0
 <p>とすると、<code class="docutils literal notranslate"><span class="pre">execute</span></code>によって返されたのと同じようにジョブオブジェクトが生成されます。</p>
 </div>
 <p>Qiskitから提供されている<code class="docutils literal notranslate"><span class="pre">plot_histogram</span></code>関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
     <span class="n">plot_histogram</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_32_0.png" src="_images/chsh_inequality_32_0.png" />
-<img alt="_images/chsh_inequality_32_1.png" src="_images/chsh_inequality_32_1.png" />
-<img alt="_images/chsh_inequality_32_2.png" src="_images/chsh_inequality_32_2.png" />
-<img alt="_images/chsh_inequality_32_3.png" src="_images/chsh_inequality_32_3.png" />
-</div>
 </div>
 <p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
 <p>実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して “<em>Noisy</em> intermediate-scale quantum (NISQ) device” と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。</p>
@@ -972,7 +969,7 @@ C^3 = 0
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
-    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">8192.</span><span class="p">)</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
     
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
@@ -993,10 +990,13 @@ Yes, we are using a quantum computer!
 </div>
 <p>無事、<span class="math notranslate nohighlight">\(S\)</span>が2を超えました。</p>
 <dl class="footnote brackets">
-<dt class="label" id="basis"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dt class="label" id="mixed-state"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dd><p>正確には、状態がケットで表せるのはこのレジスタが他のレジスタとエンタングルしていないときに限られますが、ここでは詳細を割愛します。</p>
+</dd>
+<dt class="label" id="basis"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
 <dd><p>ここで言う「基底」は線形代数での意味（basis）で、「線形空間中の任意のベクトルを要素の線形和で表せる最小の集合」です。基底となる量子状態だから「基底状態」と呼びます。化学や量子力学で言うところのエネルギーの最も低い状態「基底状態」（ground state）とは関係ありません。</p>
 </dd>
-<dt class="label" id="complexarray"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dt class="label" id="complexarray"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
 <dd><p>実際に量子計算のシミュレーションをコンピュータ上で行う時などは、量子レジスタの状態を複素数の配列で表すので、この表記の方がよく対応します。</p>
 </dd>
 </dl>

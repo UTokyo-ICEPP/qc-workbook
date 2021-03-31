@@ -142,12 +142,12 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
-   量子ダイナミクスシミュレーション
+   物理系を表現する
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
-   [課題]量子ダイナミクスシミュレーション・続
+   【課題】量子ダイナミクスシミュレーション・続
   </a>
  </li>
 </ul>
@@ -160,6 +160,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
   </a>
  </li>
 </ul>
@@ -216,8 +221,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="quantum_basics.html">
-   量子力学の基礎
+  <a class="reference internal" href="numerics.html">
+   数値表現
   </a>
  </li>
 </ul>
@@ -655,7 +660,7 @@ Number of operations in the optimized circuit: 331
 <p>効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。</p>
 <div class="section" id="id8">
 <h3><a class="toc-backref" href="#id16">トランスパイルと物理的回路</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>でも少し触れましたが、回路が実機で実行される前には、トランスパイルという回路の変換が行われ、様々な組み合わせゲートからなる「論理的」な回路から、実機のハードウェアに実装されている基本ゲートのみで書かれる「物理的」な回路が作られます<a class="footnote-reference brackets" href="#physical" id="id9">2</a>。論理的な回路はどのようにでも書ける（例えば回路全体を一つのゲートと呼んでしまうこともできる）ので、回路の効率の比較はトランスパイル後でなければ意味がありません。</p>
+<p><a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>でも少し触れましたが、回路が実機で実行される前には、トランスパイルという回路の変換が行われ、様々な複合ゲートからなる「論理的」な回路から、実機のハードウェアに実装されている基本ゲートのみで書かれる「物理的」な回路が作られます<a class="footnote-reference brackets" href="#physical" id="id9">2</a>。論理的な回路はどのようにでも書ける（例えば回路全体を一つのゲートと呼んでしまうこともできる）ので、回路の効率の比較はトランスパイル後でなければ意味がありません。</p>
 <p>いい機会なので、実機での量子計算について少し詳細に考えてみましょう。トランスパイルがまさに論理的なアルゴリズムの世界と物理的実装の世界のインターフェースとなるので、この過程に注目します。</p>
 <p>トランスパイル時には、以下のような回路の変換が起こります。</p>
 <ul class="simple">
@@ -676,7 +681,7 @@ Number of operations in the optimized circuit: 331
 <div class="section" id="id10">
 <h3><a class="toc-backref" href="#id17">回路の比較</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>上を踏まえて、改めて2つの足し算回路を比較してみましょう。</p>
-<p>これまで実機で回路を実行するときは<code class="docutils literal notranslate"><span class="pre">execute</span></code>という関数を利用していましたが、実はこの関数にトランスパイル前の回路を渡すと、自動で標準設定のトランスパイルがなされていました。しかし<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を使い、トランスパイルを明示的に行うこともできます。この関数は主にトランスパイルの設定を細かくコントロールしたいときなどに使います。今回の効率化した回路は特定のマッピングのために作られているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。</p>
+<p>これまで実機で回路を実行するときは<code class="docutils literal notranslate"><span class="pre">execute</span></code>という関数を利用していましたが、実はこの関数にトランスパイル前の回路を渡すと、自動で標準設定のトランスパイルがなされていました。しかし<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を使い、トランスパイルを明示的に行うこともできます。この関数は主にトランスパイルの設定を細かくコントロールしたいときなどに使います。今回の効率化した回路は特定のマッピングのために作られているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。マッピングはibmq_16_melbourneのトポロジーとエラー率を参考にして事前に決めてあり、<code class="docutils literal notranslate"><span class="pre">get_initial_layout</span></code>という関数の中にハードコードされています。</p>
 <p>IBMQのマシンはチップごとに異なるトポロジーを持っているので、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数にも引数としてバックエンドを指定し、そのバックエンド専用の物理的回路を作ります。</p>
 <div class="cell tag_remove-output tag_raises-exception docutils container">
 <div class="cell_input docutils container">
@@ -693,7 +698,7 @@ Number of operations in the optimized circuit: 331
 
 <span class="c1"># 効率化した回路をトランスパイルする。ibmq_16_melbourneのうち、一直線に繋がった量子ビット列にマッピングする</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transpiling the optimized circuit with basic routing and custom qubit mapping&#39;</span><span class="p">)</span>
-<span class="n">initial_layout</span> <span class="o">=</span> <span class="n">get_initial_layout</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span><span class="c1">#[1, 0, 14, 13, 12, 11, 10, 9, 8, 6, 5, 4, 3]</span>
+<span class="n">initial_layout</span> <span class="o">=</span> <span class="n">get_initial_layout</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
 <span class="n">circuit_optimized_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_optimized</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">routing_method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">initial_layout</span><span class="o">=</span><span class="n">initial_layout</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the original circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
@@ -710,7 +715,7 @@ Number of operations in the optimized circuit: 331
 </div>
 <p>上のセルを実行すると、今度は効率化回路のオペレーションの数が元の回路の半数以下という結果になることがわかります。このマシンの基本ゲート<span class="math notranslate nohighlight">\(R_z, X\)</span>, SX, CNOTに分解した内訳でも、エラー率の大きいCNOTゲートの数が大幅に削減されています（両回路とも<span class="math notranslate nohighlight">\(X\)</span>ゲートは0個です）。</p>
 <p>元の回路と効率化した回路の違いは、後者では「数珠つなぎ」になった量子ビット列というトポロジーを仮定して、制御ゲートの順番を工夫して直接明示的にSWAPを挿入していることです。さらに、可能なところでは<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートの分解で生じるCNOTとSWAPのCNOTが打ち消し合うことも利用しています。最後の逆フーリエ変換でもゲートの順番が工夫してあります。</p>
-<p>それでは、トランスパイルした回路を実行してみます。まずはシミュレータで理想的な結果を確認しましょう。<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を使って「手動で」トランスパイルを行った回路を<code class="docutils literal notranslate"><span class="pre">execute</span></code>に渡すと再び標準設定でトランスパイルされてしまうので、別の手続きを踏みます。</p>
+<p>それでは、トランスパイルした回路を実行してみます。<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を使って「手動で」トランスパイルを行った回路を<code class="docutils literal notranslate"><span class="pre">execute</span></code>に渡すと再び標準設定でトランスパイルされてしまうので、別の手続きを踏みます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>

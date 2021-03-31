@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>[課題]量子ダイナミクスシミュレーション・続 &#8212; 量子コンピューティング・ワークブック</title>
+    <title>【課題】量子ダイナミクスシミュレーション・続 &#8212; 量子コンピューティング・ワークブック</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -58,7 +58,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="素因数分解アルゴリズムを学習する" href="shor.html" />
-    <link rel="prev" title="量子ダイナミクスシミュレーション" href="dynamics_simulation.html" />
+    <link rel="prev" title="物理系を表現する" href="dynamics_simulation.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -142,12 +142,12 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
-   量子ダイナミクスシミュレーション
+   物理系を表現する
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   [課題]量子ダイナミクスシミュレーション・続
+   【課題】量子ダイナミクスシミュレーション・続
   </a>
  </li>
 </ul>
@@ -160,6 +160,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
   </a>
  </li>
 </ul>
@@ -216,8 +221,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="quantum_basics.html">
-   量子力学の基礎
+  <a class="reference internal" href="numerics.html">
+   数値表現
   </a>
  </li>
 </ul>
@@ -381,7 +386,7 @@
               <div>
                 
   <div class="section" id="id1">
-<h1>[課題]量子ダイナミクスシミュレーション・続<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>【課題】量子ダイナミクスシミュレーション・続<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>第二回の実習では量子計算の並列性と、その顕著な利用法としての量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -414,18 +419,22 @@
 <p><a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py">プロット用関数<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code></a>で厳密解のカーブを書くとき、追加の引数<code class="docutils literal notranslate"><span class="pre">spin_component='x'</span></code>を渡すと<span class="math notranslate nohighlight">\(X\)</span>方向のスピンのプロットに切り替わります。ただし、実験結果の<code class="docutils literal notranslate"><span class="pre">counts_list</span></code>は相応する測定の結果となっていなければいけません。具体的には、各スピンについて「0が測定される＝スピンが+<span class="math notranslate nohighlight">\(X\)</span>を向いている、1が測定される＝スピンが-<span class="math notranslate nohighlight">\(X\)</span>を向いている」という対応付けが必要です。）</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 必要なモジュールを先にインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="k">if</span> <span class="s1">&#39;source&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/source&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
-    
-<span class="kn">from</span> <span class="nn">utils.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="c1"># このワークブック独自のモジュール</span>
+<span class="kn">from</span> <span class="nn">utils.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span><span class="p">,</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span><span class="p">,</span> <span class="n">insert_initial_counts</span>
+<span class="kn">from</span> <span class="nn">utils.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">M</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">omegadt</span> <span class="o">=</span> <span class="mf">0.1</span>
 
@@ -636,10 +645,7 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <p>とします。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
-<span class="kn">from</span> <span class="nn">utils.dynamics</span> <span class="kn">import</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span><span class="p">,</span> <span class="n">insert_initial_counts</span>
-
-<span class="k">def</span> <span class="nf">number_density</span><span class="p">(</span><span class="n">bit_exp</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">number_density</span><span class="p">(</span><span class="n">bit_exp</span><span class="p">):</span>
     <span class="n">particle_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bit_exp</span><span class="p">)</span> <span class="c1"># shape (T, n)</span>
     <span class="c1"># Particle number is 1 - (bit expectation) on odd sites</span>
     <span class="n">particle_number</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">particle_number</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
@@ -767,7 +773,7 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">量子ダイナミクスシミュレーション</a>
+    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">物理系を表現する</a>
     <a class='right-next' id="next-link" href="shor.html" title="next page">素因数分解アルゴリズムを学習する</a>
 
     </div>

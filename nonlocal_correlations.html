@@ -142,12 +142,12 @@
 <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
-   量子ダイナミクスシミュレーション
+   物理系を表現する
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
-   [課題]量子ダイナミクスシミュレーション・続
+   【課題】量子ダイナミクスシミュレーション・続
   </a>
  </li>
 </ul>
@@ -160,6 +160,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
   </a>
  </li>
 </ul>
@@ -216,8 +221,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="quantum_basics.html">
-   量子力学の基礎
+  <a class="reference internal" href="numerics.html">
+   数値表現
   </a>
  </li>
 </ul>
@@ -397,9 +402,22 @@
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle#1|}\)</span></p>
+<div class="section" id="qc">
+<h2><a class="toc-backref" href="#id11">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this headline">¶</a></h2>
+<p>実習で見たように、QCで実現される量子状態は、量子力学の公理に基づいて理論的に計算・予測できます。そこで用いられる数学的操作も単なる足し算や掛け算（線形演算）なので、実はQCの量子状態は（古典）計算機で比較的簡単に計算できます。当然のことですが、QCは何も魔法のブラックボックスというわけではありません。</p>
+<p>ただし、古典計算機で量子状態を再現するためには、特殊な場合を除いて、量子ビット数の指数関数的な量のメモリが必要になります。これも前半で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットあれば、系の自由度（degrees of freedom / dof: 実数自由パラメータの数）は<span class="math notranslate nohighlight">\(2^{n+1} - 2\)</span>ですので、例えば各自由度を64ビット（＝8バイト）の浮動小数点で表現するとしたら、必要なメモリは(-2を無視して)</p>
+<div class="math notranslate nohighlight">
+\[
+2^3\, \mathrm{(bytes / dof)} \times 2^{n+1}\, \mathrm{(dof)} = 2^{n+4}\, \mathrm{(bytes)}
+\]</div>
+<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに<span class="math notranslate nohighlight">\(n=65\)</span>のものが存在するので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。</p>
+<p>しかし、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a class="reference external" href="https://quantiki.org/wiki/list-qc-simulators">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
+<p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
+<p>Qiskitのシミュレータには<code class="docutils literal notranslate"><span class="pre">Aer</span></code>というオブジェクトからアクセスします。<code class="docutils literal notranslate"><span class="pre">Aer</span></code>は実習で登場した<code class="docutils literal notranslate"><span class="pre">IBMQ</span></code>と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を取り出します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Bounds</span>
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
@@ -415,18 +433,6 @@
 </div>
 </div>
 </div>
-<div class="section" id="qc">
-<h2><a class="toc-backref" href="#id11">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this headline">¶</a></h2>
-<p>実習で見たように、QCで実現される量子状態は、量子力学の公理に基づいて理論的に計算・予測できます。そこで用いられる数学的操作も単なる足し算や掛け算（線形演算）なので、実はQCの量子状態は（古典）計算機で比較的簡単に計算できます。当然のことですが、QCは何も魔法のブラックボックスというわけではありません。</p>
-<p>ただし、古典計算機で量子状態を再現するためには、特殊な場合を除いて、量子ビット数の指数関数的な量のメモリが必要になります。これも前半で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットあれば、系の自由度（degrees of freedom / d.o.f.: 実数自由パラメータの数）は<span class="math notranslate nohighlight">\(2^{n+1} - 2\)</span>ですので、例えば各自由度を64ビット（＝8バイト）の浮動小数点で表現するとしたら、必要なメモリは(-2を無視して)</p>
-<div class="math notranslate nohighlight">
-\[
-2^3\, \mathrm{(bytes / d.o.f.)} \times 2^{n+1}\, \mathrm{(d.o.f.)} = 2^{n+4}\, \mathrm{(bytes)}
-\]</div>
-<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、よほどのハイエンドワークステーションでもRAMは<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiBなのに対し、QCではすでに<span class="math notranslate nohighlight">\(n&gt;50\)</span>のものが存在するので、後者が使いこなせて有用な問題を解くことができればいわゆる「量子超越」(quantum supremacy)が達成されたということになります。</p>
-<p>話が逸れましたが、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a class="reference external" href="https://quantiki.org/wiki/list-qc-simulators">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
-<p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
-<p>Qiskitのシミュレータには<code class="docutils literal notranslate"><span class="pre">Aer</span></code>というオブジェクトからアクセスします。<code class="docutils literal notranslate"><span class="pre">Aer</span></code>は実習で登場した<code class="docutils literal notranslate"><span class="pre">IBMQ</span></code>と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を取り出します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
@@ -507,7 +513,7 @@
 \ket{1} = \sin\frac{\theta}{2}\ket{\theta} + \cos\frac{\theta}{2}\ket{\theta + \pi},
 \end{split}\]</div>
 <p>つまり、計算基底状態が<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>の重ね合わせとして表現できます。量子ビットの任意の状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせで表現できるので、<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>の重ね合わせでも表現できるということになります。そのようなときは<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>を基底として状態を表しているわけです。</p>
-<p>一般に、量子力学的には、2つの異なる基底状態<span class="math notranslate nohighlight">\(\ket{a} \nsim \ket{b}\)</span>を考えれば、それらの重ね合わせで量子ビットの任意の状態が表現できます。そして、<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>が直交する<a class="footnote-reference brackets" href="#orthogonal" id="id5">2</a>ときに状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
+<p>一般に、量子力学的には、2つの異なる状態<span class="math notranslate nohighlight">\(\ket{a} \nsim \ket{b}\)</span>を考えれば、それらの重ね合わせで量子ビットの任意の状態が表現できます。そして、<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>が直交する<a class="footnote-reference brackets" href="#orthogonal" id="id5">2</a>ときに状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
 <div class="math notranslate nohighlight">
 \[
 \ket{\psi} = \alpha \ket{a} + \beta \ket{b}
@@ -532,24 +538,24 @@ R_y(-\theta)\ket{\psi} = \alpha \ket{0} + \beta \ket{1}
 <h2><a class="toc-backref" href="#id13">観測量の期待値とその計算法</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>課題の説明に入る前に、さらに話が込み入ってきますが、量子計算でも多出する（ワークブックでは特に<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>以降）概念である「観測量の期待値」について説明します。</p>
 <p>観測量とはそのまま「観測できる量」のことで、量子状態から取り出せる（古典的）情報のこととも言えます。例えば、何かしらの粒子の運動を量子力学的に記述した場合、その粒子の位置や運動量などが観測量です。</p>
-<p>ケットで表される量子状態に対して、観測量はケットに作用する「エルミート演算子」で表現されます。細かい定義は参考文献に譲り、ここで必要な最小限のことだけ述べると、エルミート演算子は<strong>対角化可能で、実数の固有値を持つ</strong>という性質を持っています。つまり、<span class="math notranslate nohighlight">\(\Sigma\)</span>が<span class="math notranslate nohighlight">\(N\)</span>次元の量子状態の空間のエルミート演算子であれば、</p>
+<p>ケットで表される量子状態に対して、観測量はケットに作用する「エルミート演算子」で表現されます。細かい定義は参考文献に譲り、ここで必要な最小限のことだけ述べると、エルミート演算子は<strong>対角化可能で、実数の固有値を持つ</strong>という性質を持っています。つまり、<span class="math notranslate nohighlight">\(A\)</span>が<span class="math notranslate nohighlight">\(N\)</span>次元の量子状態の空間のエルミート演算子であれば、</p>
 <div class="math notranslate nohighlight">
 \[
-\Sigma \ket{\phi_j} = a_j \ket{\phi_j}
+A \ket{\phi_j} = a_j \ket{\phi_j}
 \]</div>
-<p>が成り立つような状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>と実数<span class="math notranslate nohighlight">\(a_j\)</span>の組が<span class="math notranslate nohighlight">\(N\)</span>個存在し、各<span class="math notranslate nohighlight">\(\ket{\phi_j} \, (j=0,\dots,N-1)\)</span>は互いに直交します。このとき、<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を固有ベクトル、<span class="math notranslate nohighlight">\(a_j\)</span>を固有値と呼びます。そして、この固有値<span class="math notranslate nohighlight">\(a_j\)</span>が、演算子<span class="math notranslate nohighlight">\(\Sigma\)</span>で表される観測量の値に対応します<a class="footnote-reference brackets" href="#continuous-observables" id="id7">3</a>。</p>
-<p>さて、<span class="math notranslate nohighlight">\(\Sigma\)</span>が<span class="math notranslate nohighlight">\(n\)</span>ビット量子レジスタに対する演算子であるとします。レジスタの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が<span class="math notranslate nohighlight">\(\Sigma\)</span>の固有ベクトルで</p>
+<p>が成り立つような状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>と実数<span class="math notranslate nohighlight">\(a_j\)</span>の組が<span class="math notranslate nohighlight">\(N\)</span>個存在し、各<span class="math notranslate nohighlight">\(\ket{\phi_j} \, (j=0,\dots,N-1)\)</span>は互いに直交します。このとき、<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を固有ベクトル、<span class="math notranslate nohighlight">\(a_j\)</span>を固有値と呼びます。そして、この固有値<span class="math notranslate nohighlight">\(a_j\)</span>が、演算子<span class="math notranslate nohighlight">\(A\)</span>で表される観測量の値に対応します<a class="footnote-reference brackets" href="#continuous-observables" id="id7">3</a>。</p>
+<p>さて、<span class="math notranslate nohighlight">\(A\)</span>が<span class="math notranslate nohighlight">\(n\)</span>ビット量子レジスタに対する演算子であるとします。レジスタの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトルで</p>
 <div class="math notranslate nohighlight">
 \[
 \ket{\psi} = \sum_{j=0}^{2^n-1} \gamma_j \ket{\phi_j}
 \]</div>
-<p>と分解されるとき、この状態を固有ベクトル基底<span class="math notranslate nohighlight">\(\{\ket{\phi_j}\}\)</span>で測定すると、状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>が確率<span class="math notranslate nohighlight">\(|\gamma_j|^2\)</span>で得られます。そして、状態が<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>であれば観測量<span class="math notranslate nohighlight">\(\Sigma\)</span>の値は<span class="math notranslate nohighlight">\(a_j\)</span>です。</p>
-<p>そのような測定を多数回繰り返して<span class="math notranslate nohighlight">\(\Sigma\)</span>の値の期待値を求めることを考えます。期待値を<span class="math notranslate nohighlight">\(\bra{\psi} \Sigma \ket{\psi}\)</span>と書くと、定義から</p>
+<p>と分解されるとき、この状態を固有ベクトル基底<span class="math notranslate nohighlight">\(\{\ket{\phi_j}\}\)</span>で測定すると、状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>が確率<span class="math notranslate nohighlight">\(|\gamma_j|^2\)</span>で得られます。そして、状態が<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>であれば観測量<span class="math notranslate nohighlight">\(A\)</span>の値は<span class="math notranslate nohighlight">\(a_j\)</span>です。</p>
+<p>そのような測定を多数回繰り返して<span class="math notranslate nohighlight">\(A\)</span>の値の期待値を求めることを考えます。期待値の定義は「確率変数のすべての値に確率の重みを付けた加重平均」です。<span class="math notranslate nohighlight">\(A\)</span>が確率分布<span class="math notranslate nohighlight">\(\{|\gamma|_j\}\)</span>に従って値<span class="math notranslate nohighlight">\(\{a_j\}\)</span>を取るので、</p>
 <div class="math notranslate nohighlight">
 \[
-\bra{\psi} \Sigma \ket{\psi} = \sum_{j=0}^{2^n-1} a_j |\gamma_j|^2
+\bra{\psi} A \ket{\psi} = \sum_{j=0}^{2^n-1} a_j |\gamma_j|^2
 \]</div>
-<p>です。ここから、量子コンピュータにおいて観測量の期待値を計算する方法を見出すことができます。具体的には、</p>
+<p>となります。ここから、量子コンピュータにおいて観測量の期待値を計算する方法を見出すことができます。具体的には、</p>
 <ol class="simple">
 <li><p>観測量をエルミート演算子で表現する</p></li>
 <li><p>演算子を対角化し、固有値と対応する固有ベクトルを求める</p></li>
@@ -572,13 +578,25 @@ C = P_{00} - P_{01} - P_{10} + P_{11}
 \sigma^0 \ket{0} = \ket{0} \\
 \sigma^0 \ket{1} = -\ket{1}
 \end{split}\]</div>
-<p>で定義できる、という具合です。次に、そのような観測量<span class="math notranslate nohighlight">\(\sigma^{\kappa}\)</span>と<span class="math notranslate nohighlight">\(\sigma^{\lambda}\)</span>の積の期待値を、2つの量子ビットA, Bの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対して計算すると、</p>
+<p>で定義できる、という具合です。</p>
+<p>次に、2つの量子ビットA, Bからなるレジスタを考え、<span class="math notranslate nohighlight">\(\sigma^{\kappa}\)</span>をAの、<span class="math notranslate nohighlight">\(\sigma^{\lambda}\)</span>をBの観測量とします。また、それぞれの演算子の固有ベクトルを</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\sigma^{\kappa} \ket{\kappa_{\pm}} = \pm \ket{\kappa_{\pm}} \\
+\sigma^{\lambda} \ket{\lambda_{\pm}} = \pm \ket{\lambda_{\pm}}
+\end{split}\]</div>
+<p>で定義します。これらの固有ベクトルを使って、レジスタの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を</p>
 <div class="math notranslate nohighlight">
 \[
-\bra{\psi} \sigma^{\kappa}_A \sigma^{\lambda}_B \ket{\psi} = P(A=1, B=1) - P(A=1, B=-1) - P(A=-1, B=1) + P(A=-1, B=-1)
+\ket{\psi} = c_{++} \ket{\lambda_+}_B \ket{\kappa_+}_A + c_{+-} \ket{\lambda_+}_B \ket{\kappa_-}_A + c_{-+} \ket{\lambda_-}_B \ket{\kappa_+}_A + c_{--} \ket{\lambda_-}_B \ket{\kappa_-}_A
 \]</div>
-<p>です。ただし、観測量と量子ビットとの対応をはっきりさせるために、演算子にA, Bの添え字をつけました。ここで<span class="math notranslate nohighlight">\(P(A=x, B=y)\)</span>は<span class="math notranslate nohighlight">\(\sigma^{\kappa}_A\)</span>と<span class="math notranslate nohighlight">\(\sigma^{\lambda}_B\)</span>の固有ベクトルの積を基底として<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を測定したときに、Aで<span class="math notranslate nohighlight">\(x\)</span>、Bで<span class="math notranslate nohighlight">\(y\)</span>に対応する状態が得られる確率です。</p>
-<p>最後に、計算基底で測定をするために<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対して基底変換を施します。観測量<span class="math notranslate nohighlight">\(\sigma^{\kappa}\)</span>と<span class="math notranslate nohighlight">\(\sigma^{\lambda}\)</span>の固有ベクトルをそれぞれ<span class="math notranslate nohighlight">\(\ket{\kappa_{\pm}}\)</span>, <span class="math notranslate nohighlight">\(\ket{\lambda_{\pm}}\)</span>とし、それらが何らかのパラメータ付きゲート<span class="math notranslate nohighlight">\(R(\theta)\)</span>を通して計算基底と</p>
+<p>と分解します。ケットはAが右、Bが左になるよう並べました。すると、積<span class="math notranslate nohighlight">\(\sigma^{\lambda}_B \sigma^{\kappa}_A\)</span>の<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に関する期待値は、</p>
+<div class="math notranslate nohighlight">
+\[
+\bra{\psi} \sigma^{\lambda}_B \sigma^{\kappa}_A \ket{\psi} = |c_{++}|^2 - |c_{+-}|^2 - |c_{-+}|^2 + |c_{--}|^2
+\]</div>
+<p>です。</p>
+<p>最後に、同じ結果を計算基底での測定で表すために、<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対して基底変換を施します。<span class="math notranslate nohighlight">\(\{\ket{\kappa_{\pm}}, \ket{\lambda_{\pm}}\}\)</span>が何らかのパラメータ付きゲート<span class="math notranslate nohighlight">\(R(\theta)\)</span>を通して計算基底と</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \ket{\kappa_+} = R(\kappa) \ket{0} \\
@@ -586,20 +604,20 @@ C = P_{00} - P_{01} - P_{10} + P_{11}
 \ket{\lambda_+} = R(\lambda) \ket{0} \\
 \ket{\lambda_-} = R(\lambda) \ket{1}
 \end{split}\]</div>
-<p>で結びついているなら、状態<span class="math notranslate nohighlight">\(\ket{\psi'} = R^{-1}_A(\kappa) R^{-1}_B(\lambda) \ket{\psi}\)</span>を計算基底で測定したとき、</p>
+<p>で結びついているなら、状態<span class="math notranslate nohighlight">\(\ket{\psi'} = R^{-1}_B(\lambda) R^{-1}_A(\kappa) \ket{\psi}\)</span>を計算基底で測定したとき、</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
-P(A=1, B=1) = P_{00} \\
-P(A=1, B=-1) = P_{01} \\
-P(A=-1, B=1) = P_{10} \\
-P(A=-1, B=-1) = P_{11}
+P_{00} = |c_{++}|^2 \\
+P_{01} = |c_{+-}|^2 \\
+P_{10} = |c_{-+}|^2 \\
+P_{11} = |c_{--}|^2
 \end{split}\]</div>
-<p>が成り立ちます。確認のためはっきりさせておくと、左辺は<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を<span class="math notranslate nohighlight">\(\sigma^{\kappa, \lambda}\)</span>の固有ベクトルで測定した確率、右辺は<span class="math notranslate nohighlight">\(\ket{\psi'}\)</span>を計算基底で測定した確率です。つまり、最初の<span class="math notranslate nohighlight">\(C\)</span>は</p>
+<p>が成り立ちます。確認のためはっきりさせておくと、左辺は<span class="math notranslate nohighlight">\(\ket{\psi'}\)</span>を計算基底で測定し、ビット列00, 01, 10, 11を得る確率です。つまり、最初の<span class="math notranslate nohighlight">\(C\)</span>は</p>
 <div class="math notranslate nohighlight">
 \[
-C = \bra{\psi'} \sigma^0_A \sigma^0_B \ket{\psi'} = \bra{\psi} \sigma^{\kappa}_A \sigma^{\lambda}_B \ket{\psi}
+C = \bra{\psi'} \sigma^0_B　\sigma^0_A \ket{\psi'} = \bra{\psi} \sigma^{\lambda}_B \sigma^{\kappa}_A　\ket{\psi}
 \]</div>
-<p>から導出された量でした。</p>
+<p>を表していたのでした。</p>
 <p>これを踏まえて、CHSH不等式の左辺は結局何を計算していたのか、見直してみましょう。ここでベル状態を</p>
 <div class="math notranslate nohighlight">
 \[
@@ -608,19 +626,18 @@ C = \bra{\psi'} \sigma^0_A \sigma^0_B \ket{\psi'} = \bra{\psi} \sigma^{\kappa}_A
 <p>とおき、第0ビットをA、第1ビットをBとします。<span class="math notranslate nohighlight">\(R_y(\pi/4)\ket{0}, R_y(\pi/2)\ket{0}, R_y(3\pi/4)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子をそれぞれ<span class="math notranslate nohighlight">\(\sigma^{\pi/4}, \sigma^{\pi/2}, \sigma^{3\pi/4}\)</span>とすると、</p>
 <div class="math notranslate nohighlight">
 \[
-S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^0_A \sigma^{\pi/4}_B \ket{\Psi} - \bra{\Psi} \sigma^0_A \sigma^{3\pi/4}_B \ket{\Psi} + \bra{\Psi} \sigma^{\pi/2}_A \sigma^{\pi/4}_B \ket{\Psi} + \bra{\Psi} \sigma^{\pi/2}_A \sigma^{3\pi/4}_B \ket{\Psi}
+S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - \bra{\Psi} \sigma^{3\pi/4}_B \sigma^0_A \ket{\Psi} + \bra{\Psi} \sigma^{\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi} + \bra{\Psi} \sigma^{3\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi}
 \]</div>
-<p>という量を計算していたのでした。</p>
-<p>2ビット量子レジスタと観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>のコンテクストでCHSH不等式をより正確に表現は、「4つのパラメータ<span class="math notranslate nohighlight">\(\kappa, \lambda, \mu, \nu\)</span>を用いて</p>
-<div class="math notranslate nohighlight">
-\[
-S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle - \langle \sigma^{\kappa}\sigma^{\nu} \rangle + \langle \sigma^{\mu}\sigma^{\lambda} \rangle + \langle \sigma^{\mu}\sigma^{\nu} \rangle
-\]</div>
-<p>という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である」です。</p>
+<p>がわかります。</p>
+<p>観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を用いてCHSH不等式をより正確に表現すると、</p>
+<blockquote>
+<div><p>4つのパラメータ<span class="math notranslate nohighlight">\(\kappa, \lambda, \mu, \nu\)</span>を用いて<br />
+<span class="math notranslate nohighlight">\(S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle - \langle \sigma^{\kappa}\sigma^{\nu} \rangle + \langle \sigma^{\mu}\sigma^{\lambda} \rangle + \langle \sigma^{\mu}\sigma^{\nu} \rangle\)</span><br />
+という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である</p>
+</div></blockquote>
+<p>となります。</p>
 <p>実習で用いた<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>のパラメータは、<span class="math notranslate nohighlight">\(|S|\)</span>の値を最大化するものでした。次のセルで数値的にこのことを確かめています。</p>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantum_S</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantum_S</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Three-parameter function to be minimized. Returns -|S| = -|&lt;sigma^k sigma^l&gt; - &lt;sigma^k sigma^n&gt; + &lt;sigma^m sigma^l&gt; + &lt;sigma^m sigma^n&gt;| with k fixed to 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -635,8 +652,6 @@ S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle -
 <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">quantum_S</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;trust-constr&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;argmax |S|: kappa=0, lambda=</span><span class="si">{:.2f}</span><span class="s1">pi, mu=</span><span class="si">{:.2f}</span><span class="s1">pi, nu=</span><span class="si">{:.2f}</span><span class="s1">pi&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span>
 </pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="id9">
@@ -663,7 +678,7 @@ S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle -
 </div>
 <div class="section" id="id10">
 <h3><a class="toc-backref" href="#id17">問題</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
-<p>上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、第0ビットに適当な<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけ、第1ビットにも<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをパラメータを変えながら測定をし、期待値<span class="math notranslate nohighlight">\(C\)</span>を2つの<span class="math notranslate nohighlight">\(R_y\)</span>ゲートのパラメータの値の差の関数としてプロットします。</p>
+<p>上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットに適当な<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけ、期待値<span class="math notranslate nohighlight">\(C\)</span>を<span class="math notranslate nohighlight">\(R_y\)</span>ゲートのパラメータの値の差の関数としてプロットします。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define theta and phi values</span>
@@ -728,7 +743,7 @@ S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle -
 <p>式<a class="reference internal" href="#equation-quantum-correlation">(2)</a>では、2体系の期待値がパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(\phi\)</span>だけを含む関数の積として記述できないことがはっきり示されています。これはベル状態の持つエンタングルメントの現れで、2体系をバラバラに考えることができないということを言っています。</p>
 <p>それでは、<span class="math notranslate nohighlight">\(C\)</span>や<span class="math notranslate nohighlight">\(S\)</span>をエンタングルメントのない状態（可分状態）に対して計算してみたら、何が得られるでしょうか。例えば、ベル状態<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>の代わりに、「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態を考えます。</p>
 <p>まずは<span class="math notranslate nohighlight">\(|S(\kappa, \lambda, \mu, \nu)|\)</span>の最大値を求めます。</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">classical_S</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -776,15 +791,9 @@ S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle -
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>argmax |S|: kappa=0.080pi, lambda=0.500pi, mu=0.080pi, nu=0.500pi
-max |S|: 0.0
-</pre></div>
-</div>
-</div>
 </div>
 <p>この状態を量子回路で実装して、上の実験を繰り返してみましょう。ただし、実際に確率1/2で異なる状態が現れるような「混合状態」は量子回路では表現しにくいので、<span class="math notranslate nohighlight">\(\ket{00}\)</span>と<span class="math notranslate nohighlight">\(\ket{11}\)</span>を初期状態とする回路を一つずつ用意して、それらから得る<span class="math notranslate nohighlight">\(C\)</span>の平均値を求めることにします。</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct a circuit for each (theta, phi) pair</span>
 <span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
@@ -839,27 +848,6 @@ max |S|: 0.0
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta - \phi$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle \Psi | \sigma^{\theta}_A \sigma^{\phi}_B | \Psi \rangle$&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">QiskitError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="mi">8</span><span class="n">f043a4bd782</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span> 
-<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">34</span>         <span class="n">c_00</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span>         <span class="n">c_11</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span> 
-
-<span class="nn">/usr/local/lib/python3.8/dist-packages/qiskit/result/result.py</span> in <span class="ni">get_counts</span><span class="nt">(self, experiment)</span>
-<span class="g g-Whitespace">    </span><span class="mi">275</span>                 <span class="n">dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statevector</span><span class="o">.</span><span class="n">Statevector</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="o">.</span><span class="n">probabilities_dict</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">15</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">276</span>             <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">277</span>                 <span class="k">raise</span> <span class="n">QiskitError</span><span class="p">(</span><span class="s1">&#39;No counts for experiment &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">278</span> 
-<span class="g g-Whitespace">    </span><span class="mi">279</span>         <span class="c1"># Return first item of dict_list if size is 1</span>
-
-<span class="ne">QiskitError</span>: &#39;No counts for experiment &quot;     \nq_0: \n     \nq_1: \n     &quot;&#39;
 </pre></div>
 </div>
 </div>
