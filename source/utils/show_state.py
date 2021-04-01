@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import Aer, execute
 
-def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, draw=True, return_fig=False):
+def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, state_label=None, draw=True, return_fig=False, gpu=True):
     """Print the quantum state of the circuit in latex markdown.
     
     Args:
@@ -17,18 +17,62 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=N
             a list of ints.
         terms_per_row (int): Number of terms to show per row.
         binary (bool): Show ket indices in binary.
+        state_label (None or str): If not None, prepend '|`state_label`> = ' to the printout
         draw (bool): Call draw('mpl') on the circuit.
+        return_fig (bool): Returns the mpl Figure object.
+        gpu (bool): Use statevector_gpu if available.
     """
     
     # Run the circuit in statevector_simulator and obtain the final state statevector
     simulator = Aer.get_backend('statevector_simulator')
-    try:
-        simulator.set_options(method='statevector_gpu')
-    except:
-        simulator.set_options(method='statevector')
+    if gpu:
+        try:
+            simulator.set_options(method='statevector_gpu')
+        except:
+            simulator.set_options(method='statevector')
 
     statevector = execute(circuit, simulator).result().data()['statevector']
+    
+    if draw:
+        circuit.draw('mpl', style={'dpi': '300'}, fold=70)
+    
+    fig = plt.figure(figsize=[10., 0.5])
+    ax = fig.add_subplot()
+        
+    row_texts = show_statevector(statevector, amp_norm=amp_norm, phase_norm=phase_norm, global_phase=global_phase, register_sizes=register_sizes, terms_per_row=terms_per_row, binary=binary, state_label=state_label, ax=ax)
+    
+    fig.set_figheight(0.5 * len(row_texts))
 
+    if return_fig:
+        return fig
+
+    
+def show_statevector(statevector, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, state_label=None, ax=None):
+    """Print the quantum state of the circuit in latex markdown.
+    
+    Args:
+        statevector (np.ndarray(*, dtype=np.complex128)): Statevector.
+        amp_norm (None or tuple): If not None, specify the normalization of the amplitudes by
+            (numeric devisor, unit in latex)
+        phase_norm (None or tuple): If not None, specify the normalization of the phases by
+            (numeric devisor, unit in latex)
+        global_phase (None or float or str): If not None, specify the phase to factor out by
+            numeric offset or 'mean'
+        register_sizes (None or array_like): If not None, specify the sizes of the registers as
+            a list of ints.
+        terms_per_row (int): Number of terms to show per row.
+        binary (bool): Show ket indices in binary.
+        state_label (None or str): If not None, prepend '|`state_label`> = ' to the printout
+        ax (None or mpl.Axes): Axes object. A new axes is created if None.
+        
+    Returns:
+        List(str): Latex text (enclosed in $$) for each line.
+    """
+    
+    log2_shape = np.log2(statevector.shape[0])
+    assert log2_shape == np.round(log2_shape), 'Invalid statevector'
+    num_qubits = np.round(log2_shape).astype(int)
+    
     # Absolute value and the phase of the amplitudes
     absamp = np.abs(statevector)
     logamp = np.zeros_like(statevector)
@@ -51,7 +95,7 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=N
             slots = ['{}'] * len(register_sizes)
     else:
         if binary:
-            slots = ['{{:0{}b}}'.format(circuit.num_qubits)]
+            slots = ['{{:0{}b}}'.format(num_qubits)]
         else:
             slots = ['{}']
 
@@ -209,21 +253,18 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=N
 
     if amp_norm is not None:
         str_rows[0].insert(0, amp_norm[1])
- 
-    if draw:
-        circuit_height = 12. * ((circuit.depth() - 1) // 70 + 1)
-        fig = plt.figure(figsize=[20., circuit_height + 0.5 * num_rows])
-        gs = fig.add_gridspec(2, 1, height_ratios=(circuit_height, 0.5 * num_rows))
-        ax = fig.add_subplot(gs[0])
-        circuit.draw('mpl', style={'dpi': '300'}, fold=70, ax=ax)
-        ax = fig.add_subplot(gs[1])
-    else:
+        
+    if state_label is not None:
+        str_rows[0].insert(0, r'| {} \rangle = '.format(state_label))
+
+    if ax is None:
         fig = plt.figure(figsize=[10., 0.5 * num_rows])
         ax = fig.add_subplot()
-
+        
+    row_texts = list('${}$'.format(''.join(str_terms)) for str_terms in str_rows)
+        
     ax.axis('off')
-    for irow, str_terms in enumerate(str_rows):
-        ax.text(0.5, 1. / num_rows * (num_rows - irow - 1), '${}$'.format(''.join(str_terms)), fontsize='x-large', ha='center')
+    for irow, row_text in enumerate(row_texts):
+        ax.text(0.5, 1. / num_rows * (num_rows - irow - 1), row_text, fontsize='x-large', ha='center')
 
-    if return_fig:
-        return fig
+    return row_texts
