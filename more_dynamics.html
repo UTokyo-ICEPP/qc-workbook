@@ -54,7 +54,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="素因数分解アルゴリズムを学習する" href="shor.html" />
@@ -77,7 +77,7 @@
         <div class="navbar-brand-box">
 <a class="navbar-brand text-wrap" href="index.html">
   
-  <img src="_static/icepp.jpg" class="logo" alt="logo">
+  <img src="_static/favicon.ico" class="logo" alt="logo">
   
   
   <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
@@ -91,7 +91,7 @@
     <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
-   Welcome
+   量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
@@ -230,6 +230,11 @@
    数値表現
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   参考文献
+  </a>
+ </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -363,12 +368,12 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
+    <a class="reference internal nav-link" href="#id11">
      ハミルトニアンを物質場のみで記述する
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
+    <a class="reference internal nav-link" href="#id13">
      ハミルトニアンをパウリ行列で表現する
     </a>
    </li>
@@ -378,6 +383,11 @@
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id17">
+   参考文献
+  </a>
  </li>
 </ul>
 
@@ -396,29 +406,30 @@
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#x" id="id20">問題1: ハイゼンベルグモデル、X方向のスピン</a></p>
+<li><p><a class="reference internal" href="#x" id="id44">問題1: ハイゼンベルグモデル、X方向のスピン</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id3" id="id21">問題</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id22">おまけ: スピン総和</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id45">問題</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id46">おまけ: スピン総和</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id5" id="id23">問題2: シュウィンガーモデル</a></p>
+<li><p><a class="reference internal" href="#id5" id="id47">問題2: シュウィンガーモデル</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id6" id="id24">シュウィンガーモデルの物理</a></p></li>
-<li><p><a class="reference internal" href="#id12" id="id25">ハミルトニアンを物質場のみで記述する</a></p></li>
-<li><p><a class="reference internal" href="#id14" id="id26">ハミルトニアンをパウリ行列で表現する</a></p></li>
-<li><p><a class="reference internal" href="#id15" id="id27">問題</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id48">シュウィンガーモデルの物理</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id49">ハミルトニアンを物質場のみで記述する</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id50">ハミルトニアンをパウリ行列で表現する</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id51">問題</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#id17" id="id52">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\plusket}{\ket{+}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\minusket}{\ket{-}}\)</span></p>
 <div class="section" id="x">
-<h2><a class="toc-backref" href="#id20">問題1: ハイゼンベルグモデル、X方向のスピン</a><a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id44">問題1: ハイゼンベルグモデル、X方向のスピン</a><a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id3">
-<h3><a class="toc-backref" href="#id21">問題</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id45">問題</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>実習ではハイゼンベルグモデルのシミュレーションをし、各スピンの<span class="math notranslate nohighlight">\(Z\)</span>方向の期待値の時間発展を追いました。しかし、シミュレーションそのものは最終的なオブザーバブル（観測量）によらず成立するので、（ほぼ）同じ回路を用いて系の他の性質を調べることもできます。そこで、各スピンの<span class="math notranslate nohighlight">\(X\)</span>方向の期待値の時間発展を測定する回路を書き、実習時と同様に時間に対してプロットしてください。</p>
 <p><strong>ヒント</strong>:</p>
 <p><a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py">プロット用関数<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code></a>で厳密解のカーブを書くとき、追加の引数<code class="docutils literal notranslate"><span class="pre">spin_component='x'</span></code>を渡すと<span class="math notranslate nohighlight">\(X\)</span>方向のスピンのプロットに切り替わります。ただし、実験結果の<code class="docutils literal notranslate"><span class="pre">counts_list</span></code>は相応する測定の結果となっていなければいけません。具体的には、各スピンについて「0が測定される＝スピンが+<span class="math notranslate nohighlight">\(X\)</span>を向いている、1が測定される＝スピンが-<span class="math notranslate nohighlight">\(X\)</span>を向いている」という対応付けが必要です。）</p>
@@ -520,7 +531,7 @@
 </ul>
 </div>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id22">おまけ: スピン総和</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id46">おまけ: スピン総和</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>注：これは量子コンピューティングというより物理の問題なので、興味のある方だけ考えてみてください。</p>
 <p>上のハイゼンベルグモデルのシミュレーションで、初期状態の<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(Y\)</span>, <span class="math notranslate nohighlight">\(Z\)</span>方向のスピン期待値の全系での平均値<span class="math notranslate nohighlight">\(m_x\)</span>, <span class="math notranslate nohighlight">\(m_y\)</span>, <span class="math notranslate nohighlight">\(m_z\)</span>はそれぞれ</p>
 <div class="math notranslate nohighlight">
@@ -533,13 +544,13 @@ m_z = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Z}_j \rangle = 0
 </div>
 </div>
 <div class="section" id="id5">
-<h2><a class="toc-backref" href="#id23">問題2: シュウィンガーモデル</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id47">問題2: シュウィンガーモデル</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>これまで扱ったような、スピンに関連する現象とは異なる物理モデルのシミュレーションをしましょう。空間1次元、時間1次元の時空における量子電磁力学の模型「シュウィンガーモデル」を考えます。</p>
 <div class="section" id="id6">
-<h3><a class="toc-backref" href="#id24">シュウィンガーモデルの物理</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>簡単に物理の解説をします（ここは読み飛ばしても差し支えありません）。といっても、まともにゼロから解説をしたらあまりにも長くなってしまうので、かなり前提知識を仮定します。興味のある方は参考文献<a href="#id7"><span class="problematic" id="id8">:cite:`shifman_schwinger,Martinez_2016`</span></a>などを参照してください。特に<a href="#id9"><span class="problematic" id="id10">:cite:`Martinez_2016`</span></a>は実際にこれから実装する回路をイオントラップ型量子コンピュータで実行した論文です。</p>
+<h3><a class="toc-backref" href="#id48">シュウィンガーモデルの物理</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>簡単に物理の解説をします（ここは読み飛ばしても差し支えありません）。といっても、まともにゼロから解説をしたらあまりにも長くなってしまうので、かなり前提知識を仮定します。興味のある方は参考文献<span id="id7">[<a class="reference internal" href="#id29"><span>Shi12</span></a>,<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>などを参照してください。特に<span id="id8">[<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>は実際にこれから実装する回路をイオントラップ型量子コンピュータで実行した論文です。</p>
 <p>量子電磁力学とは量子場の理論の一種です。量子場の理論とは物質やその相互作用（力）をすべて量子力学的な「場」（時空中の各点に応じた値を持つ存在）で記述した理論で、素粒子論などで物質の根源的な性質を記述する際の基本言語です。量子場の理論において、一部の場を「物質場」とし、それに特定の対称性（<span class="math notranslate nohighlight">\(U(1)\)</span>ゲージ対称性）を持たせると、「電荷」が生み出され、電荷を持った場の間の相互作用を媒介する「光子場」が生じます。電荷を持った場と光子場の振る舞いを記述するのが量子電磁力学です。</p>
-<p>量子場の理論は「ラグランジアン」<a class="footnote-reference brackets" href="#lagrangian" id="id11">1</a>を指定すれば定まります。シュウィンガーモデルのラグランジアンは物質場（電子）<span class="math notranslate nohighlight">\(\psi\)</span>とゲージ場（光子）<span class="math notranslate nohighlight">\(A\)</span>からなり、</p>
+<p>量子場の理論は「ラグランジアン」<a class="footnote-reference brackets" href="#lagrangian" id="id9">1</a>を指定すれば定まります。シュウィンガーモデルのラグランジアンは物質場（電子）<span class="math notranslate nohighlight">\(\psi\)</span>とゲージ場（光子）<span class="math notranslate nohighlight">\(A\)</span>からなり、</p>
 <div class="math notranslate nohighlight" id="equation-schwinger-lagrangian">
 <span class="eqno">(8)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = \frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
 <p>です。ただし、これまでの物理系を扱った話と異なり、ここでは場の量子論の一般慣習に従って、光速<span class="math notranslate nohighlight">\(c\)</span>とプランク定数<span class="math notranslate nohighlight">\(\hbar\)</span>がともに1である単位系を使っています。</p>
@@ -549,7 +560,7 @@ m_z = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Z}_j \rangle = 0
 F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 \]</div>
 <p>です。<span class="math notranslate nohighlight">\(\psi\)</span>は物質と反物質を表す2元スピノルで、<span class="math notranslate nohighlight">\(m\)</span>がその質量となります。<span class="math notranslate nohighlight">\(\{\gamma^0, \gamma^1\}\)</span>は2次元のクリフォード代数の表現です。</p>
-<p>このラグランジアンを元に、Kogut-Susskindの手法でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
+<p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="#id32"><span>CKS74</span></a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-kogut-susskind-hamiltonian">
 <span class="eqno">(9)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + J \sum_{j=0}^{n-2} L_{j}^2 + \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
 <p>となります。ここで<span class="math notranslate nohighlight">\(J = g^2 a^2 / 2\)</span>, <span class="math notranslate nohighlight">\(\mu = m a\)</span>, また<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>上の（1元）物質場、<span class="math notranslate nohighlight">\(\theta_j\)</span>は<span class="math notranslate nohighlight">\(j\)</span>上のゲージ場、<span class="math notranslate nohighlight">\(L_j\)</span>は格子<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>間の接続上の電場です。</p>
@@ -561,10 +572,10 @@ F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 \Phi^{\dagger}_j \minusket_j = \plusket_j\end{split}\]</div>
 <p>と作用する状態と定めます。質量項の符号から、偶数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が粒子が存在する状態、<span class="math notranslate nohighlight">\(\plusket\)</span>が存在しない状態を表現し、奇数サイトでは逆に<span class="math notranslate nohighlight">\(\plusket\)</span>が粒子あり、<span class="math notranslate nohighlight">\(\minusket\)</span>が粒子なしを表すことがわかります。つまり、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>と<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>における電荷の上昇と下降を引き起こす演算子です。</p>
 </div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id25">ハミルトニアンを物質場のみで記述する</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id49">ハミルトニアンを物質場のみで記述する</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p><span class="math notranslate nohighlight">\(\newcommand{\mfrac}[2]{\genfrac{}{}{2pt}{0}{#1}{#2}}\)</span></p>
-<p>このままのハミルトニアンではまだデジタルモデルが構築しにくいので、ゲージを固定して<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(L\)</span>を除いてしまいます<a class="footnote-reference brackets" href="#another-approach" id="id13">2</a>。まず<span class="math notranslate nohighlight">\(\Phi_j\)</span>を以下のように再定義します。</p>
+<p>このままのハミルトニアンではまだデジタルモデルが構築しにくいので、ゲージを固定して<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(L\)</span>を除いてしまいます<a class="footnote-reference brackets" href="#another-approach" id="id12">2</a>。まず<span class="math notranslate nohighlight">\(\Phi_j\)</span>を以下のように再定義します。</p>
 <div class="math notranslate nohighlight">
 \[
 \Phi_j \rightarrow \prod_{k=0}^{j-1} e^{-i\theta_{k}} \Phi_j.
@@ -593,15 +604,15 @@ H = \frac{1}{a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1}
 \]</div>
 <p>が得られます。</p>
 </div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id26">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id50">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(10)</a>から
 前者は</p>
 <div class="math notranslate nohighlight">
 \[
 \Phi^{\dagger}_j\Phi_j \rightarrow \frac{1}{2} (\sigma^Z_j + 1)
 \]</div>
-<p>と表現できることがわかります。一方、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>に関しては、やや込み入った議論の末、</p>
+<p>と表現できることがわかります。一方、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>に関しては、やや込み入った議論<span id="id14">[<a class="reference internal" href="#id33"><span>BSK76</span></a>]</span>の末、</p>
 <div class="math notranslate nohighlight">
 \[
 \Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^+_j \sigma^-_{j+1}
@@ -624,7 +635,7 @@ H \rightarrow \frac{1}{2a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} +
 <p>です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。</p>
 </div>
 <div class="section" id="id15">
-<h3><a class="toc-backref" href="#id27">問題</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id51">問題</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をそれぞれ<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>に対応させて、8ビット量子レジスタに対して実装してください。初期状態は真空、つまり<span class="math notranslate nohighlight">\(\ket{-+-+-+-+}\)</span>（右端がサイト<span class="math notranslate nohighlight">\(j=0\)</span>）とし、系全体の粒子数密度の期待値</p>
 <div class="math notranslate nohighlight">
 \[
@@ -635,7 +646,7 @@ H \rightarrow \frac{1}{2a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} +
 <p><strong>解説</strong>:</p>
 <p>偶数サイトでは<span class="math notranslate nohighlight">\(\plusket\)</span>が物質粒子の存在しない状態、奇数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が反物質粒子の存在しない状態を表すので、初期状態は粒子数密度0となります。しかし、場の量子論においては場の相互作用によって物質と反物質が対生成・対消滅を起こし、一般に系の粒子数の期待値は時間とともに変化します。</p>
 <p><strong>ヒント</strong>:</p>
-<p>上のハミルトニアンのパラメターの値は参考文献<a href="#id16"><span class="problematic" id="id17">:cite:`Martinez_2016`</span></a>と同一です。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
+<p>上のハミルトニアンのパラメターの値は参考文献<span id="id16">[<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>と同一です。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
 <p>また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code>と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>と<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>という二つのリストを作ります。これらのリストの長さはハミルトニアンの項数で、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>の各要素は対応する項のパウリ行列のリスト、<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>の各要素はその項にかかる係数にします。例えば</p>
 <div class="math notranslate nohighlight">
 \[
@@ -743,15 +754,36 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <ul class="simple">
 <li><p>完成した回路のコードとシミュレーション結果によるプロット</p></li>
 </ul>
-<dl class="footnote brackets">
-<dt class="label" id="lagrangian"><span class="brackets"><a class="fn-backref" href="#id11">1</a></span></dt>
-<dd><p>ここで「ラグランジアン」と呼ばれているのは本来「ラグランジアン密度」で、正しくはこれを空間積分したものがラグランジアンですが、素粒子論の文脈で「ラグランジアン」と言った場合はほぼ100%積分する前のものを指します。</p>
+</div>
+</div>
+<div class="section" id="id17">
+<h2><a class="toc-backref" href="#id52">参考文献</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<p id="id18"><dl class="citation">
+<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id14">BSK76</a></span></dt>
+<dd><p>T. Banks, Leonard Susskind, and John Kogut. Strong-coupling calculations of lattice gauge theories: (1 + 1)-dimensional exercises. <em>Phys. Rev. D</em>, 13:1043–1053, Feb 1976. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevD.13.1043">https://link.aps.org/doi/10.1103/PhysRevD.13.1043</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevD.13.1043">doi:10.1103/PhysRevD.13.1043</a>.</p>
 </dd>
-<dt class="label" id="another-approach"><span class="brackets"><a class="fn-backref" href="#id13">2</a></span></dt>
-<dd><p>参考文献<a href="#id18"><span class="problematic" id="id19">:cite:`Shaw2020quantumalgorithms`</span></a>では、別のアプローチで同じハミルトニアンの量子回路実装をしています。</p>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id10">CKS74</a></span></dt>
+<dd><p>A. Casher, J. Kogut, and Leonard Susskind. Vacuum polarization and the absence of free quarks. <em>Phys. Rev. D</em>, 10:732–745, Jul 1974. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevD.10.732">https://link.aps.org/doi/10.1103/PhysRevD.10.732</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevD.10.732">doi:10.1103/PhysRevD.10.732</a>.</p>
+</dd>
+<dt class="label" id="id30"><span class="brackets">MMS+16</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id8">2</a>,<a href="#id16">3</a>)</span></dt>
+<dd><p>Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. <em>Nature</em>, 534(7608):516–519, Jun 2016. URL: <a class="reference external" href="http://dx.doi.org/10.1038/nature18318">http://dx.doi.org/10.1038/nature18318</a>, <a class="reference external" href="https://doi.org/10.1038/nature18318">doi:10.1038/nature18318</a>.</p>
+</dd>
+<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id43">SLSW20</a></span></dt>
+<dd><p>Alexander F. Shaw, Pavel Lougovski, Jesse R. Stryker, and Nathan Wiebe. Quantum Algorithms for Simulating the Lattice Schwinger Model. <em>Quantum</em>, 4:306, aug 2020. URL: <a class="reference external" href="https://doi.org/10.22331/q-2020-08-10-306">https://doi.org/10.22331/q-2020-08-10-306</a>, <a class="reference external" href="https://doi.org/10.22331/q-2020-08-10-306">doi:10.22331/q-2020-08-10-306</a>.</p>
+</dd>
+<dt class="label" id="id29"><span class="brackets"><a class="fn-backref" href="#id7">Shi12</a></span></dt>
+<dd><p>Mikhail Shifman. <em>Advanced Topics in Quantum Field Theory</em>, chapter 33.1, pages 299–304. Cambridge University Press, 2012.</p>
 </dd>
 </dl>
-</div>
+</p>
+<dl class="footnote brackets">
+<dt class="label" id="lagrangian"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
+<dd><p>ここで「ラグランジアン」と呼ばれているのは本来「ラグランジアン密度」で、正しくはこれを空間積分したものがラグランジアンですが、素粒子論の文脈で「ラグランジアン」と言った場合はほぼ100%積分する前のものを指します。</p>
+</dd>
+<dt class="label" id="another-approach"><span class="brackets"><a class="fn-backref" href="#id12">2</a></span></dt>
+<dd><p>参考文献<span id="id43">[<a class="reference internal" href="#id31"><span>SLSW20</span></a>]</span>では、別のアプローチで同じハミルトニアンの量子回路実装をしています。</p>
+</dd>
+</dl>
 </div>
 </div>
 

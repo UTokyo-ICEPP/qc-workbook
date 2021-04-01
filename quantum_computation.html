@@ -54,7 +54,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <link rel="shortcut icon" href="_static/favicon_icepp.png"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="物理系を表現する" href="dynamics_simulation.html" />
@@ -77,7 +77,7 @@
         <div class="navbar-brand-box">
 <a class="navbar-brand text-wrap" href="index.html">
   
-  <img src="_static/icepp.jpg" class="logo" alt="logo">
+  <img src="_static/favicon.ico" class="logo" alt="logo">
   
   
   <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
@@ -91,7 +91,7 @@
     <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
-   Welcome
+   量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
@@ -230,6 +230,11 @@
    数値表現
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   参考文献
+  </a>
+ </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -348,8 +353,13 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
+  <a class="reference internal nav-link" href="#id6">
    問題2: 符号が反転している基底を見つける
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   参考文献
   </a>
  </li>
 </ul>
@@ -368,17 +378,18 @@
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id6">問題1: 足し算を実機で行う</a></p>
+<li><p><a class="reference internal" href="#id3" id="id33">問題1: 足し算を実機で行う</a></p>
 <ul>
-<li><p><a class="reference internal" href="#quantum-volume" id="id7">Quantum Volume</a></p></li>
+<li><p><a class="reference internal" href="#quantum-volume" id="id34">Quantum Volume</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id5" id="id8">問題2: 符号が反転している基底を見つける</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id35">問題2: 符号が反転している基底を見つける</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id36">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id6">問題1: 足し算を実機で行う</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id33">問題1: 足し算を実機で行う</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>実習の内容の延長です。ここでは並列足し算回路を実機で実行します。</p>
 <p>実習のおさらいをすると、まずもともとの足し算のロジックをそのまま踏襲した回路を作り、それではゲート数が多すぎるので効率化した回路を作成しました。</p>
 <p>実は効率化した回路でもまだゲートの数が多すぎて、4ビット+4ビットの計算では答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、<span class="math notranslate nohighlight">\((n_1, n_2)\)</span>の値として(4, 4)以外に(3, 3)、(2, 2)、(1, 1)も同時に試すことにしましょう。</p>
@@ -501,7 +512,7 @@
 </div>
 <p>回路が均一にランダムに<span class="math notranslate nohighlight">\(0\)</span>から<span class="math notranslate nohighlight">\(2^{n_1 + n_2 + n_3} - 1\)</span>までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は<span class="math notranslate nohighlight">\(2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}\)</span>となります。実機の結果と比べてみると、(4, 4), (3, 3), (2, 2)では残念ながら元の回路も効率化した回路も正答率がほとんどこの値に近くなっているのがわかります。かろうじて(1, 1)において正答率がランダムなケース（<span class="math notranslate nohighlight">\(2^{-2}\)</span>）より高くなっています。</p>
 <div class="section" id="quantum-volume">
-<h3><a class="toc-backref" href="#id7">Quantum Volume</a><a class="headerlink" href="#quantum-volume" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id34">Quantum Volume</a><a class="headerlink" href="#quantum-volume" title="Permalink to this headline">¶</a></h3>
 <p>実は上のテストをIBMの提供するより高性能なマシンで実行すると、元の回路と効率化した回路とで正答率が異なることが見えます。<span class="math notranslate nohighlight">\((n_1, n_2)\)</span> = (1, 1)に関しては効率化回路のほうがCNOTが少しだけ多くなるケースがあり、その場合実際に元の回路の正答率のほうが高くなります。例としてibmq_torontoというマシンで実行した結果は以下のとおりです。</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
@@ -548,7 +559,7 @@ Optimized circuit <span class=" -Color -Color-Red">(1, 1)</span>: 5288 / 8192 = 
 </div>
 </div>
 <p>効率化した回路では(3, 3)の段階（回路3）で、すでに正答率が<span class="math notranslate nohighlight">\(2^{-4}\)</span>を大きく上回っているのがわかります。</p>
-<p>IBMQでは量子コンピュータ一つ一つをQuantum Volume（QV、量子体積）という指標で評価しています<a class="footnote-reference brackets" href="#qv" id="id4">1</a>。QVは簡単に言えば「量子コンピュータ上である特定の形を持った回路を安定的に実行できる量子ビット数と回路の長さ」を測っていて、QVの値が大きいマシンほど高性能と言えます。QVは全体の量子ビット数だけではなく、量子ビット間の接続度合、（特に制御ゲートの）エラー率、トランスパイラの性能などを総合的に評価した指標です。</p>
+<p>IBMQでは量子コンピュータ一つ一つをQuantum Volume（QV、量子体積）<span id="id4">[<a class="reference internal" href="#id18"><span>CBS+19</span></a>]</span>という指標で評価しています<a class="footnote-reference brackets" href="#qv" id="id5">1</a>。QVは簡単に言えば「量子コンピュータ上である特定の形を持った回路を安定的に実行できる量子ビット数と回路の長さ」を測っていて、QVの値が大きいマシンほど高性能と言えます。QVは全体の量子ビット数だけではなく、量子ビット間の接続度合、（特に制御ゲートの）エラー率、トランスパイラの性能などを総合的に評価した指標です。</p>
 <p>2021年3月現在、IBMQのマシンでQVの最大値は128ですが、ibmq_16_melbourneのQVは8です。QVの値は2の実効量子ビット数乗と考えればよく、これはつまり（かなり乱暴に言うと）15ビットマシンibmq_16_melbourneの上で信頼度高く実行できるのは3量子ビット回路までだということを意味します。</p>
 <p>上で利用したibmq_torontoのQVは32でした。量子ビット数が少ないマシンであればopenのアカウントでもQV=32のマシンが複数存在するので、そのどれかを使って<span class="math notranslate nohighlight">\((n_1, n_2)\)</span> = (1, 1)の足し算を走らせてみましょう。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
@@ -606,7 +617,7 @@ Optimized circuit <span class=" -Color -Color-Red">(1, 1)</span>: 5288 / 8192 = 
 </ul>
 <p>これまで触れて来ませんでしたが、測定自体でもエラーが起こる余地があります。測定のエラーとは、具体的には状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>や<span class="math notranslate nohighlight">\(\ket{1}\)</span>を測定したときにどのくらいの割合で0や1でない結果を得るかということを表した値です。</p>
 <p>バックエンドのエラー率は<code class="docutils literal notranslate"><span class="pre">backend.properties()</span></code>メソッドから取り出します。以下のコードを実行して、<code class="docutils literal notranslate"><span class="pre">get_initial_layout</span></code>関数から得られるマッピングのリストに含まれる量子ビットとそれらの間の接続について、SX、CNOT、測定のエラー率を取得しましょう。2021年3月現在、公表されている<span class="math notranslate nohighlight">\(X\)</span>とSXのエラー率は同じなので（IBMが別々の測定をしていません）、SXのエラー率を持って1量子ビットゲート全般のエラー率と考えます。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_error_rates</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">qubits</span><span class="p">):</span>
     <span class="n">links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -667,20 +678,6 @@ Optimized circuit <span class=" -Color -Color-Red">(1, 1)</span>: 5288 / 8192 = 
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">9</span><span class="o">-</span><span class="mi">85</span><span class="n">a0fe3d1ffe</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">     </span><span class="mi">43</span> 
-<span class="g g-Whitespace">     </span><span class="mi">44</span> 
-<span class="ne">---&gt; </span><span class="mi">45</span> <span class="n">qubits</span> <span class="o">=</span> <span class="n">get_initial_layout</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Qubits:&#39;</span><span class="p">,</span> <span class="n">qubits</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">47</span> <span class="n">sx_error</span><span class="p">,</span> <span class="n">cx_error</span><span class="p">,</span> <span class="n">meas_error</span> <span class="o">=</span> <span class="n">get_error_rates</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">qubits</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;backend&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <p>CNOTのエラー率がSXのそれよりも一桁高く、さらに測定のエラー率がCNOTのそれの数倍になっているのがわかります。また、量子ビットごとや接続ごとにエラー率が大きく異なることも見て取れます。</p>
 <p>それでは、これらの数字を元に、足し算回路の正答率を予想してみましょう。単純化するために以下の仮定をおきます。</p>
@@ -731,8 +728,8 @@ F = P_0 + 2^{-n_3} (1 - P_0 - P_1)
 </ul>
 </div>
 </div>
-<div class="section" id="id5">
-<h2><a class="toc-backref" href="#id8">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id35">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>実習の前半で出てきたequal superposition状態</p>
 <div class="math notranslate nohighlight">
 \[
@@ -771,6 +768,9 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/quantum_computation_22_0.png" src="_images/quantum_computation_22_0.png" />
 </div>
 </div>
 <p>ここまでは<a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>の問題5と同じです。</p>
@@ -828,6 +828,9 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/quantum_computation_28_0.png" src="_images/quantum_computation_28_0.png" />
+</div>
 </div>
 <p>実機ではどんな結果が得られるでしょうか。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
@@ -854,7 +857,7 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 </div>
 </div>
 <p>シミュレータでの結果とずれていたら、トランスパイルした回路<code class="docutils literal notranslate"><span class="pre">circuit_tr</span></code>を見て原因を考えてみてください。作ったのは一見単純な回路ですが、実際に実行されるものはどうなっているでしょうか。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_tr</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
@@ -867,8 +870,17 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <li><p>ヒストグラムから何が読み取れるかの考察</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">haystack</span></code>レジスタが一般の<span class="math notranslate nohighlight">\(n\)</span>ビットであるとき、この方法で<code class="docutils literal notranslate"><span class="pre">needle</span></code>を探すことの問題点（実行時間の観点から）に関する考察</p></li>
 </ul>
+</div>
+<div class="section" id="id7">
+<h2><a class="toc-backref" href="#id36">参考文献</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p id="id8"><dl class="citation">
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id4">CBS+19</a></span></dt>
+<dd><p>Andrew W. Cross, Lev S. Bishop, Sarah Sheldon, Paul D. Nation, and Jay M. Gambetta. Validating quantum computers using randomized model circuits. <em>Phys. Rev. A</em>, 100:032328, Sep 2019. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevA.100.032328">https://link.aps.org/doi/10.1103/PhysRevA.100.032328</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevA.100.032328">doi:10.1103/PhysRevA.100.032328</a>.</p>
+</dd>
+</dl>
+</p>
 <dl class="footnote brackets">
-<dt class="label" id="qv"><span class="brackets"><a class="fn-backref" href="#id4">1</a></span></dt>
+<dt class="label" id="qv"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
 <dd><p>QVはハードウェアの詳細に依存しないように定義されているので、量子ビット型の量子コンピュータであればIBMのマシンに限らずすべてQVで評価できます。実際、業界で徐々にQVを標準ベンチマークとして使う動きが広がってきているようです。</p>
 </dd>
 </dl>
