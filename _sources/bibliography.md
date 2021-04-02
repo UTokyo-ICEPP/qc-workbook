@@ -27,6 +27,6 @@
 ### 量子機械学習
 
 ```{bibliography}
-:filter: key in {"mitarai_jps", "garg2020advances", "Dunjko_2018", "parametrized_expressibility", "Moll_2018", "Schuld_qml", "Benedetti_2019"}
+:filter: key in {"mitarai_jps", "garg2020advances", "dunjko_2018", "parametrized_expressibility", "moll_2018", "schuld_qml", "benedetti_2019"}
 :list: bullet
 ```
