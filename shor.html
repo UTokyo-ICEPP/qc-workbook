@@ -216,7 +216,7 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：予備知識・実習環境
+  補足
  </span>
 </p>
 <ul class="nav sidenav_l1">
@@ -446,49 +446,49 @@
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#shor-introduction" id="id45">はじめに</a></p></li>
-<li><p><a class="reference internal" href="#qpe" id="id46">量子位相推定</a></p>
+<li><p><a class="reference internal" href="#shor-introduction" id="id59">はじめに</a></p></li>
+<li><p><a class="reference internal" href="#qpe" id="id60">量子位相推定</a></p>
 <ul>
-<li><p><a class="reference internal" href="#qpe-1qubit" id="id47">1量子ビットの位相推定</a></p></li>
-<li><p><a class="reference internal" href="#n" id="id48"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a></p></li>
+<li><p><a class="reference internal" href="#qpe-1qubit" id="id61">1量子ビットの位相推定</a></p></li>
+<li><p><a class="reference internal" href="#n" id="id62"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#shor-algo" id="id49">ショアのアルゴリズム</a></p>
+<li><p><a class="reference internal" href="#shor-algo" id="id63">ショアのアルゴリズム</a></p>
 <ul>
-<li><p><a class="reference internal" href="#factoring-example" id="id50">素因数分解の例</a></p></li>
-<li><p><a class="reference internal" href="#shor-circuit" id="id51">量子回路</a></p></li>
-<li><p><a class="reference internal" href="#shor-measurement" id="id52">測定結果の解析</a></p></li>
-<li><p><a class="reference internal" href="#continued-fractions" id="id53">連分数展開</a></p></li>
-<li><p><a class="reference internal" href="#modular-exponentiation" id="id54">剰余指数化</a></p></li>
+<li><p><a class="reference internal" href="#factoring-example" id="id64">素因数分解の例</a></p></li>
+<li><p><a class="reference internal" href="#shor-circuit" id="id65">量子回路</a></p></li>
+<li><p><a class="reference internal" href="#shor-measurement" id="id66">測定結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#continued-fractions" id="id67">連分数展開</a></p></li>
+<li><p><a class="reference internal" href="#modular-exponentiation" id="id68">剰余指数化</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#shor-imp" id="id55">アルゴリズムの実装</a></p>
+<li><p><a class="reference internal" href="#shor-imp" id="id69">アルゴリズムの実装</a></p>
 <ul>
-<li><p><a class="reference internal" href="#shor-imp-period" id="id56">位数の発見</a></p></li>
-<li><p><a class="reference internal" href="#shor-imp-oracle" id="id57">オラクルの実装</a></p></li>
-<li><p><a class="reference internal" href="#shor-imp-circuit" id="id58">回路全体の実装</a></p></li>
-<li><p><a class="reference internal" href="#shor-imp-ana" id="id59">計算結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#shor-imp-period" id="id70">位数の発見</a></p></li>
+<li><p><a class="reference internal" href="#shor-imp-oracle" id="id71">オラクルの実装</a></p></li>
+<li><p><a class="reference internal" href="#shor-imp-circuit" id="id72">回路全体の実装</a></p></li>
+<li><p><a class="reference internal" href="#shor-imp-ana" id="id73">計算結果の解析</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id19" id="id60">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id19" id="id74">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\modequiv}[3]{#1 \equiv #2 \pmod{#3}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\modnequiv}[3]{#1 \not\equiv #2 \pmod{#3}}\)</span></p>
 <div class="section" id="shor-introduction">
-<span id="id4"></span><h2><a class="toc-backref" href="#id45">はじめに</a><a class="headerlink" href="#shor-introduction" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id59">はじめに</a><a class="headerlink" href="#shor-introduction" title="Permalink to this headline">¶</a></h2>
 <p>古典計算をはるかに上回る能力を持つ量子計算の一つの例として、最も広く知られているのがショアの量子計算アルゴリズムでしょう。このアルゴリズムが考える問題は、大きな正の数を二つの素数の積に分解するというもので、問題自体はシンプルです。しかし、古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると<strong>指数関数的に計算量が増える</strong>と予想されています。
 ショアのアルゴリズムを用いれば、同じ問題を<strong>多項式時間で解くことができる</strong>と考えられています（一般的に、問題のサイズに対して多項式で増える計算時間で解くことができれば、それは有効なアルゴリズムだと見なされます）。</p>
 <p>古典計算での素因数分解の難しさは、現在広く使われている鍵暗号技術の元になっています。なので、指数関数的に高速なショアのアルゴリズムが量子コンピュータで実現されれば、秘密の情報が暴かれる可能性があります。ショアのアルゴリズムが大きく注目される理由はそこにあります。</p>
 </div>
 <div class="section" id="qpe">
-<span id="id5"></span><h2><a class="toc-backref" href="#id46">量子位相推定</a><a class="headerlink" href="#qpe" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id60">量子位相推定</a><a class="headerlink" href="#qpe" title="Permalink to this headline">¶</a></h2>
 <p>まず、ショアのアルゴリズムの元になっている「<strong>量子位相推定」</strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「<strong>量子フーリエ変換</strong>」（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについては、この<a class="reference internal" href="circuit_from_scratch.html"><span class="doc std std-doc">実習</span></a>の問題7、もしくは参考文献[1]を参照してください。</p>
 <p>QPEはとても大事な計算手法で、ショアのアルゴリズムだけでなく、いろいろな量子アルゴリズムのサブルーチンとしても使われています。</p>
 <p>QPEが考える問題は、「あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？」という問題です。</p>
 <div class="section" id="qpe-1qubit">
-<span id="id6"></span><h3><a class="toc-backref" href="#id47">1量子ビットの位相推定</a><a class="headerlink" href="#qpe-1qubit" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3><a class="toc-backref" href="#id61">1量子ビットの位相推定</a><a class="headerlink" href="#qpe-1qubit" title="Permalink to this headline">¶</a></h3>
 <p>まず、下図にあるような量子回路を考えてみましょう。上側の量子ビットは<span class="math notranslate nohighlight">\(\ket{0}\)</span>、下側の量子ビットには<span class="math notranslate nohighlight">\(U\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が初期状態として与えられているとします。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe_1qubit.png"><img alt="qpe_1qubit" class="bg-primary mb-1 align-center" src="_images/qpe_1qubit.png" style="width: 300px;" /></a>
 <p>この場合、量子回路の1-3の各ステップでの量子状態は、以下のように表現できます。</p>
@@ -506,7 +506,7 @@
 <p>本題に戻って、では少ない測定回数でも精度良く位相を決める方法は、何か考えられるでしょうか。。</p>
 </div>
 <div class="section" id="n">
-<span id="qpe-nqubit"></span><h3><a class="toc-backref" href="#id48"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a><a class="headerlink" href="#n" title="Permalink to this headline">¶</a></h3>
+<span id="qpe-nqubit"></span><h3><a class="toc-backref" href="#id62"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a><a class="headerlink" href="#n" title="Permalink to this headline">¶</a></h3>
 <p>そこで、上側のレジスタを<span class="math notranslate nohighlight">\(n\)</span>量子ビットに拡張した量子回路（下図）を考えてみましょう。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/qpe_wo_iqft.png"><img alt="qpe_wo_iqft" class="bg-primary mb-1 align-center" src="_images/qpe_wo_iqft.png" style="width: 500px;" /></a>
 <p>それに応じて、下側のレジスタにも<span class="math notranslate nohighlight">\(U\)</span>を繰り返し適用することになりますが、鍵になるのは<span class="math notranslate nohighlight">\(U\)</span>を2の羃乗回適用するところです。それがどういう意味を持つのかを理解するために、準備として<span class="math notranslate nohighlight">\(U^{2^x}\ket{\psi}\)</span>が以下のように書けることを見ておきます（まあ当然と言えば当然ですが）。</p>
@@ -533,7 +533,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </div>
 </div>
 <div class="section" id="shor-algo">
-<span id="id7"></span><h2><a class="toc-backref" href="#id49">ショアのアルゴリズム</a><a class="headerlink" href="#shor-algo" title="Permalink to this headline">¶</a></h2>
+<span id="id7"></span><h2><a class="toc-backref" href="#id63">ショアのアルゴリズム</a><a class="headerlink" href="#shor-algo" title="Permalink to this headline">¶</a></h2>
 <p>では、そろそろ本題であるショアのアルゴリズムに入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数<span class="math notranslate nohighlight">\(N\)</span>を、自明ではない素数の積<span class="math notranslate nohighlight">\(N=qp\)</span>に分解する」という問題です。</p>
 <p>まず、整数の剰余についての表記法をおさらいしておきます。以下のような整数<span class="math notranslate nohighlight">\(x\)</span>の並びを考えたとき、例えば3で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
@@ -570,7 +570,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。「アルゴリズムの一部でしか量子計算を使わないのはなぜ？」と思うかもしれませんが、この青地の部分を古典計算で実行するのが難しいというのがその理由です。つまり、古典計算で十分なところは古典計算にまかして、古典計算では難しい部分を量子計算で実行するというのがその発想の大元にあります。なぜ青地の部分が古典計算では難しいのかは追々明らかになります。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/shor_flow.png" id="shor-algo-fig"><img alt="shor_flow" class="bg-primary mb-1 align-center" id="shor-algo-fig" src="_images/shor_flow.png" style="width: 500px;" /></a>
 <div class="section" id="factoring-example">
-<span id="id8"></span><h3><a class="toc-backref" href="#id50">素因数分解の例</a><a class="headerlink" href="#factoring-example" title="Permalink to this headline">¶</a></h3>
+<span id="id8"></span><h3><a class="toc-backref" href="#id64">素因数分解の例</a><a class="headerlink" href="#factoring-example" title="Permalink to this headline">¶</a></h3>
 <p>簡単な例として、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解をこのアルゴリズムに沿って考えてみましょう。</p>
 <p>例えば、15に素な数として仮に<span class="math notranslate nohighlight">\(a=7\)</span>を選んだとします。そこで<span class="math notranslate nohighlight">\(7^x\)</span>を15で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
@@ -608,7 +608,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>となって、<span class="math notranslate nohighlight">\(15=5\times3\)</span>が得られました!</p>
 </div>
 <div class="section" id="shor-circuit">
-<span id="id9"></span><h3><a class="toc-backref" href="#id51">量子回路</a><a class="headerlink" href="#shor-circuit" title="Permalink to this headline">¶</a></h3>
+<span id="id9"></span><h3><a class="toc-backref" href="#id65">量子回路</a><a class="headerlink" href="#shor-circuit" title="Permalink to this headline">¶</a></h3>
 <p>では次に、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解を実装する量子回路を考えていきましょう。いきなり答えを書いてしまうようですが、回路自体は以下のような構成をしています。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/shor.png" id="shor-circuit-fig"><img alt="shor" class="bg-primary mb-1 align-center" id="shor-circuit-fig" src="_images/shor.png" style="width: 700px;" /></a>
 <p>上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つずつなのは、15が4ビット（<span class="math notranslate nohighlight">\(n=4\)</span>）で表現できるからです（15の2進数表記 = <span class="math notranslate nohighlight">\(1111_2\)</span>）。状態は全て<span class="math notranslate nohighlight">\(\ket{0}\)</span>に初期化されているものとして、測定用ビットの状態を<span class="math notranslate nohighlight">\(\ket{x}\)</span>、作業用ビットの状態を<span class="math notranslate nohighlight">\(\ket{w}\)</span>とします。
@@ -653,7 +653,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>ステップ 2で<span class="math notranslate nohighlight">\(7^x \bmod 15\)</span>を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。</p>
 </div>
 <div class="section" id="shor-measurement">
-<span id="id10"></span><h3><a class="toc-backref" href="#id52">測定結果の解析</a><a class="headerlink" href="#shor-measurement" title="Permalink to this headline">¶</a></h3>
+<span id="id10"></span><h3><a class="toc-backref" href="#id66">測定結果の解析</a><a class="headerlink" href="#shor-measurement" title="Permalink to this headline">¶</a></h3>
 <p>この測定結果の意味を考察してみましょう。ショアのアルゴリズムの<a class="reference internal" href="#shor-circuit-fig"><span class="std std-ref">回路</span></a>と<span class="math notranslate nohighlight">\(n\)</span>量子ビット位相推定の<a class="reference internal" href="#qpe-nqubit-fig"><span class="std std-ref">回路</span></a>の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を<span class="math notranslate nohighlight">\(2^4=16\)</span>倍したものになっているはずです。つまり、例えば測定用レジスタを測定した結果が仮に4の場合、位相<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=4/16=0.25\)</span>です。この位相の値は何を意味しているのでしょうか？</p>
 <p>ショアのアルゴリズムの量子回路として、これまで<span class="math notranslate nohighlight">\(\ket{w}=\ket{0}^{\otimes n}\)</span>を初期状態として、<span class="math notranslate nohighlight">\(U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}\)</span> <span class="math notranslate nohighlight">\((f(x) = a^x \bmod N)\)</span> となるオラクル<span class="math notranslate nohighlight">\(U_f\)</span>を考えてきました。この<span class="math notranslate nohighlight">\(U_f\)</span>を実装するために、以下のようなユニタリー演算子<span class="math notranslate nohighlight">\(U\)</span>を考えてみます。</p>
 <div class="math notranslate nohighlight">
@@ -697,12 +697,12 @@ U\ket{\psi_s}=e^{2\pi is/r}\ket{\psi_s}
 <p>QPEで得られる位相は何だったかを思い出すと、それは<span class="math notranslate nohighlight">\(U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}\)</span>なるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>と固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対する固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>に含まれる位相<span class="math notranslate nohighlight">\(\theta\)</span>でした。以上のことから、ショアのアルゴリズムから得られる位相<span class="math notranslate nohighlight">\(\theta\)</span>は、<span class="math notranslate nohighlight">\(s/r\)</span>（の整数倍）の意味を持つことも分かるでしょう。</p>
 </div>
 <div class="section" id="continued-fractions">
-<span id="id11"></span><h3><a class="toc-backref" href="#id53">連分数展開</a><a class="headerlink" href="#continued-fractions" title="Permalink to this headline">¶</a></h3>
+<span id="id11"></span><h3><a class="toc-backref" href="#id67">連分数展開</a><a class="headerlink" href="#continued-fractions" title="Permalink to this headline">¶</a></h3>
 <p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（<span id="id12">[<a class="reference internal" href="#id25"><span>NC00</span></a>]</span>にもp.230に記述があります）。この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
 <p>例えば<span class="math notranslate nohighlight">\(\theta=0.25\)</span>の場合、<span class="math notranslate nohighlight">\(r=4\)</span>が得られます（頻度は小さいですが<span class="math notranslate nohighlight">\(r=8\)</span>が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（<a class="reference internal" href="#factoring-example"><span class="std std-ref">ここ</span></a>を参照）。</p>
 </div>
 <div class="section" id="modular-exponentiation">
-<span id="id13"></span><h3><a class="toc-backref" href="#id54">剰余指数化</a><a class="headerlink" href="#modular-exponentiation" title="Permalink to this headline">¶</a></h3>
+<span id="id13"></span><h3><a class="toc-backref" href="#id68">剰余指数化</a><a class="headerlink" href="#modular-exponentiation" title="Permalink to this headline">¶</a></h3>
 <p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作<span class="math notranslate nohighlight">\(U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}\)</span>とはどういうものか、もう少し考えてみましょう。<span class="math notranslate nohighlight">\(f(x) = a^x \bmod N\)</span>は、<span class="math notranslate nohighlight">\(x\)</span>の2進数表記</p>
 <div class="math notranslate nohighlight">
 \[
@@ -723,7 +723,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="section" id="shor-imp">
-<span id="id14"></span><h2><a class="toc-backref" href="#id55">アルゴリズムの実装</a><a class="headerlink" href="#shor-imp" title="Permalink to this headline">¶</a></h2>
+<span id="id14"></span><h2><a class="toc-backref" href="#id69">アルゴリズムの実装</a><a class="headerlink" href="#shor-imp" title="Permalink to this headline">¶</a></h2>
 <p>ここから、ショアのアルゴリズムを実装していきます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -742,7 +742,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="section" id="shor-imp-period">
-<span id="id15"></span><h3><a class="toc-backref" href="#id56">位数の発見</a><a class="headerlink" href="#shor-imp-period" title="Permalink to this headline">¶</a></h3>
+<span id="id15"></span><h3><a class="toc-backref" href="#id70">位数の発見</a><a class="headerlink" href="#shor-imp-period" title="Permalink to this headline">¶</a></h3>
 <p>まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。</p>
 <p><span class="math notranslate nohighlight">\(N\)</span>を正の整数として、関数<span class="math notranslate nohighlight">\(f(x) = a^x \bmod N\)</span>の振る舞いを考えます。<a class="reference external" href="#shor_algo_fig">ショアのアルゴリズム</a>に立ち返ってみると、
 ここで<span class="math notranslate nohighlight">\(a\)</span>は<span class="math notranslate nohighlight">\(N\)</span>と互いに素な<span class="math notranslate nohighlight">\(N\)</span>未満の正の整数で、位数<span class="math notranslate nohighlight">\(r\)</span>は<span class="math notranslate nohighlight">\(\modequiv{a^r}{1}{N}\)</span>を満たす非ゼロの最小の整数でした。
@@ -776,7 +776,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="section" id="shor-imp-oracle">
-<span id="id16"></span><h3><a class="toc-backref" href="#id57">オラクルの実装</a><a class="headerlink" href="#shor-imp-oracle" title="Permalink to this headline">¶</a></h3>
+<span id="id16"></span><h3><a class="toc-backref" href="#id71">オラクルの実装</a><a class="headerlink" href="#shor-imp-oracle" title="Permalink to this headline">¶</a></h3>
 <p>以下では、<span class="math notranslate nohighlight">\(N=15\)</span>を素因数に分解してみます。上で説明したように、<span class="math notranslate nohighlight">\(U\ket{m}=\ket{am \bmod N}\)</span>となるユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回繰り返すことで、オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を実装します。</p>
 <p>練習問題として、<span class="math notranslate nohighlight">\(U\ket{m}=\ket{am \bmod 15}\)</span>を実行する関数<code class="docutils literal notranslate"><span class="pre">U_amod15</span></code>を以下に実装してください（<code class="docutils literal notranslate"><span class="pre">U_amod15</span></code>は制御ゲートですが、標的ビットのユニタリー演算に対応する部分を書いてみてください）。</p>
 <div class="cell docutils container">
@@ -810,7 +810,7 @@ f(x) &amp; = a^x \bmod N \\
 <p><code class="docutils literal notranslate"><span class="pre">power</span></code>は繰り返しの回数を表します。</p>
 </div>
 <div class="section" id="shor-imp-circuit">
-<span id="id17"></span><h3><a class="toc-backref" href="#id58">回路全体の実装</a><a class="headerlink" href="#shor-imp-circuit" title="Permalink to this headline">¶</a></h3>
+<span id="id17"></span><h3><a class="toc-backref" href="#id72">回路全体の実装</a><a class="headerlink" href="#shor-imp-circuit" title="Permalink to this headline">¶</a></h3>
 <p>測定用ビットとして、8量子ビットを使います。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -909,7 +909,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="section" id="shor-imp-ana">
-<span id="id18"></span><h3><a class="toc-backref" href="#id59">計算結果の解析</a><a class="headerlink" href="#shor-imp-ana" title="Permalink to this headline">¶</a></h3>
+<span id="id18"></span><h3><a class="toc-backref" href="#id73">計算結果の解析</a><a class="headerlink" href="#shor-imp-ana" title="Permalink to this headline">¶</a></h3>
 <p>出力された結果から、位相を求めてみます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -968,7 +968,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="section" id="id19">
-<h2><a class="toc-backref" href="#id60">参考文献</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id74">参考文献</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
 <p id="id20"><dl class="citation">
 <dt class="label" id="id25"><span class="brackets">NC00</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id12">2</a>)</span></dt>
 <dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 5.3, pages 226–234. Cambridge University Press, 2000.</p>
@@ -1019,7 +1019,7 @@ f(x) &amp; = a^x \bmod N \\
         
           By 東京大学素粒子物理国際研究センター<br/>
         
-            &copy; Copyright 2020.<br/>
+            &copy; Copyright 2021.<br/>
       </p>
     </div>
   </footer>

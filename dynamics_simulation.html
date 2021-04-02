@@ -216,7 +216,7 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：予備知識・実習環境
+  補足
  </span>
 </p>
 <ul class="nav sidenav_l1">
@@ -421,24 +421,24 @@
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id48">量子系のダイナミクスとは</a></p>
+<li><p><a class="reference internal" href="#id3" id="id62">量子系のダイナミクスとは</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id4" id="id49">例：核磁気の歳差運動</a></p></li>
-<li><p><a class="reference internal" href="#id5" id="id50">量子コンピュータ上での表現</a></p></li>
-<li><p><a class="reference internal" href="#id6" id="id51">ハミルトニアンの対角化</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id52">鈴木・トロッター分解</a></p></li>
-<li><p><a class="reference internal" href="#id11" id="id53">なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id63">例：核磁気の歳差運動</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id64">量子コンピュータ上での表現</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id65">ハミルトニアンの対角化</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id66">鈴木・トロッター分解</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id67">なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id14" id="id54">実習：ハイゼンベルグモデルの時間発展</a></p>
+<li><p><a class="reference internal" href="#id14" id="id68">実習：ハイゼンベルグモデルの時間発展</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id15" id="id55">モデルのハミルトニアン</a></p></li>
-<li><p><a class="reference internal" href="#id17" id="id56">量子ゲートでの表現</a></p></li>
-<li><p><a class="reference internal" href="#id19" id="id57">回路実装</a></p></li>
-<li><p><a class="reference internal" href="#measurement-error-mitigation" id="id58">おまけ：測定エラーの緩和</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id69">モデルのハミルトニアン</a></p></li>
+<li><p><a class="reference internal" href="#id17" id="id70">量子ゲートでの表現</a></p></li>
+<li><p><a class="reference internal" href="#id19" id="id71">回路実装</a></p></li>
+<li><p><a class="reference internal" href="#measurement-error-mitigation" id="id72">おまけ：測定エラーの緩和</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id22" id="id59">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id22" id="id73">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle #1 |}\)</span>
@@ -448,7 +448,7 @@
 <span class="math notranslate nohighlight">\(\newcommand{\rightket}{\ket{\!\rightarrow}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\leftket}{\ket{\!\leftarrow}}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id48">量子系のダイナミクスとは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id62">量子系のダイナミクスとは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>量子力学について少しでも聞いたことのある方は、量子力学の根幹にシュレーディンガー方程式というものが存在することを知っているかと思います。この方程式は</p>
 <div class="math notranslate nohighlight">
 \[
@@ -467,7 +467,7 @@ i \hbar \frac{\partial}{\partial t} \ket{\psi (t)} = H \ket{\psi (t)}
 <p>です。以下このケースのみを考えます。量子状態に対する演算子（線形演算子）の指数関数もまた演算子なので、積分形のシュレーディンガー方程式は「<span class="math notranslate nohighlight">\(e^{-i/\hbar (t_1-t_0) H}\)</span>という演算子が系を時刻<span class="math notranslate nohighlight">\(t_0\)</span>の初期状態<span class="math notranslate nohighlight">\(\ket{\psi(t_0)}\)</span>から時刻<span class="math notranslate nohighlight">\(t_1\)</span>の状態<span class="math notranslate nohighlight">\(\ket{\psi(t_1)}\)</span>に発展させる」と読めます。さらに、定義上ハミルトニアンは「エルミート演算子」であり、それに虚数単位をかけて指数の冪にした<span class="math notranslate nohighlight">\(e^{-i/\hbar t H}\)</span>（以下これを時間発展演算子<span class="math notranslate nohighlight">\(U_H(t)\)</span>と呼びます）は「ユニタリ演算子」です（このあたりの線形代数の用語にあまり馴染みがなくても、そういうものかと思ってもらえれば結構です）。</p>
 <p>ユニタリ演算子は量子計算の言葉で言えばゲートにあたります。したがって、ある量子系に関して、その初期状態を量子レジスタで表現でき、時間発展演算子を量子コンピュータの基本ゲートの組み合わせで実装できれば、その系のダイナミクス（＝時間発展）シミュレーションを量子コンピュータで行うことができます。</p>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id49">例：核磁気の歳差運動</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id63">例：核磁気の歳差運動</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>シミュレーションの詳しい話をする前に、これまで量子力学と疎遠だった方のために、ハミルトニアンや時間発展とは具体的にどういうことか、簡単な例を使って説明します。</p>
 <p>空間中に固定されたスピン<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>原子核一つを考えます。ある方向（Z方向とします）のスピン<span class="math notranslate nohighlight">\(\pm \frac{1}{2}\)</span>の状態をそれぞれ<span class="math notranslate nohighlight">\(\upket, \downket\)</span>で表します。量子力学に馴染みのない方のための説明例で大いに量子力学的な概念を使っていますが、何の話かわからなければ「2つの基底ケットで表現される、量子ビットのような物理系がある」と考えてください。量子ビットのような物理系なので、系の状態は一般に<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>の重ね合わせになります。</p>
 <p>時刻<span class="math notranslate nohighlight">\(t_0\)</span>で系が<span class="math notranslate nohighlight">\(\ket{\psi(t_0)} = \upket\)</span>にあるとします。時刻<span class="math notranslate nohighlight">\(t_1\)</span>での系の状態を求めることは</p>
@@ -502,7 +502,7 @@ U_H(t) = \exp (-i \omega t \sigma^X) = \sum_{n=0}^{\infty} \frac{1}{n!} (-i \ome
 <p>ちなみに、<span class="math notranslate nohighlight">\(\ket{\psi (t_1)}\)</span>は<span class="math notranslate nohighlight">\(t_1 = t_0\)</span>で<span class="math notranslate nohighlight">\(\upket\)</span>、<span class="math notranslate nohighlight">\(t_1 = t_0 + \pi / (2 \omega)\)</span>で<span class="math notranslate nohighlight">\((-i)\downket\)</span>となり、以降<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>を周期的に繰り返します。実は、その間の状態はスピンが<span class="math notranslate nohighlight">\(Y\)</span>-<span class="math notranslate nohighlight">\(Z\)</span>平面内を向いている状態に相当します。スピンが0でない原子核に磁場をかけると、スピンと磁場の方向が揃っていなければ磁場の方向を軸にスピンが歳差運動（すりこぎ運動）をします。これはコマが重力中で起こす運動と同じで、核磁気共鳴（NMR、さらに医学応用のMRI）の原理に深く関わります。</p>
 </div>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id50">量子コンピュータ上での表現</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id64">量子コンピュータ上での表現</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>すでに触れましたが、上の例で核のスピンは量子ビットのように2つの基底ケットを持ちます（2次元量子系です）。さらに、お気づきの方も多いと思いますが、<span class="math notranslate nohighlight">\(\sigma^X\)</span>の<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>への作用は<span class="math notranslate nohighlight">\(X\)</span>ゲートの<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>への作用そのものです。このことから、核磁気の歳差運動が極めて自然に量子コンピュータでシミュレートできることがわかるかと思います。</p>
 <p>実際には、時間発展演算子は<span class="math notranslate nohighlight">\(\sigma^X\)</span>そのものではなくその指数関数なので、量子コンピュータでも<span class="math notranslate nohighlight">\(\exp (-i \theta/2 X)\)</span>に対応する<span class="math notranslate nohighlight">\(R_{x} (\theta)\)</span>ゲートを利用します。これまで紹介されませんでしたが、<span class="math notranslate nohighlight">\(R_{x}\)</span>ゲートはパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>をとり、</p>
 <div class="math notranslate nohighlight">
@@ -520,7 +520,7 @@ R_{x}(\theta)\ket{1} = -i\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{
 </div>
 </div>
 <div class="section" id="id6">
-<h3><a class="toc-backref" href="#id51">ハミルトニアンの対角化</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id65">ハミルトニアンの対角化</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>再び量子コンピュータを離れて、量子・古典に関わらずデジタル計算機で量子ダイナミクスのシミュレーションをする際の一般論をします。</p>
 <p>上の核スピンの例ではハミルトニアンが単純だったので、式<a class="reference internal" href="#equation-spin-exact">(4)</a>のように厳密解が求まりました。特に、導出において<span class="math notranslate nohighlight">\((\sigma^X)^2 = I\)</span>という恒等式が非常に重要でした。しかし、一般のハミルトニアンでは、何乗しても恒等演算子の定数倍にたどり着く保証がありません。</p>
 <p>累乗して恒等演算子にならないようなハミルトニアンであっても、系の次元が小さい場合は「対角化」という作業で厳密解を得られます。ハミルトニアンの対角化とは、ハミルトニアンの作用が実数をかけることと等しくなるようなケットを探してくること、つまり</p>
@@ -569,7 +569,7 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 <p>このように、ハミルトニアンの対角化さえできれば、量子ダイナミクスのシミュレーションは位相をかけて足し算をするだけの問題に帰着します。しかし、上で言及したように、計算量の問題から、ハミルトニアンが対角化できるのは主に系の次元が小さいときに限ります。「対角化」という言葉が示唆するように、この操作は行列演算（対角化）を伴い、その際の行列の大きさは<span class="math notranslate nohighlight">\(N \times N\)</span>です。上の核スピンの例では<span class="math notranslate nohighlight">\(N=2\)</span>でしたが、もっと実用的なシミュレーションの場合、系の量子力学的次元は一般的に関係する自由度の数（粒子数など）の指数関数的に増加します。比較的小規模な系でもすぐに対角化にスーパーコンピュータが必要なスケールになってしまいます。</p>
 </div>
 <div class="section" id="id7">
-<h3><a class="toc-backref" href="#id52">鈴木・トロッター分解</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id66">鈴木・トロッター分解</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>ハミルトニアンが対角化できない場合、ダイナミクスシミュレーションをするには、結局式<a class="reference internal" href="#equation-spin-exact">(4)</a>のように初期状態に時間発展演算子を愚直にかけていくことになります。これは、式<a class="reference internal" href="#equation-exp-sigmax">(3)</a>のように<span class="math notranslate nohighlight">\(U_H(t)\)</span>を閉じた形式で厳密に書けるなら簡単な問題ですが、そうでない場合は数値的に近似していく必要があります。その場合の常套手段は、行いたい時間発展<span class="math notranslate nohighlight">\((t_1 - t_0)\)</span>を短い時間</p>
 <div class="math notranslate nohighlight">
 \[
@@ -595,7 +595,7 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 <p>であるということです。この関係があるからこそ、式<a class="reference internal" href="#equation-trotter-formula">(6)</a>で<span class="math notranslate nohighlight">\(U_{H_k}(t)\)</span>が実装できても<span class="math notranslate nohighlight">\(U_H(t)\)</span>が実装できるとは限らないのです。しかし、十分短い時間<span class="math notranslate nohighlight">\(\Delta t\)</span><a class="footnote-reference brackets" href="#sufficiently-small" id="id10">2</a>についてであれば、<span class="math notranslate nohighlight">\(U_H(\Delta t)\)</span>を<span class="math notranslate nohighlight">\(U_{H_k}(\Delta t)\)</span>の積として表しても、その誤差が計算結果に大きく影響しない、ということをこの定理は言っています。</p>
 </div>
 <div class="section" id="id11">
-<h3><a class="toc-backref" href="#id53">なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id67">なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>鈴木・トロッター分解がダイナミクスシミュレーションに適用できるには、ハミルトニアンが都合よくゲートで実装できる<span class="math notranslate nohighlight">\(H_k\)</span>に分解できる必要があります。これが常に成り立つかというと、答えはyes and noです。</p>
 <p>まず、<span class="math notranslate nohighlight">\(2^n\)</span>次元線形空間に作用するエルミート演算子は、<span class="math notranslate nohighlight">\(n\)</span>個の2次元部分系に独立に作用する基底演算子<span class="math notranslate nohighlight">\(\{I, \sigma^X, \sigma^Y, \sigma^Z\}\)</span>の積の線形和に分解できます。<span class="math notranslate nohighlight">\(\sigma^X\)</span>以外のパウリ演算子<span class="math notranslate nohighlight">\(\sigma^Y\)</span>と<span class="math notranslate nohighlight">\(\sigma^Z\)</span>はここまで登場しませんでしたが、重要なのは、2次元量子系に作用する<span class="math notranslate nohighlight">\(\sigma^X, \sigma^Y, \sigma^Z\)</span>がそれぞれ量子ビットに作用する<span class="math notranslate nohighlight">\(X, Y, Z\)</span>ゲート<a class="footnote-reference brackets" href="#ygate" id="id12">3</a>に、パウリ演算子の指数関数がそれぞれ<span class="math notranslate nohighlight">\(R_x, R_y, R_z\)</span>ゲート（総じて回転ゲートと呼びます）に対応するということです。つまり、対象の物理系の量子レジスタへの対応付けさえできれば、そのハミルトニアンは必ず基本的なゲートの組み合わせで表現できます。</p>
 <p>しかし、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに作用する基底演算子の組み合わせは<span class="math notranslate nohighlight">\(4^n\)</span>通りあり、最も一般のハミルトニアンではその全ての組み合わせが寄与することも有りえます。その場合、指数関数的に多くのゲートを用いてしか時間発展演算子が実装できないことになります。それでは「都合よく分解できる」とは言えません。</p>
@@ -607,9 +607,9 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 </div>
 </div>
 <div class="section" id="id14">
-<h2><a class="toc-backref" href="#id54">実習：ハイゼンベルグモデルの時間発展</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id68">実習：ハイゼンベルグモデルの時間発展</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id15">
-<h3><a class="toc-backref" href="#id55">モデルのハミルトニアン</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id69">モデルのハミルトニアン</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>ハミルトニアンの分解と言われてもピンと来ない方もいるかもしれませんし、ここからはダイナミクスシミュレーションの具体例をQiskitで実装してみましょう。</p>
 <p>ハイゼンベルグモデルという、磁性体のトイモデルを考えます。空間中一列に固定された多数のスピンを持つ粒子（電子）の系で、隣接スピンの向きによってエネルギーが決まるような問題です。</p>
 <p>例えば、<span class="math notranslate nohighlight">\(n\)</span>スピン系で簡単な形式のハミルトニアンは</p>
@@ -637,7 +637,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <p>です。</p>
 </div>
 <div class="section" id="id17">
-<h3><a class="toc-backref" href="#id56">量子ゲートでの表現</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id70">量子ゲートでの表現</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <p>これを回転ゲートと制御ゲートで表します。まず<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1})\)</span>について考えてみましょう。この演算子の<span class="math notranslate nohighlight">\(j\)</span>-<span class="math notranslate nohighlight">\((j+1)\)</span>スピン系の4つの基底状態への作用は</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -691,7 +691,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <p>です<a class="footnote-reference brackets" href="#sgate" id="id18">6</a>。</p>
 </div>
 <div class="section" id="id19">
-<h3><a class="toc-backref" href="#id57">回路実装</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id71">回路実装</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p>やっと準備が整ったので、シミュレーションを実装しましょう。実機で走らせられるように、<span class="math notranslate nohighlight">\(n=5\)</span>, <span class="math notranslate nohighlight">\(M=10\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = 0.1\)</span>とします。上で決めたように、ビット0以外が<span class="math notranslate nohighlight">\(\upket\)</span>、ビット0が<span class="math notranslate nohighlight">\(\rightket\)</span>という初期状態から始めます。各<span class="math notranslate nohighlight">\(\Delta t\)</span>ステップごとに回路のコピーをとり、それぞれのコピーで測定を行うことで、時間発展の様子を観察します。</p>
 <div class="cell tag_remove-input docutils container">
 </div>
@@ -802,7 +802,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 </div>
 </div>
 <div class="section" id="measurement-error-mitigation">
-<span id="id20"></span><h3><a class="toc-backref" href="#id58">おまけ：測定エラーの緩和</a><a class="headerlink" href="#measurement-error-mitigation" title="Permalink to this headline">¶</a></h3>
+<span id="id20"></span><h3><a class="toc-backref" href="#id72">おまけ：測定エラーの緩和</a><a class="headerlink" href="#measurement-error-mitigation" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="quantum_computation.html"><span class="doc">第二回の課題</span></a>でも触れましたが、実機ではCNOTゲートと測定で主にエラーが起きます。課題ではCNOTを極力減らす回路を書きましたが、今回のシミュレーションではなかなかこれ以上CNOTを減らす工夫のしようがなさそうです。</p>
 <p>そこで、今度は測定エラーに注目します。測定エラーは統計的にだいたい再現性がある（あるビット列<span class="math notranslate nohighlight">\(x\)</span>が得られるべき状態から別のビット列<span class="math notranslate nohighlight">\(y\)</span>が得られる確率が、状態の生成法に依存しにくい）ので、事後的に緩和（部分的補正）できます。そのためには<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの<span class="math notranslate nohighlight">\(2^n\)</span>個すべての計算基底状態について、相当するビット列が100%の確率で得られるべき回路を作成し、それを測定した結果を利用します。</p>
 <p>例えば<span class="math notranslate nohighlight">\(n=2\)</span>で状態<span class="math notranslate nohighlight">\(\ket{x} \, (x = 00, 01, 10, 11)\)</span>を測定してビット列<span class="math notranslate nohighlight">\(y\)</span>を得る確率が<span class="math notranslate nohighlight">\(\epsilon^x_y\)</span>だとします。このとき実際の量子計算をして測定で得られた確率分布が<span class="math notranslate nohighlight">\(\{p_y\}\)</span>であったとすると、その計算で本来得られるべき確率分布<span class="math notranslate nohighlight">\(\{P_x\}\)</span>は連立方程式</p>
@@ -853,7 +853,7 @@ p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon
 </div>
 </div>
 <div class="section" id="id22">
-<h2><a class="toc-backref" href="#id59">参考文献</a><a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id73">参考文献</a><a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
 <p id="id23"><dl class="citation">
 <dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id9">NC00</a></span></dt>
 <dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 4.7, pages 204–213. Cambridge University Press, 2000.</p>
@@ -924,7 +924,7 @@ p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon
         
           By 東京大学素粒子物理国際研究センター<br/>
         
-            &copy; Copyright 2020.<br/>
+            &copy; Copyright 2021.<br/>
       </p>
     </div>
   </footer>

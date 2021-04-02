@@ -216,7 +216,7 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
-  補足：予備知識・実習環境
+  補足
  </span>
 </p>
 <ul class="nav sidenav_l1">
@@ -378,18 +378,18 @@
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id33">問題1: 足し算を実機で行う</a></p>
+<li><p><a class="reference internal" href="#id3" id="id47">問題1: 足し算を実機で行う</a></p>
 <ul>
-<li><p><a class="reference internal" href="#quantum-volume" id="id34">Quantum Volume</a></p></li>
+<li><p><a class="reference internal" href="#quantum-volume" id="id48">Quantum Volume</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id6" id="id35">問題2: 符号が反転している基底を見つける</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id36">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id49">問題2: 符号が反転している基底を見つける</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id50">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id33">問題1: 足し算を実機で行う</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id47">問題1: 足し算を実機で行う</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>実習の内容の延長です。ここでは並列足し算回路を実機で実行します。</p>
 <p>実習のおさらいをすると、まずもともとの足し算のロジックをそのまま踏襲した回路を作り、それではゲート数が多すぎるので効率化した回路を作成しました。</p>
 <p>実は効率化した回路でもまだゲートの数が多すぎて、4ビット+4ビットの計算では答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、<span class="math notranslate nohighlight">\((n_1, n_2)\)</span>の値として(4, 4)以外に(3, 3)、(2, 2)、(1, 1)も同時に試すことにしましょう。</p>
@@ -512,7 +512,7 @@
 </div>
 <p>回路が均一にランダムに<span class="math notranslate nohighlight">\(0\)</span>から<span class="math notranslate nohighlight">\(2^{n_1 + n_2 + n_3} - 1\)</span>までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は<span class="math notranslate nohighlight">\(2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}\)</span>となります。実機の結果と比べてみると、(4, 4), (3, 3), (2, 2)では残念ながら元の回路も効率化した回路も正答率がほとんどこの値に近くなっているのがわかります。かろうじて(1, 1)において正答率がランダムなケース（<span class="math notranslate nohighlight">\(2^{-2}\)</span>）より高くなっています。</p>
 <div class="section" id="quantum-volume">
-<h3><a class="toc-backref" href="#id34">Quantum Volume</a><a class="headerlink" href="#quantum-volume" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id48">Quantum Volume</a><a class="headerlink" href="#quantum-volume" title="Permalink to this headline">¶</a></h3>
 <p>実は上のテストをIBMの提供するより高性能なマシンで実行すると、元の回路と効率化した回路とで正答率が異なることが見えます。<span class="math notranslate nohighlight">\((n_1, n_2)\)</span> = (1, 1)に関しては効率化回路のほうがCNOTが少しだけ多くなるケースがあり、その場合実際に元の回路の正答率のほうが高くなります。例としてibmq_torontoというマシンで実行した結果は以下のとおりです。</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
@@ -729,7 +729,7 @@ F = P_0 + 2^{-n_3} (1 - P_0 - P_1)
 </div>
 </div>
 <div class="section" id="id6">
-<h2><a class="toc-backref" href="#id35">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id49">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>実習の前半で出てきたequal superposition状態</p>
 <div class="math notranslate nohighlight">
 \[
@@ -872,7 +872,7 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 </ul>
 </div>
 <div class="section" id="id7">
-<h2><a class="toc-backref" href="#id36">参考文献</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id50">参考文献</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p id="id8"><dl class="citation">
 <dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id4">CBS+19</a></span></dt>
 <dd><p>Andrew W. Cross, Lev S. Bishop, Sarah Sheldon, Paul D. Nation, and Jay M. Gambetta. Validating quantum computers using randomized model circuits. <em>Phys. Rev. A</em>, 100:032328, Sep 2019. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevA.100.032328">https://link.aps.org/doi/10.1103/PhysRevA.100.032328</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevA.100.032328">doi:10.1103/PhysRevA.100.032328</a>.</p>
@@ -925,7 +925,7 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
         
           By 東京大学素粒子物理国際研究センター<br/>
         
-            &copy; Copyright 2020.<br/>
+            &copy; Copyright 2021.<br/>
       </p>
     </div>
   </footer>
