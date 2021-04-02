@@ -972,10 +972,20 @@ C^3 = 0
 <p>とすると、<code class="docutils literal notranslate"><span class="pre">execute</span></code>によって返されたのと同じようにジョブオブジェクトが生成されます。</p>
 </div>
 <p>Qiskitから提供されている<code class="docutils literal notranslate"><span class="pre">plot_histogram</span></code>関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
     <span class="n">plot_histogram</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/chsh_inequality_32_0.png" src="_images/chsh_inequality_32_0.png" />
+<img alt="_images/chsh_inequality_32_1.png" src="_images/chsh_inequality_32_1.png" />
+<img alt="_images/chsh_inequality_32_2.png" src="_images/chsh_inequality_32_2.png" />
+<img alt="_images/chsh_inequality_32_3.png" src="_images/chsh_inequality_32_3.png" />
+</div>
 </div>
 <p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
 <p>実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して “<em>Noisy</em> intermediate-scale quantum (NISQ) device” と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。</p>
