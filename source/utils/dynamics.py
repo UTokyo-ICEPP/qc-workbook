@@ -131,7 +131,8 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
 
         if spin_basis_change is not None:
             basis_change = tensor_product([spin_basis_change] * num_spins)
-            statevectors = basis_change @ statevectors            
+            statevectors = basis_change @ statevectors
+            iniital_state = basis_change @ initial_state
 
         x, y = bit_expectations_sv(time_points, statevectors)
 
