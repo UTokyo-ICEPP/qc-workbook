@@ -563,6 +563,16 @@ F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 <p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="#id32"><span>CKS74</span></a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-kogut-susskind-hamiltonian">
 <span class="eqno">(9)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + J \sum_{j=0}^{n-2} L_{j}^2 + \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
+<hr class="docutils" />
+<p><span style="color:red"><strong>訂正</strong></span></p>
+<p><span style="color:red">本来は</span></p>
+<div class="math notranslate nohighlight">
+\[
+\color{red}{
+H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} L_{j}^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}
+}
+\]</div>
+<hr class="docutils" />
 <p>となります。ここで<span class="math notranslate nohighlight">\(J = g^2 a^2 / 2\)</span>, <span class="math notranslate nohighlight">\(\mu = m a\)</span>, また<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>上の（1元）物質場、<span class="math notranslate nohighlight">\(\theta_j\)</span>は<span class="math notranslate nohighlight">\(j\)</span>上のゲージ場、<span class="math notranslate nohighlight">\(L_j\)</span>は格子<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>間の接続上の電場です。</p>
 <p>Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは<span class="math notranslate nohighlight">\(j\)</span>が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト<span class="math notranslate nohighlight">\(j\)</span>の基底<span class="math notranslate nohighlight">\(\plusket_j\)</span>と<span class="math notranslate nohighlight">\(\minusket_j\)</span>を、<span class="math notranslate nohighlight">\(\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-creation-annihilation">
@@ -602,6 +612,16 @@ L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1
 \[
 H = \frac{1}{a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1 \right]^2 + \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
 \]</div>
+<hr class="docutils" />
+<p><span style="color:red"><strong>訂正</strong></span></p>
+<p><span style="color:red">本来は</span></p>
+<div class="math notranslate nohighlight">
+\[
+\color{red}{
+H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
+}
+\]</div>
+<hr class="docutils" />
 <p>が得られます。</p>
 </div>
 <div class="section" id="id13">
@@ -632,6 +652,17 @@ H = \frac{1}{a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1}
 \[
 H \rightarrow \frac{1}{2a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \mfrac{n-j}{2} \right] \sigma^Z_j \right\}
 \]</div>
+<hr class="docutils" />
+<p><span style="color:red"><strong>訂正</strong></span></p>
+<p><span style="color:red">本来は</span></p>
+<div class="math notranslate nohighlight">
+\[
+\color{red}{
+H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \mfrac{n-j}{2} \right] \sigma^Z_j \right\}
+}
+\]</div>
+<p><span style="color:red">上で<span class="math notranslate nohighlight">\(J\)</span>と<span class="math notranslate nohighlight">\(\mu\)</span>に比例する項について、計算がファクター2ずれていたため、結果として間違えたハミルトニアンと本来のハミルトニアンが定数倍の関係になっている。</span></p>
+<hr class="docutils" />
 <p>です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。</p>
 </div>
 <div class="section" id="id15">
@@ -642,7 +673,11 @@ H \rightarrow \frac{1}{2a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} +
 \nu = \left\langle \frac{1}{n} \sum_{j=0}^{n-1} \frac{1}{2} \left[(-1)^{j+1} \sigma^Z_j + 1\right] \right\rangle
 \]</div>
 <p>を時間の関数としてプロットしてください。余裕があれば、各サイトにおける粒子数、電荷、サイト間の電場などの期待値の時間変化も観察してみましょう。</p>
-<p>ハミルトニアンのパラメターは、<span class="math notranslate nohighlight">\(J = 1\)</span>, <span class="math notranslate nohighlight">\(\mu = 0.5\)</span>とします（他の<span class="math notranslate nohighlight">\(J\)</span>や<span class="math notranslate nohighlight">\(\mu\)</span>の値もぜひ試してみてください）。鈴木・トロッター分解における時間ステップ<span class="math notranslate nohighlight">\(\Delta t\)</span>の大きさは<span class="math notranslate nohighlight">\(\Delta t / a = 0.2\)</span>とし、時間<span class="math notranslate nohighlight">\(t / a = 2\)</span>までシミュレーションをします。</p>
+<p>ハミルトニアンのパラメターは、<span class="math notranslate nohighlight">\(J = 1\)</span>, <span class="math notranslate nohighlight">\(\mu = 0.5\)</span>とします（他の<span class="math notranslate nohighlight">\(J\)</span>や<span class="math notranslate nohighlight">\(\mu\)</span>の値もぜひ試してみてください）。<span class="math notranslate nohighlight">\(\omega = 1/a\)</span>とおき、鈴木・トロッター分解における時間ステップ<span class="math notranslate nohighlight">\(\Delta t\)</span>の大きさ<span class="math notranslate nohighlight">\(\omega \Delta t = 0.2\)</span>として、時間<span class="math notranslate nohighlight">\(\omega t = 2\)</span>までシミュレーションをします。</p>
+<hr class="docutils" />
+<p><span style="color:red"><strong>訂正</strong></span></p>
+<p><span style="color:red">本来は<span class="math notranslate nohighlight">\(\omega = 1/(2a)\)</span>であるべき</span></p>
+<hr class="docutils" />
 <p><strong>解説</strong>:</p>
 <p>偶数サイトでは<span class="math notranslate nohighlight">\(\plusket\)</span>が物質粒子の存在しない状態、奇数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が反物質粒子の存在しない状態を表すので、初期状態は粒子数密度0となります。しかし、場の量子論においては場の相互作用によって物質と反物質が対生成・対消滅を起こし、一般に系の粒子数の期待値は時間とともに変化します。</p>
 <p><strong>ヒント</strong>:</p>
