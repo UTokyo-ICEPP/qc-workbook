@@ -571,24 +571,6 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 <span class="c1">##################</span>
 
 <span class="c1"># ステップ１：{0,1}を取るTに対して定義されているb_ijを、{+1,-1}を取る変数sに対して定義しなおす。</span>
-<span class="n">J_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nvar</span><span class="p">,</span><span class="n">nvar</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="p">:</span>
-            <span class="k">continue</span>        
-        <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">b_ij</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">continue</span>
-        
-<span class="n">h_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nvar</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
-    <span class="n">bias</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
-        <span class="n">bias</span> <span class="o">+=</span> <span class="n">b_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">b_ij</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-    <span class="n">bias</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
-    <span class="k">if</span> <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">continue</span>
 
 <span class="c1"># ステップ２：変数sをパウリZ演算子を使って実装する。</span>
 
@@ -596,32 +578,6 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 <span class="c1">#</span>
 <span class="c1">#</span>
 <span class="c1">#    return ??</span>
-<span class="k">def</span> <span class="nf">get_qubitops</span><span class="p">(</span><span class="n">J_ij</span><span class="p">,</span><span class="n">h_i</span><span class="p">,</span><span class="n">penalty</span><span class="o">=</span><span class="mf">1e6</span><span class="p">):</span>
-    <span class="n">num_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h_i</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of qubits (selected triplets) =&quot;</span><span class="p">,</span><span class="n">num_qubits</span><span class="p">)</span>
-    <span class="n">weighted_sum</span> <span class="o">=</span> <span class="mi">0</span>
-    
-    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;J_ij[&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot;][&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="s2">&quot;]=&quot;</span><span class="p">,</span><span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
-            <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-            <span class="n">vp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">vp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">weighted_sum</span> <span class="o">+=</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">PrimitiveOp</span><span class="p">(</span><span class="n">Pauli</span><span class="p">(</span><span class="n">vp</span><span class="p">,</span> <span class="n">zero</span><span class="p">))</span>
-
-    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;h_i[&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot;]=&quot;</span><span class="p">,</span><span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-        <span class="n">vp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">weighted_sum</span> <span class="o">+=</span> <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">PrimitiveOp</span><span class="p">(</span><span class="n">Pauli</span><span class="p">(</span><span class="n">vp</span><span class="p">,</span> <span class="n">zero</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">weighted_sum</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
@@ -643,7 +599,7 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 <span class="c1">##################</span>
 <span class="c1">### EDIT BELOW ###</span>
 <span class="c1">##################</span>
-<span class="n">qubitOp</span> <span class="o">=</span> <span class="n">get_qubitops</span><span class="p">(</span><span class="n">J_ij</span><span class="p">,</span><span class="n">h_i</span><span class="p">)</span>
+<span class="n">qubitOp</span> <span class="o">=</span> <span class="n">get_qubitops</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
