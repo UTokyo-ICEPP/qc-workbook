@@ -467,7 +467,6 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1、hepqpr-qallse 0.1.0</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -483,18 +482,19 @@
 </div>
 <div class="section" id="trackml">
 <span id="ml-challenge"></span><h3><a class="toc-backref" href="#id16">TrackMLチャレンジ</a><a class="headerlink" href="#trackml" title="Permalink to this headline">¶</a></h3>
-<p>データとしては、2018年に行われた<a class="reference external" href="https://www.kaggle.com/c/trackml-particle-identification">TrackML Particle Trackingチャレンジ</a>で提供されたオープンデータを活用します。CERNでは、将来の加速器計画として「高輝度LHC」（2027年に開始予定）と呼ばれるLHCの増強計画を進めています。高輝度LHCでは陽子の衝突頻度が現在の数倍に上がるため、Trackingは非常にチャレンジングになることが予想されています。その克服のために高輝度LHCの環境を擬似的に作り、そこでの有効なTracking技術の開発を目指して行われたのがTrackMLチャレンジです。</p>
+<p>データとしては、2018年に行われた<a class="reference external" href="https://www.kaggle.com/c/trackml-particle-identification">TrackML Particle Trackingチャレンジ</a>で提供されたオープンデータを活用します。CERNでは、将来の加速器計画として「高輝度LHC」（2027年に開始予定）と呼ばれるLHCの増強計画を進めています。高輝度LHCでは陽子の衝突頻度が現在の10倍近くに上がり、発生する2次粒子の数もそれに応じて増えるため、Trackingは非常にチャレンジングになると予想されています。それを克服するために、高輝度LHCでの実験環境を擬似的に作り、そこでの有効なTracking技術の開発を目指して行われたのがTrackMLチャレンジです。</p>
 </div>
 <div class="section" id="vqe">
 <span id="hamiltonian-form"></span><h3><a class="toc-backref" href="#id17">ハミルトニアンの構成とVQEの実行</a><a class="headerlink" href="#vqe" title="Permalink to this headline">¶</a></h3>
 <p>課題として考えるのは、<strong>Trackingを実現するためのハミルトニアンを構成し、それをVQEに実装して実行する</strong>ことです。</p>
 <div class="section" id="pre-processing">
 <span id="id7"></span><h4><a class="toc-backref" href="#id18">前準備</a><a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h4>
-<p>この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここでは「セグメント」と呼ぶことにします）。この時検出器中心から発生した粒子を優先的に選び出せるように、セグメントが検出器中心の方を向いているものを選びます。</p>
+<p>この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここでは「セグメント」と呼ぶことにします）。色のついた点がヒットだと考えてください。この時検出器中心から発生した粒子を優先的に選び出せるように、セグメントが検出器中心の方を向いているものを選びます。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/track_segment.png"><img alt="track_segment" class="bg-primary mb-1 align-center" src="_images/track_segment.png" style="width: 350px;" /></a>
 <p>こうして選び出したセグメントのリストを作り、そのリストから任意のペアを選んで、その<strong>相互作用の強さ</strong>を考えます。この相互作用は物理的な力ではなく、二つのセグメントが<strong>同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか</strong>を表す指標だと考えてください。この指標の決め方ですが、セグメントのペアが同一飛跡に近くなるにつれ、相互作用の強さは-1に近づくように設定されています。セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているケース（図中で赤で示した場合に相当）は、飛跡の候補としては適切でないので相互作用は+1になっています。なぜかと言うと、赤で示したような「枝分かれ」あるいは「収束」したような飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。</p>
-<p>また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは言えないため、相互作用の強さは-1より大きな値に設定しています。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で粒子の軌道が曲がるからです。以上のような理由から、この相互作用の強さは緑のケースに相当するセグメントのペアが最も-1に近くなるように決められていて、このようなペアを選び出すことがここでの目標になります。</p>
-<p>この段階まで処理されたデータを、<code class="docutils literal notranslate"><span class="pre">data/QUBO_05pct_input.txt</span></code>というファイルで提供しています。ファイルの中を見ると分かりますが、個々のセグメントは”23749_38657_45525”のような名前がついており、セグメントの対をキーとする辞書型のデータとして格納されています（例えば、最初のデータは”(‘23749_38657_45525’, ‘23749_38657_45525’): 0.01112655792777395”となっています）。同じセグメントの対をキーとするデータがなぜこういう値をもっているのかは、前処理に使うモデルの詳細に依るのでここでは説明を省略します（ここでの課題には影響ありません）。</p>
+<p>また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは言えないため、相互作用の強さは-1より大きな値に設定しています。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で同じ方向に粒子の軌道が曲がるからです。</p>
+<p>以上のような理由から、この相互作用の強さは緑のケースに相当するセグメントのペアが最も-1に近くなるように決められていて、このようなペア（<strong>各セグメントの3つのヒットのうち2つが共有されていて、かつ一定の曲率で同じ方向に軌道が曲がっているペア</strong>）を選び出すことがここでの目標になります。</p>
+<p>この段階まで処理されたデータを、<code class="docutils literal notranslate"><span class="pre">data/QUBO_05pct_input.txt</span></code>というファイルで提供しています。ファイルの中を見ると分かりますが、個々のセグメントは”23749_38657_45525”のような名前がついており、セグメントのペアをキーとする辞書型のデータとして格納されています（例えば、最初のデータは”(‘23749_38657_45525’, ‘23749_38657_45525’): 0.01112655792777395”となっています）。同じセグメントのペアをキーとするデータがなぜこういう値をもっているのかは、前処理に使うモデルの詳細に依るのでここでは説明を省略します（ここでの課題には影響ありません）。</p>
 </div>
 <div class="section" id="problem">
 <span id="id8"></span><h4><a class="toc-backref" href="#id19">問題</a><a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h4>
@@ -510,11 +510,11 @@
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Q size =&quot;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
 
 
-<span class="n">n_qubits</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">n_max</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="n">nvar</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">key_i</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">b_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_qubits</span><span class="p">,</span><span class="n">n_qubits</span><span class="p">))</span>
+<span class="n">b_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_max</span><span class="p">,</span><span class="n">n_max</span><span class="p">))</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">),</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Q</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">if</span> <span class="n">k1</span> <span class="o">==</span> <span class="n">k2</span><span class="p">:</span>
         <span class="n">b_ij</span><span class="p">[</span><span class="n">nvar</span><span class="p">][</span><span class="n">nvar</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
@@ -530,16 +530,20 @@
                         <span class="n">b_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">b_ij</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+<span class="n">b_ij</span> <span class="o">=</span> <span class="n">b_ij</span><span class="p">[:</span><span class="n">nvar</span><span class="p">,:</span><span class="n">nvar</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# of segments =&quot;</span><span class="p">,</span><span class="n">nvar</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Q size = 46
+# of segments = 10
 </pre></div>
 </div>
 </div>
 </div>
-<p>セグメント数を<span class="math notranslate nohighlight">\(N\)</span>とすると、この時b_ijは<span class="math notranslate nohighlight">\(N\)</span>行<span class="math notranslate nohighlight">\(N\)</span>列の正方行列になります。実はこのデータは、<strong>QUBO</strong>（<em>Quadratic Unconstrained Binary Optimization</em>、2次制約無し2値最適化）と呼ばれる問題として解くことができる形式で与えられています。QUBOは量子ビット<span class="math notranslate nohighlight">\(T\)</span>がバイナリー値（0か1）を持つ場合に、以下の式で与えられる目的関数<span class="math notranslate nohighlight">\(O\)</span>を最小化する問題として定義されます。</p>
+<p>セグメント数を<span class="math notranslate nohighlight">\(N\)</span>（上のコードではnvar）とすると、この時b_ijは<span class="math notranslate nohighlight">\(N\)</span>行<span class="math notranslate nohighlight">\(N\)</span>列の正方行列になります。実はこのデータは、<strong>QUBO</strong>（<em>Quadratic Unconstrained Binary Optimization</em>、2次制約無し2値最適化）と呼ばれる問題として解くことができる形式で与えられています。QUBOは量子ビット<span class="math notranslate nohighlight">\(T\)</span>がバイナリー値（0か1）を持つ場合に、以下の式で与えられる目的関数<span class="math notranslate nohighlight">\(O\)</span>を最小化する問題として定義されます。</p>
 <div class="math notranslate nohighlight">
 \[
 O(b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_j
@@ -549,14 +553,14 @@ O(b,T) = \sum_{i=1}^Nb_{ii}T_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^Nb_{ij}T_iT_j
 \[
 O(b,T) = \sum_{i=1}^N\sum_{j=1}^Nb_{ij}T_iT_j
 \]</div>
-<p>と書くこともできます。<span class="math notranslate nohighlight">\(T\)</span>は{0,1}のバイナリー値を持ちますが、シンプルな計算で{+1,-1}を持つ量子ビットに変換することができます。{+1,-1}はパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の固有値でもあるため、パウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子を使ってハミルトニアンを構成することができれば、そのまま量子回路に実装することができます。</p>
+<p>と書くこともできます。<span class="math notranslate nohighlight">\(T\)</span>は{0,1}のバイナリー値を持ちますが、シンプルな計算で{+1,-1}を持つ量子ビットに変換することができます。{+1,-1}はパウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子の固有値でもあるため、パウリ<span class="math notranslate nohighlight">\(Z\)</span>演算子を使って目的関数<span class="math notranslate nohighlight">\(O\)</span>をハミルトニアンとして書くことができれば、そのまま量子回路に実装することができます。</p>
 <p>以下のスペースに、どのような変換が可能か等を含め、VQEでTrackingを実行するために必要な量子演算を定義してください。</p>
 <p><strong>ヒント2</strong>：まず、{0,1}のバイナリー値を持つ<span class="math notranslate nohighlight">\(T\)</span>を{+1,-1}をもつスピン<span class="math notranslate nohighlight">\(s\)</span>に変換します。<span class="math notranslate nohighlight">\(T=0\)</span>を<span class="math notranslate nohighlight">\(s=1\)</span>、<span class="math notranslate nohighlight">\(T=1\)</span>を<span class="math notranslate nohighlight">\(s=-1\)</span>に対応させるとします。この関係の下で、目的関数<span class="math notranslate nohighlight">\(O\)</span>を</p>
 <div class="math notranslate nohighlight">
 \[
 H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 \]</div>
-<p>となるような関数<span class="math notranslate nohighlight">\(H\)</span>に変換してみてください。この関数<span class="math notranslate nohighlight">\(H\)</span>はイジング模型のハミルトニアンと同じ形になっています。</p>
+<p>となるような関数<span class="math notranslate nohighlight">\(H\)</span>に書き換えてみてください。この関数<span class="math notranslate nohighlight">\(H\)</span>はイジング模型のハミルトニアンと同じ形になっています。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
@@ -567,13 +571,57 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 <span class="c1">##################</span>
 
 <span class="c1"># ステップ１：{0,1}を取るTに対して定義されているb_ijを、{+1,-1}を取る変数sに対して定義しなおす。</span>
+<span class="n">J_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nvar</span><span class="p">,</span><span class="n">nvar</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="p">:</span>
+            <span class="k">continue</span>        
+        <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">b_ij</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        
+<span class="n">h_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nvar</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvar</span><span class="p">):</span>
+        <span class="n">bias</span> <span class="o">+=</span> <span class="n">b_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">b_ij</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">bias</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
+    <span class="k">if</span> <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
 
-<span class="c1"># ステップ２：変数SをパウリZ演算子を使って実装する。</span>
+<span class="c1"># ステップ２：変数sをパウリZ演算子を使って実装する。</span>
 
 <span class="c1">#def get_qubitops(...):</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
 <span class="c1">#    return ??</span>
+<span class="k">def</span> <span class="nf">get_qubitops</span><span class="p">(</span><span class="n">J_ij</span><span class="p">,</span><span class="n">h_i</span><span class="p">,</span><span class="n">penalty</span><span class="o">=</span><span class="mf">1e6</span><span class="p">):</span>
+    <span class="n">num_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h_i</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of qubits (selected triplets) =&quot;</span><span class="p">,</span><span class="n">num_qubits</span><span class="p">)</span>
+    <span class="n">weighted_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;J_ij[&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot;][&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="s2">&quot;]=&quot;</span><span class="p">,</span><span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="n">vp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">vp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">weighted_sum</span> <span class="o">+=</span> <span class="n">J_ij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">PrimitiveOp</span><span class="p">(</span><span class="n">Pauli</span><span class="p">(</span><span class="n">vp</span><span class="p">,</span> <span class="n">zero</span><span class="p">))</span>
+
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;h_i[&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot;]=&quot;</span><span class="p">,</span><span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">vp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">weighted_sum</span> <span class="o">+=</span> <span class="n">h_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">PrimitiveOp</span><span class="p">(</span><span class="n">Pauli</span><span class="p">(</span><span class="n">vp</span><span class="p">,</span> <span class="n">zero</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">weighted_sum</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
@@ -588,17 +636,25 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 </div>
 <div class="section" id="tracking-vqe">
 <span id="id9"></span><h3><a class="toc-backref" href="#id20">VQEによる近似解の探索</a><a class="headerlink" href="#tracking-vqe" title="Permalink to this headline">¶</a></h3>
-<p>上で定義したハミルトニアンを元に、VQEを使ってエネルギーの最小固有値（の近似解）を求めていきます。ただその前に、このハミルトニアンの行列を対角化してエネルギーの最小固有値とその固有ベクトルを厳密に計算した場合の答えを出してみましょう。</p>
+<p>上で定義したハミルトニアンを元に、VQEを使ってエネルギーの最小固有値（の近似解）を求めていきます。ただその前に、このハミルトニアンの行列を対角化して、エネルギーの最小固有値とその固有ベクトルを厳密に計算した場合の答えを出してみましょう。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qubitOp</span> <span class="o">=</span> <span class="n">get_qubitops</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ハミルトニアンオペレータを取得</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+<span class="n">qubitOp</span> <span class="o">=</span> <span class="n">get_qubitops</span><span class="p">(</span><span class="n">J_ij</span><span class="p">,</span><span class="n">h_i</span><span class="p">)</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total number of qubits = &quot;</span><span class="p">,</span><span class="n">qubitOp</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">)</span>
 
-<span class="c1"># Making the Hamiltonian in its full form and getting the lowest eigenvalue and eigenvector</span>
-<span class="n">ee</span> <span class="o">=</span> <span class="n">NumPyMinimumEigensolver</span><span class="p">(</span><span class="n">qubitOp</span><span class="p">)</span>
+<span class="c1"># ハミルトニアン行列を対角化して、エネルギーの最小固有値と固有ベクトルを求める</span>
+<span class="n">ee</span>  <span class="o">=</span> <span class="n">NumPyMinimumEigensolver</span><span class="p">(</span><span class="n">qubitOp</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
+<span class="c1"># 最小エネルギーに対応する量子ビットの組み合わせを表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Eigensolver: objective =&#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">eigenvalue</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">sample_most_likely</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">eigenstate</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Eigensolver: x =&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
@@ -612,24 +668,31 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 </div>
 <p>xのリストで1になっている量子ビット（セグメント）が、最小エネルギーに対応するものとして選ばれているのが分かります。</p>
 <p>次に、同じハミルトニアンモデルをVQEに実装して、最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。</p>
+<p>まず最初に、VQE用の量子回路を作ります。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- run optimization with VQE</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VQE用の回路を作る：ここではTwoLocalという組み込み関数を使う</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">10598</span>
 <span class="n">spsa</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 <span class="n">cobyla</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 <span class="n">two</span> <span class="o">=</span> <span class="n">TwoLocal</span><span class="p">(</span><span class="n">qubitOp</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="s1">&#39;ry&#39;</span><span class="p">,</span> <span class="s1">&#39;cz&#39;</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">two</span><span class="p">)</span>
-
-<span class="c1">#backend = Aer.get_backend(&#39;statevector_simulator&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>バックエンドしてqasm_simulatorを使い、実行した結果を書き出します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VQEの実行</span>
 <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 <span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">seed_simulator</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">qubitOp</span><span class="p">,</span> <span class="n">two</span><span class="p">,</span> <span class="n">spsa</span><span class="p">)</span>
 <span class="c1">#vqe = VQE(qubitOp, two, cobyla)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">quantum_instance</span><span class="p">)</span>
 
+<span class="c1"># 最小エネルギーに対応する量子ビットの組み合わせを表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="c1">#print(result[&#39;optimal_parameters&#39;])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;VQE: objective =&#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">eigenvalue</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">sample_most_likely</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">eigenstate</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;VQE x =&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
