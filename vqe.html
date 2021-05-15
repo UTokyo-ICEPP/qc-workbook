@@ -616,7 +616,7 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 </div>
 <p>として再度実行するとどういう結果が得られるでしょうか。量子回路とオプティマイザーの関係はこのようになってますね。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/vqe_u3.png"><img alt="vqe_2q_u3" class="bg-primary mb-1 align-center" src="_images/vqe_u3.png" style="width: 500px;" /></a>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/vqe_2q_u3.png"><img alt="vqe_2q_u3" class="bg-primary mb-1 align-center" src="_images/vqe_2q_u3.png" style="width: 500px;" /></a>
 <p>やってみると分かりますが、結果は1量子ビットの場合と比べて良くないですね。どうすれば良くなるでしょうか？（やり方は複数あると思います）</p>
 <p><strong>一つの解決策：変分フォームにエンタングルメントを導入する</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nq</span><span class="p">):</span>
