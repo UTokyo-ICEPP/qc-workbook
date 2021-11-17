@@ -1,20 +1,41 @@
 title: Quantum Computing Workbook
 author: ICEPP, The University of Tokyo
-logo: ../images/icepp.png
+copyright: "2021"
+logo: figs/favicon.ico
+
+execute:
+  execute_notebooks: cache  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
+  
+only_build_toc_files: true
+
+parse:
+  myst_enable_extensions:
+    - dollarmath
+    - smartquotes
 
 latex:
   latex_documents:
     targetname: qc-workbook_en.tex
 
 html:
-  favicon: ../images/favicon_icepp.png
+  favicon: figs/favicon.ico
   use_repository_button: true
+  use_issues_button: true
+  use_edit_page_button: false
 
 repository:
-  url: "https://github.com/UTokyo-ICEPP/qc-workbook"
-  book_path: source/en
+  url: "https://github.com/UTokyo-ICEPP/qc-workbook/en"
+#  path_to_book: source/ja # .binder/start file chdirs into source/ja already
   branch: master
 
 launch_buttons:
   binderhub_url: "https://mybinder.org"
-  thebelab: true
+  notebook_interface: "jupyterlab"
+  thebe: true
+
+sphinx:
+  config:
+    myst_footnote_transition: false
+
+bibtex_bibfiles:
+  - references.bib
