@@ -7,18 +7,30 @@ cd /packages/$src
 
 for dname in tests test __pycache__ test-examples datasets Tests _tests examples sample_data
 do
-  find . -name $dname -type d | xargs rm -r
+  for dir in $(find . -name $dname -type d)
+  do
+    rm -r $dir
+  done
 done
 for fname in LICENSE 'README*' dateutil-zoneinfo.tar.gz
 do
-  find . -name $fname -type f | xargs rm -r
+  for file in $(find . -name $fname -type f)
+  do
+    rm $file
+  done
 done
-find sphinx/locale -maxdepth 1 -mindepth 1 -type d | xargs rm -r
-find . -type d -name locales | xargs rm -r
-rm -r babel/locale-data/
-rm -r numpy/core/include/
-rm -r pybind11/include/
-rm -r pytz/zoneinfo
+for dir in $(find sphinx/locale -maxdepth 1 -mindepth 1 -type d)
+do
+  rm -r $dir
+done
+for dir in $(find . -type d -name locales)
+do
+  rm -r $dir
+done
+rm -rf babel/locale-data/
+rm -rf numpy/core/include/
+rm -rf pybind11/include/
+rm -rf pytz/zoneinfo
 
 src=/usr/lib/python3/dist-packages
 mkdir -p /packages/$src

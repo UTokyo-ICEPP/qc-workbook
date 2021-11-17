@@ -5,7 +5,7 @@ import sys
 import shutil
 import subprocess
 from argparse import ArgumentParser
-from jupyter_book.commands import build
+from jupyter_book.cli.main import build
 
 parser = ArgumentParser(description='Build and publish qc-workbook.')
 parser.add_argument('--checkout', '-k', action='store_true', dest='checkout', help='Checkout the source files from github.')

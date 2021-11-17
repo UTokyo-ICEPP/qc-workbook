@@ -6,8 +6,9 @@ RUN apt-get -y update && \
        python3-venv \
        python3-pip
 
-RUN pip3 install --no-cache-dir myst-parser==0.13.3 && \
-    pip3 install --no-cache-dir qiskit matplotlib pylatexenc jupyter-book tabulate
+# pyparsing version spec for matplotlib, docutils for jupyter-book
+RUN pip3 install --no-cache-dir pyparsing==2.2.1 docutils==0.15 && \
+    pip3 install qiskit matplotlib pylatexenc jupyter-book tabulate
 
 COPY clean_packages.sh /
 RUN /clean_packages.sh
