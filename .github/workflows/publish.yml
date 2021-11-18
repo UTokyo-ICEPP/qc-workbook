@@ -15,7 +15,10 @@ jobs:
 
     - name: Build the books
       run: |
-        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/tmp/qc-workbook yiiyama/jupyterbook-qiskit:1.0.4 /tmp/qc-workbook/build-runner/build_and_publish.py
+        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/tmp/qc-workbook yiiyama/jupyterbook-qiskit:1.0.5 /tmp/qc-workbook/build-runner/build_and_publish.py
+        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/tmp/qc-workbook yiiyama/jupyterbook-qiskit:1.0.5 /tmp/qc-workbook/build-runner/build_and_publish.py --lang en --target /tmp/qc-workbook/build-en
+        mkdir build/_build/html/en
+        cp -r build-en/_build/html/* build/_build/html/en/
 
     - name: GitHub Pages action
       uses: peaceiris/actions-gh-pages@v3.7.3
