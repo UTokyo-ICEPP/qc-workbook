@@ -41,5 +41,9 @@ src=/usr/lib/python3.8
 mkdir -p /packages/$src
 cp -r $src/distutils /packages/$src
 
+src=/usr/local/share
+mkdir -p /packages/$src
+cp -r $src/jupyter /packages/$src
+
 cd /packages
 tar czf ../packages.tar.gz *

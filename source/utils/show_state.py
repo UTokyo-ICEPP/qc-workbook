@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import Aer, execute
+from qiskit import Aer, transpile
 
-def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, state_label=None, draw=True, return_fig=False, gpu=True):
+def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=None, register_sizes=None, terms_per_row=8, binary=False, state_label=None, draw=True, return_fig=False):
     """Print the quantum state of the circuit in latex markdown.
     
     Args:
@@ -20,18 +20,14 @@ def show_state(circuit, amp_norm=None, phase_norm=(np.pi, '\pi'), global_phase=N
         state_label (None or str): If not None, prepend '|`state_label`> = ' to the printout
         draw (bool): Call draw('mpl') on the circuit.
         return_fig (bool): Returns the mpl Figure object.
-        gpu (bool): Use statevector_gpu if available.
     """
     
     # Run the circuit in statevector_simulator and obtain the final state statevector
     simulator = Aer.get_backend('statevector_simulator')
-    if gpu:
-        try:
-            simulator.set_options(method='statevector_gpu')
-        except:
-            simulator.set_options(method='statevector')
 
-    statevector = execute(circuit, simulator).result().data()['statevector']
+    circuit = transpile(circuit, backend=simulator)
+    print(circuit)
+    statevector = simulator.run(circuit).result().data()['statevector']
     
     if draw:
         circuit.draw('mpl', style={'dpi': '300'}, fold=70)
