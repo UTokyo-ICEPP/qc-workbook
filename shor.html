@@ -633,27 +633,6 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <img alt="_images/shor_10_0.png" src="_images/shor_10_0.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># (Hidden cell) set to some dummy dict</span>
-    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
-        <span class="n">qc</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
-            <span class="n">qc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">  File</span><span class="nn"> &quot;/var/folders/1k/hhpw0q556fbb2txm3hdphdf00000gn/T/ipykernel_7527/1614894008.py&quot;</span><span class="gt">, line </span><span class="mi">2</span>
-    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
-    <span class="o">^</span>
-<span class="ne">IndentationError</span>: unexpected indent
-</pre></div>
-</div>
-</div>
-</div>
 <div class="section" id="qpe-imp-simulator">
 <span id="id8"></span><h3><a class="toc-backref" href="#id67">シミュレータでの実験</a><a class="headerlink" href="#qpe-imp-simulator" title="Permalink to this headline">¶</a></h3>
 <p>シミュレータで実行して、測定結果の確率分布を作ってみます。</p>
@@ -687,7 +666,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/shor_13_0.png" src="_images/shor_13_0.png" />
+<img alt="_images/shor_12_0.png" src="_images/shor_12_0.png" />
 </div>
 </div>
 <p>答えは10進数で2になっていますね。ここで測定した答えは<span class="math notranslate nohighlight">\(\ket{2^n\theta}\)</span>だったことを思い出すと、<span class="math notranslate nohighlight">\(\theta=2/2^3=1/4\)</span>となって正しい<span class="math notranslate nohighlight">\(\theta\)</span>が得られたことが分かります。</p>
@@ -744,7 +723,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/shor_18_0.png" src="_images/shor_18_0.png" />
+<img alt="_images/shor_17_0.png" src="_images/shor_17_0.png" />
 </div>
 </div>
 </div>
@@ -981,7 +960,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/shor_26_0.png" src="_images/shor_26_0.png" />
+<img alt="_images/shor_25_0.png" src="_images/shor_25_0.png" />
 </div>
 </div>
 </div>
@@ -1013,28 +992,6 @@ f(x) &amp; = a^x \bmod N \\
     <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">^</span><span class="si">%i</span><span class="s2"> mod 15&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
     <span class="n">c_U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">c_U</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># (Hidden cell)</span>
-    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">power</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">11</span><span class="p">]:</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-                <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1102,7 +1059,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/shor_35_0.png" src="_images/shor_35_0.png" />
+<img alt="_images/shor_33_0.png" src="_images/shor_33_0.png" />
 </div>
 </div>
 <p>シミュレータで実行して、結果を確認してみます。</p>
@@ -1117,7 +1074,7 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/shor_37_0.png" src="_images/shor_37_0.png" />
+<img alt="_images/shor_35_0.png" src="_images/shor_35_0.png" />
 </div>
 </div>
 </div>
