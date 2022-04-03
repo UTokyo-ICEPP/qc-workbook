@@ -885,12 +885,23 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 \[
 U_{\phi_{\{k\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
 \]</div>
-<p>とします（<span class="math notranslate nohighlight">\(k\)</span>は入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>のベクトル要素の添字）。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\mathbf{x}_i)=x_i^k\)</span>と決めて（<span class="math notranslate nohighlight">\(x_i^k\)</span>は<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>を<span class="math notranslate nohighlight">\(k\)</span>個の量子ビットに埋め込みます。この<span class="math notranslate nohighlight">\(U_{\phi_{\{k\}}}(x)\)</span>にアダマール演算子を組み合わせることで、全体として</p>
+<p>あるいは</p>
 <div class="math notranslate nohighlight">
 \[
-U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i) H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i \sum_{k=1}^n \phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
+U_{\phi_{\{l,m\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{l,m\}}(\mathbf{x}_i)Z_lZ_m\right)
 \]</div>
-<p>が得られます。</p>
+<p>とします（<span class="math notranslate nohighlight">\(k\)</span>、<span class="math notranslate nohighlight">\(l\)</span>、<span class="math notranslate nohighlight">\(m\)</span>は入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>のベクトル要素の添字）。この特徴量マップは、パウリZ演算子の形から前者をZ特徴量マップ、後者をZZ特徴量マップと呼ぶことがあります。ここで<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}\)</span>（<span class="math notranslate nohighlight">\(x_i^{(k)}\)</span>は<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>の<span class="math notranslate nohighlight">\(k\)</span>番目要素）、<span class="math notranslate nohighlight">\(\phi_{\{l,m\}}(\mathbf{x}_i)=(\pi-x_i^{(l)})(\pi-x_i^{(m)})\)</span>（<span class="math notranslate nohighlight">\(x_i^{(l,m)}\)</span>は<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>の<span class="math notranslate nohighlight">\(l,m\)</span>番目要素）と決めて、入力値<span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>を量子ビットに埋め込みます。Z特徴量マップは入力データの各要素を直接量子ビットに埋め込みます（つまり<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\mathbf{x}_i)\)</span>は1入力に対して1量子ビットを使う）。ZZ特徴量マップは実際はZ特徴量マップを含む形で使うことが多いため、<span class="math notranslate nohighlight">\(\phi_{\{l,m\}}(\mathbf{x}_i)\)</span>の場合も<span class="math notranslate nohighlight">\(\phi_{\{k\}}(\mathbf{x}_i)\)</span>と同数の量子ビットに対して<span class="math notranslate nohighlight">\((l,m)\)</span>を循環的に指定して埋め込むことになります。ZZ特徴量マップでは量子ビット間にエンタングルメントを作っているため、古典計算では難しい特徴量空間へのマッピングになっていると考えられます。</p>
+<p>この<span class="math notranslate nohighlight">\(U_\phi(\mathbf{x}_i)\)</span>にアダマール演算子を組み合わせることで、全体として、Z特徴量マップは</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
+\]</div>
+<p>ZZ特徴量マップは</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^n(\pi-x_i^{(k)})(\pi-x_i^{(k\%n+1)})Z_kZ_{k\%n+1}\right)\exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
+\]</div>
+<p>となります。<span class="math notranslate nohighlight">\(U_{\phi}(\mathbf{x}_i)H^{\otimes n}\)</span>を複数回繰り返すことでより複雑な特徴量マップを作ることができるのは、上の例の場合と同じです。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#feature_map = ZFeatureMap(feature_dimension=feature_dim, reps=1)</span>
