@@ -385,6 +385,11 @@
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   参考文献
+  </a>
+ </li>
 </ul>
 
         </nav>
@@ -402,25 +407,26 @@
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#q-kernel" id="id11">量子カーネル</a></p>
+<li><p><a class="reference internal" href="#q-kernel" id="id51">量子カーネル</a></p>
 <ul>
-<li><p><a class="reference internal" href="#q-kernel-imp" id="id12">量子カーネルの評価</a></p></li>
-<li><p><a class="reference internal" href="#svm" id="id13">サポートベクターマシン</a></p></li>
-<li><p><a class="reference internal" href="#qsvm" id="id14">量子サポートベクター</a></p></li>
+<li><p><a class="reference internal" href="#q-kernel-imp" id="id52">量子カーネルの評価</a></p></li>
+<li><p><a class="reference internal" href="#svm" id="id53">サポートベクターマシン</a></p></li>
+<li><p><a class="reference internal" href="#qsvm" id="id54">量子サポートベクター</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#qsvm-imp" id="id15">素粒子探索への応用</a></p>
+<li><p><a class="reference internal" href="#qsvm-imp" id="id55">素粒子探索への応用</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id9" id="id16">問題1</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id17">問題2</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id56">問題1</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id57">問題2</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#id11" id="id58">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}\)</span></p>
 <div class="section" id="q-kernel">
-<span id="id4"></span><h2><a class="toc-backref" href="#id11">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id51">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
 <p>変分量子回路を使った量子回路学習では、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -433,13 +439,13 @@ K(x_i,x_j):=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|
 \]</div>
 <p>として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi(x_j)}\)</span>の「近さ」あるいは「重なり具合」を表していると解釈できます。</p>
 <div class="section" id="q-kernel-imp">
-<span id="id5"></span><h3><a class="toc-backref" href="#id12">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
+<span id="id5"></span><h3><a class="toc-backref" href="#id52">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
 <p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="figs/qke_circuit.png"><img alt="qke_circuit" class="bg-primary mb-1 align-center" src="figs/qke_circuit.png" style="width: 700px;" /></a>
+<a class="bg-primary mb-1 reference internal image-reference" href="_images/qke_circuit.png"><img alt="qke_circuit" class="bg-primary mb-1 align-center" src="_images/qke_circuit.png" style="width: 700px;" /></a>
 <p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\(\cal{O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
 </div>
 <div class="section" id="svm">
-<span id="id6"></span><h3><a class="toc-backref" href="#id13">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3><a class="toc-backref" href="#id53">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h3>
 <p>上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、データ分類を行なってみます。</p>
 <p>まず、線形サポートベクターマシンとはどういうものかを見ていきます。2クラス分類を考えるとして、<span class="math notranslate nohighlight">\(+1\)</span>と<span class="math notranslate nohighlight">\(-1\)</span>を持つクラス<span class="math notranslate nohighlight">\(C=\{+1,-1\}\)</span>とします。学習データを<span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i,y_i)\}\:(i=1,\ldots,N)\)</span>とすると、<span class="math notranslate nohighlight">\(y_i\in\{+1,-1\}\)</span>です。<span class="math notranslate nohighlight">\(i\)</span>は各データを表すインデックス、<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は<span class="math notranslate nohighlight">\(d\)</span>次元の実数変数<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\in\mathbb{R}^d\)</span>としておきます。</p>
 <p>サポートベクターによる線形分離とは、ある空間にデータ点の集合が分布しているとして、それを超平面（Hyperplane）で二つの領域に分離するという問題です。超平面とは、<span class="math notranslate nohighlight">\(\boldsymbol{w}\in\mathbb{R}^d\)</span>をデータと同じ次元数の実数ベクトルとして、<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x}+b=0\)</span>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>のことを超平面と読んでいます。<span class="math notranslate nohighlight">\(b\)</span>はバイアス、<span class="math notranslate nohighlight">\(\circ\)</span>は内積を表していて、<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>は超平面に直交するベクトルと考えることができます。データの線形分離は、</p>
@@ -450,7 +456,7 @@ y_i(\boldsymbol{w}\circ\boldsymbol{x}_i+b)\geq1,\:\:\:\forall i=1,\ldots,N
 <p>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>を見つけることができれば、<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>のマージン（超平面からデータ点までの距離）を持って分離できることが知られています。このような超平面が見つかれば、新しいテストデータ<span class="math notranslate nohighlight">\(\boldsymbol{x'}\in\mathbb{R}^d\)</span>に対して<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x'}+b\)</span>の符号（超平面で分離される領域のどちらにデータが分布しているか）を見ることで、分離ができるという仕組みです。</p>
 </div>
 <div class="section" id="qsvm">
-<span id="id7"></span><h3><a class="toc-backref" href="#id14">量子サポートベクター</a><a class="headerlink" href="#qsvm" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3><a class="toc-backref" href="#id54">量子サポートベクター</a><a class="headerlink" href="#qsvm" title="Permalink to this headline">¶</a></h3>
 <p>量子サポートベクターマシンは、ヒルベルト空間にエンコードされた特徴量空間で、このデータ分離を行います。上の式では、マージンが<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>なので、<span class="math notranslate nohighlight">\(||\boldsymbol{w}||\)</span>を最小化することでマージンが大きな超平面を探すことが考えられます。特徴量空間での超平面探索では、非線形変換が可能な特徴量マップが関わってくるため、少し違う形ですが同等なものとして以下の距離に相当する量<span class="math notranslate nohighlight">\(L\)</span></p>
 <div class="math notranslate nohighlight">
 \[
@@ -465,7 +471,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="qsvm-imp">
-<span id="id8"></span><h2><a class="toc-backref" href="#id15">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
+<span id="id8"></span><h2><a class="toc-backref" href="#id55">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
 <p>それでは、<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">ここ</span></a>で考えた素粒子現象の探索問題に、量子サポートベクターマシンを応用してみましょう。</p>
 <p>データセットの準備は同じです。</p>
 <div class="cell docutils container">
@@ -552,7 +558,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="id9">
-<h3><a class="toc-backref" href="#id16">問題1</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id56">問題1</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>各自特徴量マップを選び、実装してください。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -571,7 +577,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="id10">
-<h3><a class="toc-backref" href="#id17">問題2</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id57">問題2</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>最初の二つのデータ<span class="math notranslate nohighlight">\(x_0=\)</span>norm_train_data[0]と<span class="math notranslate nohighlight">\(x_1=\)</span>norm_train_data[1]に対するカーネル行列要素を計算するための量子回路を作ってください。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -671,6 +677,15 @@ Precomputed kernel: Classification Test score:  73.5%
 <li><p>サポートベクターマシンを使った分類結果に対する考察</p></li>
 </ul>
 </div>
+</div>
+<div class="section" id="id11">
+<h2><a class="toc-backref" href="#id58">参考文献</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p id="id12"><dl class="citation">
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id2">HavlivcekCorcolesT+19</a></span></dt>
+<dd><p>Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. <em>Nature</em>, 567(7747):209–212, 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-019-0980-2">https://doi.org/10.1038/s41586-019-0980-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-019-0980-2">doi:10.1038/s41586-019-0980-2</a>.</p>
+</dd>
+</dl>
+</p>
 </div>
 </div>
 
