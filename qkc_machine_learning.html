@@ -1,0 +1,731 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>【課題】量子カーネルを使った新現象の分類 &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="実習の準備" href="prerequisites.html" />
+    <link rel="prev" title="量子機械学習を使った新しい素粒子現象の探索" href="vqc_machine_learning.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/favicon.ico" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   量子コンピューティング・ワークブックへようこそ！
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nonlocal_correlations.html">
+   【課題】量子相関を調べる
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  超並列計算機としての量子コンピュータ
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   4兆通りの足し算を同時に行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_computation.html">
+   【課題】量子計算
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子ダイナミクスシミュレーション
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   物理系を表現する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="more_dynamics.html">
+   【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  ショアのアルゴリズム
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="shor.html">
+   素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  グローバーのアルゴリズム
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover.html">
+   データベース検索を行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="amplitude_amplification.html">
+   【課題】振幅増幅を確認する
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  変分法と変分量子固有値ソルバー
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqc_machine_learning.html">
+   量子機械学習を使った新しい素粒子現象の探索
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   【課題】量子カーネルを使った新現象の分類
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  補足
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習の準備
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numerics.html">
+   数値表現
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/qkc_machine_learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fqkc_machine_learning.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/qkc_machine_learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#q-kernel">
+   量子カーネル
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#q-kernel-imp">
+     量子カーネルの評価
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#svm">
+     サポートベクターマシン
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qsvm">
+     量子サポートベクター
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qsvm-imp">
+   素粒子探索への応用
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     問題1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     問題2
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="id1">
+<h1>【課題】量子カーネルを使った新現象の分類<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>これまで、量子・古典ハイブリッドアルゴリズムの一つである<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">量子回路学習</span></a>の手法を使って、素粒子物理での新粒子探索が可能かを見てきました。ここでは、<strong>量子機械学習</strong>の別の手法として、<strong>量子カーネル</strong>を用いた分類を考えてみます。特に、量子カーネルを活用した<strong>サポートベクターマシン</strong>の手法<span id="id2">[<a class="reference internal" href="vqc_machine_learning.html#id35"><span>HavlivcekCorcolesT+19</span></a>]</span>を使って、同じ新粒子探索の問題に取り組みます。</p>
+<div class="contents local topic" id="id3">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#q-kernel" id="id11">量子カーネル</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-kernel-imp" id="id12">量子カーネルの評価</a></p></li>
+<li><p><a class="reference internal" href="#svm" id="id13">サポートベクターマシン</a></p></li>
+<li><p><a class="reference internal" href="#qsvm" id="id14">量子サポートベクター</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#qsvm-imp" id="id15">素粒子探索への応用</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id9" id="id16">問題1</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id17">問題2</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}\)</span></p>
+<div class="section" id="q-kernel">
+<span id="id4"></span><h2><a class="toc-backref" href="#id11">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
+<p>変分量子回路を使った量子回路学習では、</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
+\]</div>
+<p>と定義した特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>を考えました。それを初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に適用することで、入力データから<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}\)</span>という量子状態を作りました。<strong>量子カーネル</strong>とは、この状態の内積<span class="math notranslate nohighlight">\(\langle\phi^\dagger(x_j)|\phi(x_i)\rangle\)</span>（の絶対値2乗）</p>
+<div class="math notranslate nohighlight">
+\[
+K(x_i,x_j):=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
+\]</div>
+<p>として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi(x_j)}\)</span>の「近さ」あるいは「重なり具合」を表していると解釈できます。</p>
+<div class="section" id="q-kernel-imp">
+<span id="id5"></span><h3><a class="toc-backref" href="#id12">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
+<p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
+<a class="bg-primary mb-1 reference internal image-reference" href="figs/qke_circuit.png"><img alt="qke_circuit" class="bg-primary mb-1 align-center" src="figs/qke_circuit.png" style="width: 700px;" /></a>
+<p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\(\cal{O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
+</div>
+<div class="section" id="svm">
+<span id="id6"></span><h3><a class="toc-backref" href="#id13">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h3>
+<p>上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、データ分類を行なってみます。</p>
+<p>まず、線形サポートベクターマシンとはどういうものかを見ていきます。2クラス分類を考えるとして、<span class="math notranslate nohighlight">\(+1\)</span>と<span class="math notranslate nohighlight">\(-1\)</span>を持つクラス<span class="math notranslate nohighlight">\(C=\{+1,-1\}\)</span>とします。学習データを<span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i,y_i)\}\:(i=1,\ldots,N)\)</span>とすると、<span class="math notranslate nohighlight">\(y_i\in\{+1,-1\}\)</span>です。<span class="math notranslate nohighlight">\(i\)</span>は各データを表すインデックス、<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は<span class="math notranslate nohighlight">\(d\)</span>次元の実数変数<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\in\mathbb{R}^d\)</span>としておきます。</p>
+<p>サポートベクターによる線形分離とは、ある空間にデータ点の集合が分布しているとして、それを超平面（Hyperplane）で二つの領域に分離するという問題です。超平面とは、<span class="math notranslate nohighlight">\(\boldsymbol{w}\in\mathbb{R}^d\)</span>をデータと同じ次元数の実数ベクトルとして、<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x}+b=0\)</span>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>のことを超平面と読んでいます。<span class="math notranslate nohighlight">\(b\)</span>はバイアス、<span class="math notranslate nohighlight">\(\circ\)</span>は内積を表していて、<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>は超平面に直交するベクトルと考えることができます。データの線形分離は、</p>
+<div class="math notranslate nohighlight">
+\[
+y_i(\boldsymbol{w}\circ\boldsymbol{x}_i+b)\geq1,\:\:\:\forall i=1,\ldots,N
+\]</div>
+<p>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>を見つけることができれば、<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>のマージン（超平面からデータ点までの距離）を持って分離できることが知られています。このような超平面が見つかれば、新しいテストデータ<span class="math notranslate nohighlight">\(\boldsymbol{x'}\in\mathbb{R}^d\)</span>に対して<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x'}+b\)</span>の符号（超平面で分離される領域のどちらにデータが分布しているか）を見ることで、分離ができるという仕組みです。</p>
+</div>
+<div class="section" id="qsvm">
+<span id="id7"></span><h3><a class="toc-backref" href="#id14">量子サポートベクター</a><a class="headerlink" href="#qsvm" title="Permalink to this headline">¶</a></h3>
+<p>量子サポートベクターマシンは、ヒルベルト空間にエンコードされた特徴量空間で、このデータ分離を行います。上の式では、マージンが<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>なので、<span class="math notranslate nohighlight">\(||\boldsymbol{w}||\)</span>を最小化することでマージンが大きな超平面を探すことが考えられます。特徴量空間での超平面探索では、非線形変換が可能な特徴量マップが関わってくるため、少し違う形ですが同等なものとして以下の距離に相当する量<span class="math notranslate nohighlight">\(L\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\alpha_jK(\boldsymbol{x}_i,\boldsymbol{x}_j)
+\]</div>
+<p>を考えます。この<span class="math notranslate nohighlight">\(L\)</span>が最大になるパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\alpha}=\{\alpha_i\}\:(i=1,\ldots,N)\)</span>を見つける問題になるのですが、<span class="math notranslate nohighlight">\(\alpha_i\)</span>は以下の条件を満たす必要があります。</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^N\alpha_iy_i=0,\:\:\:\alpha_i\geq0
+\]</div>
+<p>最適化によって、<span class="math notranslate nohighlight">\(L\)</span>を最大化するパラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\alpha}^*=\{\alpha_1^*,\ldots,\alpha_N^*\}\)</span>が見つかったとします。その最適パラメータと学習データで求めたカーネル行列を使うことで、新しいデータ<span class="math notranslate nohighlight">\(\boldsymbol{x'}\)</span>に対して<span class="math notranslate nohighlight">\(\sum_{i=1}^Ny_i\alpha_i^*K(\boldsymbol{x}_i,\boldsymbol{x'})+b^*\)</span>の符号を調べることで、クラス分類が可能になるというわけです。最適なバイアス<span class="math notranslate nohighlight">\(b^*\)</span>は<span class="math notranslate nohighlight">\(\sum_{j=1}^Ny_j\alpha_j^*K(\boldsymbol{x}_j,\boldsymbol{x}_i)+b=y_i\)</span>を解くことによって、最適パラメータ<span class="math notranslate nohighlight">\(\boldsymbol{\alpha}^*\)</span>と学習データから求めることができます。</p>
+</div>
+</div>
+<div class="section" id="qsvm-imp">
+<span id="id8"></span><h2><a class="toc-backref" href="#id15">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
+<p>それでは、<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">ここ</span></a>で考えた素粒子現象の探索問題に、量子サポートベクターマシンを応用してみましょう。</p>
+<p>データセットの準備は同じです。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2</span>
+<span class="c1"># General imports</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># scikit-learn imports</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># Qiskit imports</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">ParameterVector</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">PauliFeatureMap</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">NLocal</span><span class="p">,</span> <span class="n">RealAmplitudes</span><span class="p">,</span> <span class="n">EfficientSU2</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">HGate</span><span class="p">,</span> <span class="n">RXGate</span><span class="p">,</span> <span class="n">RYGate</span><span class="p">,</span> <span class="n">RZGate</span><span class="p">,</span> <span class="n">CXGate</span><span class="p">,</span> <span class="n">CRXGate</span><span class="p">,</span> <span class="n">CRZGate</span>
+<span class="kn">from</span> <span class="nn">qiskit_machine_learning.kernels</span> <span class="kn">import</span> <span class="n">QuantumKernel</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ファイルから変数を読み出す</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
+                 <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;MT2&#39;</span><span class="p">,</span><span class="s1">&#39;S_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">,</span><span class="s1">&#39;dPhi_r_b&#39;</span><span class="p">,</span><span class="s1">&#39;cos_theta_r1&#39;</span><span class="p">))</span>
+
+<span class="c1"># 学習に使う変数の数</span>
+<span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># dimension of each data point</span>
+
+<span class="c1"># 3, 5, 7変数の場合に使う変数のセット</span>
+<span class="k">if</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">]</span>
+<span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+<span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+
+<span class="c1"># 学習に使う事象数: trainingは訓練用サンプル、testingはテスト用サンプル</span>
+<span class="n">train_size</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">test_size</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># オプティマイザーをCallする回数の上限</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">10598</span>
+
+<span class="n">df_sig</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
+<span class="n">df_bkg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
+
+<span class="c1"># サンプルの生成</span>
+<span class="n">df_sig_train</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">train_size</span><span class="p">]</span>
+<span class="n">df_bkg_train</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">train_size</span><span class="p">]</span>
+<span class="n">df_sig_test</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span><span class="o">+</span><span class="n">test_size</span><span class="p">]</span>
+<span class="n">df_bkg_test</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span><span class="o">+</span><span class="n">test_size</span><span class="p">]</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_train</span><span class="p">,</span><span class="n">df_bkg_train</span><span class="p">])</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_test</span><span class="p">,</span><span class="n">df_bkg_test</span><span class="p">])</span>
+<span class="c1">#print(&#39;train_data =&#39;,training_data)</span>
+<span class="c1">#print(&#39;test_data =&#39;,test_data)</span>
+<span class="n">train_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">train_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">train_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)])</span>
+<span class="n">test_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">test_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">test_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)])</span>
+
+<span class="n">train_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">train_size</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">train_size</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">train_label_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">train_label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">test_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">test_size</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_size</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">test_label_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">test_label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">mms</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">norm_train_data</span> <span class="o">=</span> <span class="n">mms</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+<span class="n">norm_test_data</span> <span class="o">=</span> <span class="n">mms</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id16">問題1</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>各自特徴量マップを選び、実装してください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="n">feature_map</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id17">問題2</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>最初の二つのデータ<span class="math notranslate nohighlight">\(x_0=\)</span>norm_train_data[0]と<span class="math notranslate nohighlight">\(x_1=\)</span>norm_train_data[1]に対するカーネル行列要素を計算するための量子回路を作ってください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="n">qc_circuit</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率を調べてください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_circuit</span><span class="p">,</span>
+              <span class="n">backend</span><span class="p">,</span>
+              <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
+              <span class="n">seed_simulator</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
+              <span class="n">seed_transpiler</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
+
+<span class="n">counts</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc_circuit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probability of observing 0^n state = </span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="n">feature_dim</span><span class="p">]</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Qiskitには特徴量マップから量子カーネルを作ってくれるAPIが準備されていて、それを使えば課題2は実は簡単に実行できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">q_kernel</span> <span class="o">=</span> <span class="n">QuantumKernel</span><span class="p">(</span><span class="n">feature_map</span><span class="o">=</span><span class="n">feature_map</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">))</span>
+
+<span class="n">qc_circuit</span> <span class="o">=</span> <span class="n">q_kernel</span><span class="o">.</span><span class="n">construct_circuit</span><span class="p">(</span><span class="n">norm_train_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">norm_train_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">qc_circuit</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>QuantumKernelを使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">matrix_train</span> <span class="o">=</span> <span class="n">q_kernel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x_vec</span><span class="o">=</span><span class="n">norm_train_data</span><span class="p">)</span>
+<span class="n">matrix_test</span> <span class="o">=</span> <span class="n">q_kernel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x_vec</span><span class="o">=</span><span class="n">norm_test_data</span><span class="p">,</span> <span class="n">y_vec</span><span class="o">=</span><span class="n">norm_train_data</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">matrix_train</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;training kernel matrix&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">matrix_test</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;validation kernel matrix&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Transition amplitude: 0.095947265625
+</pre></div>
+</div>
+<img alt="_images/qkc_machine_learning_18_1.png" src="_images/qkc_machine_learning_18_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>最後に、sklearnパッケージに実装されているサポートベクターマシンを使って分類を行います。量子回路学習の場合と同様に、データサイズや特徴量マップを変えるなどして分類精度がどう変わるかなど、調べてみてください。
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">qc_svc</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;precomputed&#39;</span><span class="p">)</span>
+<span class="n">qc_svc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">matrix_train</span><span class="p">,</span> <span class="n">train_label</span><span class="p">)</span>
+
+<span class="n">train_score</span> <span class="o">=</span> <span class="n">qc_svc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">matrix_train</span><span class="p">,</span> <span class="n">train_label</span><span class="p">)</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">qc_svc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">matrix_test</span><span class="p">,</span> <span class="n">test_label</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Precomputed kernel: Classification Train score: </span><span class="si">{</span><span class="n">train_score</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Precomputed kernel: Classification Test score:  </span><span class="si">{</span><span class="n">test_score</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Precomputed kernel: Classification Train score: 77.0%
+Precomputed kernel: Classification Test score:  73.5%
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>提出するもの</strong></p>
+<ul class="simple">
+<li><p>選んだ特徴量マップの説明とその量子回路</p></li>
+<li><p>カーネル行列要素を計算するための量子回路</p></li>
+<li><p>サポートベクターマシンを使った分類結果に対する考察</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "UTokyo-ICEPP/qc-workbook",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="vqc_machine_learning.html" title="previous page">量子機械学習を使った新しい素粒子現象の探索</a>
+    <a class='right-next' id="next-link" href="prerequisites.html" title="next page">実習の準備</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By 東京大学素粒子物理国際研究センター<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
