@@ -214,6 +214,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="#roc">
+   ROC曲線を描いてみる
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="qkc_machine_learning.html">
    【課題】量子カーネルを使った新現象の分類
   </a>
@@ -346,130 +351,144 @@
         </div>
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-introduction-a">
-   はじめに
-   <a id="introduction">
-   </a>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-ml-a">
-   機械学習と深層学習
-   <a id="ml">
-   </a>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-qml-a">
-   量子回路学習
-   <a id="qml">
-   </a>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-example-a">
-   初歩的な例
-   <a id="example">
-   </a>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   量子機械学習を使った新しい素粒子現象の探索
   </a>
   <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-func-data-a">
-     学習データの準備
-     <a id="func_data">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-introduction-a">
+     はじめに
+     <a id="introduction">
      </a>
     </a>
    </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-func-state-preparation-a">
-     量子状態の生成
-     <a id="func_state_preparation">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-ml-a">
+     機械学習と深層学習
+     <a id="ml">
      </a>
     </a>
    </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-func-variational-form-a">
-     変分フォームを使った状態変換
-     <a id="func_variational_form">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-qml-a">
+     量子回路学習
+     <a id="qml">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-example-a">
+     初歩的な例
+     <a id="example">
      </a>
     </a>
     <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#u-boldsymbol-theta">
-       変分量子回路
-       <span class="math notranslate nohighlight">
-        \(U(\boldsymbol{\theta})\)
-       </span>
-       の構成
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-func-data-a">
+       学習データの準備
+       <a id="func_data">
+       </a>
       </a>
      </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id6">
-       2量子ビットゲートの作成
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-func-state-preparation-a">
+       量子状態の生成
+       <a id="func_state_preparation">
+       </a>
       </a>
      </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id7">
-       回転ゲートと
-       <span class="math notranslate nohighlight">
-        \(U(\boldsymbol{\theta})\)
-       </span>
-       の作成
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-func-variational-form-a">
+       変分フォームを使った状態変換
+       <a id="func_variational_form">
+       </a>
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#u-boldsymbol-theta">
+         変分量子回路
+         <span class="math notranslate nohighlight">
+          \(U(\boldsymbol{\theta})\)
+         </span>
+         の構成
+        </a>
+       </li>
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id6">
+         2量子ビットゲートの作成
+        </a>
+       </li>
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id7">
+         回転ゲートと
+         <span class="math notranslate nohighlight">
+          \(U(\boldsymbol{\theta})\)
+         </span>
+         の作成
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-func-measurement-a">
+       測定とモデル出力
+       <a id="func_measurement">
+       </a>
       </a>
      </li>
     </ul>
    </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-func-measurement-a">
-     測定とモデル出力
-     <a id="func_measurement">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-a">
+     素粒子現象の探索への応用
+     <a id="susy">
      </a>
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-susy-data-a">
+       学習データの準備
+       <a id="susy_data">
+       </a>
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-susy-state-preparation-a">
+       量子状態の生成
+       <a id="susy_state_preparation">
+       </a>
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-susy-variational-form-a">
+       変分フォームを使った状態変換
+       <a id="susy_variational_form">
+       </a>
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-id-susy-measurement-a">
+       測定とモデル出力
+       <a id="susy_measurement">
+       </a>
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-id-susy-a">
-   素粒子現象の探索への応用
-   <a id="susy">
-   </a>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#roc">
+   ROC曲線を描いてみる
   </a>
   <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-susy-data-a">
-     学習データの準備
-     <a id="susy_data">
-     </a>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-susy-state-preparation-a">
-     量子状態の生成
-     <a id="susy_state_preparation">
-     </a>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-susy-variational-form-a">
-     変分フォームを使った状態変換
-     <a id="susy_variational_form">
-     </a>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-id-susy-measurement-a">
-     測定とモデル出力
-     <a id="susy_measurement">
-     </a>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     参考文献
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
-   参考文献
-  </a>
  </li>
 </ul>
 
@@ -513,7 +532,6 @@
 <li><p><a class="reference internal" href="#a-id-susy-measurement-a" id="id66">測定とモデル出力<a id='susy_measurement'></a></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id11" id="id67">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
@@ -1009,41 +1027,35 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 <div class="toggle docutils container">
 <p>学習したモデルの出力に対して、閾値を設定することで信号とバックグラウンドの選別が可能になります。その選別性能を評価するために一般的に行われるのは、閾値を連続的に変化させた時に得られる選別効率を2次元平面上でプロットすることです。この曲線はROC（Receiver Operating Characteristic）曲線と呼ばれ、バックグラウンドの選別効率に対する信号の選別効率を相対的に評価するものです。</p>
 <p>学習結果を使って、訓練用とテスト用のデータからROC曲線を描いてみます。</p>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#(Hidden cell)結果を求める</span>
-<span class="n">predicted_probs</span><span class="p">,</span> <span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datapoints</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">prob_test_signal</span> <span class="o">=</span> <span class="n">predicted_probs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-<span class="c1">#predicted_classes = map_label_to_class_name(predicted_labels, vqc.label_to_class)</span>
-<span class="c1">#print(&quot; ---   Prediction:   {}&quot;.format(predicted_classes))</span>
-<span class="n">predicted_probs_tr</span><span class="p">,</span> <span class="n">predicted_labels_tr</span> <span class="o">=</span> <span class="n">vqc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datapoints_tr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">prob_train_signal</span> <span class="o">=</span> <span class="n">predicted_probs_tr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="c1"># ROC曲線を描いてみる</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span><span class="p">,</span> <span class="n">roc_auc_score</span>
-<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">datapoints</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prob_test_signal</span><span class="p">,</span> <span class="n">drop_intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">,</span> <span class="n">thresholds_tr</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">datapoints_tr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prob_train_signal</span><span class="p">,</span> <span class="n">drop_intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
-<span class="n">roc_auc_tr</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Testing Data (AUC = </span><span class="si">%0.3f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">roc_auc</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr_tr</span><span class="p">,</span> <span class="n">tpr_tr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkblue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Data (AUC = </span><span class="si">%0.3f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">roc_auc_tr</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<p>#(Hidden cell)結果を求める
+predicted_probs, predicted_labels = vqc.predict(datapoints[0])
+prob_test_signal = predicted_probs[:,1]
+#predicted_classes = map_label_to_class_name(predicted_labels, vqc.label_to_class)
+#print(” —   Prediction:   {}”.format(predicted_classes))
+predicted_probs_tr, predicted_labels_tr = vqc.predict(datapoints_tr[0])
+prob_train_signal = predicted_probs_tr[:,1]</p>
 </div>
 </div>
 </div>
 </div>
-</div>
+<div class="section" id="roc">
+<h1>ROC曲線を描いてみる<a class="headerlink" href="#roc" title="Permalink to this headline">¶</a></h1>
+<p>from sklearn.metrics import roc_curve, auc, roc_auc_score
+fpr, tpr, thresholds = roc_curve(datapoints[1], prob_test_signal, drop_intermediate=False)
+fpr_tr, tpr_tr, thresholds_tr = roc_curve(datapoints_tr[1], prob_train_signal, drop_intermediate=False)
+roc_auc = auc(fpr, tpr)
+roc_auc_tr = auc(fpr_tr, tpr_tr)</p>
+<p>plt.plot(fpr, tpr, color=‘darkorange’, lw=2, label=‘Testing Data (AUC = %0.3f)’ % roc_auc)
+plt.plot(fpr_tr, tpr_tr, color=‘darkblue’, lw=2, label=‘Training Data (AUC = %0.3f)’ % roc_auc_tr)
+plt.plot([0, 0], [1, 1], color=‘navy’, lw=2, linestyle=‘–’)
+plt.xlim([-0.05, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel(‘False Positive Rate’)
+plt.ylabel(‘True Positive Rate’)
+plt.legend(loc=“lower right”)
+plt.show()</p>
 <div class="section" id="id11">
-<h2><a class="toc-backref" href="#id67">参考文献</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<h2>参考文献<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p id="id12"><dl class="citation">
 <dt class="label" id="id36"><span class="brackets">BSW14</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>)</span></dt>
 <dd><p>P. Baldi, P. Sadowski, and D. Whiteson. Searching for exotic particles in high-energy physics with deep learning. <em>Nature Communications</em>, 5(1):4308, 2014. URL: <a class="reference external" href="https://doi.org/10.1038/ncomms5308">https://doi.org/10.1038/ncomms5308</a>, <a class="reference external" href="https://doi.org/10.1038/ncomms5308">doi:10.1038/ncomms5308</a>.</p>
