@@ -14,6 +14,7 @@ parser.add_argument('--branch', '-b', metavar='BRANCH', dest='branch', default='
 parser.add_argument('--source', '-i', metavar='PATH', dest='source', default='/tmp/qc-workbook/source', help='Source directory.')
 parser.add_argument('--lang', '-l', metavar='LANG', dest='lang', default='ja', help='Workbook language.')
 parser.add_argument('--target', '-o', metavar='PATH', dest='target', default='/tmp/qc-workbook/build', help='Build directory.')
+parser.add_argument('--clean', '-c', action='store_true', dest='clean', help='Clean the target directory before build.')
 parser.add_argument('--keep-reports', '-r', action='store_true', dest='keep_reports', help='Keep the reports directory and .buildinfo file.')
 options = parser.parse_args()
 sys.argv = []
@@ -23,14 +24,17 @@ if options.checkout:
     shutil.rmtree(workdir, ignore_errors=True)
     os.chdir(os.path.dirname(workdir))
     # Can think about installing gitpython if needed
-    subprocess.Popen(['git', 'clone', '-b', options.branch, 'https://github.com/{}/qc-workbook'.format(options.account)]).wait()
+    subprocess.Popen(['git', 'clone', '-b', options.branch, f'https://github.com/{options.account}/qc-workbook']).wait()
 
 try:
-    os.environ['PYTHONPATH'] += ':{}'.format(options.source)
+    os.environ['PYTHONPATH'] += f':{options.source}'
 except KeyError:
     os.environ['PYTHONPATH'] = options.source
 
-build.callback(path_source='{}/{}'.format(options.source, options.lang),
+if options.clean:
+    shutil.rmtree(os.path.join(options.target, '_build'))
+
+build.callback(path_source=os.path.join(options.source, options.lang),
                path_output=options.target,
                config=None,
                toc=None,
@@ -46,11 +50,11 @@ build.callback(path_source='{}/{}'.format(options.source, options.lang),
 
 if not options.keep_reports:
     try:
-        shutil.rmtree('{}/_build/html/reports'.format(options.target))
+        shutil.rmtree(os.path.join(options.target, '_build', 'html', 'reports'))
     except:
         pass
 
     try:
-        os.remove('{}/_build/html/.buildinfo'.format(options.target))
+        os.remove(os.path.join(options.target, '_build', 'html', '.buildinfo'))
     except:
         pass

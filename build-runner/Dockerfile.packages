@@ -1,0 +1,18 @@
+FROM ubuntu:latest
+
+RUN apt-get -y update && \
+    apt-get install -y \
+       python3 \
+       python3-venv \
+       python3-pip
+
+# First line: jupyter-book installs a bunch of dependencies and some have
+# superficially conflicting version requirements. Conflict occurs because
+# pip does not perform a full dependency resolution and can be resolved
+# by installing the specific versions of the packages in the first line.
+RUN pip3 install --no-cache-dir mdit-py-plugins==0.2.8 docutils==0.16 && \
+    pip3 install --no-cache-dir setuptools==61.3.1 && \
+    pip3 install --no-cache-dir qiskit==0.34.2 matplotlib==3.5.1 pylatexenc==2.10 && \
+    pip3 install --no-cache-dir jupyter-book==0.12.2 tabulate==0.8.9
+
+# Tag as yiiyama/jupyterbook-qiskit-packages:__version__

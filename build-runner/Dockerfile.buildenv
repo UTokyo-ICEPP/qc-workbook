@@ -1,14 +1,4 @@
-FROM ubuntu:latest AS packages
-
-RUN apt-get -y update && \
-    apt-get install -y \
-       python3 \
-       python3-venv \
-       python3-pip
-
-# pyparsing version spec for matplotlib, docutils for jupyter-book
-RUN pip3 install --no-cache-dir pyparsing==2.2.1 docutils==0.15 && \
-    pip3 install qiskit matplotlib pylatexenc jupyter-book tabulate
+FROM yiiyama/jupyterbook-qiskit-packages:1.0.7 AS packages_cleaned
 
 COPY clean_packages.sh /
 RUN /clean_packages.sh
@@ -21,6 +11,6 @@ RUN apt-get -y update && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=packages /packages.tar.gz /
+COPY --from=packages_cleaned /packages.tar.gz /
 
 RUN tar -C / -xzf /packages.tar.gz && rm /packages.tar.gz
