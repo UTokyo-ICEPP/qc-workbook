@@ -1,14 +1,24 @@
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+import collections
 import numpy as np
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
 
-def optimized_additions(n1, n2, measure=True, barrier=False):
+def optimized_additions(
+    n1: int,
+    n2: int,
+    measure: bool = True,
+    barrier: bool = False
+) -> QuantumCircuit:
     """This function sets up a circuit that performs 2^{n1+n2} additions in parallel, with operations
     optimized for a linear topology (all CNOTs between adjacent qubits).
     """
 
     n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
+    
+    reg1 = QuantumRegister(n1, 'r1')
+    reg2 = QuantumRegister(n2, 'r2')
+    reg3 = QuantumRegister(n3, 'r3')
 
-    circuit = QuantumCircuit(QuantumRegister(n1 + n2 + n3, 'q'), ClassicalRegister(n1 + n2 + n3, 'c'))
+    circuit = QuantumCircuit(reg1, reg2, reg3, ClassicalRegister(n1 + n2 + n3, 'c'))
 
     # Set all registers to equal superpositions
     for iq in range(n1 + n2 + n3):
@@ -119,21 +129,3 @@ def optimized_additions(n1, n2, measure=True, barrier=False):
             circuit.measure(iq, n1 + n2 + iq)
 
     return circuit
-
-
-def get_initial_layout(backend, n1, n2):
-    if backend.name() == 'ibmq_16_melbourne':
-        if n1 + n2 == 8:
-            return [1, 0, 14, 13, 12, 11, 10, 9, 8, 6, 5, 4, 3]
-        elif n1 + n2 == 6:
-            return [6, 8, 9, 10, 4, 3, 2, 1, 0, 14]
-        elif n1 + n2 == 4:
-            return [6, 8, 9, 10, 11, 12, 13]
-        elif n1 + n2 == 2:
-            return [9, 10, 11, 12]
-    elif backend.configuration().processor_type['family'] == 'Falcon' and \
-        backend.configuration().n_qubits == 5:
-        if n1 + n2 == 2:
-            return [0, 1, 2, 3]
-    
-    raise NotImplementedError('Unsupported backend or n1+n2')
