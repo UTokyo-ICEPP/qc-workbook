@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import tempfile
 import sys
 import shutil
 import subprocess
@@ -33,20 +34,29 @@ except KeyError:
 
 if options.clean:
     shutil.rmtree(os.path.join(options.target, '_build'))
+    
+with tempfile.TemporaryDirectory() as temp_home:
+    # Move HOME so qiskit won't load the IBMQ credentials
+    current_home = os.environ['HOME']
+    os.environ['HOME'] = temp_home
 
-build.callback(path_source=os.path.join(options.source, options.lang),
-               path_output=options.target,
-               config=None,
-               toc=None,
-               warningiserror=False,
-               nitpick=False,
-               keep_going=False,
-               freshenv=False,
-               builder='html',
-               custom_builder=None,
-               verbose=0,
-               quiet=0,
-               individualpages=False)
+    try:
+        build.callback(path_source=os.path.join(options.source, options.lang),
+                       path_output=options.target,
+                       config=None,
+                       toc=None,
+                       warningiserror=False,
+                       nitpick=False,
+                       keep_going=False,
+                       freshenv=False,
+                       builder='html',
+                       custom_builder=None,
+                       verbose=0,
+                       quiet=0,
+                       individualpages=False)
+
+    finally:
+        os.environ['HOME'] = current_home
 
 if not options.keep_reports:
     try:
