@@ -1,4 +1,3 @@
-import collections
 import numpy as np
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
 
