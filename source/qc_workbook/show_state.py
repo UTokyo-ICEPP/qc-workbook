@@ -43,6 +43,9 @@ def show_state(
         ax = fig.add_subplot()
         
     ax.axis('off')
+    
+    num_rows = len(row_texts)
+    
     for irow, row_text in enumerate(row_texts):
         ax.text(0.5, 1. / num_rows * (num_rows - irow - 1), row_text, fontsize='x-large', ha='center')
 
