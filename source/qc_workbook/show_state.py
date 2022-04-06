@@ -175,7 +175,7 @@ def statevector_expr(
     post_expr = ''
     
     if state_label is not None:
-        pre_expr += f'| {state_label} \\rangle = '
+        pre_expr += fr'| {state_label} \rangle = '
     
     if phase_offset != 0.:
         if phase_norm is None:
@@ -187,9 +187,9 @@ def statevector_expr(
                 if rounded_phase_offset == 1:
                     phase_value_expr = phase_norm[1]
                 else:
-                    phase_value_expr = f'{rounded_phase_offset:d} \\cdot {phase_norm[1]}'
+                    phase_value_expr = fr'{rounded_phase_offset:d} \cdot {phase_norm[1]}'
             else:
-                phase_value_expr = phase_format.format(phase_offset) + f' \\cdot {phase_norm[1]}'
+                phase_value_expr = phase_format.format(phase_offset) + fr' \cdot {phase_norm[1]}'
             
         pre_expr += f'e^{{{phase_value_expr} i}}'
         
@@ -249,7 +249,7 @@ def statevector_expr(
                     # With phase normalization -> write as exp(divident * norm * i)
                     if phase_is_int[iterm]:
                         if rounded_phase[iterm] != 1:
-                            basis_unsigned += f'{rounded_phase[iterm]:d} \\cdot '
+                            basis_unsigned += fr'{rounded_phase[iterm]:d} \cdot '
                     else:
                         basis_unsigned += phase_format.format(p) + r' \cdot '
 
