@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>【課題】量子ダイナミクスシミュレーション・続 &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="素因数分解アルゴリズムを学習する" href="shor.html" />
     <link rel="prev" title="物理系を表現する" href="dynamics_simulation.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#x">
    問題1: ハイゼンベルグモデル、X方向のスピン
@@ -397,16 +409,83 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>【課題】量子ダイナミクスシミュレーション・続</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#x">
+   問題1: ハイゼンベルグモデル、X方向のスピン
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     問題
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     おまけ: スピン総和
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   問題2: シュウィンガーモデル
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     シュウィンガーモデルの物理
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     ハミルトニアンを物質場のみで記述する
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     ハミルトニアンをパウリ行列で表現する
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id15">
+     問題
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id17">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>【課題】量子ダイナミクスシミュレーション・続<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>第三回の実習では量子計算の並列性と、その顕著な利用法としての量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。</p>
 <div class="contents local topic" id="id2">
@@ -444,12 +523,11 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 必要なモジュールを先にインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
 <span class="c1"># このワークブック独自のモジュール</span>
-<span class="kn">from</span> <span class="nn">utils.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span><span class="p">,</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span><span class="p">,</span> <span class="n">insert_initial_counts</span>
-<span class="kn">from</span> <span class="nn">utils.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span><span class="p">,</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span><span class="p">,</span> <span class="n">insert_initial_counts</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
 </pre></div>
 </div>
 </div>
@@ -518,7 +596,8 @@
         
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">sim_counts_list</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="c1"># Initial state as a statevector</span>
@@ -554,25 +633,25 @@ m_z = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Z}_j \rangle = \frac{n-1}{n}
 <p>これまで扱ったような、スピンに関連する現象とは異なる物理モデルのシミュレーションをしましょう。空間1次元、時間1次元の時空における量子電磁力学の模型「シュウィンガーモデル」を考えます。</p>
 <div class="section" id="id6">
 <h3><a class="toc-backref" href="#id62">シュウィンガーモデルの物理</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>簡単に物理の解説をします（ここは読み飛ばしても差し支えありません）。といっても、まともにゼロから解説をしたらあまりにも長くなってしまうので、かなり前提知識を仮定します。興味のある方は参考文献<span id="id7">[<a class="reference internal" href="#id29"><span>Shi12</span></a>,<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>などを参照してください。特に<span id="id8">[<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>は実際にこれから実装する回路をイオントラップ型量子コンピュータで実行した論文です。</p>
+<p>簡単に物理の解説をします（ここは読み飛ばしても差し支えありません）。といっても、まともにゼロから解説をしたらあまりにも長くなってしまうので、かなり前提知識を仮定します。興味のある方は参考文献<span id="id7">[<a class="reference internal" href="#id30" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>, <a class="reference internal" href="#id29" title="Mikhail Shifman. Advanced Topics in Quantum Field Theory, chapter 33.1, pages 299-304. Cambridge University Press, 2012.">Shi12</a>]</span>などを参照してください。特に<span id="id8">[<a class="reference internal" href="#id30" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>]</span>は実際にこれから実装する回路をイオントラップ型量子コンピュータで実行した論文です。</p>
 <p>量子電磁力学とは量子場の理論の一種です。量子場の理論とは物質やその相互作用（力）をすべて量子力学的な「場」（時空中の各点に応じた値を持つ存在）で記述した理論で、素粒子論などで物質の根源的な性質を記述する際の基本言語です。量子場の理論において、一部の場を「物質場」とし、それに特定の対称性（<span class="math notranslate nohighlight">\(U(1)\)</span>ゲージ対称性）を持たせると、「電荷」が生み出され、電荷を持った場の間の相互作用を媒介する「光子場」が生じます。電荷を持った場と光子場の振る舞いを記述するのが量子電磁力学です。</p>
 <p>量子場の理論は「ラグランジアン」<a class="footnote-reference brackets" href="#lagrangian" id="id9">1</a>を指定すれば定まります。シュウィンガーモデルのラグランジアンは物質場（電子）<span class="math notranslate nohighlight">\(\psi\)</span>とゲージ場（光子）<span class="math notranslate nohighlight">\(A\)</span>からなり、</p>
 <div class="math notranslate nohighlight" id="equation-schwinger-lagrangian">
-<span class="eqno">(8)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
+<span class="eqno">(9)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
 <p>です。ただし、これまでの物理系を扱った話と異なり、ここでは場の量子論の一般慣習に従って、光速<span class="math notranslate nohighlight">\(c\)</span>とプランク定数<span class="math notranslate nohighlight">\(\hbar\)</span>がともに1である単位系を使っています。</p>
-<p>式<a class="reference internal" href="#equation-schwinger-lagrangian">(8)</a>の指数<span class="math notranslate nohighlight">\(\mu, \nu\)</span>は0（時間次元）か1（空間次元）の値を取ります。<span class="math notranslate nohighlight">\(\frac{1}{2g} F_{\mu\nu}\)</span>は<span class="math notranslate nohighlight">\(A\)</span>の強度テンソル（電場）で</p>
+<p>式<a class="reference internal" href="#equation-schwinger-lagrangian">(9)</a>の指数<span class="math notranslate nohighlight">\(\mu, \nu\)</span>は0（時間次元）か1（空間次元）の値を取ります。<span class="math notranslate nohighlight">\(\frac{1}{2g} F_{\mu\nu}\)</span>は<span class="math notranslate nohighlight">\(A\)</span>の強度テンソル（電場）で</p>
 <div class="math notranslate nohighlight">
 \[
 F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 \]</div>
 <p>です。<span class="math notranslate nohighlight">\(\psi\)</span>は物質と反物質を表す2元スピノルで、<span class="math notranslate nohighlight">\(m\)</span>がその質量となります。<span class="math notranslate nohighlight">\(\{\gamma^0, \gamma^1\}\)</span>は2次元のクリフォード代数の表現です。</p>
-<p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="#id32"><span>CKS74</span></a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
+<p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="#id32" title="A. Casher, J. Kogut, and Leonard Susskind. Vacuum polarization and the absence of free quarks. Phys. Rev. D, 10:732–745, Jul 1974. URL: https://link.aps.org/doi/10.1103/PhysRevD.10.732, doi:10.1103/PhysRevD.10.732.">CKS74</a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-kogut-susskind-hamiltonian">
-<span class="eqno">(9)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
+<span class="eqno">(10)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
 <p>となります。ここで<span class="math notranslate nohighlight">\(J = g^2 a^2 / 2\)</span>, <span class="math notranslate nohighlight">\(\mu = m a\)</span>, また<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>上の（1元）物質場、<span class="math notranslate nohighlight">\(\theta_j\)</span>は<span class="math notranslate nohighlight">\(j\)</span>上のゲージ場、<span class="math notranslate nohighlight">\(L_j\)</span>は格子<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>間の接続上の電場です。</p>
 <p>Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは<span class="math notranslate nohighlight">\(j\)</span>が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト<span class="math notranslate nohighlight">\(j\)</span>の基底<span class="math notranslate nohighlight">\(\plusket_j\)</span>と<span class="math notranslate nohighlight">\(\minusket_j\)</span>を、<span class="math notranslate nohighlight">\(\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-creation-annihilation">
-<span class="eqno">(10)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">¶</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
+<span class="eqno">(11)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">¶</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
 \Phi_j \minusket_j = 0 \\
 \Phi^{\dagger}_j \plusket_j = 0 \\
 \Phi^{\dagger}_j \minusket_j = \plusket_j\end{split}\]</div>
@@ -603,7 +682,7 @@ L_j - L_{j-1} = \rho_j \\
 \[
 L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1
 \]</div>
-<p>となります。ここで太線の分数<span class="math notranslate nohighlight">\(\genfrac{}{}{2pt}{1}{j}{2}\)</span>は切り捨ての割り算<span class="math notranslate nohighlight">\([j - (j \bmod 2)]/2\)</span>（Pythonでの<code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">//</span> <span class="pre">2</span></code>と同等）です。この電場を式<a class="reference internal" href="#equation-kogut-susskind-hamiltonian">(9)</a>に代入して</p>
+<p>となります。ここで太線の分数<span class="math notranslate nohighlight">\(\genfrac{}{}{2pt}{1}{j}{2}\)</span>は切り捨ての割り算<span class="math notranslate nohighlight">\([j - (j \bmod 2)]/2\)</span>（Pythonでの<code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">//</span> <span class="pre">2</span></code>と同等）です。この電場を式<a class="reference internal" href="#equation-kogut-susskind-hamiltonian">(10)</a>に代入して</p>
 <div class="math notranslate nohighlight">
 \[
 H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
@@ -612,13 +691,13 @@ H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1
 </div>
 <div class="section" id="id13">
 <h3><a class="toc-backref" href="#id64">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
-<p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(10)</a>から
+<p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(11)</a>から
 前者は</p>
 <div class="math notranslate nohighlight">
 \[
 \Phi^{\dagger}_j\Phi_j \rightarrow \frac{1}{2} (\sigma^Z_j + 1)
 \]</div>
-<p>と表現できることがわかります。一方、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>に関しては、やや込み入った議論<span id="id14">[<a class="reference internal" href="#id33"><span>BSK76</span></a>]</span>の末、</p>
+<p>と表現できることがわかります。一方、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>に関しては、やや込み入った議論<span id="id14">[<a class="reference internal" href="#id33" title="T. Banks, Leonard Susskind, and John Kogut. Strong-coupling calculations of lattice gauge theories: (1 + 1)-dimensional exercises. Phys. Rev. D, 13:1043–1053, Feb 1976. URL: https://link.aps.org/doi/10.1103/PhysRevD.13.1043, doi:10.1103/PhysRevD.13.1043.">BSK76</a>]</span>の末、</p>
 <div class="math notranslate nohighlight">
 \[
 \Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^+_j \sigma^-_{j+1}
@@ -652,7 +731,7 @@ H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} +
 <p><strong>解説</strong>:</p>
 <p>偶数サイトでは<span class="math notranslate nohighlight">\(\plusket\)</span>が物質粒子の存在しない状態、奇数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が反物質粒子の存在しない状態を表すので、初期状態は粒子数密度0となります。しかし、場の量子論においては場の相互作用によって物質と反物質が対生成・対消滅を起こし、一般に系の粒子数の期待値は時間とともに変化します。</p>
 <p><strong>ヒント</strong>:</p>
-<p>上のハミルトニアンのパラメターの値は参考文献<span id="id16">[<a class="reference internal" href="#id30"><span>MMS+16</span></a>]</span>と同一です。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
+<p>上のハミルトニアンのパラメターの値は参考文献<span id="id16">[<a class="reference internal" href="#id30" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>]</span>と同一です。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
 <p>また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code>と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>と<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>という二つのリストを作ります。これらのリストの長さはハミルトニアンの項数で、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>の各要素は対応する項のパウリ行列のリスト、<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>の各要素はその項にかかる係数にします。例えば</p>
 <div class="math notranslate nohighlight">
 \[
@@ -709,7 +788,8 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <span class="c1"># Run the circuits in the simulator</span>
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">sim_counts_list</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="c1">## Numerical solution through diagonalization</span>
@@ -787,7 +867,7 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <dd><p>ここで「ラグランジアン」と呼ばれているのは本来「ラグランジアン密度」で、正しくはこれを空間積分したものがラグランジアンですが、素粒子論の文脈で「ラグランジアン」と言った場合はほぼ100%積分する前のものを指します。</p>
 </dd>
 <dt class="label" id="another-approach"><span class="brackets"><a class="fn-backref" href="#id12">2</a></span></dt>
-<dd><p>参考文献<span id="id57">[<a class="reference internal" href="#id31"><span>SLSW20</span></a>]</span>では、別のアプローチで同じハミルトニアンの量子回路実装をしています。</p>
+<dd><p>参考文献<span id="id57">[<a class="reference internal" href="#id31" title="Alexander F. Shaw, Pavel Lougovski, Jesse R. Stryker, and Nathan Wiebe. Quantum Algorithms for Simulating the Lattice Schwinger Model. Quantum, 4:306, aug 2020. URL: https://doi.org/10.22331/q-2020-08-10-306, doi:10.22331/q-2020-08-10-306.">SLSW20</a>]</span>では、別のアプローチで同じハミルトニアンの量子回路実装をしています。</p>
 </dd>
 </dl>
 </div>
@@ -815,36 +895,42 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">物理系を表現する</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="shor.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">素因数分解アルゴリズムを学習する</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">物理系を表現する</a>
-    <a class='right-next' id="next-link" href="shor.html" title="next page">素因数分解アルゴリズムを学習する</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

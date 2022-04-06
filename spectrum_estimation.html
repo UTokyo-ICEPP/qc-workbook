@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>【課題】位相推定によるスペクトル分解 &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="データベース検索を行う" href="grover.html" />
     <link rel="prev" title="素因数分解アルゴリズムを学習する" href="shor.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
    エネルギースペクトルを求める
@@ -378,16 +390,64 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>【課題】位相推定によるスペクトル分解</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   エネルギースペクトルを求める
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   ハイゼンベルグモデル再考
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   位相推定によるスペクトル分解
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   問題1: スペクトル推定を実装し、厳密解と照らし合わせる
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
+   問題2: 非自明な系の振る舞いを調べる
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>【課題】位相推定によるスペクトル分解<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -405,7 +465,7 @@
 <h2><a class="toc-backref" href="#id50">エネルギースペクトルを求める</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="vqe.html"><span class="doc">後の実習</span></a>にも現れるように、物理学や化学において、系のエネルギー固有値（スペクトル）と対応する固有状態を求めるということは非常に重要な問題です。系のエネルギースペクトルを求めることとは、系を表すハミルトニアンを決め、それを対角化することに対応します。</p>
 <p>しかし、<a class="reference internal" href="dynamics_simulation.html"><span class="doc">前回の実習</span></a>でも出てきたように、一般的に量子系の次元数は莫大で、ハミルトニアンの対角化の肝となる逆行列の計算をまともに行うことはできません。同実習では、そのような場合でも、ハミルトニアンが効率的な鈴木・トロッター分解を許す形であれば、量子コンピュータを使って時間発展シミュレーションを行えるということを示しました。ただし、このシミュレーションでは、系のエネルギー固有値や固有状態を明示的に利用しませんでした。</p>
-<p>実は、同じ時間発展シミュレーションの手法と、<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で登場した位相推定の手法を組み合わせると、エネルギー固有値も数値的に求めることができます<span id="id4">[<a class="reference internal" href="#id28"><span>AGDLHG05</span></a>]</span>。さらに、工夫によっては対応する固有状態も調べられます。ここでは外部磁場のかかったハイゼンベルグモデルを題材に、位相推定によるエネルギースペクトル分解をしてみましょう。</p>
+<p>実は、同じ時間発展シミュレーションの手法と、<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で登場した位相推定の手法を組み合わせると、エネルギー固有値も数値的に求めることができます<span id="id4">[<a class="reference internal" href="#id28" title="Alán Aspuru-Guzik, Anthony D. Dutoi, Peter J. Love, and Martin Head-Gordon. Simulated quantum computation of molecular energies. Science, 309(5741):1704–1707, 2005. URL: https://science.sciencemag.org/content/309/5741/1704, arXiv:https://science.sciencemag.org/content/309/5741/1704.full.pdf, doi:10.1126/science.1113479.">AGDLHG05</a>]</span>。さらに、工夫によっては対応する固有状態も調べられます。ここでは外部磁場のかかったハイゼンベルグモデルを題材に、位相推定によるエネルギースペクトル分解をしてみましょう。</p>
 </div>
 <div class="section" id="id5">
 <h2><a class="toc-backref" href="#id51">ハイゼンベルグモデル再考</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
@@ -427,11 +487,11 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まず必要なモジュールをインポートする</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 <span class="c1"># ワークブック独自のモジュール</span>
-<span class="kn">from</span> <span class="nn">utils.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span>
-<span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span><span class="p">,</span> <span class="n">show_statevector</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
 </pre></div>
@@ -468,7 +528,7 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 
 <span class="c1"># Print the eigenvectors</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eigvals</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">show_statevector</span><span class="p">(</span><span class="n">eigvectors</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\phi_</span><span class="si">{}</span><span class="s1"> (E=</span><span class="si">{}</span><span class="s1">J)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">eigvals</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">show_state</span><span class="p">(</span><span class="n">eigvectors</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\phi_</span><span class="si">{}</span><span class="s1"> (E=</span><span class="si">{}</span><span class="s1">J)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">eigvals</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -513,10 +573,10 @@ U_H(-\tau) \ket{\psi} = \exp\left(i\omega \tau \Theta\right) \ket{\psi}
 \]</div>
 <p>となります。したがって、<span class="math notranslate nohighlight">\(\Theta\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\{\ket{\phi_m}\}\)</span>で<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-spectral-decomposition">
-<span class="eqno">(11)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
+<span class="eqno">(12)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
 <p>と書けるなら、対応する固有値を<span class="math notranslate nohighlight">\(\{\theta_m\}\)</span>とし、<span class="math notranslate nohighlight">\(\kappa_m = 2^{n_R} \theta_m\)</span>を用いて</p>
 <div class="math notranslate nohighlight" id="equation-spectrum-estimation-final">
-<span class="eqno">(12)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(13)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
 \text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S &amp; = \frac{1}{2^{n_R}} \sum_{k=0}^{2^{n_R} - 1} \sum_{j=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m \exp\left[\frac{2 \pi i j}{2^{n_R}} (\kappa_m - k)\right] \ket{k}_R \ket{\phi_m}_S \\
 &amp; = \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S.
 \end{align}\end{split}\]</div>
@@ -541,7 +601,7 @@ H = \sum_{k} h_k \sigma_k
 \mu = \min_{s_k = \pm 1} \left| \sum_{k} s_k h_k \right|
 \]</div>
 <p>以上です。この値を求めるには原理的には<span class="math notranslate nohighlight">\(2^{L}\)</span>（<span class="math notranslate nohighlight">\(L\)</span>はハミルトニアンの項数）通りの組み合わせを調べる必要がありますが、実際のハミルトニアンは通常そこまで複雑な形をしていないので、これも難しくないと考えられます。レジスタRのビット数<span class="math notranslate nohighlight">\(n_R\)</span>は<span class="math notranslate nohighlight">\(2^{n_R}\mu/(\hbar \omega)\)</span>が読みだせるように設定します。</p>
-<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(11)</a>で<span class="math notranslate nohighlight">\(\psi_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
+<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(12)</a>で<span class="math notranslate nohighlight">\(\psi_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
 <p>一方、系の最低エネルギー<span class="math notranslate nohighlight">\(\hbar \omega \theta_0\)</span>なら、<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>の手法などを用いて最低エネルギー状態の近似を実現し、それをSの初期状態とすることで、比較的に安定して求めることは可能です。そのため、上の手法は原理的にはスペクトルの完全な分解に使えますが、実際には最低エネルギーとその固有ベクトルを正確に求めるために利用することが多いと考えられます。</p>
 </div>
 <div class="section" id="id7">
@@ -660,7 +720,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 <p>まずは、上で厳密解を求めた<span class="math notranslate nohighlight">\(n=2, g=0\)</span>のケースを調べます。状態レジスタの初期状態を</p>
 <div class="math notranslate nohighlight" id="equation-two-qubit-init">
-<span class="eqno">(13)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
+<span class="eqno">(14)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
 <p>とします。ここで<span class="math notranslate nohighlight">\(\ket{\phi_i}\)</span>は最初に求めた固有ベクトルの4つの厳密解です。</p>
 <p>今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を<span class="math notranslate nohighlight">\(\hbar \omega = 16J\)</span>として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が<span class="math notranslate nohighlight">\(2^{n_R} (6/16)\)</span>なので、<span class="math notranslate nohighlight">\(n_R = 1 + 3\)</span>とすればオーバーフローを回避できます。</p>
 <div class="cell tag_remove-output docutils container">
@@ -693,7 +753,8 @@ H = \sum_{k} h_k \sigma_k
 
 <span class="c1"># Run the circuit in qasm_simulator and plot the histogram</span>
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
-<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 <span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
@@ -701,7 +762,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 </div>
 </div>
-<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(13)</a>なので、回路の終状態は</p>
+<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(14)</a>なので、回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \frac{1}{2} \ket{-2}_{R} \ket{00}_{S} - \frac{1}{2\sqrt{2}} \ket{-2}_{R} \left( \ket{01}_{S} + \ket{10}_{S} \right) + \frac{1}{2} \ket{-2}_{R} \ket{11}_{S} - \frac{1}{2\sqrt{2}} \ket{6}_{R} \left( \ket{01}_{S} - \ket{10}_{S} \right)
@@ -718,17 +779,17 @@ H = \sum_{k} h_k \sigma_k
 <h2><a class="toc-backref" href="#id54">問題2: 非自明な系の振る舞いを調べる</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p>今度は<span class="math notranslate nohighlight">\(n=4\)</span>のハイゼンベルグモデルで、全エネルギースペクトルを<span class="math notranslate nohighlight">\(g\)</span>の関数として求めてみましょう。<span class="math notranslate nohighlight">\(n=4\)</span>なので最初にやったような対角化もまだ簡単にできますが、ここではあえて量子計算のみに頼ってみます。</p>
 <p>全てのエネルギー固有値を知るためにはSの初期状態を工夫しなければいけませんが、今回は事前の情報がないので、しらみつぶし戦略をとります。つまり、計算基底<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{15}\)</span>までをそれぞれ初期状態としてスペクトル推定を繰り返し、得られる情報をつなぎ合わせて全体のスペクトルを求めます。</p>
-<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(12)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l}\)</span> <span class="math notranslate nohighlight">\((l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
+<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(13)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l}\)</span> <span class="math notranslate nohighlight">\((l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
 <div class="math notranslate nohighlight" id="equation-phim-decomposition">
-<span class="eqno">(14)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}\]</div>
+<span class="eqno">(15)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}\]</div>
 <p>とします。すると回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} c^l_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S
 \]</div>
-<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(14)</a>が成り立つとき</p>
+<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(15)</a>が成り立つとき</p>
 <div class="math notranslate nohighlight" id="equation-l-decomposition">
-<span class="eqno">(15)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}\]</div>
+<span class="eqno">(16)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}\]</div>
 <p>も成り立つ<a class="footnote-reference brackets" href="#unitarity" id="id9">1</a>ので、終状態の回路をRとSの計算基底で測定し、<span class="math notranslate nohighlight">\(k, h\)</span>を得る確率を<span class="math notranslate nohighlight">\(P_l(k, h)\)</span>とすると</p>
 <div class="math notranslate nohighlight">
 \[
@@ -779,7 +840,8 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 
         <span class="c1"># Run the circuit in qasm_simulator and plot the histogram</span>
         <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
-        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
         <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
@@ -795,7 +857,8 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
     
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sv_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
-        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">sv_simulator</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">sv_simulator</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">sv_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
         <span class="n">statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
         
@@ -895,7 +958,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 </ul>
 <p><strong>ヒント</strong></p>
 <p>（<span class="math notranslate nohighlight">\(P(k)\)</span>の導出に関して）
-式<a class="reference internal" href="#equation-phim-decomposition">(14)</a>と<a class="reference internal" href="#equation-l-decomposition">(15)</a>を眺めると、</p>
+式<a class="reference internal" href="#equation-phim-decomposition">(15)</a>と<a class="reference internal" href="#equation-l-decomposition">(16)</a>を眺めると、</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{l=0}^{2^{n_S} - 1} c^l_m c^{l*}_n = \delta_{mn}
@@ -940,36 +1003,42 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="shor.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">素因数分解アルゴリズムを学習する</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="grover.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">データベース検索を行う</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="shor.html" title="previous page">素因数分解アルゴリズムを学習する</a>
-    <a class='right-next' id="next-link" href="grover.html" title="next page">データベース検索を行う</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

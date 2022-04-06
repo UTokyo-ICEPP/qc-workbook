@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>素因数分解アルゴリズムを学習する &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】位相推定によるスペクトル分解" href="spectrum_estimation.html" />
     <link rel="prev" title="【課題】量子ダイナミクスシミュレーション・続" href="more_dynamics.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#shor-introduction">
    はじめに
@@ -454,18 +466,142 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>素因数分解アルゴリズムを学習する</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#shor-introduction">
+   はじめに
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qpe">
+   量子位相推定
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qpe-1qubit">
+     1量子ビットの位相推定
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#n">
+     <span class="math notranslate nohighlight">
+      \(n\)
+     </span>
+     量子ビットの位相推定
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qpe-imp">
+   QPEの簡単な例を実装する
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qpe-imp-simulator">
+     シミュレータでの実験
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qpe-imp-real">
+     量子コンピュータでの実験
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#shor-algo">
+   ショアのアルゴリズム
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#factoring-example">
+     素因数分解の例
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-circuit">
+     量子回路
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-measurement">
+     測定結果の解析
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#continued-fractions">
+     連分数展開
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#modular-exponentiation">
+     剰余指数化
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#shor-imp">
+   アルゴリズムの実装
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-imp-period">
+     位数の発見
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-imp-oracle">
+     オラクルの実装
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-imp-circuit">
+     回路全体の実装
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor-imp-ana">
+     計算結果の解析
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id22">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>素因数分解アルゴリズムを学習する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>この実習では<strong>ショアのアルゴリズム</strong>を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズム<span id="id2">[<a class="reference internal" href="#id39"><span>Sho99</span></a>,<a class="reference internal" href="#id28"><span>NC00</span></a>]</span>は最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている<strong>量子位相推定</strong>と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
+<p>この実習では<strong>ショアのアルゴリズム</strong>を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズム<span id="id2">[<a class="reference internal" href="#id28" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5.3, pages 226-234. Cambridge University Press, 2000.">NC00</a>, <a class="reference internal" href="#id39" title="Peter W. Shor. Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer. SIAM Review, 41(2):303-332, 1999. URL: https://doi.org/10.1137/S0036144598347011, arXiv:https://doi.org/10.1137/S0036144598347011, doi:10.1137/S0036144598347011.">Sho99</a>]</span>は最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている<strong>量子位相推定</strong>と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
@@ -572,10 +708,13 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+
+<span class="c1"># ワークブック独自のモジュール</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
 </pre></div>
 </div>
 </div>
@@ -643,9 +782,10 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>シミュレータで実行して、測定結果の確率分布を作ってみます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">)</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">2048</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">qc_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 <span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">):</span>
@@ -685,40 +825,34 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <div class="section" id="qpe-imp-real">
 <span id="id9"></span><h3><a class="toc-backref" href="#id68">量子コンピュータでの実験</a><a class="headerlink" href="#qpe-imp-real" title="Permalink to this headline">¶</a></h3>
 <p>最後に量子コンピュータで実行して、結果を確認してみましょう、以下のようにすることで、現時点でbusyでないマシンを優先的に選んで実行してくれます。</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 量子コンピュータで実行する場合</span>
-<span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 
-<span class="c1">#provider = IBMQ.get_provider(hub=&#39;ibm-q&#39;, group=&#39;open&#39;, project=&#39;main&#39;)</span>
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q-utokyo&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;internal&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;icepp&#39;</span><span class="p">)</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="ow">and</span>
-                                   <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="o">.</span><span class="n">operational</span><span class="o">==</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+
+<span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;least busy backend: &quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>least busy backend:  ibm_kawasaki
-</pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。</span>
-<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">qc_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Job Status: job has successfully run
-</pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 計算結果</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
@@ -726,9 +860,6 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/shor_17_0.png" src="_images/shor_17_0.png" />
 </div>
 </div>
 </div>
@@ -899,7 +1030,7 @@ U\ket{\psi_s}=e^{2\pi is/r}\ket{\psi_s}
 </div>
 <div class="section" id="continued-fractions">
 <span id="id14"></span><h3><a class="toc-backref" href="#id73">連分数展開</a><a class="headerlink" href="#continued-fractions" title="Permalink to this headline">¶</a></h3>
-<p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（<span id="id15">[<a class="reference internal" href="#id28"><span>NC00</span></a>]</span>にもp.230に記述があります）。この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
+<p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（<span id="id15">[<a class="reference internal" href="#id28" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5.3, pages 226-234. Cambridge University Press, 2000.">NC00</a>]</span>にもp.230に記述があります）。この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
 <p>例えば<span class="math notranslate nohighlight">\(\theta=0.25\)</span>の場合、<span class="math notranslate nohighlight">\(r=4\)</span>が得られます（頻度は小さいですが<span class="math notranslate nohighlight">\(r=8\)</span>が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（<a class="reference internal" href="#factoring-example"><span class="std std-ref">ここ</span></a>を参照）。</p>
 </div>
 <div class="section" id="modular-exponentiation">
@@ -928,8 +1059,7 @@ f(x) &amp; = a^x \bmod N \\
 <p>ここから、ショアのアルゴリズムを実装していきます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span>
-<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 </pre></div>
 </div>
@@ -994,7 +1124,7 @@ f(x) &amp; = a^x \bmod N \\
 
     <span class="c1"># 以下で制御ゲートに変換</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
-    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">^</span><span class="si">%i</span><span class="s2"> mod 15&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">^</span><span class="si">{</span><span class="n">power</span><span class="si">}</span><span class="s2"> mod 15&quot;</span>
     <span class="n">c_U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">c_U</span>
 </pre></div>
@@ -1070,8 +1200,8 @@ f(x) &amp; = a^x \bmod N \\
 <p>シミュレータで実行して、結果を確認してみます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 <span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
@@ -1094,25 +1224,277 @@ f(x) &amp; = a^x \bmod N \\
     <span class="n">phase</span> <span class="o">=</span> <span class="n">decimal</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">)</span>
     <span class="n">measured_phases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
     <span class="c1"># これらの値をテーブルの行に追加：</span>
-    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">),</span>
-                 <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2"> = </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">decimal</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">,</span> <span class="n">phase</span><span class="p">)])</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decimal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decimal</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_count</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">phase</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
 <span class="c1"># 結果を表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Register Output              Phase&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----------------------------------&#39;</span><span class="p">)</span>
 
 <span class="c1"># 回路を実装できたら、以下のコードをコメントアウトして結果を確認</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%15s</span><span class="s1"> </span><span class="si">%18s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">15s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">18s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Register Output              Phase
 ----------------------------------
-              0       0/256 = 0.00
-             64      64/256 = 0.25
-            128     128/256 = 0.50
-            192     192/256 = 0.75
+55              55/256 = 0.21     
+75              75/256 = 0.29     
+151             151/256 = 0.59    
+60              60/256 = 0.23     
+116             116/256 = 0.45    
+100             100/256 = 0.39    
+80              80/256 = 0.31     
+91              91/256 = 0.36     
+87              87/256 = 0.34     
+221             221/256 = 0.86    
+191             191/256 = 0.75    
+170             170/256 = 0.66    
+201             201/256 = 0.79    
+40              40/256 = 0.16     
+154             154/256 = 0.60    
+24              24/256 = 0.09     
+49              49/256 = 0.19     
+224             224/256 = 0.88    
+246             246/256 = 0.96    
+222             222/256 = 0.87    
+156             156/256 = 0.61    
+61              61/256 = 0.24     
+171             171/256 = 0.67    
+153             153/256 = 0.60    
+115             115/256 = 0.45    
+200             200/256 = 0.78    
+72              72/256 = 0.28     
+144             144/256 = 0.56    
+124             124/256 = 0.48    
+121             121/256 = 0.47    
+211             211/256 = 0.82    
+160             160/256 = 0.62    
+188             188/256 = 0.73    
+238             238/256 = 0.93    
+166             166/256 = 0.65    
+193             193/256 = 0.75    
+35              35/256 = 0.14     
+232             232/256 = 0.91    
+23              23/256 = 0.09     
+234             234/256 = 0.91    
+133             133/256 = 0.52    
+236             236/256 = 0.92    
+248             248/256 = 0.97    
+231             231/256 = 0.90    
+105             105/256 = 0.41    
+46              46/256 = 0.18     
+250             250/256 = 0.98    
+199             199/256 = 0.78    
+255             255/256 = 1.00    
+223             223/256 = 0.87    
+90              90/256 = 0.35     
+73              73/256 = 0.29     
+228             228/256 = 0.89    
+190             190/256 = 0.74    
+20              20/256 = 0.08     
+15              15/256 = 0.06     
+118             118/256 = 0.46    
+7               7/256 = 0.03      
+152             152/256 = 0.59    
+157             157/256 = 0.61    
+102             102/256 = 0.40    
+148             148/256 = 0.58    
+209             209/256 = 0.82    
+78              78/256 = 0.30     
+67              67/256 = 0.26     
+11              11/256 = 0.04     
+126             126/256 = 0.49    
+1               1/256 = 0.00      
+205             205/256 = 0.80    
+98              98/256 = 0.38     
+214             214/256 = 0.84    
+32              32/256 = 0.12     
+113             113/256 = 0.44    
+173             173/256 = 0.68    
+33              33/256 = 0.13     
+96              96/256 = 0.38     
+47              47/256 = 0.18     
+167             167/256 = 0.65    
+97              97/256 = 0.38     
+135             135/256 = 0.53    
+251             251/256 = 0.98    
+31              31/256 = 0.12     
+212             212/256 = 0.83    
+39              39/256 = 0.15     
+184             184/256 = 0.72    
+187             187/256 = 0.73    
+29              29/256 = 0.11     
+56              56/256 = 0.22     
+51              51/256 = 0.20     
+185             185/256 = 0.72    
+169             169/256 = 0.66    
+172             172/256 = 0.67    
+95              95/256 = 0.37     
+79              79/256 = 0.31     
+41              41/256 = 0.16     
+107             107/256 = 0.42    
+45              45/256 = 0.18     
+86              86/256 = 0.34     
+195             195/256 = 0.76    
+112             112/256 = 0.44    
+242             242/256 = 0.95    
+25              25/256 = 0.10     
+83              83/256 = 0.32     
+164             164/256 = 0.64    
+178             178/256 = 0.70    
+142             142/256 = 0.55    
+70              70/256 = 0.27     
+249             249/256 = 0.97    
+44              44/256 = 0.17     
+84              84/256 = 0.33     
+179             179/256 = 0.70    
+52              52/256 = 0.20     
+9               9/256 = 0.04      
+114             114/256 = 0.45    
+5               5/256 = 0.02      
+123             123/256 = 0.48    
+111             111/256 = 0.43    
+215             215/256 = 0.84    
+141             141/256 = 0.55    
+162             162/256 = 0.63    
+230             230/256 = 0.90    
+239             239/256 = 0.93    
+158             158/256 = 0.62    
+237             237/256 = 0.93    
+134             134/256 = 0.52    
+18              18/256 = 0.07     
+217             217/256 = 0.85    
+103             103/256 = 0.40    
+243             243/256 = 0.95    
+13              13/256 = 0.05     
+159             159/256 = 0.62    
+68              68/256 = 0.27     
+106             106/256 = 0.41    
+208             208/256 = 0.81    
+216             216/256 = 0.84    
+82              82/256 = 0.32     
+155             155/256 = 0.61    
+177             177/256 = 0.69    
+247             247/256 = 0.96    
+202             202/256 = 0.79    
+42              42/256 = 0.16     
+180             180/256 = 0.70    
+28              28/256 = 0.11     
+146             146/256 = 0.57    
+165             165/256 = 0.64    
+65              65/256 = 0.25     
+197             197/256 = 0.77    
+54              54/256 = 0.21     
+27              27/256 = 0.11     
+119             119/256 = 0.46    
+140             140/256 = 0.55    
+50              50/256 = 0.20     
+207             207/256 = 0.81    
+253             253/256 = 0.99    
+43              43/256 = 0.17     
+16              16/256 = 0.06     
+17              17/256 = 0.07     
+252             252/256 = 0.98    
+12              12/256 = 0.05     
+244             244/256 = 0.95    
+22              22/256 = 0.09     
+198             198/256 = 0.77    
+233             233/256 = 0.91    
+104             104/256 = 0.41    
+175             175/256 = 0.68    
+74              74/256 = 0.29     
+122             122/256 = 0.48    
+132             132/256 = 0.52    
+101             101/256 = 0.39    
+219             219/256 = 0.86    
+117             117/256 = 0.46    
+120             120/256 = 0.47    
+218             218/256 = 0.85    
+176             176/256 = 0.69    
+109             109/256 = 0.43    
+206             206/256 = 0.80    
+85              85/256 = 0.33     
+125             125/256 = 0.49    
+130             130/256 = 0.51    
+59              59/256 = 0.23     
+8               8/256 = 0.03      
+138             138/256 = 0.54    
+131             131/256 = 0.51    
+127             127/256 = 0.50    
+210             210/256 = 0.82    
+92              92/256 = 0.36     
+182             182/256 = 0.71    
+4               4/256 = 0.02      
+186             186/256 = 0.73    
+53              53/256 = 0.21     
+161             161/256 = 0.63    
+226             226/256 = 0.88    
+10              10/256 = 0.04     
+196             196/256 = 0.77    
+62              62/256 = 0.24     
+203             203/256 = 0.79    
+38              38/256 = 0.15     
+36              36/256 = 0.14     
+48              48/256 = 0.19     
+94              94/256 = 0.37     
+58              58/256 = 0.23     
+254             254/256 = 0.99    
+19              19/256 = 0.07     
+235             235/256 = 0.92    
+77              77/256 = 0.30     
+71              71/256 = 0.28     
+174             174/256 = 0.68    
+88              88/256 = 0.34     
+57              57/256 = 0.22     
+21              21/256 = 0.08     
+26              26/256 = 0.10     
+6               6/256 = 0.02      
+229             229/256 = 0.89    
+89              89/256 = 0.35     
+163             163/256 = 0.64    
+3               3/256 = 0.01      
+93              93/256 = 0.36     
+81              81/256 = 0.32     
+108             108/256 = 0.42    
+0               0/256 = 0.00      
+145             145/256 = 0.57    
+63              63/256 = 0.25     
+2               2/256 = 0.01      
+69              69/256 = 0.27     
+147             147/256 = 0.57    
+181             181/256 = 0.71    
+220             220/256 = 0.86    
+64              64/256 = 0.25     
+189             189/256 = 0.74    
+183             183/256 = 0.71    
+14              14/256 = 0.05     
+99              99/256 = 0.39     
+34              34/256 = 0.13     
+137             137/256 = 0.54    
+129             129/256 = 0.50    
+143             143/256 = 0.56    
+240             240/256 = 0.94    
+225             225/256 = 0.88    
+139             139/256 = 0.54    
+76              76/256 = 0.30     
+213             213/256 = 0.83    
+136             136/256 = 0.53    
+150             150/256 = 0.59    
+149             149/256 = 0.58    
+194             194/256 = 0.76    
+128             128/256 = 0.50    
+245             245/256 = 0.96    
+241             241/256 = 0.94    
+30              30/256 = 0.12     
+204             204/256 = 0.80    
+37              37/256 = 0.14     
+168             168/256 = 0.66    
+192             192/256 = 0.75    
+110             110/256 = 0.43    
+227             227/256 = 0.89    
+66              66/256 = 0.26     
 </pre></div>
 </div>
 </div>
@@ -1123,7 +1505,7 @@ f(x) &amp; = a^x \bmod N \\
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">measured_phases</span><span class="p">:</span>
     <span class="n">frac</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">phase</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">frac</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">),</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">])</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">phase</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">frac</span><span class="o">.</span><span class="n">numerator</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span><span class="p">])</span>
 
 <span class="c1"># 結果を表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;     Phase   Fraction     Guess for r&#39;</span><span class="p">)</span>
@@ -1131,17 +1513,269 @@ f(x) &amp; = a^x \bmod N \\
 
 <span class="c1"># 回路を実装できたら、以下のコードをコメントアウトして結果を確認</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">10f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">10s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">15d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Phase   Fraction     Guess for r
 -------------------------------------
-       0.0        0/1               1
-      0.25        1/4               4
-       0.5        1/2               2
-      0.75        3/4               4
+  0.214844 3/14                    14
+  0.292969 3/10                    10
+  0.589844 7/12                    12
+  0.234375 3/13                    13
+  0.453125 5/11                    11
+  0.390625 5/13                    13
+  0.312500 4/13                    13
+  0.355469 5/14                    14
+  0.339844 1/3                      3
+  0.863281 13/15                   15
+  0.746094 3/4                      4
+  0.664062 2/3                      3
+  0.785156 11/14                   14
+  0.156250 2/13                    13
+  0.601562 3/5                      5
+  0.093750 1/11                    11
+  0.191406 1/5                      5
+  0.875000 7/8                      8
+  0.960938 14/15                   15
+  0.867188 13/15                   15
+  0.609375 8/13                    13
+  0.238281 3/13                    13
+  0.667969 2/3                      3
+  0.597656 3/5                      5
+  0.449219 4/9                      9
+  0.781250 7/9                      9
+  0.281250 2/7                      7
+  0.562500 5/9                      9
+  0.484375 1/2                      2
+  0.472656 7/15                    15
+  0.824219 9/11                    11
+  0.625000 5/8                      8
+  0.734375 11/15                   15
+  0.929688 13/14                   14
+  0.648438 9/14                    14
+  0.753906 3/4                      4
+  0.136719 2/15                    15
+  0.906250 10/11                   11
+  0.089844 1/11                    11
+  0.914062 11/12                   12
+  0.519531 8/15                    15
+  0.921875 12/13                   13
+  0.968750 1/1                      1
+  0.902344 9/10                    10
+  0.410156 5/12                    12
+  0.179688 2/11                    11
+  0.976562 1/1                      1
+  0.777344 7/9                      9
+  0.996094 1/1                      1
+  0.871094 7/8                      8
+  0.351562 5/14                    14
+  0.285156 2/7                      7
+  0.890625 8/9                      9
+  0.742188 3/4                      4
+  0.078125 1/13                    13
+  0.058594 1/15                    15
+  0.460938 6/13                    13
+  0.027344 0/1                      1
+  0.593750 3/5                      5
+  0.613281 8/13                    13
+  0.398438 2/5                      5
+  0.578125 7/12                    12
+  0.816406 9/11                    11
+  0.304688 4/13                    13
+  0.261719 4/15                    15
+  0.042969 1/15                    15
+  0.492188 1/2                      2
+  0.003906 0/1                      1
+  0.800781 4/5                      5
+  0.382812 5/13                    13
+  0.835938 5/6                      6
+  0.125000 1/8                      8
+  0.441406 4/9                      9
+  0.675781 2/3                      3
+  0.128906 1/8                      8
+  0.375000 3/8                      8
+  0.183594 2/11                    11
+  0.652344 9/14                    14
+  0.378906 3/8                      8
+  0.527344 8/15                    15
+  0.980469 1/1                      1
+  0.121094 1/8                      8
+  0.828125 5/6                      6
+  0.152344 2/13                    13
+  0.718750 5/7                      7
+  0.730469 11/15                   15
+  0.113281 1/9                      9
+  0.218750 2/9                      9
+  0.199219 1/5                      5
+  0.722656 8/11                    11
+  0.660156 2/3                      3
+  0.671875 2/3                      3
+  0.371094 3/8                      8
+  0.308594 4/13                    13
+  0.160156 2/13                    13
+  0.417969 5/12                    12
+  0.175781 2/11                    11
+  0.335938 1/3                      3
+  0.761719 10/13                   13
+  0.437500 4/9                      9
+  0.945312 14/15                   15
+  0.097656 1/10                    10
+  0.324219 1/3                      3
+  0.640625 9/14                    14
+  0.695312 9/13                    13
+  0.554688 5/9                      9
+  0.273438 3/11                    11
+  0.972656 1/1                      1
+  0.171875 1/6                      6
+  0.328125 1/3                      3
+  0.699219 7/10                    10
+  0.203125 1/5                      5
+  0.035156 1/15                    15
+  0.445312 4/9                      9
+  0.019531 0/1                      1
+  0.480469 7/15                    15
+  0.433594 3/7                      7
+  0.839844 11/13                   13
+  0.550781 5/9                      9
+  0.632812 7/11                    11
+  0.898438 9/10                    10
+  0.933594 14/15                   15
+  0.617188 8/13                    13
+  0.925781 12/13                   13
+  0.523438 8/15                    15
+  0.070312 1/14                    14
+  0.847656 11/13                   13
+  0.402344 2/5                      5
+  0.949219 14/15                   15
+  0.050781 1/15                    15
+  0.621094 5/8                      8
+  0.265625 4/15                    15
+  0.414062 5/12                    12
+  0.812500 9/11                    11
+  0.843750 11/13                   13
+  0.320312 4/13                    13
+  0.605469 3/5                      5
+  0.691406 9/13                    13
+  0.964844 14/15                   15
+  0.789062 11/14                   14
+  0.164062 1/6                      6
+  0.703125 7/10                    10
+  0.109375 1/9                      9
+  0.570312 4/7                      7
+  0.644531 9/14                    14
+  0.253906 1/4                      4
+  0.769531 10/13                   13
+  0.210938 3/14                    14
+  0.105469 1/10                    10
+  0.464844 7/15                    15
+  0.546875 6/11                    11
+  0.195312 1/5                      5
+  0.808594 4/5                      5
+  0.988281 1/1                      1
+  0.167969 1/6                      6
+  0.062500 1/15                    15
+  0.066406 1/15                    15
+  0.984375 1/1                      1
+  0.046875 1/15                    15
+  0.953125 14/15                   15
+  0.085938 1/12                    12
+  0.773438 10/13                   13
+  0.910156 10/11                   11
+  0.406250 2/5                      5
+  0.683594 9/13                    13
+  0.289062 2/7                      7
+  0.476562 7/15                    15
+  0.515625 1/2                      2
+  0.394531 2/5                      5
+  0.855469 6/7                      7
+  0.457031 5/11                    11
+  0.468750 7/15                    15
+  0.851562 11/13                   13
+  0.687500 9/13                    13
+  0.425781 3/7                      7
+  0.804688 4/5                      5
+  0.332031 1/3                      3
+  0.488281 1/2                      2
+  0.507812 1/2                      2
+  0.230469 3/13                    13
+  0.031250 0/1                      1
+  0.539062 7/13                    13
+  0.511719 1/2                      2
+  0.496094 1/2                      2
+  0.820312 9/11                    11
+  0.359375 5/14                    14
+  0.710938 5/7                      7
+  0.015625 0/1                      1
+  0.726562 8/11                    11
+  0.207031 1/5                      5
+  0.628906 5/8                      8
+  0.882812 8/9                      9
+  0.039062 1/15                    15
+  0.765625 10/13                   13
+  0.242188 1/4                      4
+  0.792969 4/5                      5
+  0.148438 2/13                    13
+  0.140625 1/7                      7
+  0.187500 2/11                    11
+  0.367188 4/11                    11
+  0.226562 3/13                    13
+  0.992188 1/1                      1
+  0.074219 1/13                    13
+  0.917969 11/12                   12
+  0.300781 3/10                    10
+  0.277344 3/11                    11
+  0.679688 9/13                    13
+  0.343750 1/3                      3
+  0.222656 2/9                      9
+  0.082031 1/12                    12
+  0.101562 1/10                    10
+  0.023438 0/1                      1
+  0.894531 9/10                    10
+  0.347656 5/14                    14
+  0.636719 7/11                    11
+  0.011719 0/1                      1
+  0.363281 4/11                    11
+  0.316406 4/13                    13
+  0.421875 5/12                    12
+  0.000000 0/1                      1
+  0.566406 4/7                      7
+  0.246094 1/4                      4
+  0.007812 0/1                      1
+  0.269531 4/15                    15
+  0.574219 4/7                      7
+  0.707031 7/10                    10
+  0.859375 6/7                      7
+  0.250000 1/4                      4
+  0.738281 11/15                   15
+  0.714844 5/7                      7
+  0.054688 1/15                    15
+  0.386719 5/13                    13
+  0.132812 2/15                    15
+  0.535156 8/15                    15
+  0.503906 1/2                      2
+  0.558594 5/9                      9
+  0.937500 14/15                   15
+  0.878906 7/8                      8
+  0.542969 6/11                    11
+  0.296875 3/10                    10
+  0.832031 5/6                      6
+  0.531250 8/15                    15
+  0.585938 7/12                    12
+  0.582031 7/12                    12
+  0.757812 3/4                      4
+  0.500000 1/2                      2
+  0.957031 14/15                   15
+  0.941406 14/15                   15
+  0.117188 1/9                      9
+  0.796875 4/5                      5
+  0.144531 1/7                      7
+  0.656250 2/3                      3
+  0.750000 3/4                      4
+  0.429688 3/7                      7
+  0.886719 8/9                      9
+  0.257812 1/4                      4
 </pre></div>
 </div>
 </div>
@@ -1186,36 +1820,42 @@ f(x) &amp; = a^x \bmod N \\
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="more_dynamics.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">【課題】量子ダイナミクスシミュレーション・続</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="spectrum_estimation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">【課題】位相推定によるスペクトル分解</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="more_dynamics.html" title="previous page">【課題】量子ダイナミクスシミュレーション・続</a>
-    <a class='right-next' id="next-link" href="spectrum_estimation.html" title="next page">【課題】位相推定によるスペクトル分解</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

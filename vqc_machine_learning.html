@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>量子機械学習を使った新しい素粒子現象の探索 &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】量子カーネルを使った新現象の分類" href="qkc_machine_learning.html" />
     <link rel="prev" title="【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける" href="vqe_tracking.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#a-id-introduction-a">
    はじめに
@@ -473,18 +485,161 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>量子機械学習を使った新しい素粒子現象の探索</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-introduction-a">
+   はじめに
+   <a id="introduction">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-ml-a">
+   機械学習と深層学習
+   <a id="ml">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-qml-a">
+   量子回路学習
+   <a id="qml">
+   </a>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-example-a">
+   初歩的な例
+   <a id="example">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-data-a">
+     学習データの準備
+     <a id="func_data">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-state-preparation-a">
+     量子状態の生成
+     <a id="func_state_preparation">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-variational-form-a">
+     変分フォームを使った状態変換
+     <a id="func_variational_form">
+     </a>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#u-boldsymbol-theta">
+       変分量子回路
+       <span class="math notranslate nohighlight">
+        \(U(\boldsymbol{\theta})\)
+       </span>
+       の構成
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       2量子ビットゲートの作成
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       回転ゲートと
+       <span class="math notranslate nohighlight">
+        \(U(\boldsymbol{\theta})\)
+       </span>
+       の作成
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-func-measurement-a">
+     測定とモデル出力
+     <a id="func_measurement">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-id-susy-a">
+   素粒子現象の探索への応用
+   <a id="susy">
+   </a>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-data-a">
+     学習データの準備
+     <a id="susy_data">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-state-preparation-a">
+     量子状態の生成
+     <a id="susy_state_preparation">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-variational-form-a">
+     変分フォームを使った状態変換
+     <a id="susy_variational_form">
+     </a>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-id-susy-measurement-a">
+     測定とモデル出力
+     <a id="susy_measurement">
+     </a>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>量子機械学習を使った新しい素粒子現象の探索<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、変分量子アルゴリズムの応用として提案された、<strong>量子回路学習</strong>と呼ばれる学習手法<span id="id2">[<a class="reference internal" href="#id34"><span>MNKF18</span></a>]</span>です。</p>
+<p>この実習では、<strong>量子・古典ハイブリッドアルゴリズム</strong>の応用である<strong>量子機械学習</strong>の基本的な実装を学んだのち、その活用例として、<strong>素粒子実験での新粒子探索</strong>への応用を考えます。ここで学ぶ量子機械学習の手法は、変分量子アルゴリズムの応用として提案された、<strong>量子回路学習</strong>と呼ばれる学習手法<span id="id2">[<a class="reference internal" href="#id34" title="K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii. Quantum circuit learning. Phys. Rev. A, 98:032309, Sep 2018. URL: https://link.aps.org/doi/10.1103/PhysRevA.98.032309, doi:10.1103/PhysRevA.98.032309.">MNKF18</a>]</span>です。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
@@ -522,7 +677,7 @@
 <h2><a class="toc-backref" href="#id51">はじめに <a id='introduction'></a></a><a class="headerlink" href="#a-id-introduction-a" title="Permalink to this headline">¶</a></h2>
 <p>近年、機械学習の分野において<strong>深層学習</strong>（<strong>ディープラーニング</strong>）が注目を浴びています。ディープラーニングは<strong>ニューラルネットワーク</strong>の隠れ層を多層にすることで、入力と出力の間の複雑な関係を学習することができます。その学習結果を使って、新しい入力データに対して出力を予測することが可能になります。ここで学習する量子機械学習アルゴリズムは、このニューラルネットワークの部分を変分量子回路に置き換えたものです。つまり、ニューラルネットワークでの各ニューロン層への重みを調節する代わりに、変分量子回路のパラメータ（例えば回転ゲートの回転角）を調整することで入力と出力の関係を学習しようという試みです。
 量子力学の重ね合わせの原理から、<strong>指数関数的に増える多数の計算基底</strong>を使って状態を表現できることが量子コンピュータの強みです。この強みを生かすことで、データ間の複雑な相関を学習できる可能性が生まれます。そこに量子機械学習の最も大きな強みがあると考えられています。</p>
-<p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<span id="id4">[<a class="reference internal" href="#id35"><span>HavlivcekCorcolesT+19</span></a>]</span>として出版されています。</p>
+<p>多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (<em>Noisy Intermediate-Scale Quantum</em>デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文<span id="id4">[<a class="reference internal" href="#id35" title="Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. Nature, 567(7747):209–212, 2019. URL: https://doi.org/10.1038/s41586-019-0980-2, doi:10.1038/s41586-019-0980-2.">HavlivcekCorcolesT+19</a>]</span>として出版されています。</p>
 </div>
 <div class="section" id="a-id-ml-a">
 <h2><a class="toc-backref" href="#id52">機械学習と深層学習 <a id='ml'></a></a><a class="headerlink" href="#a-id-ml-a" title="Permalink to this headline">¶</a></h2>
@@ -573,7 +728,7 @@ w'=w-\epsilon\Delta_w L(\mathbf{w})
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
 <span class="kn">from</span> <span class="nn">qiskit.utils</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
 <span class="kn">from</span> <span class="nn">qiskit_machine_learning.algorithms.classifiers</span> <span class="kn">import</span> <span class="n">VQC</span>
@@ -621,7 +776,7 @@ w'=w-\epsilon\Delta_w L(\mathbf{w})
 </div>
 <div class="section" id="a-id-func-state-preparation-a">
 <h3><a class="toc-backref" href="#id56">量子状態の生成<a id='func_state_preparation'></a></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
-<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献<span id="id5">[<a class="reference internal" href="#id34"><span>MNKF18</span></a>]</span>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
+<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献<span id="id5">[<a class="reference internal" href="#id34" title="K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii. Quantum circuit learning. Phys. Rev. A, 98:032309, Sep 2018. URL: https://link.aps.org/doi/10.1103/PhysRevA.98.032309, doi:10.1103/PhysRevA.98.032309.">MNKF18</a>]</span>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{i\theta Z_j/2}\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
@@ -749,7 +904,8 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
     <span class="n">cost_total</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)):</span>
         <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
         <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
         <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
         <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train_noise</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">exp_2Z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
@@ -774,7 +930,8 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">:</span>
     <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
     <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
     <span class="n">y_pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_2Z</span><span class="p">)</span>
@@ -812,11 +969,11 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <p>次の実習課題では、素粒子物理の基本理論（<strong>標準模型</strong>と呼ばれる）を超える新しい理論の枠組みとして知られている「<strong>超対称性理論</strong>」（<em>Supersymmetry</em>、略してSUSY）で存在が予言されている新粒子の探索を考えてみます。</p>
 <p>左下の図は、グルーオン<span class="math notranslate nohighlight">\(g\)</span>が相互作用してヒッグス粒子<span class="math notranslate nohighlight">\(h\)</span>を作り、それが2つのSUSY粒子<span class="math notranslate nohighlight">\(\chi^+\chi^-\)</span>に崩壊する過程を示しています。<span class="math notranslate nohighlight">\(\chi^+\)</span>粒子はさらに崩壊し、最終的には<span class="math notranslate nohighlight">\(\ell^+\ell^-\nu\nu\chi^0\chi^0\)</span>という終状態に落ち着くとします。右下の図は標準模型で存在が知られている過程を表していて、クォーク<span class="math notranslate nohighlight">\(q\)</span>と反クォーク<span class="math notranslate nohighlight">\(\bar{q}\)</span>が相互作用して<span class="math notranslate nohighlight">\(W\)</span>ボソン対を作り、それが<span class="math notranslate nohighlight">\(\ell^+\ell^-\nu\nu\)</span>に崩壊しています。</p>
 <a class="bg-primary mb-1 reference internal image-reference" href="_images/susy_bg.png"><img alt="susy_bg" class="bg-primary mb-1 align-center" src="_images/susy_bg.png" style="width: 700px;" /></a>
-<p>(図の引用：参考文献<span id="id8">[<a class="reference internal" href="#id36"><span>BSW14</span></a>]</span>)</p>
+<p>(図の引用：参考文献<span id="id8">[<a class="reference internal" href="#id36" title="P. Baldi, P. Sadowski, and D. Whiteson. Searching for exotic particles in high-energy physics with deep learning. Nature Communications, 5(1):4308, 2014. URL: https://doi.org/10.1038/ncomms5308, doi:10.1038/ncomms5308.">BSW14</a>]</span>)</p>
 <p>左と右の過程を比べると、終状態の違いは<span class="math notranslate nohighlight">\(\chi^0\chi^0\)</span>が存在しているかどうかだけですね。この<span class="math notranslate nohighlight">\(\chi^0\)</span>という粒子は検出器と相互作用しないと考えられているので、この二つの過程の違いは（大雑把に言うと）実際の検出器では観測できないエネルギーの大きさにしかなく、探索することが難しい問題と考えることができます。以上のような状況で、この二つの物理過程を量子回路学習で分類できるかどうかを試みます。</p>
 <div class="section" id="a-id-susy-data-a">
 <h3><a class="toc-backref" href="#id63">学習データの準備<a id='susy_data'></a></a><a class="headerlink" href="#a-id-susy-data-a" title="Permalink to this headline">¶</a></h3>
-<p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<span id="id9">[<a class="reference internal" href="#id36"><span>BSW14</span></a>]</span>に委ねますが、ある特定のSUSY粒子生成反応と、それに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
+<p>学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する<a class="reference external" href="https://archive.ics.uci.edu/ml/index.php">機械学習レポジトリ</a>の中の<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/SUSY">SUSYデータセット</a>です。このデータセットの詳細は文献<span id="id9">[<a class="reference internal" href="#id36" title="P. Baldi, P. Sadowski, and D. Whiteson. Searching for exotic particles in high-energy physics with deep learning. Nature Communications, 5(1):4308, 2014. URL: https://doi.org/10.1038/ncomms5308, doi:10.1038/ncomms5308.">BSW14</a>]</span>に委ねますが、ある特定のSUSY粒子生成反応と、それに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。</p>
 <p>探索に役立つ運動学的変数をどう選ぶかはそれ自体が大事な研究トピックですが、ここでは簡単のため、前もって役立つことを経験上知っている変数を使います。以下で、学習に使う運動学的変数を選んで、その変数を指定したサンプルを訓練用とテスト用に準備します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -880,7 +1037,7 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 </div>
 <div class="section" id="a-id-susy-state-preparation-a">
 <h3><a class="toc-backref" href="#id64">量子状態の生成<a id='susy_state_preparation'></a></a><a class="headerlink" href="#a-id-susy-state-preparation-a" title="Permalink to this headline">¶</a></h3>
-<p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(\mathbf{x}_i)\)</span>の作成ですが、ここでは参考文献<span id="id10">[<a class="reference internal" href="#id35"><span>HavlivcekCorcolesT+19</span></a>]</span>に従い、</p>
+<p>次は特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(\mathbf{x}_i)\)</span>の作成ですが、ここでは参考文献<span id="id10">[<a class="reference internal" href="#id35" title="Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. Nature, 567(7747):209–212, 2019. URL: https://doi.org/10.1038/s41586-019-0980-2, doi:10.1038/s41586-019-0980-2.">HavlivcekCorcolesT+19</a>]</span>に従い、</p>
 <div class="math notranslate nohighlight">
 \[
 U_{\phi_{\{k\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
@@ -1047,36 +1204,42 @@ U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="qkc_machine_learning.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">【課題】量子カーネルを使った新現象の分類</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="vqe_tracking.html" title="previous page">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a>
-    <a class='right-next' id="next-link" href="qkc_machine_learning.html" title="next page">【課題】量子カーネルを使った新現象の分類</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

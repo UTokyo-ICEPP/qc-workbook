@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>【課題】量子相関を調べる &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="単純な量子回路をゼロから書く" href="circuit_from_scratch.html" />
     <link rel="prev" title="CHSH不等式の破れを確認する" href="chsh_inequality.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#qc">
    QCシミュレータの使い方
@@ -389,16 +401,75 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>【課題】量子相関を調べる</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qc">
+   QCシミュレータの使い方
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   測定基底の変換
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   観測量の期待値とその計算法
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chsh">
+   CHSH不等式を見直す
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   問題: ベル状態と可分状態の違い
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sigma">
+     一般の
+     <span class="math notranslate nohighlight">
+      \(\sigma\)
+     </span>
+     演算子の期待値
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     問題
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>【課題】量子相関を調べる<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>第一回の実習ではCHSH不等式の破れを調べるために、2つの量子ビットの相関関数<span class="math notranslate nohighlight">\(C^{i} \, (i=0,1,2,3)\)</span>という量を量子コンピュータを使って計算しました。この課題では、この量をもう少し細かく調べてみましょう。</p>
 <div class="contents local topic" id="id2">
@@ -426,7 +497,7 @@
 \[
 2^3\, \mathrm{(bytes / dof)} \times 2^{n+1}\, \mathrm{(dof)} = 2^{n+4}\, \mathrm{(bytes)}
 \]</div>
-<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに<span class="math notranslate nohighlight">\(n=65\)</span>のものが存在するので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。</p>
+<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに<span class="math notranslate nohighlight">\(n=127\)</span>のものが存在するので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。</p>
 <p>しかし、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a class="reference external" href="https://quantiki.org/wiki/list-qc-simulators">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
 <p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
 <p>Qiskitのシミュレータには<code class="docutils literal notranslate"><span class="pre">Aer</span></code>というオブジェクトからアクセスします。<code class="docutils literal notranslate"><span class="pre">Aer</span></code>は実習で登場した<code class="docutils literal notranslate"><span class="pre">IBMQ</span></code>と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を取り出します。</p>
@@ -436,7 +507,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Bounds</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
@@ -451,7 +522,8 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータをバックエンドとして使うときは、IBMQのプロバイダではなくAerのget_backend()を呼ぶ</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">simulator</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -466,36 +538,61 @@
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">ic</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ic</span><span class="p">))</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit0&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
-    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータにはショット数の制限がないので、時間の許す限りいくらでも大きい値を使っていい</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
-    
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 
+<span class="c1"># 実習と同じく transpile() - 今は「おまじない」と思ってよい</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="c1"># シミュレータもバックエンドと同じように振る舞うので、runメソッドで回路とショット数を受け取り、ジョブオブジェクトを返す</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+
+<span class="c1"># シミュレータから渡されたジョブオブジェクトは実機のジョブと全く同じように扱える</span>
 <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
-<span class="n">C</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">sim_result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">circuits</span><span class="p">):</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">sim_result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
-    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
     
-    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
+    <span class="n">C</span><span class="p">[</span><span class="n">ic</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;00&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+<span class="n">C</span> <span class="o">/=</span> <span class="n">shots</span>
     
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;S =&#39;</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
@@ -503,24 +600,24 @@
 </div>
 </div>
 </div>
-<p>上のように、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は実機と同様に<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数で実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った<code class="docutils literal notranslate"><span class="pre">job_monitor()</span></code>関数を使用していません。また、シミュレータにはノイズがない<a class="footnote-reference brackets" href="#simulator-noise" id="id3">1</a>ので、<span class="math notranslate nohighlight">\(S\)</span>の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。</p>
+<p>上のように、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は実機と同様に<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った<code class="docutils literal notranslate"><span class="pre">job_monitor()</span></code>関数を使用していません。また、シミュレータにはノイズがない<a class="footnote-reference brackets" href="#simulator-noise" id="id3">1</a>ので、<span class="math notranslate nohighlight">\(S\)</span>の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。</p>
 </div>
 <div class="section" id="id4">
 <h2><a class="toc-backref" href="#id12">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>さて、おさらいをすると、上の<span class="math notranslate nohighlight">\(C^{0,1,2,3}\)</span>を計算する4つの回路は以下のようなものでした。</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<img alt="_images/nonlocal_correlations_8_0.png" src="_images/nonlocal_correlations_8_0.png" />
-<img alt="_images/nonlocal_correlations_8_1.png" src="_images/nonlocal_correlations_8_1.png" />
-<img alt="_images/nonlocal_correlations_8_2.png" src="_images/nonlocal_correlations_8_2.png" />
-<img alt="_images/nonlocal_correlations_8_3.png" src="_images/nonlocal_correlations_8_3.png" />
+<img alt="_images/nonlocal_correlations_9_0.png" src="_images/nonlocal_correlations_9_0.png" />
+<img alt="_images/nonlocal_correlations_9_1.png" src="_images/nonlocal_correlations_9_1.png" />
+<img alt="_images/nonlocal_correlations_9_2.png" src="_images/nonlocal_correlations_9_2.png" />
+<img alt="_images/nonlocal_correlations_9_3.png" src="_images/nonlocal_correlations_9_3.png" />
 </div>
 </div>
 <p>ベル状態を作るところまですべての回路で共通で、その後それぞれ異なる角度の<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけています。実習では深く立ち入りませんでしたが、この<span class="math notranslate nohighlight">\(R_y\)</span>ゲートはベル状態を<span class="math notranslate nohighlight">\(\{\ket{0}, \ket{1}\}\)</span>とは異なる基底で測定するために置かれています。どういうことか、以下で説明します。</p>
 <p>ここまで「測定」とはレジスタの量子状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>からビット列<span class="math notranslate nohighlight">\(j\)</span>を確率<span class="math notranslate nohighlight">\(|c_j|^2\)</span>で得る行為である、と説明してきました。しかし、本来「測定」はもっと一般的な概念です。それを理解するために、まず、量子力学的には計算基底状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>は何ら特別な状態ではないということを理解しておきましょう。</p>
 <p>例えば1量子ビットにおいて、計算基底状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、以下のような状態<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>を考えます。</p>
 <div class="math notranslate nohighlight" id="equation-theta-ket-def">
-<span class="eqno">(1)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{\theta} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
+<span class="eqno">(2)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{\theta} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
 \ket{\theta + \pi} := R_y(\theta)\ket{1} = -\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}\end{split}\]</div>
 <p>すると、</p>
 <div class="math notranslate nohighlight">
@@ -536,7 +633,7 @@
 \]</div>
 <p>と表現されるならば、「基底<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>についての測定」という操作を考えることができます。<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対してそのような測定をすると、状態<span class="math notranslate nohighlight">\(\ket{a}\)</span>が確率<span class="math notranslate nohighlight">\(|\alpha|^2\)</span>で、状態<span class="math notranslate nohighlight">\(\ket{b}\)</span>が確率<span class="math notranslate nohighlight">\(|\beta|^2\)</span>で得られます。</p>
 <p>量子計算においても、アルゴリズムの一部として、計算の結果実現した状態を特定の基底で測定するということが多々あります。ところが、ここで若干問題があります。量子コンピュータは実装上、計算基底でしか測定ができないのです。量子力学の理論的には特別でない<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、量子コンピュータという実態にとっては具体的な対応物があるのです。</p>
-<p>そこで、量子計算では、状態を任意の基底で測定することを諦め、反対に状態を変化させてしまいます。例えば、本当は上の<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>という基底で量子ビットの状態<span class="math notranslate nohighlight">\(\ket{\psi} = \alpha \ket{\theta} + \beta \ket{\theta + \pi}\)</span>を測定したいとします。しかし計算基底でしか測定ができないので、代わりに<span class="math notranslate nohighlight">\(R_y(-\theta)\)</span>を<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>にかけます。すると式<a class="reference internal" href="#equation-theta-ket-def">(1)</a>から</p>
+<p>そこで、量子計算では、状態を任意の基底で測定することを諦め、反対に状態を変化させてしまいます。例えば、本当は上の<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>という基底で量子ビットの状態<span class="math notranslate nohighlight">\(\ket{\psi} = \alpha \ket{\theta} + \beta \ket{\theta + \pi}\)</span>を測定したいとします。しかし計算基底でしか測定ができないので、代わりに<span class="math notranslate nohighlight">\(R_y(-\theta)\)</span>を<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>にかけます。すると式<a class="reference internal" href="#equation-theta-ket-def">(2)</a>から</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 R_y(-\theta)\ket{\theta} = \ket{0} \\
@@ -587,7 +684,7 @@ A \ket{\phi_j} = a_j \ket{\phi_j}
 \[
 C = P_{00} - P_{01} - P_{10} + P_{11}
 \]</div>
-<p>という量を計算しました。ここで、<span class="math notranslate nohighlight">\(P_{lm}\)</span>は2つの量子ビットでそれぞれ<span class="math notranslate nohighlight">\(l, m \, (=0,1)\)</span>が得られる確率でした。実はこの量<span class="math notranslate nohighlight">\(C\)</span>は、2ビットレジスタにおけるある観測量の期待値として捉えることができます。</p>
+<p>という量を計算しました。ここで、<span class="math notranslate nohighlight">\(P_{lm}\)</span>は2つの量子ビットでそれぞれ<span class="math notranslate nohighlight">\(l, m \, (=0,1)\)</span>が得られる確率でした（コードで言えば<code class="docutils literal notranslate"><span class="pre">counts.get('lm')</span> <span class="pre">/</span> <span class="pre">shots</span></code>に対応）。実はこの量<span class="math notranslate nohighlight">\(C\)</span>は、2ビットレジスタにおけるある観測量の期待値として捉えることができます。</p>
 <p>まず、1つの量子ビットに対して、固有値が<span class="math notranslate nohighlight">\(\pm 1\)</span>であるような観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を考えます。そのような<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>は無数に存在し、固有ベクトルで区別できます。<span class="math notranslate nohighlight">\(\theta\)</span>は固有ベクトルを決める何らかのパラメータです<a class="footnote-reference brackets" href="#specifying-eigenvectors" id="id8">4</a>。例えば<span class="math notranslate nohighlight">\(\sigma^0\)</span>という観測量を、計算基底を固有ベクトルとして、</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -666,7 +763,8 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
 <span class="c1"># Minimize using scipy.optimize.minimize</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">quantum_S</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;trust-constr&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;argmax |S|: kappa=0, lambda=</span><span class="si">{:.2f}</span><span class="s1">pi, mu=</span><span class="si">{:.2f}</span><span class="s1">pi, nu=</span><span class="si">{:.2f}</span><span class="s1">pi&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span>
+<span class="n">xopt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;argmax |S|: kappa=0, lambda=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi, mu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi, nu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -685,7 +783,7 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 \end{split}\]</div>
 <p>したがって、</p>
 <div class="math notranslate nohighlight" id="equation-quantum-correlation">
-<span class="eqno">(2)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(3)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
 \bra{\Psi} \sigma^{\phi}_B \sigma^{\theta}_A \ket{\Psi} &amp; = \bra{\Psi'} \sigma^{0}_B \sigma^{0}_A \ket{\Psi'} \\
 &amp; = \cos^2\left(\frac{\theta - \phi}{2}\right) - \sin^2\left(\frac{\theta - \phi}{2}\right) \\
 &amp; = \cos(\theta - \phi)
@@ -698,7 +796,7 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define theta and phi values</span>
-<span class="n">thetas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span>
+<span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
 <span class="n">theta_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi/4$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi/2$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$3\pi/4$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">]</span>
 <span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -706,7 +804,7 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">itheta</span><span class="p">,</span> <span class="n">iphi</span><span class="p">))</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1">##################</span>
         <span class="c1">### EDIT BELOW ###</span>
@@ -725,7 +823,8 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <span class="c1"># Execute the circuit in qasm_simulator and retrieve the results</span>
 <span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
 <span class="c1"># Plot C versus (theta - phi) for each theta</span>
@@ -735,7 +834,7 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span><span class="p">])</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span><span class="p">])</span>
 
         <span class="c1">##################</span>
         <span class="c1">### EDIT BELOW ###</span>
@@ -758,7 +857,7 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 </div>
 </div>
 </div>
-<p>式<a class="reference internal" href="#equation-quantum-correlation">(2)</a>では、2体系の期待値がパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(\phi\)</span>だけを含む関数の積として記述できないことがはっきり示されています。これはベル状態の持つエンタングルメントの現れで、2体系をバラバラに考えることができないということを言っています。</p>
+<p>式<a class="reference internal" href="#equation-quantum-correlation">(3)</a>では、2体系の期待値がパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(\phi\)</span>だけを含む関数の積として記述できないことがはっきり示されています。これはベル状態の持つエンタングルメントの現れで、2体系をバラバラに考えることができないということを言っています。</p>
 <p>それでは、<span class="math notranslate nohighlight">\(C\)</span>や<span class="math notranslate nohighlight">\(S\)</span>をエンタングルメントのない状態（可分状態）に対して計算してみたら、何が得られるでしょうか。例えば、ベル状態<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>の代わりに、「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態を考えます。</p>
 <p>まずは<span class="math notranslate nohighlight">\(|S(\kappa, \lambda, \mu, \nu)|\)</span>の最大値を求めます。</p>
 <div class="cell tag_remove-output docutils container">
@@ -812,7 +911,8 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="c1"># Minimize using scipy.optimize.minimize</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">classical_S</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;trust-constr&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;argmax |S|: kappa=</span><span class="si">{:.3f}</span><span class="s1">pi, lambda=</span><span class="si">{:.3f}</span><span class="s1">pi, mu=</span><span class="si">{:.3f}</span><span class="s1">pi, nu=</span><span class="si">{:.3f}</span><span class="s1">pi&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span>
+<span class="n">xopt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;argmax |S|: kappa=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, lambda=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, mu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, nu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max |S|:&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -825,8 +925,8 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">circuit_00</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">itheta</span><span class="p">,</span> <span class="n">iphi</span><span class="p">))</span>
-        <span class="n">circuit_11</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_11&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">itheta</span><span class="p">,</span> <span class="n">iphi</span><span class="p">))</span>
+        <span class="n">circuit_00</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">_00&#39;</span><span class="p">)</span>
+        <span class="n">circuit_11</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">_11&#39;</span><span class="p">)</span>
 
         <span class="c1">##################</span>
         <span class="c1">### EDIT BELOW ###</span>
@@ -847,7 +947,8 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 
 <span class="c1"># Execute the circuit in qasm_simulator and retrieve the results</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
 <span class="c1"># Plot C versus (theta - phi) for each theta</span>
@@ -927,36 +1028,42 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="chsh_inequality.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">CHSH不等式の破れを確認する</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="circuit_from_scratch.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">単純な量子回路をゼロから書く</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="chsh_inequality.html" title="previous page">CHSH不等式の破れを確認する</a>
-    <a class='right-next' id="next-link" href="circuit_from_scratch.html" title="next page">単純な量子回路をゼロから書く</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CHSH不等式の破れを確認する &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】量子相関を調べる" href="nonlocal_correlations.html" />
     <link rel="prev" title="量子コンピューティング・ワークブックへようこそ！" href="welcome.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
    本当に量子コンピュータなのか？
@@ -373,103 +385,200 @@
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id10">
+     量子計算結果の解析
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#common-gates">
      よく使うゲート
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id11">
+      <a class="reference internal nav-link" href="#id12">
        1量子ビットの操作
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id12">
+      <a class="reference internal nav-link" href="#id13">
        2量子ビットの操作
       </a>
      </li>
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
+    <a class="reference internal nav-link" href="#id14">
      回路図の書き方と読み方
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id14">
+  <a class="reference internal nav-link" href="#id15">
    CHSH不等式を計算する回路を書く
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id15">
+  <a class="reference internal nav-link" href="#id16">
    回路を実機で実行する
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id16">
+  <a class="reference internal nav-link" href="#id17">
    量子測定結果の解析
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id17">
+  <a class="reference internal nav-link" href="#id18">
    参考文献
   </a>
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>CHSH不等式の破れを確認する</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   本当に量子コンピュータなのか？
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   CHSH不等式
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qiskit">
+   Qiskitの基本構造
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     量子ビット、量子レジスタ
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     ゲート、回路、測定
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     量子計算結果の解析
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#common-gates">
+     よく使うゲート
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id12">
+       1量子ビットの操作
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id13">
+       2量子ビットの操作
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     回路図の書き方と読み方
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id15">
+   CHSH不等式を計算する回路を書く
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id16">
+   回路を実機で実行する
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id17">
+   量子測定結果の解析
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id18">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="chsh">
+  <div class="tex2jax_ignore mathjax_ignore section" id="chsh">
 <h1>CHSH不等式の破れを確認する<a class="headerlink" href="#chsh" title="Permalink to this headline">¶</a></h1>
 <p>この最初の実習では、量子コンピュータにおいて量子力学的状態、特に「<strong>エンタングルメント</strong>」が実現しているか検証してみましょう。実習を通じて量子力学の概念と量子コンピューティングの基礎を紹介していきます。</p>
 <div class="contents local topic" id="id1">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id2" id="id57">本当に量子コンピュータなのか？</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id58">CHSH不等式</a></p></li>
-<li><p><a class="reference internal" href="#qiskit" id="id59">Qiskitの基本構造</a></p>
+<li><p><a class="reference internal" href="#id2" id="id58">本当に量子コンピュータなのか？</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id59">CHSH不等式</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id60">Qiskitの基本構造</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id5" id="id60">量子ビット、量子レジスタ</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id61">ゲート、回路、測定</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id62">よく使うゲート</a></p>
+<li><p><a class="reference internal" href="#id5" id="id61">量子ビット、量子レジスタ</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id62">ゲート、回路、測定</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id63">量子計算結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#common-gates" id="id64">よく使うゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id11" id="id63">1量子ビットの操作</a></p></li>
-<li><p><a class="reference internal" href="#id12" id="id64">2量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id65">1量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id66">2量子ビットの操作</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id13" id="id65">回路図の書き方と読み方</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id67">回路図の書き方と読み方</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id14" id="id66">CHSH不等式を計算する回路を書く</a></p></li>
-<li><p><a class="reference internal" href="#id15" id="id67">回路を実機で実行する</a></p></li>
-<li><p><a class="reference internal" href="#id16" id="id68">量子測定結果の解析</a></p></li>
-<li><p><a class="reference internal" href="#id17" id="id69">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id68">CHSH不等式を計算する回路を書く</a></p></li>
+<li><p><a class="reference internal" href="#id16" id="id69">回路を実機で実行する</a></p></li>
+<li><p><a class="reference internal" href="#id17" id="id70">量子測定結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#id18" id="id71">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id57">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id58">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>このワークブックの主旨が量子コンピュータ（QC）を使おう、ということですが、QCなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソースとして使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQCなのでしょうか。どうしたらそれが調べられるでしょうか。</p>
 <p>QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。</p>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id58">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式<span id="id4">[<a class="reference internal" href="#id25"><span>CHSH69</span></a>,<a class="reference internal" href="#id20"><span>NC00</span></a>]</span>の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
-<p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>を利用します。</p>
+<h2><a class="toc-backref" href="#id59">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式<span id="id4">[<a class="reference internal" href="#id26" title="John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. Phys. Rev. Lett., 23:880–884, Oct 1969. URL: https://link.aps.org/doi/10.1103/PhysRevLett.23.880, doi:10.1103/PhysRevLett.23.880.">CHSH69</a>, <a class="reference internal" href="#id21" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 2.6, pages 111-117. Cambridge University Press, 2000.">NC00</a>]</span>の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
+<p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>量子コンピュータを利用します。</p>
 </div>
 <div class="section" id="qiskit">
-<h2><a class="toc-backref" href="#id59">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id60">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
 <p>IBM Q System OneのQCで量子計算を実行するには、IBMの提供する<a class="reference external" href="https://qiskit.org/">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
 <ol class="simple">
-<li><p>使用する量子ビットの数を決める</p></li>
-<li><p>量子ビットに量子計算の操作（ゲート）をかけて、量子回路を作る</p></li>
+<li><p>使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る</p></li>
 <li><p>回路を実行して計算結果を得る。ここでは二通りのオプションがあり、</p>
 <ul class="simple">
 <li><p>回路をQCの実機に送り、実行させる。</p></li>
@@ -479,8 +588,9 @@
 <li><p>計算結果を解析する。</p></li>
 </ol>
 <p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="nonlocal_correlations.html"><span class="doc">第一回の課題</span></a>を参照してください。</p>
+<p>Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a class="reference external" href="https://qiskit.org/documentation/">Qiskitのドキュメンテーション</a>をあたってみましょう。</p>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id60">量子ビット、量子レジスタ</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id61">量子ビット、量子レジスタ</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。そして、量子ビットの集まりを量子レジスタと呼びます。</p>
 <p>量子レジスタは量子コンピュータ中で常に一つの「状態」にあります。量子レジスタの状態を物理学の習わしに従ってしばしば「ケット」という<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>のような記号で表します<a class="footnote-reference brackets" href="#mixed-state" id="id6">1</a>。量子力学に不慣れな方はこの記法で怯んでしまうかもしれませんが、ケット自体はただの記号なのであまり気にしないでください。別に「枠」なしで<span class="math notranslate nohighlight">\(\psi\)</span>と書いても、絵文字を使って🔱と書いても、何でも構いません。</p>
 <p>重要なのは各量子ビットに対して2つの<strong>基底状態</strong>が定義できることで、量子計算の習わしではそれらを<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>で表し、「計算基底」とも呼びます<a class="footnote-reference brackets" href="#basis" id="id7">2</a>。そして、量子ビットの任意の状態は、2つの複素数<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を使って</p>
@@ -534,7 +644,7 @@ e^{-i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>のように量子ビット数（この場合4）と名前（<code class="docutils literal notranslate"><span class="pre">'myregister'</span></code>）を指定して初期化します。初期状態では、量子ビットはすべて<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態にあります。レジスタオブジェクトはこのままではあまり使い道がなく、基本的には次に紹介する量子回路の一部として利用します。</p>
 </div>
 <div class="section" id="id9">
-<h3><a class="toc-backref" href="#id61">ゲート、回路、測定</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id62">ゲート、回路、測定</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>量子計算とは、端的に言えば、量子レジスタに特定の状態を生成し、その振幅を利用することと言えます。</p>
 <p>とは言っても、いきなり「えいや」と好きな量子状態を作れるわけではなく、パターンの決まった単純操作（<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える、ブロッホ球表現での位相角度<span class="math notranslate nohighlight">\(\phi\)</span>を増減させる、など）を順番に組み合わせて複雑な状態を作っていきます。この単純操作のオペレーションのことを一般に量子<strong>ゲート</strong>といい、ゲートの種類や順番を指定したプログラムに相当するものを量子<strong>回路</strong>と呼びます。</p>
 <p>Qiskitでは、量子回路を<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトで表します。</p>
@@ -549,17 +659,24 @@ e^{-i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{i\phi/2}\sin\frac{\theta}{2}\ket{1}
 </pre></div>
 </div>
 <p>とします。</p>
-<p>上で「振幅を利用する」という曖昧な表現をしましたが、それはいろいろな利用の仕方があるからです。しかし、どんな方法であっても、必ず量子レジスタの<strong>測定</strong>という操作を行います。量子コンピュータから何かしらの情報を得るための唯一の方法が測定です。</p>
+<p>上で「振幅を利用する」という曖昧な表現をしましたが、それはいろいろな利用の仕方があるからです。しかし、どんな方法であっても、必ず量子レジスタの<strong>測定</strong>という操作を行います。量子コンピュータから何かしらの情報を得るための唯一の方法が測定です。Qiskitでは<code class="docutils literal notranslate"><span class="pre">measure_all</span></code>というメソッドを使って測定を行います。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>測定は量子レジスタの状態を「覗き見る」ような操作ですが、一回の測定操作で具体的に起きることは、各量子ビットに対して0もしくは1という値が得られるというだけです。つまり、量子状態が<span class="math notranslate nohighlight">\(2^n\)</span>個の計算基底の複雑な重ね合わせであったとしても、測定をすると一つの計算基底に対応するビット列が出てくるだけということになります。しかも、一度測定してしまった量子ビットはもう状態を変えてしまっていて、複雑な重ね合わせは失われてしまいます。</p>
-<p>ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を何度も実行して測定を繰り返すと、その都度ランダムにビット列が決まります。ただし、このランダムさには法則があって、<strong>特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗</strong>となっています。つまり、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>があるとき、測定でビット列<span class="math notranslate nohighlight">\(k\)</span>が得られる確率は<span class="math notranslate nohighlight">\(|c_k|^2\)</span>です。</p>
-<p>したがって、回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていき、レジスタがどんな量子状態にあるのか見えてきます。しかし、わかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
-<p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
+<p>ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を繰り返し実行して測定すると、毎回ランダムにビット列が決まります。ただし、このランダムさには法則があって、<strong>特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗</strong>となっています。つまり、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>があるとき、測定でビット列<span class="math notranslate nohighlight">\(k\)</span>が得られる確率は<span class="math notranslate nohighlight">\(|c_k|^2\)</span>です。根本的にはこの確率の分布<span class="math notranslate nohighlight">\(|c_0|^2, |c_1|^2, \dots, |c_{2^n-1}|^2\)</span>が量子計算の結果です。</p>
 </div>
 <div class="section" id="id10">
-<h3><a class="toc-backref" href="#id62">よく使うゲート</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
-<p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明できます。</p>
-<div class="section" id="id11">
-<h4><a class="toc-backref" href="#id63">1量子ビットの操作</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id63">量子計算結果の解析</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていきます。例えば、2量子ビットの回路を1000回実行・測定して、ビット列00、01、10、11がそれぞれ246回、300回、103回、351回得られたとすれば、統計誤差を考慮して<span class="math notranslate nohighlight">\(|c_0|^2=0.24 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_1|^2=0.30 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_2|^2=0.11 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_3|^2=0.35 \pm 0.01\)</span>という具合です。しかし、わかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
+<p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
+<p>一度の測定で答えがわかるケースを除いて、基本的には多数回の試行から確率分布を推定することになるので、量子回路を量子コンピュータの実機やシミュレータに送って実行させる時には必ず繰り返し数（「ショット数」と呼びます）を指定します。ショット数<span class="math notranslate nohighlight">\(S\)</span>でビット列<span class="math notranslate nohighlight">\(k\)</span>が<span class="math notranslate nohighlight">\(n_k\)</span>回得られた時、<span class="math notranslate nohighlight">\(|c_k|^2\)</span>の推定値は<span class="math notranslate nohighlight">\(z_k = n_k/S\)</span>、その統計誤差は（<span class="math notranslate nohighlight">\(S, n_k, S-n_k\)</span>が全て十分大きい場合）<span class="math notranslate nohighlight">\(\sqrt{z_k (1-z_k) / S}\)</span>で与えられます。</p>
+</div>
+<div class="section" id="common-gates">
+<span id="id11"></span><h3><a class="toc-backref" href="#id64">よく使うゲート</a><a class="headerlink" href="#common-gates" title="Permalink to this headline">¶</a></h3>
+<p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明されています。</p>
+<div class="section" id="id12">
+<h4><a class="toc-backref" href="#id65">1量子ビットの操作</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
 <p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。（表中コードの<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>は量子ビットの番号）</p>
 <table class="table">
 <colgroup>
@@ -622,10 +739,12 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは必要になるpythonモジュールをすべてインポートしておく</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">execute</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
 </pre></div>
@@ -638,9 +757,10 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># その場合、ゲートにはregister[0]ではなく直接量子ビットの番号を指定します</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#　θ = π/2</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># 実際の回路では出力を得るためには必ず最後に測定を行う</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This circuit has&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="s1">&#39;qubits and&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="s1">&#39;operations&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This circuit has </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="si">}</span><span class="s1"> qubits and </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s1"> operations&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -651,7 +771,7 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 </div>
 </div>
 <p>最後のプリント文で、ゲートが3つなのにも関わらず “5 operations” と出てくるのは、各量子ビットの測定も一つのオペレーションとして数えられるからです。</p>
-<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(\pi/2), X\)</span>という順の操作で第0ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていくので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
+<p>量子計算に慣れる目的で、この<span class="math notranslate nohighlight">\(H, R_y(\pi/2), X\)</span>という順の操作で第0ビットに何が起こるかを辿ってみましょう。初期状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>で、ケット記法では操作は左からかけていく（ゲート操作が右から順に並ぶ）ので、<span class="math notranslate nohighlight">\(X R_y(\pi/2) H \ket{0}\)</span>を計算することになります。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -664,8 +784,8 @@ X R_y\left(\frac{\pi}{2}\right) H \ket{0} &amp; = X R_y\left(\frac{\pi}{2}\right
 \end{split}\]</div>
 <p>なので、結局<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態に戻る操作でした。</p>
 </div>
-<div class="section" id="id12">
-<h4><a class="toc-backref" href="#id64">2量子ビットの操作</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id13">
+<h4><a class="toc-backref" href="#id66">2量子ビットの操作</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>2量子ビットの操作は、量子ビットの超電導素子での実装の都合上、全て「制御ゲート」（controlled gates）という方式で行われます。この方式では、2つのビットのうち片方を制御（control）、もう片方を標的（target）として、制御ビットが1の時だけ標的ビットに何らかの操作がかかります。</p>
 <p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。ケットの添字でビットの番号を表して（reminder: 並べて書くときは右から順に番号を振ります）</p>
 <div class="math notranslate nohighlight">
@@ -724,7 +844,7 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 <span class="n">circuit</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># C[Z] 0が制御で1が標的（実はC[Z]ではどちらが制御でも結果は同じ）</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This circuit has&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="s1">&#39;qubits and&#39;</span><span class="p">,</span> <span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="s1">&#39;operations&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This circuit has </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="si">}</span><span class="s1"> qubits and </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s1"> operations&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -758,8 +878,8 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 <p>最後に<span class="math notranslate nohighlight">\(C[Z]\)</span>をかけると、<span class="math notranslate nohighlight">\(\ket{11}\)</span>だけ符号が反転します。</p>
 </div>
 </div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id65">回路図の書き方と読み方</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id67">回路図の書き方と読み方</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>量子回路を可視化する方法として、「回路図」の標準的な描き方が決まっています。Qiskitでは<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>というメソッドを使って自動描画できます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -768,7 +888,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_14_0.png" src="_images/chsh_inequality_14_0.png" />
+<img alt="_images/chsh_inequality_15_0.png" src="_images/chsh_inequality_15_0.png" />
 </div>
 </div>
 <p>ここで<code class="docutils literal notranslate"><span class="pre">draw()</span></code>の引数<code class="docutils literal notranslate"><span class="pre">'mpl'</span></code>はmatplotlibライブラリを使ってカラーで描くことを指定しています。実行環境によっては対応していないこともあるので、その場合は引数なしの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>を使います。結果は<code class="docutils literal notranslate"><span class="pre">mpl</span></code>の場合に比べて見劣りしますが、内容は同じです。</p>
@@ -780,9 +900,9 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌────────────┐┌──────────────┐    ░ ┌─┐   
-   q_0: ┤ RY(1.9106) ├┤ RY(-0.19649) ├─■──░─┤M├───
+   q_0: ┤ Ry(1.9106) ├┤ Ry(-0.19649) ├─■──░─┤M├───
         ├────────────┤└──────┬───────┘ │  ░ └╥┘┌─┐
-   q_1: ┤ RY(1.9823) ├───────■─────────■──░──╫─┤M├
+   q_1: ┤ Ry(1.9823) ├───────■─────────■──░──╫─┤M├
         └────────────┘                    ░  ║ └╥┘
 meas: 2/═════════════════════════════════════╩══╩═
                                              0  1 </pre></div></div>
@@ -790,28 +910,50 @@ meas: 2/════════════════════════
 <p>回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第0、第1量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」に対応し、測定結果の0/1が記録される部分です。</p>
 </div>
 </div>
-<div class="section" id="id14">
-<h2><a class="toc-backref" href="#id66">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2><a class="toc-backref" href="#id68">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <p>それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「ベル状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>を実現します。ベル状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
-<p>ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作るので、ループを回して<code class="docutils literal notranslate"><span class="pre">circuits</span></code>という配列に回路を足していきます。</p>
+<p>ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作って一度にIBMQに送るので、<code class="docutils literal notranslate"><span class="pre">circuits</span></code>というリストに回路を足していきます。</p>
 <p>CHSH不等式の検証用の観測量を作るために、量子ビット1に対し、回路0と2では測定の直前に<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、1と3では<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路2と3では量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を同じく測定の直前に作用させます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">ic</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ic</span><span class="p">))</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># H, CX[0, 1], Ry(-π/4)[1]をかける回路</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit0&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># 回路リストに追加</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">circuits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># H, CX[0, 1], Ry(-3π/4)[1]をかける回路</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># 回路リストに追加</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
+<span class="c1"># H, CX[0, 1], Ry(-π/4)[1], Ry(-π/2)[0]をかける回路</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># 回路リストに追加</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="c1"># H, CX[0, 1], Ry(-3π/4)[1], Ry(-π/2)[0]をかける回路</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># 回路リストに追加</span>
+<span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="c1"># 全ての回路に測定操作を足す</span>
 <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
@@ -824,10 +966,10 @@ meas: 2/════════════════════════
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_19_0.png" src="_images/chsh_inequality_19_0.png" />
-<img alt="_images/chsh_inequality_19_1.png" src="_images/chsh_inequality_19_1.png" />
-<img alt="_images/chsh_inequality_19_2.png" src="_images/chsh_inequality_19_2.png" />
-<img alt="_images/chsh_inequality_19_3.png" src="_images/chsh_inequality_19_3.png" />
+<img alt="_images/chsh_inequality_20_0.png" src="_images/chsh_inequality_20_0.png" />
+<img alt="_images/chsh_inequality_20_1.png" src="_images/chsh_inequality_20_1.png" />
+<img alt="_images/chsh_inequality_20_2.png" src="_images/chsh_inequality_20_2.png" />
+<img alt="_images/chsh_inequality_20_3.png" src="_images/chsh_inequality_20_3.png" />
 </div>
 </div>
 <p>それぞれの回路で2ビットレジスタの基底<span class="math notranslate nohighlight">\(\ket{00}, \ket{01}, \ket{10}, \ket{11}\)</span>が現れる確率を計算してみましょう。</p>
@@ -848,10 +990,8 @@ P^0_{00} = P^0_{11} = \frac{c^2}{2} \\
 P^0_{01} = P^0_{10} = \frac{s^2}{2}
 \end{split}\]</div>
 <p>同様に、回路1の状態は</p>
-<div class="math notranslate nohighlight">
-\[
-R_{y1}\left(-\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
-\]</div>
+<div class="math notranslate nohighlight" id="equation-eqn-circuit1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eqn-circuit1" title="Permalink to this equation">¶</a></span>\[R_{y1}\left(-\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})\]</div>
 <p>で確率<span class="math notranslate nohighlight">\(P^1_{l}\)</span>は</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -907,12 +1047,15 @@ C^3 = 0
 <p>となり、<span class="math notranslate nohighlight">\(S = \sqrt{2} &lt; 2\)</span>です。これがCHSH不等式です。</p>
 <p>それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から<span class="math notranslate nohighlight">\(S\)</span>の値を計算して確認してみましょう。</p>
 </div>
-<div class="section" id="id15">
-<h2><a class="toc-backref" href="#id67">回路を実機で実行する</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
-<p>まずは<a class="reference internal" href="prerequisites.html#qiskit-token"><span class="std std-ref">トークン</span></a>を使ってIBMQに接続します。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="section" id="id16">
+<h2><a class="toc-backref" href="#id69">回路を実機で実行する</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<p>まずはIBMQに認証・接続します。自分のラップトップなどローカルの環境ですでに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">認証設定がされている</span></a>場合は<code class="docutils literal notranslate"><span class="pre">IBMQ.load_account()</span></code>で接続ができます。設定がない場合は<code class="docutils literal notranslate"><span class="pre">enable_account()</span></code>関数に<a class="reference internal" href="prerequisites.html#copy-token"><span class="std std-ref">トークン</span></a>を渡してIBMQに接続します。</p>
+<div class="cell tag_remove-output tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -923,47 +1066,60 @@ C^3 = 0
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IBMQプロバイダ（実機へのアクセスを管理するオブジェクト）</span>
 <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 
-<span class="c1"># バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得し、一番空いているものを選ぶ</span>
-<span class="n">backend_filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">b</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="o">.</span><span class="n">operational</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">backend_filter</span><span class="p">))</span>
+<span class="c1"># バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得する</span>
+<span class="c1"># operational_backendはこのワークブック用にqc_workbook.utilsで定義された関数</span>
+<span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Jobs will run on&#39;</span><span class="p">,</span> <span class="n">backend</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+<span class="c1"># リストの中から一番空いているものを選ぶ</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Jobs will run on </span><span class="si">{</span><span class="n">backend</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>回路をバックエンドに送るには、<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数を使います。引数<code class="docutils literal notranslate"><span class="pre">shots</span></code>で回路の実行と測定を何回繰り返すか指定します。バックエンドごとに一度のジョブでの最大ショット数が決められていますが、大半の場合8192 (=2<sup>13</sup>)回となっています。</p>
-<p>一つのジョブで複数の回路を<code class="docutils literal notranslate"><span class="pre">shots</span></code>回ずつ実行できます。一度に送れる回路の数はバックエンドごとに決まっています。</p>
+<p>回路をバックエンドに送るには、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数とバックエンドの<code class="docutils literal notranslate"><span class="pre">run</span></code>というメソッドを使います。<code class="docutils literal notranslate"><span class="pre">transpile</span></code>については次回<a class="reference internal" href="extreme_simd.html#transpilation"><span class="std std-ref">トランスパイルと物理的回路</span></a>で説明するので、今は「おまじない」だと思ってください。<code class="docutils literal notranslate"><span class="pre">run</span></code>で回路を送るとき、前述したように同時にショット数を指定します。バックエンドごとに一度のジョブでの最大ショット数が決められており、8192、30000、100000などとさまざまです。回路をバックエンドに渡し、<code class="docutils literal notranslate"><span class="pre">shots</span></code>回実行させることをジョブと呼びます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shots</span> <span class="o">=</span> <span class="mi">8192</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># バックエンドごとに決められている最大ショット数</span>
+<span class="n">shots</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">max_shots</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Running four circuits, </span><span class="si">{</span><span class="n">shots</span><span class="si">}</span><span class="s1"> shots each&#39;</span><span class="p">)</span>
 
-<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="c1"># transpileの説明は次回の実習にて</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+<span class="c1"># バックエンドで回路をshots回実行させ、測定結果を返させる</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 
+<span class="c1"># ジョブが終了するまで状態を表示しながら待つ（正常に完了、エラーで停止、など終了する理由は一つではない）</span>
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>これで回路がジョブとしてバックエンドに送られ、キューに入りました。ジョブの実行結果は<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数の返り値であるジョブオブジェクトから参照します。</p>
+<p>これで回路がバックエンドに送られ、キューに入りました。ジョブの実行結果は<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドの返り値であるジョブオブジェクトから参照します。</p>
 <p>IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。</p>
-<p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a>のホーム画面の右側で確認できます。この右側のコラムでバックエンドを一つクリックすると詳細が表示され、一番下の Your access providers という欄でバックエンドの最大ショット数と最大ジョブ数を確認できます。</p>
-<p>また、自分の投じたジョブのステータスは左のツールバーのうちのJobsボタンから確認できます。</p>
+<p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/services?services=systems">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。</p>
+<p>また、自分の投じたジョブのステータスは<a class="reference external" href="https://quantum-computing.ibm.com/jobs">ジョブ一覧ページ</a>から確認できます。</p>
 <p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように<code class="docutils literal notranslate"><span class="pre">job_monitor</span></code>を使います。</p>
 </div>
-<div class="section" id="id16">
-<h2><a class="toc-backref" href="#id68">量子測定結果の解析</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2><a class="toc-backref" href="#id70">量子測定結果の解析</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>ジョブオブジェクトの<code class="docutils literal notranslate"><span class="pre">result()</span></code>というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
-<span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-    <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="c1"># 4つの回路のヒストグラムデータを入れるリスト</span>
+<span class="n">counts_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># 回路ごとの結果をresultから抽出する</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="c1"># get_counts(i)で回路iのヒストグラムデータが得られる</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="c1"># データをリストに足す</span>
+    <span class="n">counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
     
-<span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">counts_list</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -971,37 +1127,46 @@ C^3 = 0
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って<code class="docutils literal notranslate"><span class="pre">retrieve_job</span></code>というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantum Experienceのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;backend_you_used&#39;</span><span class="p">)</span>
-<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">retrieve_job</span><span class="p">(</span><span class="s1">&#39;job_id&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;__backend_you_used__&#39;</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">retrieve_job</span><span class="p">(</span><span class="s1">&#39;__job_id__&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>とすると、<code class="docutils literal notranslate"><span class="pre">execute</span></code>によって返されたのと同じようにジョブオブジェクトが生成されます。</p>
+<p>とすると、<code class="docutils literal notranslate"><span class="pre">backend.run</span></code>によって返されたのと同じようにジョブオブジェクトが生成されます。</p>
 </div>
 <p>Qiskitから提供されている<code class="docutils literal notranslate"><span class="pre">plot_histogram</span></code>関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">counts_list</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
-    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_32_0.png" src="_images/chsh_inequality_32_0.png" />
-<img alt="_images/chsh_inequality_32_1.png" src="_images/chsh_inequality_32_1.png" />
-<img alt="_images/chsh_inequality_32_2.png" src="_images/chsh_inequality_32_2.png" />
-<img alt="_images/chsh_inequality_32_3.png" src="_images/chsh_inequality_32_3.png" />
+<img alt="_images/chsh_inequality_33_0.png" src="_images/chsh_inequality_33_0.png" />
+<img alt="_images/chsh_inequality_33_1.png" src="_images/chsh_inequality_33_1.png" />
+<img alt="_images/chsh_inequality_33_2.png" src="_images/chsh_inequality_33_2.png" />
+<img alt="_images/chsh_inequality_33_3.png" src="_images/chsh_inequality_33_3.png" />
 </div>
 </div>
 <p>上で、<span class="math notranslate nohighlight">\(c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85\)</span>, <span class="math notranslate nohighlight">\(s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
 <p>実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して “<em>Noisy</em> intermediate-scale quantum (NISQ) device” と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。</p>
 <p>逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>で紹介する変分量子回路を用いた最適化などがその候補として注目されています。</p>
 <p>さて、それでは最後にCHSH不等式の破れを確認してみましょう。<span class="math notranslate nohighlight">\(C^{0}, C^{1}, C^{2}, C^{3}\)</span>を計算して<span class="math notranslate nohighlight">\(S\)</span>を求めます。</p>
+<p>下のコードで<code class="docutils literal notranslate"><span class="pre">counts</span></code>という辞書オブジェクトからキー<code class="docutils literal notranslate"><span class="pre">'00'</span></code>などに対応する値を取り出す際に<code class="docutils literal notranslate"><span class="pre">counts['00']</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">counts.get('00',</span> <span class="pre">0)</span></code>としています。二つの表現は<code class="docutils literal notranslate"><span class="pre">counts</span></code>に<code class="docutils literal notranslate"><span class="pre">'00'</span></code>というキーが定義されていれば全く同義ですが、キーが定義されていないときは、前者の場合エラーとして実行が止まるのに対して、後者ではデフォルト値として2個目の引数で指定されている<code class="docutils literal notranslate"><span class="pre">0</span></code>が返ってきます。qiskitの結果データは一度も測定されなかったビット列についてキーを持たないので、常に<code class="docutils literal notranslate"><span class="pre">get</span></code>でカウント数を抽出するようにしましょう。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
-    <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;00&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># C0, C1, C2, C3を一つのアレイにする</span>
+<span class="c1">#（今の場合ただのリストにしてもいいが、純粋な数字の羅列にはnumpy arrayを使うといいことが多い）</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c1"># enumerate(L)でリストのインデックスと対応する要素に関するループを回せる</span>
+<span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">counts</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">counts_list</span><span class="p">):</span>
+    <span class="c1"># counts[&#39;00&#39;] でなく counts.get(&#39;00&#39;, 0) - 上のテキストを参照</span>
+    <span class="n">C</span><span class="p">[</span><span class="n">ic</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;00&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 4つの要素を同時にshotsで規格化（リストではこういうことはできない）</span>
+<span class="n">C</span> <span class="o">/=</span> <span class="n">shots</span>
     
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
@@ -1009,11 +1174,13 @@ C^3 = 0
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;S =&#39;</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">S</span> <span class="o">&gt;</span> <span class="mf">2.</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Yes, we are using a quantum computer!&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Armonk, we have a problem.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C: [0.613525390625, -0.615234375, 0.59814453125, 0.635498046875]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C: [ 0.61352539 -0.61523438  0.59814453  0.63549805]
 S = 2.46240234375
 Yes, we are using a quantum computer!
 </pre></div>
@@ -1022,13 +1189,13 @@ Yes, we are using a quantum computer!
 </div>
 <p>無事、<span class="math notranslate nohighlight">\(S\)</span>が2を超えました。</p>
 </div>
-<div class="section" id="id17">
-<h2><a class="toc-backref" href="#id69">参考文献</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
-<p id="id18"><dl class="citation">
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id4">CHSH69</a></span></dt>
+<div class="section" id="id18">
+<h2><a class="toc-backref" href="#id71">参考文献</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<p id="id19"><dl class="citation">
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id4">CHSH69</a></span></dt>
 <dd><p>John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. <em>Phys. Rev. Lett.</em>, 23:880–884, Oct 1969. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.23.880">https://link.aps.org/doi/10.1103/PhysRevLett.23.880</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.23.880">doi:10.1103/PhysRevLett.23.880</a>.</p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id4">NC00</a></span></dt>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id4">NC00</a></span></dt>
 <dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 2.6, pages 111–117. Cambridge University Press, 2000.</p>
 </dd>
 </dl>
@@ -1069,36 +1236,42 @@ Yes, we are using a quantum computer!
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="welcome.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">量子コンピューティング・ワークブックへようこそ！</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="nonlocal_correlations.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">【課題】量子相関を調べる</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="welcome.html" title="previous page">量子コンピューティング・ワークブックへようこそ！</a>
-    <a class='right-next' id="next-link" href="nonlocal_correlations.html" title="next page">【課題】量子相関を調べる</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

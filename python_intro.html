@@ -1,0 +1,1851 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>予備知識：Python &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="予備知識：数値表現" href="numerics.html" />
+    <link rel="prev" title="実習の準備" href="prerequisites.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   量子コンピューティング・ワークブックへようこそ！
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nonlocal_correlations.html">
+   【課題】量子相関を調べる
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子回路で計算をする
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   計算をする量子回路の実装
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_computation.html">
+   【課題】量子計算
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子ダイナミクスシミュレーション
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   物理系を表現する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="more_dynamics.html">
+   【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  ショアのアルゴリズム
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="shor.html">
+   素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  グローバーのアルゴリズム
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover.html">
+   データベース検索を行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover_number_light.html">
+   【課題】ビット反転ボードの操作を見つける
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  変分法と変分量子固有値ソルバー
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqc_machine_learning.html">
+   量子機械学習を使った新しい素粒子現象の探索
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="qkc_machine_learning.html">
+   【課題】量子カーネルを使った新現象の分類
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  補足
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習の準備
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numerics.html">
+   予備知識：数値表現
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/python_intro.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fpython_intro.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/python_intro.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   基礎編
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     Pythonプログラムとは
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     行構造
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     変数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     演算子
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     基本のデータ型
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#int-float-complex">
+       数値型 int, float, complex
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#str">
+       文字列型 str
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#tuple-list">
+       配列型 tuple, list
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#dict">
+       辞書型 dict
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bool">
+       真理値型 bool
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#none">
+       None型
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     関数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if">
+     if文（条件文）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forwhile">
+     for文、while文（ループ）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     クラス、オブジェクト、メソッド
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     モジュールのインポート
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exception">
+     例外（exception）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   実用編
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#built-in-functions">
+     実習で登場する組み込み関数/型（Built-in functions）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#numpy">
+     NumPy
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id12">
+       配列を作る
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id13">
+       配列の要素を参照する
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id14">
+       配列を操作する
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id15">
+       配列に対して計算を施す
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#matplotlib">
+     Matplotlib
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>予備知識：Python</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   基礎編
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     Pythonプログラムとは
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     行構造
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     変数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     演算子
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     基本のデータ型
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#int-float-complex">
+       数値型 int, float, complex
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#str">
+       文字列型 str
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#tuple-list">
+       配列型 tuple, list
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#dict">
+       辞書型 dict
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bool">
+       真理値型 bool
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#none">
+       None型
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     関数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if">
+     if文（条件文）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forwhile">
+     for文、while文（ループ）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     クラス、オブジェクト、メソッド
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     モジュールのインポート
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exception">
+     例外（exception）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   実用編
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#built-in-functions">
+     実習で登場する組み込み関数/型（Built-in functions）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#numpy">
+     NumPy
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id12">
+       配列を作る
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id13">
+       配列の要素を参照する
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id14">
+       配列を操作する
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id15">
+       配列に対して計算を施す
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#matplotlib">
+     Matplotlib
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="python">
+<h1>予備知識：Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="id1">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#id2" id="id16">基礎編</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id3" id="id17">Pythonプログラムとは</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id18">行構造</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id19">変数</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id20">演算子</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id21">基本のデータ型</a></p>
+<ul>
+<li><p><a class="reference internal" href="#int-float-complex" id="id22">数値型 int, float, complex</a></p></li>
+<li><p><a class="reference internal" href="#str" id="id23">文字列型 str</a></p></li>
+<li><p><a class="reference internal" href="#tuple-list" id="id24">配列型 tuple, list</a></p></li>
+<li><p><a class="reference internal" href="#dict" id="id25">辞書型 dict</a></p></li>
+<li><p><a class="reference internal" href="#bool" id="id26">真理値型 bool</a></p></li>
+<li><p><a class="reference internal" href="#none" id="id27">None型</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id8" id="id28">関数</a></p></li>
+<li><p><a class="reference internal" href="#if" id="id29">if文（条件文）</a></p></li>
+<li><p><a class="reference internal" href="#forwhile" id="id30">for文、while文（ループ）</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id31">クラス、オブジェクト、メソッド</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id32">モジュールのインポート</a></p></li>
+<li><p><a class="reference internal" href="#exception" id="id33">例外（exception）</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id11" id="id34">実用編</a></p>
+<ul>
+<li><p><a class="reference internal" href="#built-in-functions" id="id35">実習で登場する組み込み関数/型（Built-in functions）</a></p></li>
+<li><p><a class="reference internal" href="#numpy" id="id36">NumPy</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id12" id="id37">配列を作る</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id38">配列の要素を参照する</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id39">配列を操作する</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id40">配列に対して計算を施す</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#matplotlib" id="id41">Matplotlib</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2><a class="toc-backref" href="#id16">基礎編</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Pythonに関する教材は世の中にいくらでもあるので、このワークブックで登場する概念・構文・テクニックに絞って説明をします。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">すでにプログラミング経験がある場合</p>
+<p>「CやJavaなどのプログラミング経験はあるが、Pythonは初めて」という人の理解を助けるために、随所でこのように注釈を入れます。プログラミング経験が一切ないという場合は無視して構いません。</p>
+</div>
+<div class="section" id="id3">
+<h3><a class="toc-backref" href="#id17">Pythonプログラムとは</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>プログラムとは、機械が順番に実行するべき命令を、決まった文法に従って書き下した文書のことです。プログラムには様々な言語があり、それぞれ用途や扱える命令群が異なります。Pythonは世界で最も広く使われている言語の一つで、扱える命令の多様さ、表現性の高さ、フレキシビリティが最大の特徴です。</p>
+</div>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id18">行構造</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>最も単純には、Pythonのプログラムは一行一つの命令文で成り立ちます。各行で<code class="docutils literal notranslate"><span class="pre">#</span></code>が登場したら、それ以降のテキストは「コメント」として無視されます。また、空白（スペースやタブ）のみを含む行も無視されます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># aという変数に3という値を代入する命令文</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># aに代入されている値と5を掛け算してbという変数に代入する命令文</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># bの文字列表現をプリントアウトする命令文</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>あとで解説する関数やクラスの定義、<code class="docutils literal notranslate"><span class="pre">if</span></code>、<code class="docutils literal notranslate"><span class="pre">for</span></code>、<code class="docutils literal notranslate"><span class="pre">try</span></code>/<code class="docutils literal notranslate"><span class="pre">except</span></code>などの複合文では、全ての行を一定数の空白文字分（通常スペース4つ、流儀によっては2つ。タブ文字は使うべきでない）だけインデントさせます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+    <span class="c1"># bの値が15の時、インデントされている部分が実行される</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;b is True&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This line is also executed&#39;</span><span class="p">)</span>
+    
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># それ以外の場合、インデントされている部分が実行される</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;b is False&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This line is also not executed&#39;</span><span class="p">)</span>
+    
+<span class="c1"># インデンテーションが解消された＝if文を抜けた</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This line is always executed&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>インデントしたブロックの中で、さらにインデントを必要とする文を書く場合は、スペース8つ、12個、と入れ子状にインデントします。各レベルでのインデンテーション解消がブロックの終わりを意味します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="c1"># bの値が2の時、インデントされている部分が実行される</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="c1"># さらにインデントされた部分が3回実行される</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;b is 2 and I print this line three times&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 3回実行のループは抜けたが、if b == 2:のブロックの中</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;b is 2 and I printed three times&#39;</span><span class="p">)</span>
+    
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># それ以外の場合、インデントされている部分が実行される</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># そのうち、aの値が3の時はこの部分が実行される</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;b is not 2 and a is 3&#39;</span><span class="p">)</span>
+
+<span class="c1"># 全てのインデンテーションが解消された</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All indentations resolved&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">インデンテーション</p>
+<p>C/C++やJavaなどではコードのブロックは{}括弧で括られるため、インデンテーションは単に人間がコードを読みやすくするための飾りです。Pythonではインデンテーションがプログラム上の意味を持ちます。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id19">変数</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>上で出てきた<code class="docutils literal notranslate"><span class="pre">a</span></code>や<code class="docutils literal notranslate"><span class="pre">b</span></code>を変数と呼びます。変数は（変「数」と書きますが）数値だけではなく、プログラム中で扱う様々なデータ（あとで言うオブジェクト）を表すラベルのようなものです。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">変数の生成</p>
+<p>CやJavaなどの言語と異なり、Pythonでは変数を明示的に宣言しません。上のコードのように、値の代入をもって変数の宣言と初期化が行われます。また、変数は型を限定しないので、同じ変数名を別の型の値に使うことができます。</p>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sという変数に「abc」という文字列を代入</span>
+<span class="c1"># &#39; (single quote)もしくは &quot; (double quote) で挟まれたテキストは文字列となる</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;Hello World&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># bという変数を真理値型の「真」で再定義</span>
+<span class="n">b</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">文字列</p>
+<p>C/C++と異なり、Pythonでは文字（character）と文字列（string）の区別がありません。文字情報は全て文字列です。また、’ (single quote)と ” (double quote)の間に機能的な違いもありません。</p>
+</div>
+<p>変数を使わないと、プログラムはただ「3」や「‘Hello World’」のような「リテラル」（値がそのままプログラム文中に書き下されているデータ）で成り立つことになり、「3と5を足す」「Hello Worldと表示する」などの自明な動作しかできません。逆に言えば、変数を駆使することで初めてプログラムを書く意味が出てきます。</p>
+<p>変数名はアルファベット一文字とは限りません。小文字のaからz、大文字のAからZ、アンダースコア（_）、0-9の数字の任意の長さの組み合わせが使えます。ただし、数字は変数名の最初の一文字には使えません。変数に意味のある名前をつけてコードを読みやすくすることは、プログラミングにおける重要なエチケットです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 変数にはプログラム中でその変数が持つ役割をベースに名前をつける</span>
+<span class="n">dividend</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">divisor</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">quotient</span> <span class="o">=</span> <span class="n">dividend</span> <span class="o">/</span> <span class="n">divisor</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id20">演算子</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>数値に対して使える、様々な演算子が用意されています。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 足し算</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a + 2 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># print()は中身を , (comma) で区切ることで、複数の表現をプリントアウトできる</span>
+<span class="c1"># 引き算</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a - 2 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># 符号反転</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-a =&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">)</span>
+<span class="c1"># 括弧</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-(-a) =&#39;</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">))</span>
+<span class="c1"># 掛け算</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a * 3 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># 割り算</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a / 2 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># 切り捨て除算（整数の割り算における商）</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a // 2 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># 剰余</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a % 2 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># べき乗</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a ** 3 =&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># 比較</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a &lt; 4 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="c1"># 4より小さい</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a &lt;= 3 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 3以下</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a &gt; 5 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># 5より大きい</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a &gt;= 1 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># 1以上</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a == 3 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 3と等しい</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a != 7 is&#39;</span><span class="p">,</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">)</span> <span class="c1"># 7と等しくない</span>
+<span class="c1"># 値の更新</span>
+<span class="n">a</span> <span class="o">+=</span> <span class="mi">3</span> <span class="c1"># aに3を足す</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a += 3 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">-=</span> <span class="mi">4</span> <span class="c1"># aから4を引く</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a -= 4 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">*=</span> <span class="mi">5</span> <span class="c1"># aに5をかける</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a *= 5 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">//=</span> <span class="mi">2</span> <span class="c1"># aを2で割る（切り捨て）</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a //= 2 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">/=</span> <span class="mf">1.4</span> <span class="c1"># aを1.4で割る</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a /= 1.4 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">%=</span> <span class="mi">3</span> <span class="c1"># aを3で割った剰余にする</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a %= 3 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">**=</span> <span class="mi">3</span> <span class="c1"># aを3乗する</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a **= 3 -&gt; a is&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>他にもビットシフト演算子などが存在しますが、このワークブックでは使用しないので割愛します。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">割り算</p>
+<p>Python 3では、/演算子は、整数同士に用いられたとしても、true divisionつまり浮動小数点数同士の割り算を引き起こします。</p>
+</div>
+<p>実は上の演算子の多くが数値以外にも使え、なんとなくそうなるかな、という直感的な効果を持ちます。Pythonの表現性が高い一つの理由がこれです。例えば文字列に対しては以下のようになります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 文字列と文字列を足し合わせる -&gt; 文字列の結合</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&quot;abc&quot; + &quot;xyz&quot; = &#39;</span><span class="p">,</span> <span class="s2">&quot;abc&quot;</span> <span class="o">+</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+<span class="c1"># 文字列を整数倍する -&gt; 文字列の反復</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&quot;ha&quot; * 3 =&#39;</span><span class="p">,</span> <span class="s2">&quot;ha&quot;</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># 文字列の比較 -&gt; 辞書式順序での比較</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&quot;abc&quot; &lt; &quot;def&quot; is&#39;</span><span class="p">,</span> <span class="s2">&quot;abc&quot;</span> <span class="o">&lt;</span> <span class="s2">&quot;def&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&quot;xy&quot; &lt;= &quot;xyz&quot; is&#39;</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span> <span class="o">&lt;=</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+<span class="c1"># etc.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id21">基本のデータ型</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>変数が表すデータには様々な「型」（タイプ）があります。文字と数は異なる、というのはプログラムに限らず現実世界でも成り立つ関係です。型ごとに行える操作が異なるので、データの型を常に意識しながらプログラムを書く必要があります。後で一般のクラスについて解説をするので、ここではPythonの組み込み型と言われる、言語レベルで定義されている基本的な型を紹介します。</p>
+<div class="section" id="int-float-complex">
+<h4><a class="toc-backref" href="#id22">数値型 int, float, complex</a><a class="headerlink" href="#int-float-complex" title="Permalink to this headline">¶</a></h4>
+<p>数値を表す型には<code class="docutils literal notranslate"><span class="pre">int</span></code>（整数）、<code class="docutils literal notranslate"><span class="pre">float</span></code>（実数）、<code class="docutils literal notranslate"><span class="pre">complex</span></code>（複素数）があります。数学的には包含関係にある3つの型ですが、コンピュータ的には実数と複素数は「浮動小数点数」で実装されるため整数と根本的に異なります。複素数は浮動小数点数を2つ一組にし、複素数特有の演算規則を当てはめたものです。</p>
+<p>3つの型は異なりますが、全て数値を表すものであるため、演算の互換性があります。型が混在する演算の結果は数学的な包含関係に従います。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 整数</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">43</span>
+<span class="c1"># 実数</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mf">5.4</span>
+<span class="c1"># 複素数</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">2.3</span> <span class="o">+</span> <span class="mf">0.9</span><span class="n">j</span>
+
+<span class="c1"># 数学的には整数でも、小数点が入ると実数型になる</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type of 7.0 is&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="mf">7.0</span><span class="p">))</span> <span class="c1"># type()はデータの型を返す関数</span>
+
+<span class="c1"># intとfloatとの間の演算の結果はfloat</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type of i + 8.0 is&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">8.0</span><span class="p">))</span>
+<span class="c1"># int/floatとcomplexとの間の演算の結果はcomplex</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type of i + 2.0j is&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">2.0</span><span class="n">j</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type of f * c is&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">f</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="str">
+<h4><a class="toc-backref" href="#id23">文字列型 str</a><a class="headerlink" href="#str" title="Permalink to this headline">¶</a></h4>
+<p>すでに上で登場していますが、’ (single quote)もしくは ” (double quote)で囲まれたテキストは文字列データとなります。二つの記号の間に機能上の違いはありません。なぜ二通り記号が用意されているかというと、プログラマ個人の嗜好に合わせられるという以外に、以下のようなコードを書きやすくするためです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The world says &quot;Hello&quot; in single quotes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>同じことを例えばdouble quotesだけで表現することもできます。その場合、文字列中のクオーテーション記号にバックスラッシュを付け、文字列を囲む記号と区別します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The world says </span><span class="se">\&quot;</span><span class="s2">Hello</span><span class="se">\&quot;</span><span class="s2"> in double quotes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上に比べて少しコードが読みにくくなることがわかります。</p>
+<p>単純なquotesで囲まれた文字列はPythonプログラム中、一行で書ききらなければいけないので、書きたいテキストが改行を含む場合は改行文字<code class="docutils literal notranslate"><span class="pre">\n</span></code>（backslash-n）を挿入します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This text has</span><span class="se">\n</span><span class="s1">two lines&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>これもまた読みにくいので、実はsingle quotesとdouble quotes以外にそれらの記号を3つ並べた<code class="docutils literal notranslate"><span class="pre">'''</span></code>や<code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code>（三重クオート）でテキストを囲み、改行を含む文字列をそのまま書くこともできます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;This</span>
+<span class="s1">is</span>
+<span class="s1">   such</span>
+<span class="s1">a</span>
+<span class="s1">  long</span>
+<span class="s1">string&#39;&#39;&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>改行やクオーテーション以外にも「特殊文字」があり、全てバックスラッシュで始まります。実際、通常の文字列中でバックスラッシュが一つ登場すると、Pythonはそのバックスラッシュと次の文字（場合によっては複数字）を組み合わせて特殊文字として解釈します。なので、実際のバックスラッシュをテキスト中に登場させたい場合（LaTeXのテキストを書いているときなど）は、一つだけ書くと解釈されないので、<code class="docutils literal notranslate"><span class="pre">\\</span></code>という特殊文字を利用します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>これも読みにくいテキストになってしまうので、バックスラッシュがたくさん使われる文字列を書く場合は、<code class="docutils literal notranslate"><span class="pre">r</span></code>というプレフィックスをクオーテーションの前にくっつけます。<code class="docutils literal notranslate"><span class="pre">r</span></code>のついた文字列中では、バックスラッシュが特殊文字として解釈されません。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\frac{e^{2 \pi i j k}}{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ときどき、文字列型以外の変数を文字列に変換する必要が出てきます。例えば、<code class="docutils literal notranslate"><span class="pre">&quot;The</span> <span class="pre">value</span> <span class="pre">of</span> <span class="pre">variable</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">&quot;</span></code>という文字列の後に、<code class="docutils literal notranslate"><span class="pre">x</span></code>という変数の値を付け加えたいとします。<code class="docutils literal notranslate"><span class="pre">x</span></code>が整数型だと<code class="docutils literal notranslate"><span class="pre">+</span></code>演算子を使ったらエラーになります。</p>
+<div class="cell tag_remove-output tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;The value of variable x is &#39;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># 文字列と整数を加えようとするとエラーになる</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>文字列と整数の足し算は定義されていないためです。このような場合は、<code class="docutils literal notranslate"><span class="pre">str(x)</span></code>として<code class="docutils literal notranslate"><span class="pre">x</span></code>の10進数表現の文字列を作ります</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># これは文字列同士の足し算</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ただ、この方法で変数の文字列表現をたくさん作ると、コードが冗長になりやすい問題があります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a is &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and b is &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and x is &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and so on&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>そこで、Pythonでは文字列中に変数のプレースホルダーを入れ、後から変数値を代入することができるようになっています。ただ、歴史的経緯から、4つの異なる方法が実装されていて、少し厄介です。このワークブックでは2通りのみ使用することにします。</p>
+<p>まず、原則的にはフォーマット済み文字列（f-string）と呼ばれる、歴史的には一番新しい方式を使います。f-stringを作るには、クオーテーションの前に<code class="docutils literal notranslate"><span class="pre">f</span></code>というプレフィックスをつけます。そして、文字列中の変数の値を代入したい部分に<code class="docutils literal notranslate"><span class="pre">{変数名}</span></code>を挿入します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;a is </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> and b is </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1"> and x is </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1"> and so on&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>f-stringは、実は変数に限らず、その場で評価可能な任意のプログラムコードを扱えます。中括弧の中にさらに文字列リテラルが入る場合は、全体の文字列に使っていないクオーテーション記号を使います。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;If I multiply a and x I get </span><span class="si">{</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="si">}</span><span class="s1"> and this is a </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; story&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># fとrを組み合わせて、バックスラッシュを含む文字列に変数値を代入することもできる</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">fr</span><span class="s1">&#39;\int_0^</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> x dx = </span><span class="si">{</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">a</span> <span class="o">**</span> <span class="mi">2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>このようにf-stringで大体の目的は達成できますが、厄介になるのは実際に中括弧を含む文字列を作りたい場合です。f-string中の中括弧は二重にして表現するので、簡単な文字列でもコードが非常に読みにくくなります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1"> brace </span><span class="se">}}</span><span class="s1"> </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># 中括弧がたくさんあるととても読みにくい</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">fr</span><span class="s1">&#39;\frac</span><span class="se">{{</span><span class="s1">e^</span><span class="se">{{</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1">i</span><span class="se">}}}}{{</span><span class="s1">2</span><span class="se">}}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>そこで、このワークブックでは中括弧を含む文字列に変数値を代入するときに限り、最も古い方式である%-formattingを使います。この方式でのプレースホルダーは、整数値を代入したいときは<code class="docutils literal notranslate"><span class="pre">%d</span></code>、実数値なら<code class="docutils literal notranslate"><span class="pre">%f</span></code>、文字列なら<code class="docutils literal notranslate"><span class="pre">%s</span></code>など、<code class="docutils literal notranslate"><span class="pre">%</span></code>文字と代入したいデータの型の識別子の組み合わせでできます。変数値を代入するには、文字列のすぐ後に<code class="docutils literal notranslate"><span class="pre">　%　変数</span></code>をくっつけます。</p>
+<div class="admonition-formatting admonition">
+<p class="admonition-title">%-formatting</p>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\frac{e^{</span><span class="si">%f</span><span class="s1">i}}</span><span class="si">{2}</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tuple-list">
+<h4><a class="toc-backref" href="#id24">配列型 tuple, list</a><a class="headerlink" href="#tuple-list" title="Permalink to this headline">¶</a></h4>
+<p>複数のデータをひとまとめに並べておくと便利なことが多々あります。Pythonに最初から実装されている基本型のうち、重複を許して、順序つきでデータを集めた構造として、tuple（タプル）とlist（リスト）があります。Tupleは一度作ると要素を足したり除いたりできないのに対し、listは長さが可変で要素の入れ替えが可能です。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 空のtupleやlistを新しく作る</span>
+<span class="n">my_empty_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+<span class="n">my_empty_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="c1"># データの入ったtupleやlistを新しく作る</span>
+<span class="c1"># データの型が揃っている必要はない</span>
+<span class="n">my_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;dah&#39;</span><span class="p">)</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.</span> <span class="o">+</span> <span class="mf">1.</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1"># コンストラクタ関数にリストやタプルを入れる</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">my_tuple</span><span class="p">)</span>
+<span class="n">my_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+<span class="c1"># 「ジェネレータ表現」を使う</span>
+<span class="n">my_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>タプルやリストの要素を一つ参照するときは、鉤括弧でインデックス（要素の番号）を指定します。インデックスは0から始まるので、長さnの配列に対して有効なインデックスは0からn-1までです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>リストでは要素を新しい値にすることができます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span> <span class="c1"># 数値や文字列以外もprint()できる</span>
+<span class="n">my_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;three&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>あとで説明するfor文を使って、配列の要素を順番に参照することもできます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">my_list</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Next element is&#39;</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>タプルやリストの長さ（要素数）は<code class="docutils literal notranslate"><span class="pre">len()</span></code>関数でわかります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;my_tuple has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">my_tuple</span><span class="p">)</span><span class="si">}</span><span class="s1"> elements.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;my_list has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span><span class="si">}</span><span class="s1"> elements.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>タプル同士やリスト同士は足し算で繋ぎ合わせられます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">list2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">]</span> <span class="c1"># 長さ1のリスト</span>
+<span class="n">list3</span> <span class="o">=</span> <span class="n">list1</span> <span class="o">+</span> <span class="n">list2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">list3</span><span class="p">)</span>
+
+<span class="n">tuple1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">tuple2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,)</span> <span class="c1"># 長さ1のタプル。最後のコンマがないと「文字列を括弧で括ったもの」になってしまうので注意</span>
+<span class="n">tuple3</span> <span class="o">=</span> <span class="n">tuple1</span> <span class="o">+</span> <span class="n">tuple2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tuple3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>数値に対してと同様、足し算での更新も可能です。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list1</span> <span class="o">+=</span> <span class="n">list2</span>
+<span class="n">tuple1</span> <span class="o">+=</span> <span class="n">tuple2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">list1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tuple1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>リストの最後に新たな要素を足すには、<code class="docutils literal notranslate"><span class="pre">append()</span></code>というメソッド（後の解説を参照）を使います。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">list1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>すでに説明した通り、タプルには要素を足せないので、対応するメソッドがありません。</p>
+</div>
+<div class="section" id="dict">
+<h4><a class="toc-backref" href="#id25">辞書型 dict</a><a class="headerlink" href="#dict" title="Permalink to this headline">¶</a></h4>
+<p>配列はリストが順番に入っている入れ物で、インデックスで要素を参照可能でした。辞書型は要素を「キー」（索引）で参照する入れ物です。キーとなりうるデータは数値、文字列、タプルなどです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 空のdict</span>
+<span class="n">my_empty_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="c1"># データの入ったdict</span>
+<span class="c1"># キーも要素もデータ型が揃っている必要はない</span>
+<span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;AAAA&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">3333</span><span class="p">,</span> <span class="n">tuple1</span><span class="p">:</span> <span class="s1">&#39;world&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>辞書型の要素を参照するときは鉤括弧にキーを入れます。辞書型と同様、要素の値を入れ替えることができます。また、全く新しいキーを加えることもできます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my_dict[&quot;a&quot;] =&#39;</span><span class="p">,</span> <span class="n">my_dict</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
+<span class="n">my_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4444</span>
+<span class="n">my_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3333</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>辞書型に対しても<code class="docutils literal notranslate"><span class="pre">len()</span></code>が使えます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;my_dict has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span><span class="si">}</span><span class="s1"> elements.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="bool">
+<h4><a class="toc-backref" href="#id26">真理値型 bool</a><a class="headerlink" href="#bool" title="Permalink to this headline">¶</a></h4>
+<p>真理値を表す<code class="docutils literal notranslate"><span class="pre">bool</span></code>型には<code class="docutils literal notranslate"><span class="pre">True</span></code>または<code class="docutils literal notranslate"><span class="pre">False</span></code>の二通りの値しかありません。その代わり、様々な表現が真理値に明示的・暗示的に変換可能で、後述する<code class="docutils literal notranslate"><span class="pre">if</span></code>文などで利用されます。表現を明示的に真理値に変えるには<code class="docutils literal notranslate"><span class="pre">bool()</span></code>関数に表現を渡します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 数値を真理値に変換。0、0.0、0.0+0.0j以外は全てTrue</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(1) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(0) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(2.3) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mf">2.3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(0.) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mf">0.</span><span class="p">))</span> <span class="c1"># 小数点以下がゼロであるときにデータが実数型であることを表現するためには、小数点を末尾につける</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(3.7+0.j) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mf">3.7</span><span class="o">+</span><span class="mf">0.</span><span class="n">j</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(0.+0.j) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="mf">0.</span><span class="o">+</span><span class="mf">0.</span><span class="n">j</span><span class="p">))</span>
+
+<span class="c1"># 文字列を真理値に変換。長さ0の文字列以外は全てTrue</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(&quot;&quot;) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(&quot;Hello&quot;) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">))</span>
+
+<span class="c1"># tuple, list, dictを真理値に変換。長さ（要素数）0のときFalse、それ以外はTrue</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_tuple) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_tuple</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_empty_tuple) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_empty_tuple</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_list) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_list</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_empty_list) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_empty_list</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_dict) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_dict</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bool(my_empty_dict) =&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">my_empty_dict</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="none">
+<h4><a class="toc-backref" href="#id27">None型</a><a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h4>
+<p>Pythonプログラム中で特別な型・値として<code class="docutils literal notranslate"><span class="pre">None</span></code>があります。これはデータがない状態を表します。数値の<code class="docutils literal notranslate"><span class="pre">0</span></code>、文字列の<code class="docutils literal notranslate"><span class="pre">''</span></code>、真偽値の<code class="docutils literal notranslate"><span class="pre">False</span></code>などはそれぞれ型があり有効なデータなので、それらとは異なる「無」の状態を表すために<code class="docutils literal notranslate"><span class="pre">None</span></code>を使います。</p>
+</div>
+</div>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id28">関数</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>プログラムは最悪全ての命令を一行ずつ書き下していけば走りますが、繰り返し行う動作や、論理上ひとまとまりにした方が全体の可読性が高まるコードの続きなどは、関数として定義します。すでに登場した<code class="docutils literal notranslate"><span class="pre">print()</span></code>や<code class="docutils literal notranslate"><span class="pre">len()</span></code>も関数です。</p>
+<p>関数は引数（ひきすう、インプット）をとり、その値に応じて挙動を変えることができます。関数には返り値があり、関数を実行した結果として変数に代入したりできます。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">引数の型</p>
+<p>Pythonでは変数が型に縛られないので、関数も引数の型を決めずに定義されます。どんな引数を渡しても、関数の内部のコードが引数のデータ型に対して有効でさえあれば、有効な関数となります。C++やJavaでいう関数のオーバーロードが自動で行われているとも考えられます。</p>
+</div>
+<p>関数の定義には<code class="docutils literal notranslate"><span class="pre">def</span></code>というキーワードを使い、コードを一段インデントして記述します。関数名に使える文字は変数名のものと同じです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># myfunctionという名の関数を定義する。argは引数で、「関数を呼んだときに渡される最初の引数の値が関数内のコードでargという変数として使用される」ことを意味する</span>
+<span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="c1"># 渡された引数をprintする</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="c1"># 引数に2を足した値を返す</span>
+    <span class="k">return</span> <span class="n">arg</span> <span class="o">+</span> <span class="mi">2</span>
+
+<span class="c1"># myfunctionをaを引数として実行し、返ってきた値をa_plus_2に代入する</span>
+<span class="n">a_plus_2</span> <span class="o">=</span> <span class="n">my_function</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Returned value:&#39;</span><span class="p">,</span> <span class="n">a_plus_2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>関数の引数にはデフォルトの値を持たせることができます。そのような引数には、関数実行時に値を指定されなければ、設定されたデフォルト値が代入されます。</p>
+<p>また、関数は、関数が定義されている部分のコード中で定義されている変数を参照することができます。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">変数のスコープ</p>
+<p>Pythonの変数のスコープの考え方はC/C++などと異なるので注意が必要です。</p>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># arg2にはデフォルトで4という値が入る</span>
+<span class="k">def</span> <span class="nf">another_function</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span>
+
+<span class="c1"># arg2の値を指定しなかったので、4が使われる</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">another_function</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="c1"># arg2を指定するとその値が使われる</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">another_function</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># 関数の外で定義された変数</span>
+<span class="n">outer_scope_variable</span> <span class="o">=</span> <span class="s1">&#39;Q&#39;</span>
+
+<span class="c1"># 引数を取らない関数もある</span>
+<span class="k">def</span> <span class="nf">yet_another_function</span><span class="p">():</span>
+    <span class="c1"># 関数の中から外の変数を参照可能</span>
+    <span class="k">return</span> <span class="n">outer_scope_variable</span> <span class="o">+</span> <span class="s1">&#39;uantum&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">yet_another_function</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="if">
+<h3><a class="toc-backref" href="#id29">if文（条件文）</a><a class="headerlink" href="#if" title="Permalink to this headline">¶</a></h3>
+<p>プログラム中で、変数の値に応じて実行する内容を変えたい時はif文で条件分岐をすることができます。分岐したプログラムのコードは一段インデントして記述します。分岐したコードは独立なので、別々の変数を定義したり、全く異なる関数を実行したりできます。ただし一方でしか定義されない変数を作る場合は、もう一方のケースでその変数が参照されないか注意が必要です。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ifの後は一つ以上スペースを空けて、真偽値となる表現が入る</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+    <span class="c1"># my_dictの長さが4である場合</span>
+    <span class="n">true_case</span> <span class="o">=</span> <span class="n">my_function</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># my_dictの長さが4でない場合</span>
+    <span class="n">false_case</span> <span class="o">=</span> <span class="n">another_function</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 有効</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;len(my_dict) was </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span><span class="si">}</span><span class="s1"> so if I try to reference true_case I get this: </span><span class="si">{</span><span class="n">true_case</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># エラーを起こす</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;len(my_dict) was </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span><span class="si">}</span><span class="s1"> so if I try to reference false_case I get this: </span><span class="si">{</span><span class="n">false_case</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">変数のスコープ</p>
+<p>if文は独立のスコープを持たないので、上のようなことが起こります。下で登場するforやwhileでも同様です。</p>
+</div>
+<p>上でさまざまな型を<code class="docutils literal notranslate"><span class="pre">bool()</span></code>で真偽値に変換しましたが、if文の条件部分ではこの変換が自動で行われます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Conditional expression on the length of my_empty_tuple:&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">my_empty_tuple</span><span class="p">:</span>
+    <span class="c1"># my_empty_tupleの長さが0でないケース</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my_empty_tuple is actually not empty&#39;</span><span class="p">)</span>
+    
+<span class="c1"># 条件文にはelseがなくてもいい</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="forwhile">
+<h3><a class="toc-backref" href="#id30">for文、while文（ループ）</a><a class="headerlink" href="#forwhile" title="Permalink to this headline">¶</a></h3>
+<p>同じコードを（条件を変えながら）何度も実行したいときは、for文やwhile文を使ったループを作ります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># リストの要素についてループ。インデントされている部分が要素数だけ繰り返し実行され、変数elementに各要素が代入される</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">my_list</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;another_function(</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s1">) = </span><span class="si">{</span><span class="n">another_function</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+<span class="c1"># 0から5までの整数についてループ</span>
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;another_function(</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">) = </span><span class="si">{</span><span class="n">another_function</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+<span class="c1"># 配列の各要素が一定の長さの配列である場合、要素配列の要素を直接ループ変数に代入できる</span>
+<span class="n">list_of_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">char_var</span><span class="p">,</span> <span class="n">num_var</span> <span class="ow">in</span> <span class="n">list_of_tuples</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;char_var = </span><span class="si">{</span><span class="n">char_var</span><span class="si">}</span><span class="s1">, num_var = </span><span class="si">{</span><span class="n">num_var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+<span class="c1"># my_stringの長さが10以上になるまでループ</span>
+<span class="n">my_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span> <span class="c1"># 文字列の長さもlen()でわかる</span>
+    <span class="n">my_string</span> <span class="o">+=</span> <span class="s1">&#39;abc&#39;</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id31">クラス、オブジェクト、メソッド</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>上で基本のデータ型を紹介しましたが、Pythonではプログラム中で新たに型を定義することができます。型のことをクラスともいい、これまでデータと呼んできた構造をオブジェクトともいいます。全てのオブジェクトは何らかのクラスの一つの具象化（インスタンス）です。</p>
+<p>このワークブックでは新たにクラスを定義することはありませんが、参考のためにクラスの記述の仕方を紹介します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">EmptyClass</span><span class="p">:</span>
+    <span class="k">pass</span> <span class="c1"># passは「文法上インデントしなければいけないけどプログラムとして何もしない」ことを表す</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>このままでは<code class="docutils literal notranslate"><span class="pre">EmptyClass</span></code>というクラスがプログラムの中で定義されているという他、何の役割も果たしません。プログラムによってはあるクラスが存在するだけでいいということもありますが、通常は属性（インスタンスに付随するデータ）を足したり、「メソッド」を定義したりします。メソッドというのはクラスに対して定義される関数のことです。インスタンスを自動的に引数に取るため、挙動がインスタンスごとに異なります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MoreFunctionalClass</span><span class="p">:</span>
+    <span class="c1"># __init__は特殊メソッド（コンストラクタ）で、インスタンス生成時に呼ばれる</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># メソッドの最初の引数selfはインスタンスを指す</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="c1"># メソッドの一例</span>
+    <span class="k">def</span> <span class="nf">add_y_to_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span>
+    
+<span class="c1"># MoreFunctionalClassのインスタンスを作り、変数mに代入する</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">MoreFunctionalClass</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># インスタンスの属性を参照する</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value of attr_x of m is </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">attr_x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># インスタンスのメソッドを実行する</span>
+<span class="c1"># 引数selfは自動で渡される</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Calling add_y_to_x on m: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">add_y_to_x</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id32">モジュールのインポート</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>通常、Pythonプログラムは一つのファイルに書ききられません。コードが長くなりすぎるだけでなく、定義される関数やクラスが他のプログラムでも利用できる場合があるからです。別ファイルで定義された変数、関数、クラスなどをプログラム中で使用するには、<code class="docutils literal notranslate"><span class="pre">import</span></code>という命令を使い、ファイルの名前や、場合によってはファイル中の使用したい特定の関数名などを指定します。<code class="docutils literal notranslate"><span class="pre">import</span></code>で取り込まれるファイルをPythonモジュールと呼びます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># osというスタンダードライブラリのモジュールをインポート</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="c1"># osモジュールで定義されているgetcwd()という関数（現在どのディレクトリからプログラムを実行しているかを返す）を呼ぶ</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+<span class="c1"># qiskit（IBMの量子コンピューティング用ライブラリ）からQuantumCircuitクラスをインポート</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
+
+<span class="c1"># numpy（数値計算用ライブラリ）をインポートし、プログラム中npという短縮したモジュール名で使用</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pythonの非常に大きな強みが、ユーザーベースの広さとオープンソースのライブラリの多さです。Pythonでやりたいと思うことは大体誰かがすでに実装していて、<a class="reference external" href="https://pypi.org">PyPI</a>などでパッケージとして公開しているので、ユーザーはパッケージをインストールしてプログラム中からモジュールを<code class="docutils literal notranslate"><span class="pre">import</span></code>すればいい、という具合です。</p>
+</div>
+<div class="section" id="exception">
+<h3><a class="toc-backref" href="#id33">例外（exception）</a><a class="headerlink" href="#exception" title="Permalink to this headline">¶</a></h3>
+<p>プログラムで想定していない操作が要求されたときには「例外」が発生します。上の例では、文字列と整数を加えようとしたときや、if文の分岐によって定義されていない変数を参照しようとしたときに例外が発生しました。例外が発生するとプログラムの実行が中断されますが、これは実は必ずしも「クラッシュ」ということではありません。Pythonには例外の発生を検知して対処できる仕組みが備わっています。例外処理をするには、例外が発生する可能性のあるコードを<code class="docutils literal notranslate"><span class="pre">try:</span></code>というキーワードで始まるブロックに入れ、直後に<code class="docutils literal notranslate"><span class="pre">except</span></code>というキーワードから始まるブロックに対処のためのコードを記述しておきます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;The value of variable x is &#39;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># try以下のブロックで例外が発生すると、ブロック中のコードの実行がその時点で止まり、後ろのexceptブロックが実行される</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># 文字列と整数を加えようとするとエラーになる</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span> <span class="c1"># TypeError型の例外が発生したら、以下のブロックを実行する</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Oops, </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s1"> are not compatible&#39;</span><span class="p">)</span>
+    
+<span class="k">except</span><span class="p">:</span> <span class="c1"># その他の型の例外が発生したら、以下のブロックを実行する</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This was unexpected: We got a </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上の例にあるように、例外にも型があり、例外発生のさまざまな理由を区別できるようになっています。例外とその処理はPythonの正常なプログラムフローの一部として捉えるべきで、<code class="docutils literal notranslate"><span class="pre">try``except</span></code>を上手に使うことでより「Pythonらしい」コードが書けると言われています。</p>
+<p>例えば、辞書型に対して存在しないキーで値を参照しようとすると<code class="docutils literal notranslate"><span class="pre">KeyError</span></code>が発生します。これを回避するにはキーが存在するか事前に確認すればいいわけですが、確認した結果キーが存在したとして、その後値を参照するとすると、結局二回同じキーを検索することになります。それなら、最初から参照しようとしてみて、エラーが出たらキーが存在しなかったときの処理に移る、という方が実は効率的です。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;this&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">:</span> <span class="mi">89</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;dictionary&#39;</span><span class="p">:</span> <span class="mi">98</span><span class="p">}</span>
+
+<span class="c1"># dにキー&#39;a&#39;があるかどうか確認し、それからその値を使う。&#39;a&#39;がなければ他のことをする</span>
+<span class="c1"># キーの存在を調べるにはinという演算子を使う</span>
+<span class="k">if</span> <span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+    <span class="n">a_value</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d does not have an entry for &quot;a&quot;&#39;</span><span class="p">)</span>
+    <span class="n">a_value</span> <span class="o">=</span> <span class="kc">None</span>
+    
+<span class="c1"># もっと効率的な実装</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">a_value</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d does not have an entry for &quot;a&quot;&#39;</span><span class="p">)</span>
+    <span class="n">a_value</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h2><a class="toc-backref" href="#id34">実用編</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>Pythonの文法や基本概念を一通りさらったので、実際にワークブックに登場するようなプログラムを書くのに必要なものの紹介に移ります。</p>
+<div class="section" id="built-in-functions">
+<h3><a class="toc-backref" href="#id35">実習で登場する組み込み関数/型（Built-in functions）</a><a class="headerlink" href="#built-in-functions" title="Permalink to this headline">¶</a></h3>
+<p>組み込み関数とは、<code class="docutils literal notranslate"><span class="pre">import</span></code>なしでPython言語に最初から定義されている関数のことです。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># abs: 数値の絶対値を返す</span>
+<span class="nb">abs</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3</span><span class="p">)</span> <span class="c1"># 2.3</span>
+<span class="nb">abs</span><span class="p">(</span><span class="mf">1.2</span><span class="o">+</span><span class="mf">1.6</span><span class="n">j</span><span class="p">)</span> <span class="c1"># 複素数の絶対値（sqrt(real * real + imag * imag)）-&gt; 2.0</span>
+
+<span class="c1"># enumerate: 配列のインデックスと要素を順番に返す</span>
+<span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="c1"># ループの繰り返しごとに、idx（インデックス）は値 0, 1, 2 をとり、elementは &#39;a&#39;, &#39;b&#39;, &#39;c&#39; になる</span>
+    <span class="k">pass</span>
+
+<span class="c1"># isinstance: 変数やリテラルが特定のクラスのオブジェクトかチェックする</span>
+<span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="c1"># True</span>
+<span class="nb">isinstance</span><span class="p">(</span><span class="mf">2.3</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="c1"># False</span>
+
+<span class="c1"># len: 配列や辞書の長さを返す</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="c1"># 3</span>
+
+<span class="c1"># max: 引数の中から最大のものを返す</span>
+<span class="c1"># min: 引数の中から最小のものを返す</span>
+<span class="nb">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span> <span class="c1"># 9</span>
+<span class="nb">min</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="c1"># 比較演算子が定義されている型であれば成立 -&gt; &#39;b&#39;</span>
+<span class="nb">max</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="c1"># 引数が配列の場合、要素が比較される -&gt; &#39;c&#39;</span>
+
+<span class="c1"># print: 文字列を表示する</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;We&#39;ve already seen this&quot;</span><span class="p">)</span>
+
+<span class="c1"># range: 一定間隔の整数の配列を作る</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 0, 1, 2, 3, 4</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">78</span><span class="p">,</span> <span class="mi">92</span><span class="p">)</span> <span class="c1"># 78から91までの14個の整数の配列</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># 3以上10未満、間隔2の整数の配列 = 3, 5, 7, 9</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 間隔は負でもよい。4, 3, 2</span>
+
+<span class="c1"># sum: 配列の要素の総和を返す</span>
+<span class="nb">sum</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span> <span class="c1"># 18</span>
+
+<span class="c1"># zip: 複数の配列から要素をタプルにまとめた配列を作る</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="c1"># [(l[0], m[0]), (l[1], m[1]), ...]のforループと等価</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>文字列（<code class="docutils literal notranslate"><span class="pre">str</span></code>）、リスト（<code class="docutils literal notranslate"><span class="pre">list</span></code>）、タプル（<code class="docutils literal notranslate"><span class="pre">tuple</span></code>）、辞書（<code class="docutils literal notranslate"><span class="pre">dict</span></code>）などの組み込み型でよく使うメソッドも紹介しておきます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># str.join: 文字列の配列をつなげる</span>
+<span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;apples&#39;</span><span class="p">,</span> <span class="s1">&#39;bananas&#39;</span><span class="p">,</span> <span class="s1">&#39;bonobos&#39;</span><span class="p">])</span> <span class="c1"># &#39;apples, bananas, bonobos&#39;</span>
+
+<span class="c1"># list.append: 配列の最後に要素を足す</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># [0, 1, 2]</span>
+
+<span class="c1"># list.insert: 配列の任意の位置に要素を挿入する。最初の引数が位置、次の引数が要素</span>
+<span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="c1"># [&#39;a&#39;, &#39;x&#39;, &#39;y&#39;]</span>
+
+<span class="c1"># dict.keys: 辞書のキーの配列を作る</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;this&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">:</span> <span class="mi">89</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;dictionary&#39;</span><span class="p">:</span> <span class="mi">98</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="c1"># keyが&#39;this&#39;, &#39;is&#39;, &#39;a&#39;, &#39;dictionary&#39;のいずれかの値になる</span>
+    <span class="c1"># ただし、キーがどの順番で現れるかは（特殊な場合を除いて）不確定</span>
+    <span class="k">pass</span>
+
+<span class="c1"># dict.values: 辞書の値の配列を作る</span>
+<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="c1"># valueが3, 89, 123, 98のいずれかの値になる</span>
+    <span class="c1"># keysと同じく順序は不確定</span>
+    <span class="k">pass</span>
+
+<span class="c1"># dict.items: 辞書のキーと値のペアの配列を作る</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="c1"># keysと同じく順序は不確定</span>
+    <span class="k">pass</span>
+
+<span class="c1"># dict.get: [key]と同じように特定のキーに対応する値を返すが、キーが存在しない場合にデフォルトの返り値を設定できる</span>
+<span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;that&#39;</span><span class="p">,</span> <span class="mi">39</span><span class="p">)</span> <span class="c1"># 39 (default value)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="numpy">
+<h3><a class="toc-backref" href="#id36">NumPy</a><a class="headerlink" href="#numpy" title="Permalink to this headline">¶</a></h3>
+<p>Pythonで数値計算をする際に今や欠かせない存在になっているのが、NumPy（「なむぱい」もしくは「なむぴー」）ライブラリです。NumPyは基本的には数値の（多次元）配列に対して効率的に数値計算をすることを目的に書かれていますが、サポートされている計算オペレーションの多様さも支持を広げる要因になっています。</p>
+<p>このワークブックで利用するNumPyの機能について解説します。あまり複雑なものは使用していません。まずは<code class="docutils literal notranslate"><span class="pre">numpy</span></code>をインポートしますが、慣習的に<code class="docutils literal notranslate"><span class="pre">np</span></code>と短縮したモジュール名を使います。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id12">
+<h4><a class="toc-backref" href="#id37">配列を作る</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<p>numpyの配列は<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>という独自のクラスのオブジェクトで、リストやタプルとは異なります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># データから直接作る</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">7.</span><span class="p">])</span> <span class="c1"># numpyの配列では要素のデータ型が揃っている必要がある。ただし整数と実数が混ざっていれば実数の、複素数が混ざっていれば複素数の配列が作られる</span>
+
+<span class="c1"># 配列を作る関数から作る</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># 組み込みrange(4)のように、[0, 1, 2, 3]という配列を作る</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># 長さ100の配列で、0.0から1.0まで等間隔に値を取る</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># 長さ5の配列で、全ての要素が0.0。dtype=floatはデータ型を陽に実数と決めるための引数</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span> <span class="c1"># 長さ7の配列で、全ての要素が1。ただしdtype=boolとしたので、1の真偽値変換（True）が入る</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># 長さ4の配列で、値が初期化されていない</span>
+
+<span class="c1"># さまざまな配列をndarrayに変換する</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># ndarrayをasarrayに入れても何も起こらない（arrとarr2は同じオブジェクト）</span>
+
+<span class="c1"># ある配列と同じ形（次元数と各次元の要素数）の配列を作る</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id13">
+<h4><a class="toc-backref" href="#id38">配列の要素を参照する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 要素数2x4の2次元配列を生成</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The full array:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="c1"># 1次元目のインデックス0、2次元目のインデックス3の要素を選ぶ</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;arr[0, 3] = </span><span class="si">{</span><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># 1次元目のインデックス1の要素（＝2次元目に相当する配列）</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;arr[1] = </span><span class="si">{</span><span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># 1次元目のインデックス1、2次元目は0から2つおきに抽出</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;arr[1, 0:4:2] = </span><span class="si">{</span><span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id14">
+<h4><a class="toc-backref" href="#id39">配列を操作する</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reshape: 配列の次元数や各次元の要素数を変える</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="c1"># 要素数12の1次元配列</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">rarr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="c1"># 要素数3x4の2次元配列。[0, 0]が0、[0, 1]が1、...</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;reshaped: </span><span class="si">{</span><span class="n">rarr</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># concatenate: 配列をつなげる</span>
+<span class="n">brr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">crr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">arr</span><span class="p">,</span> <span class="n">brr</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;concatenated: </span><span class="si">{</span><span class="n">crr</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id15">
+<h4><a class="toc-backref" href="#id40">配列に対して計算を施す</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<p>NumPyの大きな強みの一つが、さまざまな計算オペレーションが配列全体に対して同時に実行されることです。例えば<code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2]</span></code>と<code class="docutils literal notranslate"><span class="pre">[3,</span> <span class="pre">4,</span> <span class="pre">5]</span></code>という配列があり、それらの要素同士の足し算をしたいとしたら、配列がPythonの<code class="docutils literal notranslate"><span class="pre">list</span></code>や<code class="docutils literal notranslate"><span class="pre">tuple</span></code>型であった場合のコードは</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">list2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+<span class="n">list1</span> <span class="o">+</span> <span class="n">list2</span> <span class="c1"># これではただリストが繋がるだけなので</span>
+
+<span class="c1"># ループを回して要素ごとに足し算をする必要がある</span>
+<span class="n">list3</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">):</span>
+    <span class="n">list3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i1</span> <span class="o">+</span> <span class="n">i2</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">list3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>のようになります。これだと簡単なことをするために何行もコードがいるだけでなく、実は非常に非効率です。というのも、Pythonには、コード一行一行の実行が比較的遅いという弱点があるからです。これはPythonがCやJavaのようにプログラム全体を「コンパイル」して最初から機械言語に変換して実行する言語ではないことに起因します。上のようにループを回すと、ループの繰り返しごと、一行ごとに書かれている命令を解釈し直すので、時間がかかります。無論繰り返し数3のループではCなどとPythonの間で人間が感知できるような時間の差はありませんが、配列の大きさが例えば数十万を超えてくると、明らかに違いが見えてきます。</p>
+<p>リストを使った上のケースに対して、NumPyの<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>を使った場合は</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arr1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+<span class="n">arr3</span> <span class="o">=</span> <span class="n">arr1</span> <span class="o">+</span> <span class="n">arr2</span> <span class="c1"># これで要素ごとの足し算が行われる</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">arr3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>となります。コードの行数が少なくなっただけでなく、実はこの場合はCなどと同じ速さで計算が行われます。NumPyはPythonから扱えるモジュールですが、中身はコンパイルされて極度に最適化されたライブラリなのです。</p>
+<p>配列に対して行える計算には要素ごとの四則演算だけでなく、さまざまな数学的関数もあります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 要素ごとの引き算、掛け算、割り算</span>
+<span class="n">arr1</span> <span class="o">-</span> <span class="n">arr2</span>
+<span class="n">arr1</span> <span class="o">*</span> <span class="n">arr2</span>
+<span class="n">arr1</span> <span class="o">//</span> <span class="n">arr2</span>
+<span class="n">arr1</span> <span class="o">/</span> <span class="n">arr2</span>
+
+<span class="c1"># 配列と一つの数（スカラー）との演算。配列の全ての要素に同じ演算が施される</span>
+<span class="n">arr1</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">arr1</span> <span class="o">-</span> <span class="mi">3</span>
+<span class="n">arr1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># np.pi = 3.141592653589793</span>
+<span class="n">arr1</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="n">arr1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="c1"># np.e = 2.718281828459045</span>
+<span class="n">arr1</span> <span class="o">**</span> <span class="mi">3</span>
+
+<span class="c1"># 数学的関数の数々</span>
+<span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span> <span class="c1"># 2を底とする対数</span>
+<span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="c1"># 全ての要素を2乗する</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="c1"># 全ての要素のルートを取る</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="c1"># ceiling (値以上で最も小さい整数)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="c1"># floor (値以下で最も大きい整数)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>要素ごとではなく配列全体にかかる関数もあります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 配列の全要素を足し上げる</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+
+<span class="c1"># 配列の要素の平均値</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>NumPyで実装されている関数はあまりにも多いので、このワークブックで使われている分でもここで紹介しきれていないかもしれません。残りは<a class="reference external" href="https://numpy.org/doc/stable/">NumPyのドキュメンテーション</a>を参照してください。</p>
+</div>
+</div>
+<div class="section" id="matplotlib">
+<h3><a class="toc-backref" href="#id41">Matplotlib</a><a class="headerlink" href="#matplotlib" title="Permalink to this headline">¶</a></h3>
+<p>NumPyで行った数値計算の結果を可視化するとき、おそらく最もよく用いられるのがMatplotlibというグラフ描画ライブラリです。このワークブックではMatplotlibのごく限られた機能しか使わないので、ここでは最低限の説明にとどめておきます。</p>
+<p>Matplotlibのモジュール名は<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>ですが、また慣習的に<code class="docutils literal notranslate"><span class="pre">mpl</span></code>と略してインポートすることが多いようです。また、<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>そのものよりも、そのサブモジュールである<code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code>の方をインポートすることが多く、こちらもまた慣習的に<code class="docutils literal notranslate"><span class="pre">plt</span></code>と略されます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Matplotlibには「図」（Figure）と「グラフ描画領域」（Axes）という概念があります。一つのFigureの中に複数のAxesが存在でき、各Axesに一つのプロットが描画される構造になっています。</p>
+<p>このワークブックでは新しい図を作るのに二通りのコードが登場します。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 空っぽのFigureを作る</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="c1"># Axesを一つ作る</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
+
+<span class="c1"># Figureを作ると同時に、中身のAxesも作り、配置する</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 縦に2列、横に3列の合計6個のAxesが生成される。figはFigureオブジェクト、axsはAxesオブジェクトの配列</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>こうして作ったFigureやAxesオブジェクトの様々なメソッドを使ってグラフを描くことができますが、実は単にxとyのデータがあって一つスキャッタープロットを作りたいという時などは、もっと簡単な方法を取ることもできます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>
+
+<span class="c1"># 折れ線グラフを描く</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">9.6</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">])</span>
+
+<span class="c1"># スキャッタープロットを描く</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;points&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">plt.plot</span></code>や<code class="docutils literal notranslate"><span class="pre">plt.scatter</span></code>を複数実行すると、同じAxesにグラフが重なってプロットされます。実行の際に<code class="docutils literal notranslate"><span class="pre">label='some</span> <span class="pre">text'</span></code>という引数を足し、<code class="docutils literal notranslate"><span class="pre">plt.legend()</span></code>を呼ぶと、凡例が表示されます。また<code class="docutils literal notranslate"><span class="pre">plt.xlabel()</span></code>や<code class="docutils literal notranslate"><span class="pre">plt.ylabel()</span></code>でX, Y軸にタイトルをつけたり、<code class="docutils literal notranslate"><span class="pre">plt.title()</span></code>でプロット全体にタイトルをつけたりできます。</p>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "UTokyo-ICEPP/qc-workbook",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="prerequisites.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">実習の準備</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="numerics.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">予備知識：数値表現</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By 東京大学素粒子物理国際研究センター<br/>
+    
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

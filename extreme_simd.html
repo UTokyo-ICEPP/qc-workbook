@@ -5,9 +5,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>4兆通りの足し算を同時に行う &#8212; 量子コンピューティング・ワークブック</title>
+    <title>計算をする量子回路の実装 &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】量子計算" href="quantum_computation.html" />
     <link rel="prev" title="単純な量子回路をゼロから書く" href="circuit_from_scratch.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
    量子計算の特徴
@@ -372,7 +384,7 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
+    <a class="reference internal nav-link" href="#transpilation">
      トランスパイルと物理的回路
     </a>
    </li>
@@ -390,17 +402,77 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>計算をする量子回路の実装</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   量子計算の特徴
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simd">
+   巨大SIMDマシンとしての量子コンピュータ
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   量子フーリエ変換による足し算
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   足し算の並列化
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
+   シミュレータでの実行
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transpilation">
+     トランスパイルと物理的回路
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     回路の比較
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id12">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
-<h1>4兆通りの足し算を同時に行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
+<h1>計算をする量子回路の実装<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>量子状態生成の感覚がつかめてきたところで、量子計算をするとはどういうことかに話を移して行きましょう。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -411,7 +483,7 @@
 <li><p><a class="reference internal" href="#id7" id="id55">足し算の並列化</a></p></li>
 <li><p><a class="reference internal" href="#id8" id="id56">シミュレータでの実行</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id9" id="id57">トランスパイルと物理的回路</a></p></li>
+<li><p><a class="reference internal" href="#transpilation" id="id57">トランスパイルと物理的回路</a></p></li>
 <li><p><a class="reference internal" href="#id11" id="id58">回路の比較</a></p></li>
 </ul>
 </li>
@@ -430,7 +502,7 @@
 </div>
 <div class="section" id="simd">
 <h2><a class="toc-backref" href="#id53">巨大SIMDマシンとしての量子コンピュータ</a><a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h2>
-<p>SIMD (single instruction multiple data)とは並列計算パラダイムの一つで、プロセッサの命令（instruction）が多数のデータに同時に適用されるケースを指します。私達の身の回りの（古典）コンピュータのプロセッサにもSIMD用のインストラクションセットが搭載されており、例えば（2021年2月現在）最先端の商用CPUでは、16個の単精度浮動小数点数に対し同時に四則演算や平方根の計算を行えます。</p>
+<p>SIMD (single instruction multiple data)とは並列計算パラダイムの一つで、プロセッサの命令（instruction）が多数のデータに同時に適用されるケースを指します。私達の身の回りの（古典）コンピュータのプロセッサにもSIMD用のインストラクションセットが搭載されており、例えば（2021年11月現在）最先端の商用CPUでは、16個の単精度浮動小数点数に対し同時に四則演算や平方根の計算を行えます。</p>
 <p>量子コンピュータでは、第一回の実習で触れられたように、すべてのゲートがすべての計算基底に作用します。ゲート操作を命令、各計算基底の振幅をデータとして解釈すれば、これは常に<span class="math notranslate nohighlight">\(2^n\)</span>個のデータに命令を与えながら計算をしていることにあたります。量子コンピュータは巨大SIMDマシンとも考えられるのです。</p>
 <p>ただし、これもすでに触れられたことですが、巨大並列計算ができたとしても、そのデータをすべて引き出すことはできません<a class="footnote-reference brackets" href="#and-you-dont-want-to" id="id4">1</a>ので、古典計算機のSIMDとはいろいろな意味で単純に比較できるものではありません。</p>
 <p>とはいえ、並列計算を行っているんだということを実感できると、より量子コンピュータを使う感覚が身に付いてくると思われるので、今回は最も単純に「足し算」をたくさん並列に行う回路を書いてみましょう。</p>
@@ -438,7 +510,7 @@
 <div class="section" id="id5">
 <h2><a class="toc-backref" href="#id54">量子フーリエ変換による足し算</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>これまで量子「計算機」の話をしていながら、単純であるはずの四則演算のやりかたについて触れていませんでした。理由は、実は量子コンピュータでは四則演算がそんなに単純でないから、です。</p>
-<p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです<span id="id6">[<a class="reference internal" href="#id22"><span>Dra00</span></a>]</span>。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
+<p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです<span id="id6">[<a class="reference internal" href="#id22" title="Thomas G Draper. Addition on a quantum computer. 2000. arXiv:quant-ph/0008033.">Dra00</a>]</span>。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
 <p>まずは計算の流れを数式で追ってみましょう。整数<span class="math notranslate nohighlight">\(a\)</span>と<span class="math notranslate nohighlight">\(b\)</span>の足し算を考えます。まず、2つのレジスタをそれぞれ状態<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>に用意します。以下のように、第3のレジスタ（初期状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>）の状態が和<span class="math notranslate nohighlight">\(a+b\)</span>を表すようにすることが目標です。それぞれのレジスタは十分に大きい（レジスタ<span class="math notranslate nohighlight">\(i\)</span>のビット数を<span class="math notranslate nohighlight">\(n_i\)</span>として<span class="math notranslate nohighlight">\(2^{n_1} &gt; a\)</span>, <span class="math notranslate nohighlight">\(2^{n_2} &gt; b\)</span>, <span class="math notranslate nohighlight">\(2^{n_3} &gt; a + b\)</span>）とします。</p>
 <div class="math notranslate nohighlight">
 \[
@@ -502,11 +574,13 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Math</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
-<span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
-<span class="kn">from</span> <span class="nn">utils.optimized_additions</span> <span class="kn">import</span> <span class="n">optimized_additions</span><span class="p">,</span> <span class="n">get_initial_layout</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">statevector_expr</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.optimized_additions</span> <span class="kn">import</span> <span class="n">optimized_additions</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span><span class="p">,</span> <span class="n">find_best_chain</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
 </pre></div>
@@ -520,6 +594,8 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="c1"># Equal superposition in register 3</span>
+    <span class="c1"># (Single-qubit gate methods in QuantumCircuit accepts a QuantumRegister or a</span>
+    <span class="c1"># list of qubit indices in addition to the usual single qubit index)</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">)</span>
 
     <span class="c1"># Smallest unit of phi</span>
@@ -528,11 +604,11 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
     <span class="c1"># Loop over reg1 and reg2</span>
     <span class="k">for</span> <span class="n">reg_ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">]:</span>
         <span class="c1"># Loop over qubits in the control register (reg1 or reg2)</span>
-        <span class="k">for</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="n">reg_ctrl</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg_ctrl</span><span class="p">):</span>
             <span class="c1"># Loop over qubits in the target register (reg3)</span>
-            <span class="k">for</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="n">reg3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">itarg</span><span class="p">,</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg3</span><span class="p">):</span>
                 <span class="c1"># C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}</span>
-                <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">qctrl</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">qtarg</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
+                <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">ictrl</span> <span class="o">+</span> <span class="n">itarg</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
 
     <span class="c1"># Insert a barrier for better visualization</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
@@ -553,7 +629,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </div>
 </div>
 </div>
-<p>回路を作り、レジスタ1と2を入力9と13を表すように初期化します。</p>
+<p>回路を作り、レジスタ1と2をそれぞれ入力9と13を表すように初期化します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">9</span>
@@ -574,14 +650,14 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
 <span class="c1"># Set register 1 to state |a&gt;</span>
-<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n1</span><span class="p">):</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg1</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="n">a_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">a_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg1</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
 
 <span class="c1"># Set register 2 to state |b&gt;</span>
-<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n2</span><span class="p">):</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="n">b_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">b_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg2</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
         
 <span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
@@ -590,18 +666,16 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </div>
 </div>
 </div>
-<p>再び<code class="docutils literal notranslate"><span class="pre">show_state</span></code>関数を使って終状態を確認してみましょう。</p>
-<div class="cell docutils container">
+<p>再び<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>関数を使って終状態を確認してみましょう。入力と出力のレジスタの値が別々に表示されるよう、<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>という引数を利用して、13ビットの回路を<span class="math notranslate nohighlight">\(n_1 + n_2 + n_3\)</span>ビットに分けて解釈するよう指定します。</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">),</span> <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/extreme_simd_9_0.png" src="_images/extreme_simd_9_0.png" />
 </div>
-</div>
-<p>ここで、<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>というオプション引数を渡して、13ビットの回路を<span class="math notranslate nohighlight">\(n_1 + n_2 + n_3\)</span>ビットに分けて解釈するよう指定しました。結果表示された状態は期待通り単一の計算基底<span class="math notranslate nohighlight">\(22:13:9\)</span>、つまりレジスタ1, 2, 3がそれぞれ<span class="math notranslate nohighlight">\(\ket{9}, \ket{13}, \ket{22}\)</span>となっている状態です（回路全体でビットを右から書いて状態を表示するため、レジスタも右から左に並びます）。つまり、めでたく状態の変遷</p>
+<p>結果表示された状態は期待通り単一の計算基底<span class="math notranslate nohighlight">\(22:13:9\)</span>、つまりレジスタ1, 2, 3がそれぞれ<span class="math notranslate nohighlight">\(\ket{9}, \ket{13}, \ket{22}\)</span>となっている状態です（回路全体でビットを右から書いて状態を表示するため、レジスタも右から左に並びます）。つまり、めでたく状態の変遷</p>
 <div class="math notranslate nohighlight">
 \[
 \ket{9}\ket{13}\ket{0} \rightarrow \ket{9}\ket{13}\ket{22}
@@ -616,6 +690,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{0} \rightarrow \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{j+k}
 \]</div>
 <p>を行うので、<span class="math notranslate nohighlight">\(\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)\)</span>個のゲートで<span class="math notranslate nohighlight">\(2^{n_1+n_2}\)</span>通りの足し算を並列に行います。実際にこれを確認してみましょう。</p>
+<p>この回路は下でもう一度作り直すので、回路を作る関数を定義しておきます。コード中<code class="docutils literal notranslate"><span class="pre">circuit.h()</span></code>に量子ビット番号ではなくレジスタオブジェクトを渡しています。<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>のコード中にも説明がありますが、Qiskitでは便利のために、<code class="docutils literal notranslate"><span class="pre">QuantumObject</span></code>クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span>
@@ -632,20 +707,21 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <span class="c1"># Set register 1 and 2 to equal superpositions</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
-        
-<span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">),</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">)),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt{2^{n_1 + n_2}}}&#39;</span><span class="p">),</span> <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
+    
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">),</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">)),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt{2^{n_1 + n_2}}}&#39;</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>65量子ビットのマシンを最大限利用するならば、<span class="math notranslate nohighlight">\(n_1 = n_2 = 21, n_3 = 22\)</span>で<span class="math notranslate nohighlight">\(2^{42}\)</span>通り、つまり約4兆通りの足し算を同時に行うことができます。</p>
-<p>もちろん、上で書いたようにここには重要な但し書きがあって、実機でこの計算をして測定から答えを得ようとすると、毎回の測定でどの組み合わせが得られるかをコントロールできないので、これはあまり実用的とは言えない回路です。強いて言えば毎日ランダムに6桁＋6桁の正しい足し算を教えてくれる「日めくり足し算カレンダー」にくらいは使えます。4兆通りなので100億年程度使い続けられます。</p>
+<p>2022年4月現在、IBMの持つ最大の量子コンピュータは127量子ビットです。このマシンを最大限利用するならば、<span class="math notranslate nohighlight">\(n_1 = n_2 = 42, n_3 = 43\)</span>で<span class="math notranslate nohighlight">\(2^{84}\)</span>通り、つまり約<span class="math notranslate nohighlight">\(2 \times 10^{25}\)</span>（20𥝱）通りの足し算を同時に行うことができます。</p>
+<p>もちろん、上で書いたようにここには重要な但し書きがあって、実機でこの計算をして測定から答えを得ようとすると、毎回の測定でどの組み合わせが得られるかをコントロールできないので、これはあまり実用的とは言えない回路です。強いて言えば毎日ランダムに12桁＋12桁の正しい足し算を教えてくれる「日めくり足し算カレンダー」にくらいは使えます。<span class="math notranslate nohighlight">\(10^{23}\)</span>年程度使い続けられます。</p>
 </div>
 <div class="section" id="id8">
 <h2><a class="toc-backref" href="#id56">シミュレータでの実行</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
-<p>上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。課題では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、これからは<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/optimized_additions.py">こちらの効率化した回路</a>を代わりに使用します。</p>
+<p>上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。課題では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py">専用に効率化した等価回路</a>を代わりに使用します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 元の回路に測定を加える</span>
@@ -658,11 +734,6 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constructed an optimized addition circuit
-</pre></div>
-</div>
-</div>
 </div>
 <p>回路の効率化とは具体的にどういうことでしょうか。もともとの回路と効率化したものとを比べてみましょう。まずは、単純にオペレーションの数を比較します。ゲート一つ一つで一定の確率でエラーが起こるということは、同じことをする回路ならゲートの数が少ないほうがより正確な計算をしてくれます。</p>
 <div class="cell docutils container">
@@ -672,17 +743,13 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of operations in the original circuit: 83
-Number of operations in the optimized circuit: 331
-</pre></div>
-</div>
-</div>
 </div>
 <p>効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。</p>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id57">トランスパイルと物理的回路</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>でも少し触れましたが、回路が実機で実行される前には、トランスパイルという回路の変換が行われ、様々な複合ゲートからなる「論理的」な回路から、実機のハードウェアに実装されている基本ゲートのみで書かれる「物理的」な回路が作られます<a class="footnote-reference brackets" href="#physical" id="id10">2</a>。論理的な回路はどのようにでも書ける（例えば回路全体を一つのゲートと呼んでしまうこともできる）ので、回路の効率の比較はトランスパイル後でなければ意味がありません。</p>
+<div class="section" id="transpilation">
+<span id="id9"></span><h3><a class="toc-backref" href="#id57">トランスパイルと物理的回路</a><a class="headerlink" href="#transpilation" title="Permalink to this headline">¶</a></h3>
+<p>これまで何度も登場しましたが、量子回路オブジェクトを実機やシミュレータの<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドに渡す前に、必ず<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数が呼んでいました。この関数はトランスパイルという変換を回路に施します。実機においてトランスパイルとは、様々な複合ゲートからなる論理的な回路から、実機のハードウェアに実装されている「基本ゲート」のみで書かれる物理的な回路を作ることを言います<a class="footnote-reference brackets" href="#physical" id="id10">2</a>。</p>
+<p>基本ゲートとは何でしょうか。実は、<a class="reference internal" href="chsh_inequality.html#common-gates"><span class="std std-ref">第一回</span></a>や<a class="reference internal" href="circuit_from_scratch.html#other-gates"><span class="std std-ref">第二回の前半</span></a>で様々なゲートを紹介しましたが、量子コンピュータの物理的実体（超伝導振動子など）で実際に行える量子操作にはごく少数の種類しかありません。例えば、IBMのマシンでは<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(\sqrt{X}\)</span>, <span class="math notranslate nohighlight">\(R_{z}\)</span>, CNOTの4通りです。しかし、この4つの組み合わせで全てのゲートを作ることができます。そのようなゲートの集合を基本ゲートと呼んでいます。</p>
+<p>足し算回路の愚直な実装と効率化した実装の比較に話を戻すと、上で比べていたのはあくまで複合ゲートを使った論理的な回路でした。論理的な回路はどのようにでも書ける（極端に言えば回路全体を一つの「足し算ゲート」と呼んでしまうこともできる）ので、回路のゲート数の比較はトランスパイル後でなければ意味がありません。</p>
 <p>いい機会なので、実機での量子計算について少し詳細に考えてみましょう。トランスパイルがまさに論理的なアルゴリズムの世界と物理的実装の世界のインターフェースとなるので、この過程に注目します。</p>
 <p>トランスパイル時には、以下のような回路の変換が起こります。</p>
 <ul class="simple">
@@ -693,97 +760,125 @@ Number of operations in the optimized circuit: 331
 <li><p>1量子ビットゲートの基本ゲートへの分解</p></li>
 <li><p>物理的回路の最適化</p></li>
 </ul>
-<p>実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲート（IBMQではCNOT）が実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば後で使うibmq_16_melbourneというマシンは以下のようなトポロジーを持っています。</p>
+<p>実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲート（IBMQではCNOT）が実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば以前運用されていたibmq_16_melbourneというマシンは以下のようなトポロジーを持っていました。</p>
 <a class="reference internal image-reference" href="_images/melbourne_topology.png" id="ibmq-16-melbourne"><img alt="_images/melbourne_topology.png" id="ibmq-16-melbourne" src="_images/melbourne_topology.png" style="height: 200px;" /></a>
 <p>図中、数字のついた丸が量子ビットを表し、線が量子ビット同士の繋がりを表します。</p>
+<p>このように実機ごとにトポロジーが違うことなどが理由で、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数には回路オブジェクトだけでなくバックエンドを引数として渡す必要があります。</p>
 <p>直接接続のない量子ビット間で制御ゲートを実行する場合、SWAPを使って2つの量子ビットが隣り合うように状態を遷移させていく必要があります。例えば上のibmq_16_melbourneでビット2と6の間のCNOTが必要なら、（いくつか方法がありますが）2↔3, 3↔4, 4↔5とSWAPを繰り返して、5と6の間でCNOTを行い、ビットの並びを元に戻す必要があれば再度5↔4, 4↔3, 3↔2とSWAPをすることになります。</p>
-<p><a class="reference internal" href="circuit_from_scratch.html#other-single-and-double-qubit-gates"><span class="std std-ref">ゲートの解説</span></a>に出てきたように、SWAPは3つのCNOTに分解されます。つまり、直接接続のない量子ビット同士の制御ゲートが多出するような回路があると、莫大な数のCNOTが使われることになります。<strong>CNOTのエラー率（ゲート操作一回あたりに操作の結果を間違える確率）は1量子ビットゲートのエラー率より一桁ほど高い</strong>ので、これは大きな問題になります。そこで、論理的回路の量子ビットと実機の量子ビットとのマッピング（SWAPが発生すれば対応は変わっていくので、あくまで初期対応）と、回路中にどうSWAPを挿入していくかというルーティングの両方を上手に決めるということが、トランスパイルにおける中心的な課題です。</p>
-<p>しかし、実は一般の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。</p>
+<p><a class="reference internal" href="circuit_from_scratch.html#other-gates"><span class="std std-ref">ゲートの解説</span></a>に出てきたように、SWAPは3つのCNOTに分解されます。つまり、直接接続のない量子ビット同士の制御ゲートが多出するような回路があると、莫大な数のCNOTが使われることになります。<strong>CNOTのエラー率（ゲート操作一回あたりに操作の結果を間違える確率）は1量子ビットゲートのエラー率より一桁ほど高い</strong>ので、これは大きな問題になります。そこで、論理的回路の量子ビットと実機の量子ビットとのマッピング（SWAPが発生すれば対応は変わっていくので、あくまで初期対応）と、回路中にどうSWAPを挿入していくかというルーティングの両方を上手に決めるということが、トランスパイルにおける中心的な課題です。</p>
+<p>しかし、実は任意の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。</p>
 </div>
 <div class="section" id="id11">
 <h3><a class="toc-backref" href="#id58">回路の比較</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>上を踏まえて、改めて2つの足し算回路を比較してみましょう。</p>
-<p>これまで実機で回路を実行するときは<code class="docutils literal notranslate"><span class="pre">execute</span></code>という関数を利用していましたが、実はこの関数にトランスパイル前の回路を渡すと、自動で標準設定のトランスパイルがなされていました。しかし<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を使い、トランスパイルを明示的に行うこともできます。この関数は主にトランスパイルの設定を細かくコントロールしたいときなどに使います。今回の効率化した回路は特定のマッピングのために作られているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。マッピングはibmq_16_melbourneのトポロジーとエラー率を参考にして事前に決めてあり、<code class="docutils literal notranslate"><span class="pre">get_initial_layout</span></code>という関数の中にハードコードされています。</p>
-<p>IBMQのマシンはチップごとに異なるトポロジーを持っているので、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数にも引数としてバックエンドを指定し、そのバックエンド専用の物理的回路を作ります。</p>
-<div class="cell tag_remove-output tag_raises-exception docutils container">
+<p>これまで<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を回路とバックエンド以外の引数を渡さずに実行してきましたが、実はこの関数の実行時に様々なオプションを使ってトランスパイルの設定を細かくコントロールすることができます。今回の効率化した回路は一列に並んだ量子ビット列上でSWAPを一切使わずに実装できるようになっているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。バックエンド上のどの量子ビット列を使うかは、<code class="docutils literal notranslate"><span class="pre">find_best_chain</span></code>という関数で自動的に決めます。</p>
+<p>本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、<code class="docutils literal notranslate"><span class="pre">'ibm-q/open/main'</span></code>プロバイダを使ってている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># よりアクセス権の広いプロバイダを使える場合は、下を書き換える</span>
+<span class="n">provider_def</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;main&#39;</span><span class="p">)</span>
 
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">provider_def</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;main&#39;</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">qiskit.test.mock</span> <span class="kn">import</span> <span class="n">FakeGuadalupe</span>
+    
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">FakeGuadalupe</span><span class="p">()</span>
 
-<span class="c1"># 4 + 4 + 5 = 13量子ビット以上のマシンで ibm-q/open/main からアクセス可能なのはibmq_16_melbourneのみ（2021年3月現在）</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;ibmq_16_melbourne&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+        <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 
-<span class="c1"># オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transpiling the original circuit with standard settings&#39;</span><span class="p">)</span>
-<span class="n">circuit_original_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_original</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="o">*</span><span class="n">provider_def</span><span class="p">)</span>
 
-<span class="c1"># 効率化した回路をトランスパイルする。ibmq_16_melbourneのうち、一直線に繋がった量子ビット列にマッピングする</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transpiling the optimized circuit with basic routing and custom qubit mapping&#39;</span><span class="p">)</span>
-<span class="n">initial_layout</span> <span class="o">=</span> <span class="n">get_initial_layout</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-<span class="n">circuit_optimized_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_optimized</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">routing_method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">initial_layout</span><span class="o">=</span><span class="n">initial_layout</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">13</span><span class="p">))</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the original circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the optimized circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{rz}</span><span class="s1">, N(SX)=</span><span class="si">{sx}</span><span class="s1">, N(CNOT)=</span><span class="si">{cx}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using backend </span><span class="si">{</span><span class="n">backend</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>上のように<code class="docutils literal notranslate"><span class="pre">optimization_level=3</span></code>でトランスパイルをすると、回路の最適化ルーチンに時間がかかりすぎることがたまにあります。セルを実行して1分以上反応がない場合は、一度Jupyterのカーネルを再起動してみてください。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る</span>
+<span class="c1"># フェイクバックエンドの場合、少し時間がかかるので気長に待ってください</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transpiling the original circuit with standard settings&#39;</span><span class="p">)</span>
+<span class="n">circuit_original_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_original</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># 効率化した回路をトランスパイルする。マシンのトポロジーに従い、最も合計エラー率の低い量子ビット列にマッピングする</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transpiling the optimized circuit with trivial mapping onto a chain of qubits&#39;</span><span class="p">)</span>
+<span class="n">initial_layout</span> <span class="o">=</span> <span class="n">find_best_chain</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">+</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">circuit_optimized_tr</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_optimized</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
+                                 <span class="n">routing_method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">initial_layout</span><span class="o">=</span><span class="n">initial_layout</span><span class="p">,</span>
+                                 <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># count_opsは回路に含まれる基本ゲートの数を辞書として返す</span>
+<span class="n">nops_orig</span> <span class="o">=</span> <span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()</span>
+<span class="n">nops_opt</span> <span class="o">=</span> <span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">count_ops</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of operations in the original circuit: </span><span class="si">{</span><span class="n">circuit_original_tr</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{</span><span class="n">nops_orig</span><span class="p">[</span><span class="s2">&quot;rz&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(X)=</span><span class="si">{</span><span class="n">nops_orig</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(SX)=</span><span class="si">{</span><span class="n">nops_orig</span><span class="p">[</span><span class="s2">&quot;sx&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(CNOT)=</span><span class="si">{</span><span class="n">nops_orig</span><span class="p">[</span><span class="s2">&quot;cx&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of operations in the optimized circuit: </span><span class="si">{</span><span class="n">circuit_optimized_tr</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Breakdown: N(Rz)=</span><span class="si">{</span><span class="n">nops_opt</span><span class="p">[</span><span class="s2">&quot;rz&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(X)=</span><span class="si">{</span><span class="n">nops_opt</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(SX)=</span><span class="si">{</span><span class="n">nops_opt</span><span class="p">[</span><span class="s2">&quot;sx&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">, N(CNOT)=</span><span class="si">{</span><span class="n">nops_opt</span><span class="p">[</span><span class="s2">&quot;cx&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
-<p>上のセルを実行すると、今度は効率化回路のオペレーションの数が元の回路の半数以下という結果になることがわかります。このマシンの基本ゲート<span class="math notranslate nohighlight">\(R_z, X\)</span>, SX, CNOTに分解した内訳でも、エラー率の大きいCNOTゲートの数が大幅に削減されています（両回路とも<span class="math notranslate nohighlight">\(X\)</span>ゲートは0個です）。</p>
+</div>
+</div>
+<p>上のセルを実行すると、今度は効率化回路のオペレーションの全数が元の回路の8割、CNOTの数は6割という結果になることがわかります。</p>
 <p>元の回路と効率化した回路の違いは、後者では「数珠つなぎ」になった量子ビット列というトポロジーを仮定して、制御ゲートの順番を工夫して直接明示的にSWAPを挿入していることです。さらに、可能なところでは<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートの分解で生じるCNOTとSWAPのCNOTが打ち消し合うことも利用しています。最後の逆フーリエ変換でもゲートの順番が工夫してあります。</p>
-<p>それでは、トランスパイルした回路を実行してみます。<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を使って「手動で」トランスパイルを行った回路を<code class="docutils literal notranslate"><span class="pre">execute</span></code>に渡すと再び標準設定でトランスパイルされてしまうので、別の手続きを踏みます。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
+<p>それでは、トランスパイルした回路を実行してみます。</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
-<span class="c1"># Will call backend.run() instead of execute()</span>
-<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">counts_original</span> <span class="o">=</span> <span class="n">job_original</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
-<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">counts_optimized</span> <span class="o">=</span> <span class="n">job_optimized</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
-<span class="c1"># Keys of counts are single binaries; need to split them into three parts and interpret as decimals</span>
-<span class="k">def</span> <span class="nf">interpret_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
     <span class="n">heights</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">heights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-        <span class="n">x1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">x2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">:</span><span class="o">-</span><span class="n">n1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">x3</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Keys of counts are single binaries; need to split them into three parts and interpret as decimals</span>
+        <span class="c1"># Example 4 + 4 digits:</span>
+        <span class="c1">#  00110 0101 0001 -&gt; 6 = 5 + 1</span>
+        <span class="c1">#  n3    n2   n1</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># last n1 digits</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">:</span><span class="o">-</span><span class="n">n1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># next-to-last n2 digits</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># first n3 digits</span>
         <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> + </span><span class="si">{}</span><span class="s1"> = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">))</span>
         
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
+    <span class="c1"># 棒グラフをプロット</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># ビジュアルを調整</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="c1"># サブプロットが縦に二つ並んだフィギュアを作成</span>
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_original</span><span class="p">,</span> <span class="n">ax_optimized</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 
-<span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">interpret_counts</span><span class="p">(</span><span class="n">counts_original</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-<span class="n">ax_original</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax_original</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax_original</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
-<span class="n">ax_original</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+<span class="c1"># サブプロット1: counts_original</span>
+<span class="n">plot_counts</span><span class="p">(</span><span class="n">counts_original</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">ax_original</span><span class="p">)</span>
 
-<span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">interpret_counts</span><span class="p">(</span><span class="n">counts_optimized</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-<span class="n">ax_optimized</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax_optimized</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax_optimized</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
-<span class="n">ax_optimized</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+<span class="c1"># サブプロット2: counts_optimized</span>
+<span class="n">plot_counts</span><span class="p">(</span><span class="n">counts_optimized</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">ax_optimized</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>正しい足し算の式がランダムに出現することを確認してください。</p>
+<p>両方の回路とも、正しい足し算の式がランダムに出現していることを確認してください。</p>
 </div>
 </div>
 <div class="section" id="id12">
@@ -827,36 +922,42 @@ Number of operations in the optimized circuit: 331
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="circuit_from_scratch.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">単純な量子回路をゼロから書く</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="quantum_computation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">【課題】量子計算</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="circuit_from_scratch.html" title="previous page">単純な量子回路をゼロから書く</a>
-    <a class='right-next' id="next-link" href="quantum_computation.html" title="next page">【課題】量子計算</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

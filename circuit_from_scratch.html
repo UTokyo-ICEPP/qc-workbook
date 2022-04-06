@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>単純な量子回路をゼロから書く &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4兆通りの足し算を同時に行う" href="extreme_simd.html" />
+    <link rel="next" title="計算をする量子回路の実装" href="extreme_simd.html" />
     <link rel="prev" title="【課題】量子相関を調べる" href="nonlocal_correlations.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,28 +348,28 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
    状態ベクトルシミュレータで量子状態を調べる
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id4">
+  <a class="reference internal nav-link" href="#other-gates">
    その他のゲート
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#other-single-and-double-qubit-gates">
+    <a class="reference internal nav-link" href="#id5">
      1、2量子ビット
     </a>
    </li>
@@ -404,7 +416,7 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
+    <a class="reference internal nav-link" href="#qft">
      問題7: 量子フーリエ変換
     </a>
    </li>
@@ -417,25 +429,112 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>単純な量子回路をゼロから書く</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   状態ベクトルシミュレータで量子状態を調べる
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-gates">
+   その他のゲート
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1、2量子ビット
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     3量子ビット以上
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   量子状態生成
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     問題1: 1量子ビット、相対位相付き
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     問題2: ベル状態、相対位相付き
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ghz">
+     問題3: GHZ状態
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#equal-superposition">
+     問題4: Equal superposition
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     問題5: 特定の基底の符号を反転させる
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     問題6: Equal superpositionに位相を付ける
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qft">
+     問題7: 量子フーリエ変換
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id16">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>単純な量子回路をゼロから書く<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference internal" href="chsh_inequality.html"><span class="doc">CHSH不等式の破れを確認する</span></a>で、量子回路の基本的な書き方と実機での実行の仕方を学びました。そこで出てきたように、QCでは量子レジスタに特定の量子状態を実現することが計算を行うこととなります。そこで今回は、基本的なゲートを組み合わせて様々な量子状態を作る実習を行います。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#id3" id="id56">状態ベクトルシミュレータで量子状態を調べる</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id57">その他のゲート</a></p>
+<li><p><a class="reference internal" href="#other-gates" id="id57">その他のゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#other-single-and-double-qubit-gates" id="id58">1、2量子ビット</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id58">1、2量子ビット</a></p></li>
 <li><p><a class="reference internal" href="#id6" id="id59">3量子ビット以上</a></p></li>
 </ul>
 </li>
@@ -447,7 +546,7 @@
 <li><p><a class="reference internal" href="#equal-superposition" id="id64">問題4: Equal superposition</a></p></li>
 <li><p><a class="reference internal" href="#id10" id="id65">問題5: 特定の基底の符号を反転させる</a></p></li>
 <li><p><a class="reference internal" href="#id12" id="id66">問題6: Equal superpositionに位相を付ける</a></p></li>
-<li><p><a class="reference internal" href="#id13" id="id67">問題7: 量子フーリエ変換</a></p></li>
+<li><p><a class="reference internal" href="#qft" id="id67">問題7: 量子フーリエ変換</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#id16" id="id68">参考文献</a></p></li>
@@ -457,15 +556,15 @@
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id56">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>第一回の課題で利用したQCシミュレータ<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は、実機と同様に量子回路の測定結果をヒストグラムとして返してくれるものでした。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>（状態ベクトルシミュレータ）を利用します。状態ベクトルシミュレータは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。</p>
-<p>シミュレータへのアクセスは<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>同様<code class="docutils literal notranslate"><span class="pre">Aer</span></code>からです。`</p>
+<p>シミュレータへのアクセスは<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>同様<code class="docutils literal notranslate"><span class="pre">Aer</span></code>からです。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
-<span class="c1"># utilsはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
-<span class="kn">from</span> <span class="nn">utils.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Math</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">statevector_expr</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
 </pre></div>
@@ -491,7 +590,7 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
@@ -505,53 +604,56 @@
 <p class="admonition-title">Caution</p>
 <p>回路に測定操作(<code class="docutils literal notranslate"><span class="pre">measure_all()</span></code>)を加えてしまうと、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を利用して測定前の回路の量子状態を確認することができなくなります。</p>
 </div>
-<p>状態ベクトルシミュレーションを実行する際も<code class="docutils literal notranslate"><span class="pre">execute</span></code>関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">result.data()['statevector']</span></code>を参照します。</p>
+<p>状態ベクトルシミュレーションを実行する際も<code class="docutils literal notranslate"><span class="pre">transpile</span></code>とバックエンドの<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">result.data()['statevector']</span></code>を参照します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">simulator</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 再び「おまじない」のtranspileをしてから、run()に渡す</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-<span class="n">statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
+<span class="n">qiskit_statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
 
+<span class="c1"># result.data()[&#39;statevector&#39;]は通常の配列オブジェクト（ndarray）ではなくqiskit独自のクラスのインスタンス</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">qiskit_statevector</span><span class="p">))</span>
+
+<span class="c1"># ただし np.asarray() で numpy の ndarray に変換可能</span>
+<span class="n">statevector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">qiskit_statevector</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">statevector</span><span class="p">),</span> <span class="n">statevector</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;numpy.ndarray&#39;&gt; complex128
-[ 0.27059805+0.j -0.65328148+0.j  0.65328148+0.j  0.27059805+0.j]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;qiskit.providers.aer.backends.compatibility.Statevector&#39;&gt;
+&lt;class &#39;numpy.ndarray&#39;&gt; complex128
+[ 0.27059805+0.j  0.65328148+0.j -0.65328148+0.j  0.27059805+0.j]
 </pre></div>
 </div>
 </div>
 </div>
 <p>状態ベクトルは<a class="reference external" href="https://numpy.org/">numpy</a>の<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>配列オブジェクトとして実装されています。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。</p>
-<p>matplotlibのテキスト表示を利用して、得られた状態ベクトルをケット表示してみましょう。</p>
+<p>状態ベクトルデータから数式の文字列を作る<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">state_string</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;|\psi\rangle =&#39;</span>
-<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statevector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">statevector</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">))</span>
-    <span class="n">norm_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">8.</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">state_string</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; sin(</span><span class="si">{}</span><span class="s1"> \pi / 8)|</span><span class="si">{}</span><span class="s1">\rangle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">norm_angle</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">norm_angle</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">idx</span> <span class="o">!=</span> <span class="n">statevector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">state_string</span> <span class="o">+=</span> <span class="s1">&#39;+&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state_string</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;xx-large&#39;</span><span class="p">)</span>
+<span class="c1"># Math()はLaTeXをタイプセットする関数</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_10_0.png" src="_images/circuit_from_scratch_10_0.png" />
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle = 0.271 |0\rangle + 0.653 |1\rangle - 0.653 |2\rangle + 0.271 |3\rangle\]</div>
 </div>
 </div>
+<p>前回より、<a class="reference internal" href="chsh_inequality.html#equation-eqn-circuit1">(1)</a>は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})\)</span>（<span class="math notranslate nohighlight">\(s:=\sin(\pi/8)=0.271\sqrt{2}\)</span>, <span class="math notranslate nohighlight">\(c:=\cos(\pi/8)=0.653\sqrt{2}\)</span>）という状態を作るもののはずでした。実際に計算された終状態の状態ベクトルが一致しています。</p>
 </div>
-<div class="section" id="id4">
-<h2><a class="toc-backref" href="#id57">その他のゲート</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="other-gates">
+<span id="id4"></span><h2><a class="toc-backref" href="#id57">その他のゲート</a><a class="headerlink" href="#other-gates" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="chsh_inequality.html"><span class="doc">CHSH不等式の破れを確認する</span></a>で、よく使われる1量子ビットゲートと2量子ビット制御ゲートを紹介しましたが、他にも知っておくと便利なゲートがいくつかあります。</p>
-<div class="section" id="other-single-and-double-qubit-gates">
-<span id="id5"></span><h3><a class="toc-backref" href="#id58">1、2量子ビット</a><a class="headerlink" href="#other-single-and-double-qubit-gates" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id58">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <table class="table">
 <colgroup>
 <col style="width: 25%" />
@@ -619,7 +721,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <div class="section" id="id6">
 <h3><a class="toc-backref" href="#id59">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます。そのようなゲートを含む回路を実機で実行するときには、実行直前に「トランスパイル」（transpilation）という過程を経て回路を変換します。3量子ビット以上のゲートは最終的には全て1量子ビットゲートとCNOTに自動的に分解されます。</p>
+<p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます（最終的には1量子ビットゲートと2量子ビット制御ゲートに分解して実行されます）。</p>
 <p>3量子ビット以上にかかるゲートも基本は制御ゲートで、よく使われるのは制御ビットが複数あるような多重制御（multi-controlled）ゲート<span class="math notranslate nohighlight">\(C^{ij\dots}_{k}[U]\)</span>です。そのうち制御ビットが2つで標的ビット1つに<span class="math notranslate nohighlight">\(X\)</span>をかける<span class="math notranslate nohighlight">\(C^{ij}_{k}[X]\)</span>は特別多用され、Toffoliゲートとも呼ばれます。</p>
 <p>多重制御ゲートでない3量子ビットゲートの例として、controlled SWAPというものも存在します。制御ビット1つで他の2つの量子ビットの間の量子状態交換を制御します。当然制御ビットを増やしたmulti-controlled SWAPというものも考えられます。</p>
 <p>Qiskitで多重制御ゲートに対応するコードは一般に<code class="docutils literal notranslate"><span class="pre">circuit.mc?(parameters,</span> <span class="pre">[controls],</span> <span class="pre">target)</span></code>という形を取ります。例えばToffoliゲートは</p>
@@ -636,7 +738,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <div class="section" id="id7">
 <h2><a class="toc-backref" href="#id60">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。</p>
-<p>回路の量子状態を表示する<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_state</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。この関数は内部で<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を利用して回路の状態ベクトルを読み出しています。</p>
+<p>実は<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>関数には回路オブジェクトを直接渡すこともできるので（内部でシミュレータを実行し状態ベクトルオブジェクトを取得する）、ここからはその機能を利用します。また、コード中登場する<code class="docutils literal notranslate"><span class="pre">amp_norm</span></code>や<code class="docutils literal notranslate"><span class="pre">phase_norm</span></code>は、表示される数式において振幅や位相の共通因子をくくりだすために設定されています。</p>
 <div class="section" id="id8">
 <h3><a class="toc-backref" href="#id61">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
@@ -658,7 +760,8 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -700,7 +803,8 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -737,7 +841,8 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{\sqrt</span><span class="si">{2}</span><span class="s1">}&#39;</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -775,8 +880,9 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">sqrt_2_to_n</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -817,8 +923,9 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">sqrt_2_to_n</span><span class="p">))</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -867,8 +974,11 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">),</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">amp_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">sqrt_2_to_n</span><span class="p">)</span>
+<span class="n">phase_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">))</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="n">phase_norm</span><span class="p">)</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -905,8 +1015,8 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 <p>が正解となります。</p>
 </div>
 </div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id67">問題7: 量子フーリエ変換</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="qft">
+<span id="id13"></span><h3><a class="toc-backref" href="#id67">問題7: 量子フーリエ変換</a><a class="headerlink" href="#qft" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p><span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタの状態<span class="math notranslate nohighlight">\(\ket{j} \, (j \in \{0,1,\dots,2^n-1\})\)</span>を以下のように変換する回路を考え、<span class="math notranslate nohighlight">\(n=6, j=23\)</span>のケースを実装しなさい。</p>
 <div class="math notranslate nohighlight">
@@ -921,10 +1031,23 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 
 <span class="n">j</span> <span class="o">=</span> <span class="mi">23</span>
 
-<span class="c1"># jの二進数表現で値が1になっているビットに対してXを作用させる -&gt; 状態|j&gt;を作る</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">j</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="c1">## jの２進数表現で値が1になっているビットに対してXを作用させる -&gt; 状態|j&gt;を作る</span>
+
+<span class="c1"># まずjの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）</span>
+<span class="c1"># unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している</span>
+<span class="n">j_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+
+<span class="c1"># 次にj_bitsアレイのうち、ビットが立っているインデックスを得る</span>
+<span class="n">j_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">j_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># 最後にcircuit.x()</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">j_indices</span><span class="p">:</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    
+<span class="c1">## Alternative method</span>
+<span class="c1">#for i in range(num_qubits):</span>
+<span class="c1">#    if ((j &gt;&gt; i) &amp; 1) == 1:</span>
+<span class="c1">#        circuit.x(i)</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT BELOW ###</span>
@@ -934,14 +1057,17 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span>
-<span class="n">show_state</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt_2_to_n</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">),</span> <span class="n">phase_norm</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">))</span>
+<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">amp_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">sqrt_2_to_n</span><span class="p">)</span>
+<span class="n">phase_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">))</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="n">amp_norm</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="n">phase_norm</span><span class="p">)</span>
+<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています<span id="id14">[<a class="reference internal" href="#id20"><span>NC00</span></a>]</span>。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。</p>
-<p>古典計算機で離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装<span id="id15">[<a class="reference internal" href="#id25"><span>HalesHallgren00</span></a>]</span>で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。</p>
+<p>この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています<span id="id14">[<a class="reference internal" href="#id20" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5, pages 216-247. Cambridge University Press, 2000.">NC00</a>]</span>。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。</p>
+<p>古典計算機で離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装<span id="id15">[<a class="reference internal" href="#id25" title="L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In Proceedings 41st Annual Symposium on Foundations of Computer Science, volume, 515-525. 2000. doi:10.1109/SFCS.2000.892139.">HalesHallgren00</a>]</span>で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。</p>
 <p><strong>解答</strong></p>
 <div class="toggle docutils container">
 <p>前の問題同様、基本は<span class="math notranslate nohighlight">\(H\)</span>ゲート<span class="math notranslate nohighlight">\(P\)</span>ゲートを使っていきますが、今回は<span class="math notranslate nohighlight">\(\ket{j}\)</span>という「入力」があるので、制御ゲートを利用する必要があります。</p>
@@ -1071,36 +1197,42 @@ c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="nonlocal_correlations.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">【課題】量子相関を調べる</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="extreme_simd.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">計算をする量子回路の実装</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="nonlocal_correlations.html" title="previous page">【課題】量子相関を調べる</a>
-    <a class='right-next' id="next-link" href="extreme_simd.html" title="next page">4兆通りの足し算を同時に行う</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>

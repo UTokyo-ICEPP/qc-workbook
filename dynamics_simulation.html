@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>物理系を表現する &#8212; 量子コンピューティング・ワークブック</title>
     
-  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -19,14 +20,10 @@
 
     
       
-  <link rel="stylesheet"
-    href="_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -34,39 +31,44 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】量子ダイナミクスシミュレーション・続" href="more_dynamics.html" />
     <link rel="prev" title="【課題】量子計算" href="quantum_computation.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+    
 
-
-
+    <!-- Google Analytics -->
+    
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
@@ -75,32 +77,36 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/favicon.ico" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-  
-</a>
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="welcome.html">
    量子コンピューティング・ワークブックへようこそ！
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子コンピュータに触れる
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="chsh_inequality.html">
    CHSH不等式の破れを確認する
@@ -112,12 +118,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  超並列計算機としての量子コンピュータ
+  量子回路で計算をする
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="circuit_from_scratch.html">
    単純な量子回路をゼロから書く
@@ -125,7 +131,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="extreme_simd.html">
-   4兆通りの足し算を同時に行う
+   計算をする量子回路の実装
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,12 +140,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子ダイナミクスシミュレーション
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    物理系を表現する
@@ -151,12 +157,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   ショアのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="shor.html">
    素因数分解アルゴリズムを学習する
@@ -168,12 +174,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   グローバーのアルゴリズム
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="grover.html">
    データベース検索を行う
@@ -185,12 +191,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   変分法と変分量子固有値ソルバー
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqe.html">
    変分法と変分量子固有値ソルバー法を学習する
@@ -202,12 +208,12 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   量子・古典ハイブリッド機械学習
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="vqc_machine_learning.html">
    量子機械学習を使った新しい素粒子現象の探索
@@ -219,20 +225,25 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   補足
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="numerics.html">
-   数値表現
+   予備知識：数値表現
   </a>
  </li>
  <li class="toctree-l1">
@@ -242,6 +253,7 @@
  </li>
 </ul>
 
+    </div>
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
@@ -257,21 +269,21 @@
           
 <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
@@ -285,11 +297,11 @@
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-        <!-- Source interaction buttons -->
+            <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -307,14 +319,14 @@
     </div>
 </div>
 
+            <!-- Full screen (wrap in <a> to have style consistency -->
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
 
-        <!-- Launch buttons -->
+            <!-- Launch buttons -->
 
 <div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
@@ -336,16 +348,16 @@
     </div>
 </div>
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
    量子系のダイナミクスとは
@@ -412,16 +424,98 @@
  </li>
 </ul>
 
-        </nav>
-        
+            </nav>
+        </div>
     </div>
 </div>
     <div id="main-content" class="row">
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>物理系を表現する</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   量子系のダイナミクスとは
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     例：核磁気の歳差運動
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     量子コンピュータ上での表現
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     ハミルトニアンの対角化
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     鈴木・トロッター分解
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id14">
+   実習：ハイゼンベルグモデルの時間発展
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id15">
+     モデルのハミルトニアン
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id17">
+     量子ゲートでの表現
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id19">
+     回路実装
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#measurement-error-mitigation">
+     おまけ：測定エラーの緩和
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id22">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
               <div>
                 
-  <div class="section" id="id1">
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>物理系を表現する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>第三回の実習では、量子コンピュータの並列性を利用した計算の代表例として、量子系のダイナミクスシミュレーションについて学びます。</p>
 <div class="contents local topic" id="id2">
@@ -496,13 +590,13 @@ U_H(t) = \exp (-i \omega t \sigma^X) = \sum_{n=0}^{\infty} \frac{1}{n!} (-i \ome
 \]</div>
 <p>ですが（<span class="math notranslate nohighlight">\(I\)</span>は恒等演算子）、上の<span class="math notranslate nohighlight">\(\sigma^X\)</span>の定義からわかるように<span class="math notranslate nohighlight">\((\sigma^X)^2 = I\)</span>なので</p>
 <div class="math notranslate nohighlight" id="equation-exp-sigmax">
-<span class="eqno">(3)<a class="headerlink" href="#equation-exp-sigmax" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(4)<a class="headerlink" href="#equation-exp-sigmax" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
 \exp (-i \omega t \sigma^X) &amp; = \left[ 1 + \frac{1}{2} (-i \omega t)^2 + \cdots \right] I + \left[(-i \omega t) + \frac{1}{6} (-i \omega t)^3 + \cdots \right] \sigma^X \\
 &amp; = \cos(\omega t) I - i \sin(\omega t) \sigma^X
 \end{align}\end{split}\]</div>
 <p>と書けます。したがって、</p>
 <div class="math notranslate nohighlight" id="equation-spin-exact">
-<span class="eqno">(4)<a class="headerlink" href="#equation-spin-exact" title="Permalink to this equation">¶</a></span>\[\ket{\psi (t_1)} = U_H(t_1 - t_0) \ket{\psi (t_0)} = \exp [-i \omega (t_1 - t_0) \sigma^X] \upket = \cos[\omega (t_1 - t_0)] \upket - i \sin[\omega (t_1 - t_0)] \downket\]</div>
+<span class="eqno">(5)<a class="headerlink" href="#equation-spin-exact" title="Permalink to this equation">¶</a></span>\[\ket{\psi (t_1)} = U_H(t_1 - t_0) \ket{\psi (t_0)} = \exp [-i \omega (t_1 - t_0) \sigma^X] \upket = \cos[\omega (t_1 - t_0)] \upket - i \sin[\omega (t_1 - t_0)] \downket\]</div>
 <p>です。任意の時刻<span class="math notranslate nohighlight">\(t_1\)</span>のスピンの状態が基底<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>の重ね合わせとして表現されました。</p>
 <p>このように、系のエネルギーの表式からハミルトニアンが決まり、その指数関数を初期状態に作用させることで時間発展後の系の状態が求まります。</p>
 <p>ちなみに、<span class="math notranslate nohighlight">\(\ket{\psi (t_1)}\)</span>は<span class="math notranslate nohighlight">\(t_1 = t_0\)</span>で<span class="math notranslate nohighlight">\(\upket\)</span>、<span class="math notranslate nohighlight">\(t_1 = t_0 + \pi / (2 \omega)\)</span>で<span class="math notranslate nohighlight">\((-i)\downket\)</span>となり、以降<span class="math notranslate nohighlight">\(\upket\)</span>と<span class="math notranslate nohighlight">\(\downket\)</span>を周期的に繰り返します。実は、その間の状態はスピンが<span class="math notranslate nohighlight">\(Y\)</span>-<span class="math notranslate nohighlight">\(Z\)</span>平面内を向いている状態に相当します。スピンが0でない原子核に磁場をかけると、スピンと磁場の方向が揃っていなければ磁場の方向を軸にスピンが歳差運動（すりこぎ運動）をします。これはコマが重力中で起こす運動と同じで、核磁気共鳴（NMR、さらに医学応用のMRI）の原理に深く関わります。</p>
@@ -528,7 +622,7 @@ R_{x}(\theta)\ket{1} = -i\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{
 <div class="section" id="id6">
 <h3><a class="toc-backref" href="#id65">ハミルトニアンの対角化</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>再び量子コンピュータを離れて、量子・古典に関わらずデジタル計算機で量子ダイナミクスのシミュレーションをする際の一般論をします。</p>
-<p>上の核スピンの例ではハミルトニアンが単純だったので、式<a class="reference internal" href="#equation-spin-exact">(4)</a>のように厳密解が求まりました。特に、導出において<span class="math notranslate nohighlight">\((\sigma^X)^2 = I\)</span>という恒等式が非常に重要でした。しかし、一般のハミルトニアンでは、何乗しても恒等演算子の定数倍にたどり着く保証がありません。</p>
+<p>上の核スピンの例ではハミルトニアンが単純だったので、式<a class="reference internal" href="#equation-spin-exact">(5)</a>のように厳密解が求まりました。特に、導出において<span class="math notranslate nohighlight">\((\sigma^X)^2 = I\)</span>という恒等式が非常に重要でした。しかし、一般のハミルトニアンでは、何乗しても恒等演算子の定数倍にたどり着く保証がありません。</p>
 <p>累乗して恒等演算子にならないようなハミルトニアンであっても、系の次元が小さい場合は「対角化」という作業で厳密解を得られます。ハミルトニアンの対角化とは、ハミルトニアンの作用が実数をかけることと等しくなるようなケットを探してくること、つまり</p>
 <div class="math notranslate nohighlight">
 \[
@@ -537,7 +631,7 @@ H\ket{\phi_j} = \hbar \omega_j \ket{\phi_j}, \quad \omega_j \in \mathbb{R}
 <p>が成り立つような<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を見つけることを指します。このような<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を「固有値<span class="math notranslate nohighlight">\(\hbar \omega_j\)</span>を持つ<span class="math notranslate nohighlight">\(H\)</span>の固有ベクトル」と呼びます。「エネルギー固有状態」と呼ぶこともあります。系の次元が<span class="math notranslate nohighlight">\(N\)</span>であれば、独立な固有ベクトルが<span class="math notranslate nohighlight">\(N\)</span>個存在します。</p>
 <p>例えば上の例では<span class="math notranslate nohighlight">\(H = \hbar \omega \sigma^X\)</span>ですが、</p>
 <div class="math notranslate nohighlight" id="equation-left-right-kets">
-<span class="eqno">(5)<a class="headerlink" href="#equation-left-right-kets" title="Permalink to this equation">¶</a></span>\[\begin{split}\rightket := \frac{1}{\sqrt{2}}(\upket + \downket) \\
+<span class="eqno">(6)<a class="headerlink" href="#equation-left-right-kets" title="Permalink to this equation">¶</a></span>\[\begin{split}\rightket := \frac{1}{\sqrt{2}}(\upket + \downket) \\
 \leftket := \frac{1}{\sqrt{2}}(\upket - \downket)\end{split}\]</div>
 <p>という2つの状態を考えると</p>
 <div class="math notranslate nohighlight">
@@ -571,12 +665,12 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 &amp; = \cos [\omega (t_1-t_0)] \upket - i \sin [\omega (t_1-t_0)] \downket
 \end{align}
 \end{split}\]</div>
-<p>となり、式<a class="reference internal" href="#equation-spin-exact">(4)</a>が再導出できます。</p>
+<p>となり、式<a class="reference internal" href="#equation-spin-exact">(5)</a>が再導出できます。</p>
 <p>このように、ハミルトニアンの対角化さえできれば、量子ダイナミクスのシミュレーションは位相をかけて足し算をするだけの問題に帰着します。しかし、上で言及したように、計算量の問題から、ハミルトニアンが対角化できるのは主に系の次元が小さいときに限ります。「対角化」という言葉が示唆するように、この操作は行列演算（対角化）を伴い、その際の行列の大きさは<span class="math notranslate nohighlight">\(N \times N\)</span>です。上の核スピンの例では<span class="math notranslate nohighlight">\(N=2\)</span>でしたが、もっと実用的なシミュレーションの場合、系の量子力学的次元は一般的に関係する自由度の数（粒子数など）の指数関数的に増加します。比較的小規模な系でもすぐに対角化にスーパーコンピュータが必要なスケールになってしまいます。</p>
 </div>
 <div class="section" id="id7">
 <h3><a class="toc-backref" href="#id66">鈴木・トロッター分解</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p>ハミルトニアンが対角化できない場合、ダイナミクスシミュレーションをするには、結局式<a class="reference internal" href="#equation-spin-exact">(4)</a>のように初期状態に時間発展演算子を愚直にかけていくことになります。これは、式<a class="reference internal" href="#equation-exp-sigmax">(3)</a>のように<span class="math notranslate nohighlight">\(U_H(t)\)</span>を閉じた形式で厳密に書けるなら簡単な問題ですが、そうでない場合は数値的に近似していく必要があります。その場合の常套手段は、行いたい時間発展<span class="math notranslate nohighlight">\((t_1 - t_0)\)</span>を短い時間</p>
+<p>ハミルトニアンが対角化できない場合、ダイナミクスシミュレーションをするには、結局式<a class="reference internal" href="#equation-spin-exact">(5)</a>のように初期状態に時間発展演算子を愚直にかけていくことになります。これは、式<a class="reference internal" href="#equation-exp-sigmax">(4)</a>のように<span class="math notranslate nohighlight">\(U_H(t)\)</span>を閉じた形式で厳密に書けるなら簡単な問題ですが、そうでない場合は数値的に近似していく必要があります。その場合の常套手段は、行いたい時間発展<span class="math notranslate nohighlight">\((t_1 - t_0)\)</span>を短い時間</p>
 <div class="math notranslate nohighlight">
 \[
 \Delta t = \frac{t_1 - t_0}{M}, \quad M \gg 1
@@ -588,17 +682,17 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 \tilde{U}_{H;\Delta t} = I - \frac{i \Delta t}{\hbar} H
 \]</div>
 <p>とすれば、まず<span class="math notranslate nohighlight">\(H\ket{\psi(t_0)}\)</span>を計算し、それを<span class="math notranslate nohighlight">\(i\Delta t/\hbar\)</span>倍して<span class="math notranslate nohighlight">\(\ket{\psi(t_0)}\)</span>から引き、その結果にまた<span class="math notranslate nohighlight">\(H\)</span>をかけて、…という具合に<span class="math notranslate nohighlight">\(\ket{\psi(t_1)}\)</span>が近似計算できます<a class="footnote-reference brackets" href="#exact-at-limit" id="id8">1</a>。</p>
-<p>しかし、このスキームは量子コンピュータでの実装に向いていません。上で述べたように量子コンピュータのゲートはユニタリ演算子に対応するのに対して、<span class="math notranslate nohighlight">\(I - i\Delta t / \hbar H\)</span>はユニタリでないからです。代わりに、量子コンピュータでのダイナミクスシミュレーションでよく用いられるのが鈴木・トロッター分解という近似法です<span id="id9">[<a class="reference internal" href="#id27"><span>NC00</span></a>]</span>。</p>
+<p>しかし、このスキームは量子コンピュータでの実装に向いていません。上で述べたように量子コンピュータのゲートはユニタリ演算子に対応するのに対して、<span class="math notranslate nohighlight">\(I - i\Delta t / \hbar H\)</span>はユニタリでないからです。代わりに、量子コンピュータでのダイナミクスシミュレーションでよく用いられるのが鈴木・トロッター分解という近似法です<span id="id9">[<a class="reference internal" href="#id27" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 4.7, pages 204-213. Cambridge University Press, 2000.">NC00</a>]</span>。</p>
 <p>鈴木・トロッター分解は、ハミルトニアンを<span class="math notranslate nohighlight">\(H = \sum_{k=1}^{L} H_k\)</span>と<span class="math notranslate nohighlight">\(L\)</span>個のエルミート演算子<span class="math notranslate nohighlight">\(H_k\)</span>の和に分解したときに、</p>
 <div class="math notranslate nohighlight" id="equation-trotter-formula">
-<span class="eqno">(6)<a class="headerlink" href="#equation-trotter-formula" title="Permalink to this equation">¶</a></span>\[\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)\]</div>
+<span class="eqno">(7)<a class="headerlink" href="#equation-trotter-formula" title="Permalink to this equation">¶</a></span>\[\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)\]</div>
 <p>が成り立つという定理に基づきます。個々の<span class="math notranslate nohighlight">\(H_k\)</span>について<span class="math notranslate nohighlight">\(U_{H_k}(\Delta t) = \exp (-i/\hbar \Delta t H_k)\)</span>の量子ゲートによる実装が知られていれば、右辺の第一項が実装できるので、ステップ数<span class="math notranslate nohighlight">\(M\)</span>で決まる精度でダイナミクスが近似できます。</p>
 <p>やや立ち入った話になりますが、この定理の重要なポイントは、一般に線形演算子<span class="math notranslate nohighlight">\(A, B\)</span>に対して、特殊な条件が満たされる（<span class="math notranslate nohighlight">\(A\)</span>と<span class="math notranslate nohighlight">\(B\)</span>が「可換」である）場合を除いて</p>
 <div class="math notranslate nohighlight">
 \[
 \exp(A + B) \neq \exp(A)\exp(B)
 \]</div>
-<p>であるということです。この関係があるからこそ、式<a class="reference internal" href="#equation-trotter-formula">(6)</a>で<span class="math notranslate nohighlight">\(U_{H_k}(t)\)</span>が実装できても<span class="math notranslate nohighlight">\(U_H(t)\)</span>が実装できるとは限らないのです。しかし、十分短い時間<span class="math notranslate nohighlight">\(\Delta t\)</span><a class="footnote-reference brackets" href="#sufficiently-small" id="id10">2</a>についてであれば、<span class="math notranslate nohighlight">\(U_H(\Delta t)\)</span>を<span class="math notranslate nohighlight">\(U_{H_k}(\Delta t)\)</span>の積として表しても、その誤差が計算結果に大きく影響しない、ということをこの定理は言っています。</p>
+<p>であるということです。この関係があるからこそ、式<a class="reference internal" href="#equation-trotter-formula">(7)</a>で<span class="math notranslate nohighlight">\(U_{H_k}(t)\)</span>が実装できても<span class="math notranslate nohighlight">\(U_H(t)\)</span>が実装できるとは限らないのです。しかし、十分短い時間<span class="math notranslate nohighlight">\(\Delta t\)</span><a class="footnote-reference brackets" href="#sufficiently-small" id="id10">2</a>についてであれば、<span class="math notranslate nohighlight">\(U_H(\Delta t)\)</span>を<span class="math notranslate nohighlight">\(U_{H_k}(\Delta t)\)</span>の積として表しても、その誤差が計算結果に大きく影響しない、ということをこの定理は言っています。</p>
 </div>
 <div class="section" id="id11">
 <h3><a class="toc-backref" href="#id67">なぜ量子コンピュータが量子ダイナミクスシミュレーションに向いているか</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
@@ -620,14 +714,14 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \e
 <p>ハイゼンベルグモデルという、磁性体のトイモデルを考えます。空間中一列に固定された多数のスピンを持つ粒子（電子）の系で、隣接スピンの向きによってエネルギーが決まるような問題です。</p>
 <p>例えば、<span class="math notranslate nohighlight">\(n\)</span>スピン系で簡単な形式のハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-heisenberg">
-<span class="eqno">(7)<a class="headerlink" href="#equation-heisenberg" title="Permalink to this equation">¶</a></span>\[H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1})\]</div>
+<span class="eqno">(8)<a class="headerlink" href="#equation-heisenberg" title="Permalink to this equation">¶</a></span>\[H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1})\]</div>
 <p>です。ここで、<span class="math notranslate nohighlight">\(\sigma^{[X,Y,Z]}_j\)</span>は第<span class="math notranslate nohighlight">\(j\)</span>スピンに作用するパウリ演算子です。</p>
-<p>ただし、式<a class="reference internal" href="#equation-heisenberg">(7)</a>の和の記法には実は若干の省略があります。例えば第<span class="math notranslate nohighlight">\(j\)</span>項をより正確に書くと、</p>
+<p>ただし、式<a class="reference internal" href="#equation-heisenberg">(8)</a>の和の記法には実は若干の省略があります。例えば第<span class="math notranslate nohighlight">\(j\)</span>項をより正確に書くと、</p>
 <div class="math notranslate nohighlight">
 \[
 I_0 \otimes \dots \otimes I_{j-1} \otimes \sigma^X_j \otimes \sigma^X_{j+1} \otimes I_{j+2} \otimes \dots I_{n-1}
 \]</div>
-<p>です。ここで<span class="math notranslate nohighlight">\(\otimes\)</span>は線形演算子間の「テンソル積」を表しますが、聞き慣れない方は掛け算だと思っておいてください。重要なのは、式<a class="reference internal" href="#equation-heisenberg">(7)</a>の各項が、上で触れたように<span class="math notranslate nohighlight">\(n\)</span>個の基底演算子の積になっているということです。さらに、この系では隣接スピン間の相互作用しか存在しないため、ハミルトニアンが<span class="math notranslate nohighlight">\(n-1\)</span>個の項に分解できています。</p>
+<p>です。ここで<span class="math notranslate nohighlight">\(\otimes\)</span>は線形演算子間の「テンソル積」を表しますが、聞き慣れない方は掛け算だと思っておいてください。重要なのは、式<a class="reference internal" href="#equation-heisenberg">(8)</a>の各項が、上で触れたように<span class="math notranslate nohighlight">\(n\)</span>個の基底演算子の積になっているということです。さらに、この系では隣接スピン間の相互作用しか存在しないため、ハミルトニアンが<span class="math notranslate nohighlight">\(n-1\)</span>個の項に分解できています。</p>
 <p>この系では、隣接スピン間の向きが揃っている（内積が正）のときにエネルギーが低くなります<a class="footnote-reference brackets" href="#quantum-inner-product" id="id16">5</a>。少し考えるとわかりますが、すべてのスピンが完全に同じ方向を向いている状態が最もエネルギーの低いエネルギー固有状態です。そこで、最低エネルギー状態から少しだけずらして、スピンが一つだけ直角方向を向いている状態を始状態としたときのダイナミクスをシミュレートしてみましょう。</p>
 <p>核スピンのケースと同様に、それぞれのスピンについて+<span class="math notranslate nohighlight">\(Z\)</span>方向を向いた状態<span class="math notranslate nohighlight">\(\upket\)</span>を量子ビットの状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>に、-<span class="math notranslate nohighlight">\(Z\)</span>方向の状態<span class="math notranslate nohighlight">\(\downket\)</span>を<span class="math notranslate nohighlight">\(\ket{1}\)</span>に対応づけます。このとき、上で見たように、パウリ演算子<span class="math notranslate nohighlight">\(\sigma^X, \sigma^Y, \sigma^Z\)</span>と<span class="math notranslate nohighlight">\(X, Y, Z\)</span>ゲートとが対応します。また、<span class="math notranslate nohighlight">\(J=\hbar\omega/2\)</span>とおきます。</p>
 <p>時間発展演算子は</p>
@@ -682,7 +776,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 \leftket_j \leftket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \leftket_j \leftket_{j+1}
 \end{align}
 \end{split}\]</div>
-<p>で、式<a class="reference internal" href="#equation-left-right-kets">(5)</a>から、次の回路が対応する変換を引き起こすことがわかります（これも確認してください）。</p>
+<p>で、式<a class="reference internal" href="#equation-left-right-kets">(6)</a>から、次の回路が対応する変換を引き起こすことがわかります（これも確認してください）。</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <img alt="_images/dynamics_simulation_12_0.png" src="_images/dynamics_simulation_12_0.png" />
@@ -699,7 +793,26 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <div class="section" id="id19">
 <h3><a class="toc-backref" href="#id71">回路実装</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p>やっと準備が整ったので、シミュレーションを実装しましょう。実機で走らせられるように、<span class="math notranslate nohighlight">\(n=5\)</span>, <span class="math notranslate nohighlight">\(M=10\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = 0.1\)</span>とします。上で決めたように、ビット0以外が<span class="math notranslate nohighlight">\(\upket\)</span>、ビット0が<span class="math notranslate nohighlight">\(\rightket\)</span>という初期状態から始めます。各<span class="math notranslate nohighlight">\(\Delta t\)</span>ステップごとに回路のコピーをとり、それぞれのコピーで測定を行うことで、時間発展の様子を観察します。</p>
-<div class="cell tag_remove-input docutils container">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
+<span class="kn">from</span> <span class="nn">qiskit.ignis.mitigation.measurement</span> <span class="kn">import</span> <span class="n">complete_meas_cal</span><span class="p">,</span> <span class="n">CompleteMeasFitter</span>
+<span class="c1"># このワークブック独自のモジュール</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_271/943701403.py:6: DeprecationWarning: The qiskit.ignis package is deprecated and has been supersceded by the qiskit-experiments project. Refer to the migration guide: https://github.com/Qiskit/qiskit-ignis#migration-guide on how to migrate to the new project.
+  from qiskit.ignis.mitigation.measurement import complete_meas_cal, CompleteMeasFitter
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -747,7 +860,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
     <span class="c1"># measure_all(inplace=False) creates a copy of the circuit with a full measurement at the end</span>
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
     
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> circuits created&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">)</span><span class="si">}</span><span class="s1"> circuits created&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -768,7 +881,8 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">qasm_simulator</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">sim_job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">sim_counts_list</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
    
 <span class="n">plot_heisenberg_spins</span><span class="p">(</span><span class="n">sim_counts_list</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">omegadt</span><span class="p">,</span> <span class="n">add_theory_curve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -784,13 +898,18 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <p>実機でも同様の結果が得られるでしょうか。QV32の5量子ビットマシンで確認してみましょう。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+    <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+    
 <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 
-<span class="n">backend_filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">b</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">quantum_volume</span> <span class="o">&gt;=</span> <span class="mi">32</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="o">.</span><span class="n">operational</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">backend_filter</span><span class="p">))</span>
+<span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">min_qv</span><span class="o">=</span><span class="mi">32</span><span class="p">))</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
 
-<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">tranpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
 
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
@@ -828,7 +947,8 @@ p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon
 <span class="n">meas_calibs</span><span class="p">,</span> <span class="n">state_labels</span> <span class="o">=</span> <span class="n">complete_meas_cal</span><span class="p">(</span><span class="n">qr</span><span class="o">=</span><span class="n">qreg</span><span class="p">,</span> <span class="n">circlabel</span><span class="o">=</span><span class="s1">&#39;mcal&#39;</span><span class="p">)</span>
 
 <span class="c1"># Run the circuits</span>
-<span class="n">calib_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">meas_calibs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
+<span class="n">meas_calibs</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">meas_calibs</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+<span class="n">calib_job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">meas_calibs</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
 
 <span class="n">job_monitor</span><span class="p">(</span><span class="n">calib_job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
@@ -914,36 +1034,42 @@ p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon
 
               </div>
               
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="quantum_computation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">【課題】量子計算</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="more_dynamics.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">【課題】量子ダイナミクスシミュレーション・続</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
         </div>
     </div>
+    <footer class="footer">
+  <p>
     
+      By 東京大学素粒子物理国際研究センター<br/>
     
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="quantum_computation.html" title="previous page">【課題】量子計算</a>
-    <a class='right-next' id="next-link" href="more_dynamics.html" title="next page">【課題】量子ダイナミクスシミュレーション・続</a>
-
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By 東京大学素粒子物理国際研究センター<br/>
-        
-            &copy; Copyright 2021.<br/>
-      </p>
-    </div>
-  </footer>
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
 </main>
 
 
       </div>
     </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
-    
-  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
   </body>
 </html>
