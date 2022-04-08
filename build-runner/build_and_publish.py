@@ -12,22 +12,27 @@ try:
 except ImportError:
     from yaml import Loader
 from jupyter_book.cli.main import build
-import jupytext
+
+local_repository_path = os.path.dirname(os.path.dirname(__file__))
+default_source_path = os.path.join(local_repository_path, 'source')
+default_output_path = os.path.join(local_repository_path, 'build')
 
 parser = ArgumentParser(description='Build and publish qc-workbook.')
 parser.add_argument('--checkout', '-k', action='store_true', dest='checkout', help='Checkout the source files from github.')
 parser.add_argument('--account', '-a', metavar='ACCOUNT', dest='account', default='UTokyo-ICEPP', help='Github account of the source repository.')
 parser.add_argument('--branch', '-b', metavar='BRANCH', dest='branch', default='master', help='Branch from which to build the website.')
-parser.add_argument('--source', '-i', metavar='PATH', dest='source', default='/tmp/qc-workbook/source', help='Source directory.')
+parser.add_argument('--source', '-i', metavar='PATH', dest='source', default=default_source_path, help='Source directory.')
 parser.add_argument('--lang', '-l', metavar='LANG', dest='lang', default='ja', help='Workbook language.')
-parser.add_argument('--target', '-o', metavar='PATH', dest='target', default='/tmp/qc-workbook/build', help='Build directory.')
-parser.add_argument('--clean', '-c', action='store_true', dest='clean', help='Clean the target directory before build.')
+parser.add_argument('--output', '-o', metavar='PATH', dest='output', default=default_output_path, help='Build directory.')
+parser.add_argument('--clean', '-c', action='store_true', dest='clean', help='Clean the build directory before build.')
 parser.add_argument('--keep-reports', '-r', action='store_true', dest='keep_reports', help='Keep the reports directory and .buildinfo file.')
 options = parser.parse_args()
 del sys.argv[1:]
 
 remote_repo = f'https://github.com/{options.account}/qc-workbook'
-build_path = os.path.join(options.target, '_build')
+full_source_path = os.path.join(options.source, options.lang)
+full_output_path = os.path.join(options.output, options.lang)
+build_path = os.path.join(full_output_path, '_build')
 
 # Clone the repository first, if required (WARNING: This wipes out everything in the source directory!)
 
@@ -52,8 +57,6 @@ if options.clean:
     
 # Build the book
     
-full_source_path = os.path.join(options.source, options.lang)
-        
 with tempfile.TemporaryDirectory() as temp_home:
     # Move HOME so qiskit won't load the IBMQ credentials
     current_home = os.environ['HOME']
@@ -75,7 +78,7 @@ with tempfile.TemporaryDirectory() as temp_home:
     
     try:
         build.callback(path_source=full_source_path,
-                       path_output=options.target,
+                       path_output=full_output_path,
                        config=config_path,
                        toc=None,
                        warningiserror=False,
