@@ -484,7 +484,7 @@ print('Result:')
 ee = NumPyMinimumEigensolver()
 result_ee = ee.compute_minimum_eigenvalue(obs)
 print('  Exact      =',result_ee.eigenvalue)
-f
+
 result_vqe_gfree = vqe_gfree.compute_minimum_eigenvalue(obs)
 print('  VQE(GFree) =',result_vqe_gfree.optimal_value)
 

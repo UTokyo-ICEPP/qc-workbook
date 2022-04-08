@@ -12,7 +12,7 @@ try:
 except ImportError:
     from yaml import Loader
 from jupyter_book.cli.main import build
-from jupytext.cli import jupytext
+import jupytext
 
 parser = ArgumentParser(description='Build and publish qc-workbook.')
 parser.add_argument('--checkout', '-k', action='store_true', dest='checkout', help='Checkout the source files from github.')
@@ -50,75 +50,33 @@ except KeyError:
 if options.clean:
     shutil.rmtree(build_path, ignore_errors=True)
     
-# Copy the entire source/lang area into the target directory while converting notebook md files into ipynb
-
+# Build the book
+    
 full_source_path = os.path.join(options.source, options.lang)
-temp_source_path = os.path.join(options.target, 'source')
-
-shutil.rmtree(temp_source_path, ignore_errors=True)
-os.mkdir(temp_source_path)
-
-for filename in os.listdir(full_source_path):
-    full_filename = os.path.join(full_source_path, filename)
-    target_filename = os.path.join(temp_source_path, filename)
-    
-    if filename == '_config.yml':
-        # Also update the repository information in the config yaml
-        with open(full_filename) as src:
-            config = yaml.load(src, Loader)
-            try:
-                config['repository']['url'] = remote_repo
-                config['repository']['branch'] = options.branch
-            except KeyError:
-                pass
-            
-        with open(target_filename, 'w') as out:
-            out.write(yaml.dump(config))
-            
-        continue
-            
-    elif os.path.islink(full_filename):
-        link_source = os.readlink(full_filename)
-        if link_source[0] != '/':
-            link_source = os.path.normpath(os.path.join(full_source_path, link_source))
-            
-        os.symlink(link_source, target_filename)
         
-        continue
-        
-    elif filename.endswith('.md'):
-        # Does the MD file have a yaml header? (notebook Markdowns do)
-        with open(full_filename, 'r') as source:
-            try:
-                header = next(yaml.load_all(source, Loader))
-            except yaml.scanner.ScannerError:
-                header = None
-
-            if isinstance(header, dict) and 'jupyter' in header:
-                target_filename = f'{target_filename[:-3]}.ipynb'
-                
-                # Convert the MD file to ipynb
-                jupytext(['--to', 'notebook', '--output', target_filename, full_filename])
-                
-                # Copy the file metadata so jupyterbook knows which files are actually updated
-                shutil.copystat(full_filename, target_filename)
-                continue
-    
-    # Using copy2 (copytree internally uses copy2 too) to copy the metadata too
-    if os.path.isdir(full_filename):
-        shutil.copytree(full_filename, target_filename)
-    else:
-        shutil.copy2(full_filename, target_filename)
-
 with tempfile.TemporaryDirectory() as temp_home:
     # Move HOME so qiskit won't load the IBMQ credentials
     current_home = os.environ['HOME']
     os.environ['HOME'] = temp_home
+    
+    # Also write the build configuration file here (update the repository parameter to remote_repo)
+    with open(os.path.join(full_source_path, '_config.yml')) as src:
+        config = yaml.load(src, Loader)
+        try:
+            config['repository']['url'] = remote_repo
+            config['repository']['branch'] = options.branch
+        except KeyError:
+            pass
 
+    config_path = os.path.join(current_home, '_config.yml')
+    
+    with open(config_path, 'w') as out:
+        out.write(yaml.dump(config))
+    
     try:
-        build.callback(path_source=temp_source_path,
+        build.callback(path_source=full_source_path,
                        path_output=options.target,
-                       config=None,
+                       config=config_path,
                        toc=None,
                        warningiserror=False,
                        nitpick=False,
@@ -132,6 +90,8 @@ with tempfile.TemporaryDirectory() as temp_home:
 
     finally:
         os.environ['HOME'] = current_home
+        
+# Cleanup
 
 if not options.keep_reports:
     try:
