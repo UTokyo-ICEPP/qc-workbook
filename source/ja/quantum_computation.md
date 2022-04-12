@@ -194,7 +194,7 @@ def make_circuits(n1, n2, backend):
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
+:tags: [remove-output, raises-exception]
 
 # List of circuits
 circuits = []
@@ -222,6 +222,17 @@ else:
     job_monitor(job, interval=2)
 
     counts_list = job.result().get_counts()
+```
+
+```{code-cell} ipython3
+:tags: [remove-input, remove-output]
+
+# テキスト作成用のセルなので無視してよい
+
+if len(counts_list) != len(circuits):
+    import pickle
+    with open('data/quantum_computation_fake_data.pkl', 'rb') as source:
+        counts_list = pickle.load(source)
 ```
 
 ジョブが返ってきたら、正しい足し算を表しているものの割合を調べてみましょう。
