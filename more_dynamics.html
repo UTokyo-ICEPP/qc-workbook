@@ -290,11 +290,14 @@ const thebe_selector_output = ".output, .cell_output"
 
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/more_dynamics.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+        <a class="dropdown-buttons"
+            href="_sources/more_dynamics.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/more_dynamics.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
                 onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -333,7 +336,7 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/more_dynamics.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/more_dynamics.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -637,9 +640,9 @@ m_z = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Z}_j \rangle = \frac{n-1}{n}
 <p>量子電磁力学とは量子場の理論の一種です。量子場の理論とは物質やその相互作用（力）をすべて量子力学的な「場」（時空中の各点に応じた値を持つ存在）で記述した理論で、素粒子論などで物質の根源的な性質を記述する際の基本言語です。量子場の理論において、一部の場を「物質場」とし、それに特定の対称性（<span class="math notranslate nohighlight">\(U(1)\)</span>ゲージ対称性）を持たせると、「電荷」が生み出され、電荷を持った場の間の相互作用を媒介する「光子場」が生じます。電荷を持った場と光子場の振る舞いを記述するのが量子電磁力学です。</p>
 <p>量子場の理論は「ラグランジアン」<a class="footnote-reference brackets" href="#lagrangian" id="id9">1</a>を指定すれば定まります。シュウィンガーモデルのラグランジアンは物質場（電子）<span class="math notranslate nohighlight">\(\psi\)</span>とゲージ場（光子）<span class="math notranslate nohighlight">\(A\)</span>からなり、</p>
 <div class="math notranslate nohighlight" id="equation-schwinger-lagrangian">
-<span class="eqno">(9)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
+<span class="eqno">(12)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
 <p>です。ただし、これまでの物理系を扱った話と異なり、ここでは場の量子論の一般慣習に従って、光速<span class="math notranslate nohighlight">\(c\)</span>とプランク定数<span class="math notranslate nohighlight">\(\hbar\)</span>がともに1である単位系を使っています。</p>
-<p>式<a class="reference internal" href="#equation-schwinger-lagrangian">(9)</a>の指数<span class="math notranslate nohighlight">\(\mu, \nu\)</span>は0（時間次元）か1（空間次元）の値を取ります。<span class="math notranslate nohighlight">\(\frac{1}{2g} F_{\mu\nu}\)</span>は<span class="math notranslate nohighlight">\(A\)</span>の強度テンソル（電場）で</p>
+<p>式<a class="reference internal" href="#equation-schwinger-lagrangian">(12)</a>の指数<span class="math notranslate nohighlight">\(\mu, \nu\)</span>は0（時間次元）か1（空間次元）の値を取ります。<span class="math notranslate nohighlight">\(\frac{1}{2g} F_{\mu\nu}\)</span>は<span class="math notranslate nohighlight">\(A\)</span>の強度テンソル（電場）で</p>
 <div class="math notranslate nohighlight">
 \[
 F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
@@ -647,11 +650,11 @@ F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 <p>です。<span class="math notranslate nohighlight">\(\psi\)</span>は物質と反物質を表す2元スピノルで、<span class="math notranslate nohighlight">\(m\)</span>がその質量となります。<span class="math notranslate nohighlight">\(\{\gamma^0, \gamma^1\}\)</span>は2次元のクリフォード代数の表現です。</p>
 <p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="#id32" title="A. Casher, J. Kogut, and Leonard Susskind. Vacuum polarization and the absence of free quarks. Phys. Rev. D, 10:732–745, Jul 1974. URL: https://link.aps.org/doi/10.1103/PhysRevD.10.732, doi:10.1103/PhysRevD.10.732.">CKS74</a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-kogut-susskind-hamiltonian">
-<span class="eqno">(10)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
+<span class="eqno">(13)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
 <p>となります。ここで<span class="math notranslate nohighlight">\(J = g^2 a^2 / 2\)</span>, <span class="math notranslate nohighlight">\(\mu = m a\)</span>, また<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>上の（1元）物質場、<span class="math notranslate nohighlight">\(\theta_j\)</span>は<span class="math notranslate nohighlight">\(j\)</span>上のゲージ場、<span class="math notranslate nohighlight">\(L_j\)</span>は格子<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>間の接続上の電場です。</p>
 <p>Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは<span class="math notranslate nohighlight">\(j\)</span>が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト<span class="math notranslate nohighlight">\(j\)</span>の基底<span class="math notranslate nohighlight">\(\plusket_j\)</span>と<span class="math notranslate nohighlight">\(\minusket_j\)</span>を、<span class="math notranslate nohighlight">\(\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-creation-annihilation">
-<span class="eqno">(11)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">¶</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
+<span class="eqno">(14)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">¶</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
 \Phi_j \minusket_j = 0 \\
 \Phi^{\dagger}_j \plusket_j = 0 \\
 \Phi^{\dagger}_j \minusket_j = \plusket_j\end{split}\]</div>
@@ -682,7 +685,7 @@ L_j - L_{j-1} = \rho_j \\
 \[
 L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1
 \]</div>
-<p>となります。ここで太線の分数<span class="math notranslate nohighlight">\(\genfrac{}{}{2pt}{1}{j}{2}\)</span>は切り捨ての割り算<span class="math notranslate nohighlight">\([j - (j \bmod 2)]/2\)</span>（Pythonでの<code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">//</span> <span class="pre">2</span></code>と同等）です。この電場を式<a class="reference internal" href="#equation-kogut-susskind-hamiltonian">(10)</a>に代入して</p>
+<p>となります。ここで太線の分数<span class="math notranslate nohighlight">\(\genfrac{}{}{2pt}{1}{j}{2}\)</span>は切り捨ての割り算<span class="math notranslate nohighlight">\([j - (j \bmod 2)]/2\)</span>（Pythonでの<code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">//</span> <span class="pre">2</span></code>と同等）です。この電場を式<a class="reference internal" href="#equation-kogut-susskind-hamiltonian">(13)</a>に代入して</p>
 <div class="math notranslate nohighlight">
 \[
 H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
@@ -691,7 +694,7 @@ H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1
 </div>
 <div class="section" id="id13">
 <h3><a class="toc-backref" href="#id64">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
-<p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(11)</a>から
+<p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(14)</a>から
 前者は</p>
 <div class="math notranslate nohighlight">
 \[

@@ -290,11 +290,14 @@ const thebe_selector_output = ".output, .cell_output"
 
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/vqe.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+        <a class="dropdown-buttons"
+            href="_sources/vqe.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/vqe.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
                 onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -333,7 +336,7 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/vqe.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/vqe.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -684,6 +687,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/vqe_8_0.png" src="_images/vqe_8_0.png" />
+</div>
 </div>
 <p>変分フォームのパラメータのリストを入力とし、パラメータに対応したコストを計算する目的関数を定義します。アルゴリズムを実行するバックエンドとして、<strong>QASMシミュレータ</strong>を使用します。</p>
 <div class="cell docutils container">
@@ -736,6 +742,14 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Obtained Distribution:       &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">output_distr</span><span class="p">),</span><span class="mi">4</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cost Value (L1-Distance):     </span><span class="si">{:.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters Found:            &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution:          [0.5136 0.4864]
+Obtained Distribution:        [0.5163 0.4837]
+Cost Value (L1-Distance):     0.022060
+Parameters Found:             [1.5387 0.1414 1.5793]
 </pre></div>
 </div>
 </div>
@@ -886,7 +900,9 @@ U_j\left(\frac{\pi}{2}\right)\rho U_j^\dagger\left(\frac{\pi}{2}\right)-U_j\left
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">10598</span>
 <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
@@ -896,23 +912,40 @@ U_j\left(\frac{\pi}{2}\right)\rho U_j^\dagger\left(\frac{\pi}{2}\right)-U_j\left
                                    <span class="n">seed_transpiler</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
                                    <span class="n">skip_qobj_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># VQEアルゴリズムの実装</span>
-<span class="n">vqe_cg</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">cg</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">grad</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
-<span class="n">vqe_gd</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">gd</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">grad</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
 <span class="n">vqe_gfree</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">cobyla</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
+<span class="n">result_vqe_gfree</span> <span class="o">=</span> <span class="n">vqe_gfree</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Result:&#39;</span><span class="p">)</span>
+<span class="n">vqe_cg</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">cg</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">grad</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
+<span class="n">result_vqe_cg</span> <span class="o">=</span> <span class="n">vqe_cg</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
+<span class="n">vqe_gd</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">gd</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">grad</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
+<span class="n">result_vqe_gd</span> <span class="o">=</span> <span class="n">vqe_gd</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+<span class="c1"># 厳密解</span>
 <span class="n">ee</span> <span class="o">=</span> <span class="n">NumPyMinimumEigensolver</span><span class="p">()</span>
 <span class="n">result_ee</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Exact      =&#39;</span><span class="p">,</span><span class="n">result_ee</span><span class="o">.</span><span class="n">eigenvalue</span><span class="p">)</span>
-<span class="n">f</span>
-<span class="n">result_vqe_gfree</span> <span class="o">=</span> <span class="n">vqe_gfree</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  VQE(GFree) =&#39;</span><span class="p">,</span><span class="n">result_vqe_gfree</span><span class="o">.</span><span class="n">optimal_value</span><span class="p">)</span>
-
-<span class="n">result_vqe_cg</span> <span class="o">=</span> <span class="n">vqe_cg</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  VQE(CG)    =&#39;</span><span class="p">,</span><span class="n">result_vqe_cg</span><span class="o">.</span><span class="n">optimal_value</span><span class="p">)</span>
-<span class="n">result_vqe_gd</span> <span class="o">=</span> <span class="n">vqe_gd</span><span class="o">.</span><span class="n">compute_minimum_eigenvalue</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  VQE(GD)    =&#39;</span><span class="p">,</span><span class="n">result_vqe_gd</span><span class="o">.</span><span class="n">optimal_value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Result:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Exact      = </span><span class="si">{</span><span class="n">result_ee</span><span class="o">.</span><span class="n">eigenvalue</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  VQE(GFree) = </span><span class="si">{</span><span class="n">result_vqe_gfree</span><span class="o">.</span><span class="n">optimal_value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  VQE(CG)    = </span><span class="si">{</span><span class="n">result_vqe_cg</span><span class="o">.</span><span class="n">optimal_value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  VQE(GD)    = </span><span class="si">{</span><span class="n">result_vqe_gd</span><span class="o">.</span><span class="n">optimal_value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result:
+  Exact      = -1.0
+  VQE(GFree) = -0.9882812499999999
+  VQE(CG)    = -0.99609375
+  VQE(GD)    = -0.013671875000000014
 </pre></div>
 </div>
 </div>

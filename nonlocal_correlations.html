@@ -290,11 +290,14 @@ const thebe_selector_output = ".output, .cell_output"
 
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/nonlocal_correlations.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+        <a class="dropdown-buttons"
+            href="_sources/nonlocal_correlations.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/nonlocal_correlations.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
                 onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -333,7 +336,7 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/nonlocal_correlations.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/nonlocal_correlations.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -375,12 +378,12 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#chsh">
-   CHSH不等式を見直す
+   CHSH不等式の解釈
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id9">
-   問題: ベル状態と可分状態の違い
+  <a class="reference internal nav-link" href="#id11">
+   問題：ベル状態について調べる
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -393,8 +396,18 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
-     問題
+    <a class="reference internal nav-link" href="#id12">
+     実験1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     ベル状態の何がすごいのか？
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     実験2
     </a>
    </li>
   </ul>
@@ -436,12 +449,12 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#chsh">
-   CHSH不等式を見直す
+   CHSH不等式の解釈
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id9">
-   問題: ベル状態と可分状態の違い
+  <a class="reference internal nav-link" href="#id11">
+   問題：ベル状態について調べる
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -454,8 +467,18 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
-     問題
+    <a class="reference internal nav-link" href="#id12">
+     実験1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     ベル状態の何がすごいのか？
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     実験2
     </a>
    </li>
   </ul>
@@ -471,26 +494,32 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>【課題】量子相関を調べる<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>第一回の実習ではCHSH不等式の破れを調べるために、2つの量子ビットの相関関数<span class="math notranslate nohighlight">\(C^{i} \, (i=0,1,2,3)\)</span>という量を量子コンピュータを使って計算しました。この課題では、この量をもう少し細かく調べてみましょう。</p>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle#1|}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\rmI}{\mathrm{I}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\rmII}{\mathrm{II}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\rmIII}{\mathrm{III}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\rmIV}{\mathrm{IV}}\)</span></p>
+<p>第一回の実習ではCHSH不等式の破れを調べるために、2つの量子ビットの相関関数<span class="math notranslate nohighlight">\(C^{i} \, (i=\rmI, \rmII, \rmIII, \rmIV)\)</span>という量を量子コンピュータを使って計算しました。この課題では、この量をもう少し細かく調べてみましょう。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#qc" id="id11">QCシミュレータの使い方</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id12">測定基底の変換</a></p></li>
-<li><p><a class="reference internal" href="#id6" id="id13">観測量の期待値とその計算法</a></p></li>
-<li><p><a class="reference internal" href="#chsh" id="id14">CHSH不等式を見直す</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id15">問題: ベル状態と可分状態の違い</a></p>
+<li><p><a class="reference internal" href="#qc" id="id16">QCシミュレータの使い方</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id17">測定基底の変換</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id18">観測量の期待値とその計算法</a></p></li>
+<li><p><a class="reference internal" href="#chsh" id="id19">CHSH不等式の解釈</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id20">問題：ベル状態について調べる</a></p>
 <ul>
-<li><p><a class="reference internal" href="#sigma" id="id16">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id17">問題</a></p></li>
+<li><p><a class="reference internal" href="#sigma" id="id21">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id22">実験1</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id23">ベル状態の何がすごいのか？</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id24">実験2</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
-<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
-<span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle#1|}\)</span></p>
 <div class="section" id="qc">
-<h2><a class="toc-backref" href="#id11">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this headline">¶</a></h2>
 <p>実習で見たように、QCで実現される量子状態は、量子力学の公理に基づいて理論的に計算・予測できます。そこで用いられる数学的操作も単なる足し算や掛け算（線形演算）なので、実はQCの量子状態は（古典）計算機で比較的簡単に計算できます。当然のことですが、QCは何も魔法のブラックボックスというわけではありません。</p>
 <p>ただし、古典計算機で量子状態を再現するためには、特殊な場合を除いて、量子ビット数の指数関数的な量のメモリが必要になります。これも前半で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットあれば、系の自由度（degrees of freedom / dof: 実数自由パラメータの数）は<span class="math notranslate nohighlight">\(2^{n+1} - 2\)</span>ですので、例えば各自由度を64ビット（＝8バイト）の浮動小数点で表現するとしたら、必要なメモリは(-2を無視して)</p>
 <div class="math notranslate nohighlight">
@@ -501,7 +530,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p>しかし、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a class="reference external" href="https://quantiki.org/wiki/list-qc-simulators">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
 <p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
 <p>Qiskitのシミュレータには<code class="docutils literal notranslate"><span class="pre">Aer</span></code>というオブジェクトからアクセスします。<code class="docutils literal notranslate"><span class="pre">Aer</span></code>は実習で登場した<code class="docutils literal notranslate"><span class="pre">IBMQ</span></code>と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を取り出します。</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -511,11 +540,6 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>notebook ready
 </pre></div>
 </div>
 </div>
@@ -535,43 +559,44 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <p>実習の内容を再現してみましょう。</p>
-<div class="cell tag_remove-output docutils container">
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit0&#39;</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_I&#39;</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit1&#39;</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_II&#39;</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit2&#39;</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_III&#39;</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit3&#39;</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;circuit_IV&#39;</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell tag_remove-output docutils container">
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータにはショット数の制限がないので、時間の許す限りいくらでも大きい値を使っていい</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -585,10 +610,12 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
 <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">axs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))):</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">sim_result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">()</span>
     <span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     
     <span class="n">C</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;00&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     
@@ -599,33 +626,34 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>S = 2.8442
+</pre></div>
+</div>
+<img alt="_images/nonlocal_correlations_6_1.png" src="_images/nonlocal_correlations_6_1.png" />
+</div>
 </div>
 <p>上のように、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は実機と同様に<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った<code class="docutils literal notranslate"><span class="pre">job_monitor()</span></code>関数を使用していません。また、シミュレータにはノイズがない<a class="footnote-reference brackets" href="#simulator-noise" id="id3">1</a>ので、<span class="math notranslate nohighlight">\(S\)</span>の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。</p>
 </div>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id12">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>さて、おさらいをすると、上の<span class="math notranslate nohighlight">\(C^{0,1,2,3}\)</span>を計算する4つの回路は以下のようなものでした。</p>
+<h2><a class="toc-backref" href="#id17">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>さて、おさらいをすると、上の<span class="math notranslate nohighlight">\(C^{\rmI, \rmII, \rmIII, \rmIV}\)</span>を計算する4つの回路は以下のようなものでした。</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <img alt="_images/nonlocal_correlations_9_0.png" src="_images/nonlocal_correlations_9_0.png" />
-<img alt="_images/nonlocal_correlations_9_1.png" src="_images/nonlocal_correlations_9_1.png" />
-<img alt="_images/nonlocal_correlations_9_2.png" src="_images/nonlocal_correlations_9_2.png" />
-<img alt="_images/nonlocal_correlations_9_3.png" src="_images/nonlocal_correlations_9_3.png" />
 </div>
 </div>
-<p>ベル状態を作るところまですべての回路で共通で、その後それぞれ異なる角度の<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけています。実習では深く立ち入りませんでしたが、この<span class="math notranslate nohighlight">\(R_y\)</span>ゲートはベル状態を<span class="math notranslate nohighlight">\(\{\ket{0}, \ket{1}\}\)</span>とは異なる基底で測定するために置かれています。どういうことか、以下で説明します。</p>
+<p>ベル状態を作るところまではすべての回路で共通で、その後それぞれ異なる角度の<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけています。実習では深く立ち入りませんでしたが、この<span class="math notranslate nohighlight">\(R_y\)</span>ゲートはベル状態を<span class="math notranslate nohighlight">\(\{\ket{0}, \ket{1}\}\)</span>とは異なる基底で測定するために置かれています。どういうことか、以下で説明します。</p>
 <p>ここまで「測定」とはレジスタの量子状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>からビット列<span class="math notranslate nohighlight">\(j\)</span>を確率<span class="math notranslate nohighlight">\(|c_j|^2\)</span>で得る行為である、と説明してきました。しかし、本来「測定」はもっと一般的な概念です。それを理解するために、まず、量子力学的には計算基底状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>は何ら特別な状態ではないということを理解しておきましょう。</p>
-<p>例えば1量子ビットにおいて、計算基底状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、以下のような状態<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>を考えます。</p>
+<p>例えば1量子ビットにおいて、計算基底状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、以下のような状態<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>を考えることもできます。</p>
 <div class="math notranslate nohighlight" id="equation-theta-ket-def">
-<span class="eqno">(2)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{\theta} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
-\ket{\theta + \pi} := R_y(\theta)\ket{1} = -\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}\end{split}\]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{\theta_{+}} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
+\ket{\theta_{-}} := R_y(\theta)\ket{1} = -\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}\end{split}\]</div>
 <p>すると、</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\ket{0} = \cos\frac{\theta}{2}\ket{\theta} - \sin\frac{\theta}{2}\ket{\theta + \pi} \\
-\ket{1} = \sin\frac{\theta}{2}\ket{\theta} + \cos\frac{\theta}{2}\ket{\theta + \pi},
-\end{split}\]</div>
-<p>つまり、計算基底状態が<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>の重ね合わせとして表現できます。量子ビットの任意の状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせで表現できるので、<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>の重ね合わせでも表現できるということになります。そのようなときは<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>を基底として状態を表しているわけです。</p>
+<div class="math notranslate nohighlight" id="equation-theta-ket-inverse-def">
+<span class="eqno">(3)<a class="headerlink" href="#equation-theta-ket-inverse-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{0} = \cos\frac{\theta}{2}\ket{\theta_{+}} - \sin\frac{\theta}{2}\ket{\theta_{-}} \\
+\ket{1} = \sin\frac{\theta}{2}\ket{\theta_{+}} + \cos\frac{\theta}{2}\ket{\theta_{-}},\end{split}\]</div>
+<p>つまり、計算基底状態が<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>の重ね合わせとして表現できます。量子ビットの任意の状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせで表現できるので、<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>の重ね合わせでも表現できるということになります。そのようなときは<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>を基底として状態を表しているわけです。</p>
 <p>一般に、量子力学的には、2つの異なる状態<span class="math notranslate nohighlight">\(\ket{a} \nsim \ket{b}\)</span>を考えれば、それらの重ね合わせで量子ビットの任意の状態が表現できます。そして、<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>が直交する<a class="footnote-reference brackets" href="#orthogonal" id="id5">2</a>ときに状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
 <div class="math notranslate nohighlight">
 \[
@@ -633,37 +661,43 @@ const thebe_selector_output = ".output, .cell_output"
 \]</div>
 <p>と表現されるならば、「基底<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>についての測定」という操作を考えることができます。<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対してそのような測定をすると、状態<span class="math notranslate nohighlight">\(\ket{a}\)</span>が確率<span class="math notranslate nohighlight">\(|\alpha|^2\)</span>で、状態<span class="math notranslate nohighlight">\(\ket{b}\)</span>が確率<span class="math notranslate nohighlight">\(|\beta|^2\)</span>で得られます。</p>
 <p>量子計算においても、アルゴリズムの一部として、計算の結果実現した状態を特定の基底で測定するということが多々あります。ところが、ここで若干問題があります。量子コンピュータは実装上、計算基底でしか測定ができないのです。量子力学の理論的には特別でない<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、量子コンピュータという実態にとっては具体的な対応物があるのです。</p>
-<p>そこで、量子計算では、状態を任意の基底で測定することを諦め、反対に状態を変化させてしまいます。例えば、本当は上の<span class="math notranslate nohighlight">\(\ket{\theta}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta + \pi}\)</span>という基底で量子ビットの状態<span class="math notranslate nohighlight">\(\ket{\psi} = \alpha \ket{\theta} + \beta \ket{\theta + \pi}\)</span>を測定したいとします。しかし計算基底でしか測定ができないので、代わりに<span class="math notranslate nohighlight">\(R_y(-\theta)\)</span>を<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>にかけます。すると式<a class="reference internal" href="#equation-theta-ket-def">(2)</a>から</p>
+<p>そこで、量子計算では、状態を任意の基底で測定することを諦め、反対に状態を変化させてしまいます。例えば、本当は上の<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>という基底で量子ビットの状態<span class="math notranslate nohighlight">\(\ket{\psi} = \alpha \ket{\theta_{+}} + \beta \ket{\theta_{-}}\)</span>を測定したいとします。しかし計算基底でしか測定ができないので、代わりに<span class="math notranslate nohighlight">\(R_y(-\theta)\)</span>を<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>にかけます。すると式<a class="reference internal" href="#equation-theta-ket-def">(2)</a>から</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
-R_y(-\theta)\ket{\theta} = \ket{0} \\
-R_y(-\theta)\ket{\theta + \pi} = \ket{1}
+R_y(-\theta)\ket{\theta_{+}} = \ket{0} \\
+R_y(-\theta)\ket{\theta_{-}} = \ket{1}
 \end{split}\]</div>
 <p>なので、</p>
 <div class="math notranslate nohighlight">
 \[
 R_y(-\theta)\ket{\psi} = \alpha \ket{0} + \beta \ket{1}
 \]</div>
-<p>が得られます。この<span class="math notranslate nohighlight">\(R_y(-\theta)\ket{\psi}\)</span>を計算基底で測定した結果は、<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を<span class="math notranslate nohighlight">\(\ket{\theta}, \ket{\theta + \pi}\)</span>基底で測定した結果と等価です。</p>
-<p>このように、測定を行いたい基底（ここでは<span class="math notranslate nohighlight">\(\ket{\theta}, \ket{\theta + \pi}\)</span>）を<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}\)</span>から得るための変換ゲート（<span class="math notranslate nohighlight">\(R_y(\theta)\)</span>）の逆変換を測定したい状態にかけることで、計算基底での測定で求める結果を得ることができます。</p>
+<p>が得られます。この<span class="math notranslate nohighlight">\(R_y(-\theta)\ket{\psi}\)</span>を計算基底で測定した結果は、<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を<span class="math notranslate nohighlight">\(\ket{\theta_{+}}, \ket{\theta_{-}}\)</span>基底で測定した結果と等価です。</p>
+<p>このように、測定を行いたい基底（ここでは<span class="math notranslate nohighlight">\(\ket{\theta_{+}}, \ket{\theta_{-}}\)</span>）を<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}\)</span>から得るための変換ゲート（<span class="math notranslate nohighlight">\(R_y(\theta)\)</span>）の逆変換を測定したい状態にかけることで、計算基底での測定で求める結果を得ることができます。</p>
 </div>
 <div class="section" id="id6">
-<h2><a class="toc-backref" href="#id13">観測量の期待値とその計算法</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">観測量の期待値とその計算法</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>課題の説明に入る前に、さらに話が込み入ってきますが、量子計算でも多出する（ワークブックでは特に<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>以降）概念である「観測量の期待値」について説明します。</p>
 <p>観測量とはそのまま「観測できる量」のことで、量子状態から取り出せる（古典的）情報のこととも言えます。例えば、何かしらの粒子の運動を量子力学的に記述した場合、その粒子の位置や運動量などが観測量です。</p>
-<p>ケットで表される量子状態に対して、観測量はケットに作用する「エルミート演算子」で表現されます。細かい定義は参考文献に譲り、ここで必要な最小限のことだけ述べると、エルミート演算子は<strong>対角化可能で、実数の固有値を持つ</strong>という性質を持っています。つまり、<span class="math notranslate nohighlight">\(A\)</span>が<span class="math notranslate nohighlight">\(N\)</span>次元の量子状態の空間のエルミート演算子であれば、</p>
+<p>ケットで表される量子状態に対して、観測量はケットに作用する「エルミート演算子」で表現されます。エルミート以前にそもそも演算子という言葉をこれまで使っていませんが、量子力学において演算子とは、状態ケットを他の状態ケットに変換する作用で、特に線形なもの、すなわち</p>
+<div class="math notranslate nohighlight">
+\[
+A (\ket{\psi} + \ket{\phi}) = A \ket{\psi} + A \ket{\phi}
+\]</div>
+<p>が成り立つような<span class="math notranslate nohighlight">\(A\)</span>のことを指します。例えば実習で紹介したいろいろな量子ゲートはすべて演算子<a class="footnote-reference brackets" href="#unitary" id="id7">3</a>です。</p>
+<p>さて、それではエルミート演算子はというと、（細かい定義は参考文献に譲りここで必要な最小限のことだけ述べると、）<strong>対角化可能で、実数の固有値を持つ</strong>という性質を持つ演算子のことです。つまり、<span class="math notranslate nohighlight">\(A\)</span>が<span class="math notranslate nohighlight">\(N\)</span>次元の量子状態の空間のエルミート演算子であれば、</p>
 <div class="math notranslate nohighlight">
 \[
 A \ket{\phi_j} = a_j \ket{\phi_j}
 \]</div>
-<p>が成り立つような状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>と実数<span class="math notranslate nohighlight">\(a_j\)</span>の組が<span class="math notranslate nohighlight">\(N\)</span>個存在し、各<span class="math notranslate nohighlight">\(\ket{\phi_j} \, (j=0,\dots,N-1)\)</span>は互いに直交します。このとき、<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を固有ベクトル、<span class="math notranslate nohighlight">\(a_j\)</span>を固有値と呼びます。そして、この固有値<span class="math notranslate nohighlight">\(a_j\)</span>が、演算子<span class="math notranslate nohighlight">\(A\)</span>で表される観測量の値に対応します<a class="footnote-reference brackets" href="#continuous-observables" id="id7">3</a>。</p>
+<p>が成り立つような状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>と実数<span class="math notranslate nohighlight">\(a_j\)</span>の組が<span class="math notranslate nohighlight">\(N\)</span>個存在し、各<span class="math notranslate nohighlight">\(\ket{\phi_j} \, (j=0,\dots,N-1)\)</span>は互いに直交します。このように演算子を状態にかけた結果がもとの状態の定数倍になるというのは実は特別なことで、例えば実習で出てきたゲートのうち計算基底にそのように作用するのは<span class="math notranslate nohighlight">\(Z\)</span>や<span class="math notranslate nohighlight">\(R_z\)</span>ゲートだけです。このような関係が成り立つとき、状態ケット<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>を演算子<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトル、<span class="math notranslate nohighlight">\(a_j\)</span>を固有値と呼びます。そして、この固有値<span class="math notranslate nohighlight">\(a_j\)</span>が、演算子<span class="math notranslate nohighlight">\(A\)</span>で表される観測量の値に対応します<a class="footnote-reference brackets" href="#continuous-observables" id="id8">4</a>。</p>
 <p>さて、<span class="math notranslate nohighlight">\(A\)</span>が<span class="math notranslate nohighlight">\(n\)</span>ビット量子レジスタに対する演算子であるとします。レジスタの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が<span class="math notranslate nohighlight">\(A\)</span>の固有ベクトルで</p>
 <div class="math notranslate nohighlight">
 \[
 \ket{\psi} = \sum_{j=0}^{2^n-1} \gamma_j \ket{\phi_j}
 \]</div>
 <p>と分解されるとき、この状態を固有ベクトル基底<span class="math notranslate nohighlight">\(\{\ket{\phi_j}\}\)</span>で測定すると、状態<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>が確率<span class="math notranslate nohighlight">\(|\gamma_j|^2\)</span>で得られます。そして、状態が<span class="math notranslate nohighlight">\(\ket{\phi_j}\)</span>であれば観測量<span class="math notranslate nohighlight">\(A\)</span>の値は<span class="math notranslate nohighlight">\(a_j\)</span>です。</p>
-<p>そのような測定を多数回繰り返して<span class="math notranslate nohighlight">\(A\)</span>の値の期待値を求めることを考えます。期待値の定義は「確率変数のすべての値に確率の重みを付けた加重平均」です。<span class="math notranslate nohighlight">\(A\)</span>が確率分布<span class="math notranslate nohighlight">\(\{|\gamma|^2_j\}\)</span>に従って値<span class="math notranslate nohighlight">\(\{a_j\}\)</span>を取るので、</p>
+<p>そのような測定を多数回繰り返して<span class="math notranslate nohighlight">\(A\)</span>の値の期待値を求めることを考えます。期待値の定義は「確率変数のすべての値に確率の重みを付けた加重平均」です。<span class="math notranslate nohighlight">\(A\)</span>の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>における期待値を<span class="math notranslate nohighlight">\(\bra{\psi} A \ket{\psi}\)</span>と表すと、<span class="math notranslate nohighlight">\(A\)</span>が確率分布<span class="math notranslate nohighlight">\(\{|\gamma|^2_j\}\)</span>に従って値<span class="math notranslate nohighlight">\(\{a_j\}\)</span>を取るので、</p>
 <div class="math notranslate nohighlight">
 \[
 \bra{\psi} A \ket{\psi} = \sum_{j=0}^{2^n-1} a_j |\gamma_j|^2
@@ -675,17 +709,17 @@ A \ket{\phi_j} = a_j \ket{\phi_j}
 <li><p>固有ベクトルを基底として、レジスタの状態を測定する</p></li>
 <li><p>測定から得られた確率分布を重みとして固有値の平均値を取る</p></li>
 </ol>
-<p>です。3の測定の際には、上のセクションで説明した測定基底の変換を利用します。</p>
+<p>です<a class="footnote-reference brackets" href="#pauli-decomposition" id="id9">5</a>。3の測定の際には、上のセクションで説明した測定基底の変換を利用します。</p>
 </div>
 <div class="section" id="chsh">
-<h2><a class="toc-backref" href="#id14">CHSH不等式を見直す</a><a class="headerlink" href="#chsh" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id19">CHSH不等式の解釈</a><a class="headerlink" href="#chsh" title="Permalink to this headline">¶</a></h2>
 <p>実習の中で、</p>
 <div class="math notranslate nohighlight">
 \[
 C = P_{00} - P_{01} - P_{10} + P_{11}
 \]</div>
 <p>という量を計算しました。ここで、<span class="math notranslate nohighlight">\(P_{lm}\)</span>は2つの量子ビットでそれぞれ<span class="math notranslate nohighlight">\(l, m \, (=0,1)\)</span>が得られる確率でした（コードで言えば<code class="docutils literal notranslate"><span class="pre">counts.get('lm')</span> <span class="pre">/</span> <span class="pre">shots</span></code>に対応）。実はこの量<span class="math notranslate nohighlight">\(C\)</span>は、2ビットレジスタにおけるある観測量の期待値として捉えることができます。</p>
-<p>まず、1つの量子ビットに対して、固有値が<span class="math notranslate nohighlight">\(\pm 1\)</span>であるような観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を考えます。そのような<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>は無数に存在し、固有ベクトルで区別できます。<span class="math notranslate nohighlight">\(\theta\)</span>は固有ベクトルを決める何らかのパラメータです<a class="footnote-reference brackets" href="#specifying-eigenvectors" id="id8">4</a>。例えば<span class="math notranslate nohighlight">\(\sigma^0\)</span>という観測量を、計算基底を固有ベクトルとして、</p>
+<p>まず、1つの量子ビットに対して、固有値が<span class="math notranslate nohighlight">\(\pm 1\)</span>であるような観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を考えます。そのような<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>は無数に存在し、固有ベクトルで区別できます。<span class="math notranslate nohighlight">\(\theta\)</span>は固有ベクトルを決める何らかのパラメータです<a class="footnote-reference brackets" href="#specifying-eigenvectors" id="id10">6</a>。例えば<span class="math notranslate nohighlight">\(\sigma^0\)</span>という観測量を、計算基底を固有ベクトルとして、</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \sigma^0 \ket{0} = \ket{0} \\
@@ -731,262 +765,269 @@ P_{11} = |c_{--}|^2
 C = \bra{\psi'} \sigma^0_B \sigma^0_A \ket{\psi'} = \bra{\psi} \sigma^{\lambda}_B \sigma^{\kappa}_A \ket{\psi}
 \]</div>
 <p>を表していたのでした。</p>
-<p>これを踏まえて、CHSH不等式の左辺は結局何を計算していたのか、見直してみましょう。ここでベル状態を</p>
+<p>これを踏まえて、CHSH不等式の左辺は結局何を計算していたのか、見直してみましょう。ベル状態を</p>
+<div class="math notranslate nohighlight" id="equation-bell-state">
+<span class="eqno">(4)<a class="headerlink" href="#equation-bell-state" title="Permalink to this equation">¶</a></span>\[\ket{\Psi} := \frac{1}{\sqrt{2}} \left(\ket{0}_B \ket{0}_A + \ket{1}_B \ket{1}_A\right)\]</div>
+<p>とおきます。<span class="math notranslate nohighlight">\(R_y(\pi/4)\ket{0}, R_y(\pi/2)\ket{0}, R_y(3\pi/4)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子をそれぞれ<span class="math notranslate nohighlight">\(\sigma^{\pi/4}, \sigma^{\pi/2}, \sigma^{3\pi/4}\)</span>とすると、</p>
 <div class="math notranslate nohighlight">
 \[
-\ket{\Psi} = \frac{1}{\sqrt{2}} \left(\ket{00} + \ket{11}\right)
-\]</div>
-<p>とおき、第0ビットをA、第1ビットをBとします。<span class="math notranslate nohighlight">\(R_y(\pi/4)\ket{0}, R_y(\pi/2)\ket{0}, R_y(3\pi/4)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子をそれぞれ<span class="math notranslate nohighlight">\(\sigma^{\pi/4}, \sigma^{\pi/2}, \sigma^{3\pi/4}\)</span>とすると、</p>
-<div class="math notranslate nohighlight">
-\[
-S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - \bra{\Psi} \sigma^{3\pi/4}_B \sigma^0_A \ket{\Psi} + \bra{\Psi} \sigma^{\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi} + \bra{\Psi} \sigma^{3\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi}
+S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - \bra{\Psi} \sigma^{3\pi/4}_B \sigma^0_A \ket{\Psi} + \bra{\Psi} \sigma^{\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi} + \bra{\Psi} \sigma^{3\pi/4}_B \sigma^{\pi/2}_A \ket{\Psi}
 \]</div>
 <p>がわかります。</p>
 <p>観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を用いてCHSH不等式をより正確に表現すると、</p>
 <blockquote>
 <div><p>4つのパラメータ<span class="math notranslate nohighlight">\(\kappa, \lambda, \mu, \nu\)</span>を用いて<br />
-<span class="math notranslate nohighlight">\(S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\kappa}\sigma^{\lambda} \rangle - \langle \sigma^{\kappa}\sigma^{\nu} \rangle + \langle \sigma^{\mu}\sigma^{\lambda} \rangle + \langle \sigma^{\mu}\sigma^{\nu} \rangle\)</span><br />
-という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である</p>
+<span class="math notranslate nohighlight">\(S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\lambda}\sigma^{\kappa} \rangle - \langle \sigma^{\nu}\sigma^{\kappa} \rangle + \langle \sigma^{\lambda}\sigma^{\mu} \rangle + \langle \sigma^{\nu}\sigma^{\mu} \rangle\)</span>
+という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である。</p>
 </div></blockquote>
 <p>となります。</p>
-<p>実習で用いた<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>のパラメータは、<span class="math notranslate nohighlight">\(|S|\)</span>の値を最大化するものでした。次のセルで数値的にこのことを確かめています。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantum_S</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Three-parameter function to be minimized. Returns -|S| = -|&lt;sigma^k sigma^l&gt; - &lt;sigma^k sigma^n&gt; + &lt;sigma^m sigma^l&gt; + &lt;sigma^m sigma^n&gt;| with k fixed to 0.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-
-<span class="c1"># Initial values</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">])</span>
-<span class="c1"># Bounds on all parameters ([0, pi])</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-<span class="c1"># Minimize using scipy.optimize.minimize</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">quantum_S</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;trust-constr&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
-<span class="n">xopt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;argmax |S|: kappa=0, lambda=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi, mu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi, nu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">pi&#39;</span><span class="p">)</span>
-</pre></div>
 </div>
-</div>
-<div class="section" id="id9">
-<h2><a class="toc-backref" href="#id15">問題: ベル状態と可分状態の違い</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2><a class="toc-backref" href="#id20">問題：ベル状態について調べる</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="sigma">
-<h3><a class="toc-backref" href="#id16">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a><a class="headerlink" href="#sigma" title="Permalink to this headline">¶</a></h3>
-<p>上のように<span class="math notranslate nohighlight">\(R_y(\theta)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子を<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>として、<span class="math notranslate nohighlight">\(\bra{\Psi} \sigma^{\phi}_B \sigma^{\theta}_A \ket{\Psi}\)</span>を計算してみましょう。まず基底変換を具体的に書き下します。</p>
+<h3><a class="toc-backref" href="#id21">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a><a class="headerlink" href="#sigma" title="Permalink to this headline">¶</a></h3>
+<p>上のように<span class="math notranslate nohighlight">\(R_y(\theta)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子を<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>として、<span class="math notranslate nohighlight">\(\bra{\Psi} \sigma^{\chi}_B \sigma^{\theta}_A \ket{\Psi}\)</span>を計算してみましょう。まず基底変換を具体的に書き下します。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\ket{\Psi'} &amp; = R_{y,B}(-\phi) R_{y,A}(-\theta) \frac{1}{\sqrt{2}} \left( \ket{00} + \ket{11} \right) \\
-&amp; = \frac{1}{\sqrt{2}} \left\{ \left[ \cos\left(\frac{\phi}{2}\right)\ket{0} - \sin\left(\frac{\phi}{2}\right)\ket{1} \right] \left[ \cos\left(\frac{\theta}{2}\right)\ket{0} - \sin\left(\frac{\theta}{2}\right)\ket{1} \right] + \left[ \sin\left(\frac{\phi}{2}\right)\ket{0} + \cos\left(\frac{\phi}{2}\right)\ket{1} \right] \left[ \sin\left(\frac{\theta}{2}\right)\ket{0} + \cos\left(\frac{\theta}{2}\right)\ket{1} \right] \right\} \\
-&amp; = \frac{1}{\sqrt{2}} \left[ \cos\left(\frac{\theta - \phi}{2}\right)\ket{00} - \sin\left(\frac{\theta - \phi}{2}\right)\ket{01} + \sin\left(\frac{\theta - \phi}{2}\right)\ket{10} + \cos\left(\frac{\theta - \phi}{2}\right)\ket{11} \right].
+\ket{\Psi'} = &amp; R_{y,B}(-\chi) R_{y,A}(-\theta) \frac{1}{\sqrt{2}} \left( \ket{00} + \ket{11} \right) \\
+= &amp; \frac{1}{\sqrt{2}} \left\{ \left[ \cos\left(\frac{\chi}{2}\right)\ket{0} - \sin\left(\frac{\chi}{2}\right)\ket{1} \right] \left[ \cos\left(\frac{\theta}{2}\right)\ket{0} - \sin\left(\frac{\theta}{2}\right)\ket{1} \right] \right. \\
+&amp; \left. + \left[ \sin\left(\frac{\chi}{2}\right)\ket{0} + \cos\left(\frac{\chi}{2}\right)\ket{1} \right] \left[ \sin\left(\frac{\theta}{2}\right)\ket{0} + \cos\left(\frac{\theta}{2}\right)\ket{1} \right] \right\} \\
+= &amp; \frac{1}{\sqrt{2}} \left[ \cos\left(\frac{\theta - \chi}{2}\right)\ket{00} - \sin\left(\frac{\theta - \chi}{2}\right)\ket{01} + \sin\left(\frac{\theta - \chi}{2}\right)\ket{10} + \cos\left(\frac{\theta - \chi}{2}\right)\ket{11} \right].
 \end{align}
 \end{split}\]</div>
 <p>したがって、</p>
 <div class="math notranslate nohighlight" id="equation-quantum-correlation">
-<span class="eqno">(3)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
-\bra{\Psi} \sigma^{\phi}_B \sigma^{\theta}_A \ket{\Psi} &amp; = \bra{\Psi'} \sigma^{0}_B \sigma^{0}_A \ket{\Psi'} \\
-&amp; = \cos^2\left(\frac{\theta - \phi}{2}\right) - \sin^2\left(\frac{\theta - \phi}{2}\right) \\
-&amp; = \cos(\theta - \phi)
+<span class="eqno">(5)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+\bra{\Psi} \sigma^{\chi}_B \sigma^{\theta}_A \ket{\Psi} &amp; = \bra{\Psi'} \sigma^{0}_B \sigma^{0}_A \ket{\Psi'} \\
+&amp; = \cos^2\left(\frac{\theta - \chi}{2}\right) - \sin^2\left(\frac{\theta - \chi}{2}\right) \\
+&amp; = \cos(\theta - \chi)
 \end{align}\end{split}\]</div>
 <p>となります。</p>
 </div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id17">問題</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
-<p>上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットに適当な<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけ、期待値<span class="math notranslate nohighlight">\(C\)</span>を<span class="math notranslate nohighlight">\(R_y\)</span>ゲートのパラメータの値の差の関数としてプロットします。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id22">実験1</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットにそれぞれ適当な<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけ、期待値<span class="math notranslate nohighlight">\(C\)</span>を<span class="math notranslate nohighlight">\(R_y\)</span>ゲートのパラメータの組み合わせについて二次元プロットに起こしてみます。</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define theta and phi values</span>
-<span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
-<span class="n">theta_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi/4$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi/2$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$3\pi/4$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">]</span>
-<span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Consider 20 points each for theta and phi (400 points total)</span>
+<span class="n">ntheta</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">nchi</span> <span class="o">=</span> <span class="mi">20</span>
 
-<span class="c1"># Construct a circuit for each (theta, phi) pair</span>
+<span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ntheta</span><span class="p">)</span>
+<span class="n">chis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">nchi</span><span class="p">)</span>
+
+<span class="c1"># Construct a circuit for each (theta, chi) pair</span>
 <span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># np.ndindex returns an iterator over a multi-dimensional array</span>
+<span class="c1"># -&gt; idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">chi</span> <span class="o">=</span> <span class="n">chis</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Create a circuit that forms a Bell state and then measures the two qubits</span>
+    <span class="c1"># along theta and chi bases</span>
 
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT BELOW ###</span>
-        <span class="c1">##################</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT BELOW ###</span>
+    <span class="c1">##################</span>
 
-        <span class="c1">#circuit.?</span>
-        
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT ABOVE ###</span>
-        <span class="c1">##################</span>
-        
-        <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+    <span class="c1">#circuit.?</span>
 
-        <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT ABOVE ###</span>
+    <span class="c1">##################</span>
 
-<span class="c1"># Execute the circuit in qasm_simulator and retrieve the results</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="c1"># Execute all circuits in qasm_simulator and retrieve the results</span>
 <span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
 <span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
 <span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-
-<span class="c1"># Plot C versus (theta - phi) for each theta</span>
-<span class="n">icirc</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">phis</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span><span class="p">])</span>
-
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT BELOW ###</span>
-        <span class="c1">##################</span>
-
-        <span class="c1">#y[iphi] = ?</span>
-        
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT ABOVE ###</span>
-        <span class="c1">##################</span>
-
-        <span class="n">icirc</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">theta_labels</span><span class="p">[</span><span class="n">itheta</span><span class="p">])</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta - \phi$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle \Psi | \sigma^{\phi}_B \sigma^{\theta}_A | \Psi \rangle$&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>式<a class="reference internal" href="#equation-quantum-correlation">(3)</a>では、2体系の期待値がパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(\phi\)</span>だけを含む関数の積として記述できないことがはっきり示されています。これはベル状態の持つエンタングルメントの現れで、2体系をバラバラに考えることができないということを言っています。</p>
-<p>それでは、<span class="math notranslate nohighlight">\(C\)</span>や<span class="math notranslate nohighlight">\(S\)</span>をエンタングルメントのない状態（可分状態）に対して計算してみたら、何が得られるでしょうか。例えば、ベル状態<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>の代わりに、「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態を考えます。</p>
-<p>まずは<span class="math notranslate nohighlight">\(|S(\kappa, \lambda, \mu, \nu)|\)</span>の最大値を求めます。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">classical_S</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Four-parameter function to be minimized. Returns -|S| = -|&lt;sigma^k sigma^l&gt; - &lt;sigma^k sigma^n&gt; + &lt;sigma^m sigma^l&gt; + &lt;sigma^m sigma^n&gt;|.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        params (np.ndarray): Values of kappa, lambda, mu, nu</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        float: -|S|</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">params</span>
-    
-    <span class="n">S</span> <span class="o">=</span> <span class="mf">0.</span>
-    
-    <span class="c1"># S from |00&gt;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the C values for each (theta, chi)</span>
+<span class="n">c_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">icirc</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">)):</span>
+    <span class="c1"># This is the counts dict for the (theta, chi) pair</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">icirc</span><span class="p">)</span>
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    <span class="c1">#sksl_00 = </span>
-    <span class="c1">#sksn_00 = </span>
-    <span class="c1">#smsl_00 = </span>
-    <span class="c1">#smsn_00 = </span>
-    <span class="c1">#S += (sksl_00 - sksn_00 + smsl_00 + smsn_00) * 0.5</span>
+
+    <span class="c1">#c_values[idx] = ?</span>
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
+
+<span class="c1"># Making a 2D plot using imshow()</span>
+<span class="c1"># The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner</span>
+<span class="n">dtheta</span> <span class="o">=</span> <span class="p">(</span><span class="n">thetas</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">thetas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">dchi</span> <span class="o">=</span> <span class="p">(</span><span class="n">chis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">chis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">c_values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">chis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dchi</span><span class="p">,</span> <span class="n">chis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dchi</span><span class="p">,</span> <span class="n">thetas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dtheta</span><span class="p">,</span> <span class="n">thetas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dtheta</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\chi$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<span class="c1"># Place markers at theta and chi values that realize |S| = 2 sqrt(2)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>プロット上に、合わせて<span class="math notranslate nohighlight">\(|S| = 2\sqrt{2}\)</span>となる時の<span class="math notranslate nohighlight">\(\theta, \chi\)</span>の値の組み合わせを表示してあります（<span class="math notranslate nohighlight">\(\langle \sigma^{\chi} \sigma^{\theta} \rangle\)</span>を足す点は赤、引く点は白）</p>
+</div>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id23">ベル状態の何がすごいのか？</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>ここまで、かなり天下り的に「エンタングルメント」や「ベル状態」が登場してきて、CHSH不等式が破れているから量子力学だ、と言われても、そもそも量子現象がないとしたら何が期待されるのか、なぜベル状態が不思議なのか、といったある種の「出発点」が欠けていると感じている方も多いかと思います（量子ネイティブを育成するという観点からは、出発点が量子力学でありエンタングルメントは当たり前、ということでいいのかもしれませんが）。量子現象のない「古典力学」とはすなわち、ボールを投げたら放物線を描いて地面に落ちる、といった我々の日常的な感覚に沿った物理法則体系とも言えます。そこで、一旦量子力学を忘れて、日常的な感覚でベル状態を解釈することを試みましょう。</p>
+<p><strong>量子ビットAとBはそれぞれどんな状態にある？</strong></p>
+<p>量子コンピュータ上で実験をしているので、量子ビットAとBは1mmも離れていません（IBMQのような超電導型のコンピュータの実態は、数mm四方のシリコンチップ上にプリントされた金属の回路です）が、これまでの議論にそもそもAとBの間の距離は一切登場しませんでした。実際、AとBをエンタングルさせてから、何らかの方法で二つを100m引き離したとしても、AとBの関係は全く変わりません。そのようにバラバラにして扱える二つの物があるとしたら、日常的な感覚で言えば、それぞれの物が独立に何らかの状態にあると思うのが自然です。ケットの記法で言えば、<span class="math notranslate nohighlight">\(\ket{\psi}_B\ket{\phi}_A\)</span>というような状態（「可分状態」）です。</p>
+<p>ところが、式<a class="reference internal" href="#equation-bell-state">(4)</a>を見るとわかるように、量子ビットAもBも、<span class="math notranslate nohighlight">\(\ket{0}\)</span>や<span class="math notranslate nohighlight">\(\ket{1}\)</span>という状態にはありません。少し計算をしてみると、AやBにどんな基底変換を施しても、ベル状態を可分状態にすることができないことがわかります。ベル状態にある二つの量子ビットは相関していて、別々の独立な状態になく、二つを合わせて一つの状態と理解しなければいけません。「それぞれどんな状態にあるか」という問いは見当外れだったということです。</p>
+<p><strong>五分五分の確率で<span class="math notranslate nohighlight">\(\ket{00}\)</span>か<span class="math notranslate nohighlight">\(\ket{11}\)</span>という状態をとる？</strong></p>
+<p>ベル状態を計算基底で測定すると、00か11というビット列が等しい確率で得られます。ならば、二つの量子ビットが相関しているとしても、全体が<span class="math notranslate nohighlight">\(\ket{00}\)</span>という状態にあったり<span class="math notranslate nohighlight">\(\ket{11}\)</span>という状態にあったりして、それがランダムに切り替わっていると思えばいいのでしょうか？</p>
+<p>再び式<a class="reference internal" href="#equation-bell-state">(4)</a>を眺めると、この解釈も正しくないことがわかります。例えば式<a class="reference internal" href="#equation-theta-ket-inverse-def">(3)</a>を用いると</p>
+<div class="math notranslate nohighlight" id="equation-bell-state-basis-change">
+<span class="eqno">(6)<a class="headerlink" href="#equation-bell-state-basis-change" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+\ket{\Psi} = &amp; \frac{1}{\sqrt{2}} \left(\ket{0}_B \ket{0}_A + \ket{1}_B \ket{1}_A\right) \\
+= &amp; \frac{1}{\sqrt{2}} \left[
+\left( \cos\frac{\theta}{2} \ket{\theta_+}_B - \sin\frac{\theta}{2} \ket{\theta_-}_B \right)
+\left( \cos\frac{\theta}{2} \ket{\theta_+}_A - \sin\frac{\theta}{2} \ket{\theta_-}_A \right) \right. \\
+&amp; \left. + \left( \sin\frac{\theta}{2} \ket{\theta_+}_B + \cos\frac{\theta}{2} \ket{\theta_-}_B \right)
+\left( \sin\frac{\theta}{2} \ket{\theta_+}_A + \cos\frac{\theta}{2} \ket{\theta_-}_A \right)
+\right] \\
+= &amp; \frac{1}{\sqrt{2}} \left( \ket{\theta_+}_B \ket{\theta_+}_A + \ket{\theta_-}_B \ket{\theta_-}_A \right)
+\end{align}\end{split}\]</div>
+<p>となり、今度は全体が<span class="math notranslate nohighlight">\(\ket{\theta_+ \theta_+}\)</span>という状態にあったり<span class="math notranslate nohighlight">\(\ket{\theta_- \theta_-}\)</span>という状態にあったりするかのようにも見えます。</p>
+<p><strong>全ての<span class="math notranslate nohighlight">\(\ket{\theta_{\pm}\theta_{\pm}}\)</span>が一様にランダムに含まれる？</strong></p>
+<p>式<a class="reference internal" href="#equation-bell-state-basis-change">(6)</a>によると、AとBをどんな基底で測定しても、基底が揃ってさえいれば、100%相関した測定結果が得られることになります。ならば、<span class="math notranslate nohighlight">\(\ket{00}\)</span>と<span class="math notranslate nohighlight">\(\ket{11}\)</span>だけでなく、あらゆる<span class="math notranslate nohighlight">\(\ket{\theta\theta}\)</span>が等しい確率で実現しているという解釈はどうでしょうか？（<span class="math notranslate nohighlight">\(\ket{\theta_-} = \ket{(\theta + \pi)_+}\)</span>であり、全ての角度<span class="math notranslate nohighlight">\(\theta\)</span>を考えるので、<span class="math notranslate nohighlight">\(\pm\)</span>の添字を省略しています。）</p>
+<p>残念ながらそれも正しくありません。ポイントは、測定をする基底をベル状態の生成の後に決められる（回路で言えば<span class="math notranslate nohighlight">\(H\)</span>とCNOTの後に<span class="math notranslate nohighlight">\(R_{y}\)</span>ゲートを自由にかけられる）ということです。ベル状態が、生成されるごとに何か一つランダムに<span class="math notranslate nohighlight">\(\ket{\theta\theta}\)</span>を作るというのであれば、その状態を後から選んだ別の角度<span class="math notranslate nohighlight">\(\chi\)</span>を用いて測定してしまったら、完全な相関は得られません。どんな基底で測定しても完全な相関が得られるためには、それぞれの量子ビットの状態があらかじめ決まっていてはいけないのです。</p>
+<p>結論として、ベル状態では、量子ビットAもBも特定の状態にはなく、Aを測定した時に初めてBの状態が決まる（もしくはその逆）、そしてAとBがどれだけ離れていてもそれが成り立つ、ということになります。こういう言い方をすると、あたかもAとBがテレパシーで繋がっているようで、これが例えばアインシュタインがエンタングルメントの概念を「spooky action at a distance」と称して嫌がった（量子力学の定式化に間違いがあると主張した）理由です。</p>
+<p>実際にはテレパシーがあるわけではないのですが、量子力学には「部分系の状態」という概念そのものが成り立たないような状態が存在し、古典力学と本質的に異なることは確かなようです。ちなみに、AとBが可分状態にあるとすれば、CHSH不等式の左辺に登場する<span class="math notranslate nohighlight">\(\langle \sigma^{\lambda}\sigma^{\kappa} \rangle\)</span>などの期待値は全て<span class="math notranslate nohighlight">\(\langle \sigma^{\lambda} \rangle \langle \sigma^{\kappa} \rangle\)</span>とそれぞれの系での期待値の積で表せるはずなので、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+| S(\kappa, \lambda, \mu, \nu) | &amp; = \big| \langle \sigma^{\lambda} \rangle \langle \sigma^{\kappa} \rangle - \langle \sigma^{\nu} \rangle \langle \sigma^{\kappa} \rangle + \langle \sigma^{\lambda} \rangle \langle \sigma^{\mu} \rangle + \langle \sigma^{\nu} \rangle \langle \sigma^{\mu} \rangle \big| \\
+&amp; \leq | \langle \sigma^{\lambda} \rangle | | \langle \sigma^{\kappa} \rangle + \langle \sigma^{\mu} \rangle | + | \langle \sigma^{\nu} \rangle | | \langle \sigma^{\kappa} \rangle - \langle \sigma^{\mu} \rangle | \\
+&amp; \leq 2 \left( | \langle \sigma^{\kappa} \rangle | + | \langle \sigma^{\mu} \rangle | \right) \\
+&amp; \leq 2
+\end{align}
+\end{split}\]</div>
+<p>です。様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>」という命題の意味です。</p>
+</div>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id24">実験2</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>上で言及した「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態（「混合状態」という状態の一種です）も、少し工夫をすると量子回路で再現することができます。まず量子ビットを3つ使って「GHZ状態」</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\Phi} = \frac{1}{\sqrt{2}} \left( \ket{000} + \ket{111} \right)
+\]</div>
+<p>を作ります。右二つのケットに対応する量子ビットを今までと同様右からAとBと呼び、この状態を様々な基底で測定します。一番左のケットに対応する量子ビットCには何もせず、ただ測定をし、しかもその結果を無視します<a class="footnote-reference brackets" href="#implicit-measurement" id="id15">7</a>。</p>
+<p>それでは、実験1のGHZバージョンを作ってみましょう。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct a circuit for each (theta, chi) pair</span>
+<span class="n">circuits_ghz</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># np.ndindex returns an iterator over a multi-dimensional array</span>
+<span class="c1"># -&gt; idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">chi</span> <span class="o">=</span> <span class="n">chis</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
     
-    <span class="c1"># S from |11&gt;</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Create a circuit that forms a Bell state and then measures the two qubits</span>
+    <span class="c1"># along theta and chi bases</span>
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    <span class="c1">#sksl_11 = </span>
-    <span class="c1">#sksn_11 = </span>
-    <span class="c1">#smsl_11 = </span>
-    <span class="c1">#smsn_11 = </span>
-    <span class="c1">#S += (sksl_11 - sksn_11 + smsl_11 + smsn_11) * 0.5</span>
+    
+    <span class="c1">#circuit.?</span>
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
-    
-    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
 
-<span class="c1"># Initial values</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">])</span>
-<span class="c1"># Bounds on all parameters ([0, pi])</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
-<span class="c1"># Minimize using scipy.optimize.minimize</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">classical_S</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;trust-constr&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
-<span class="n">xopt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;argmax |S|: kappa=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, lambda=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, mu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi, nu=</span><span class="si">{</span><span class="n">xopt</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">pi&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max |S|:&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+    <span class="n">circuits_ghz</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="c1"># Execute all circuits in qasm_simulator and retrieve the results</span>
+<span class="n">circuits_ghz</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits_ghz</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">sim_job_ghz</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits_ghz</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">result_ghz</span> <span class="o">=</span> <span class="n">sim_job_ghz</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>この状態を量子回路で実装して、上の実験を繰り返してみましょう。ただし、実際に確率1/2で異なる状態が現れるような「混合状態」は量子回路では表現しにくいので、<span class="math notranslate nohighlight">\(\ket{00}\)</span>と<span class="math notranslate nohighlight">\(\ket{11}\)</span>を初期状態とする回路を一つずつ用意して、それらから得る<span class="math notranslate nohighlight">\(C\)</span>の平均値を求めることにします。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct a circuit for each (theta, phi) pair</span>
-<span class="n">circuits</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">circuit_00</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">_00&#39;</span><span class="p">)</span>
-        <span class="n">circuit_11</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">itheta</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iphi</span><span class="si">}</span><span class="s1">_11&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counts_ignoring_qubit2</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">bitstring</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add the counts of cases where qubit C is 0 and 1&quot;&quot;&quot;</span>
+    
+    <span class="k">return</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;1</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT BELOW ###</span>
-        <span class="c1">##################</span>
+<span class="c1"># Compute the C values for each (theta, chi)</span>
+<span class="n">c_values_ghz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">icirc</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">)):</span>
+    <span class="c1"># This is the counts dict for the (theta, chi) pair</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result_ghz</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">icirc</span><span class="p">)</span>
+    
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT BELOW ###</span>
+    <span class="c1">##################</span>
+    
+    <span class="c1">#c_values_ghz[idx] = ?</span>
 
-        <span class="c1">#circuit_00.?</span>
-        <span class="c1">#circuit_11.?</span>
-        
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT ABOVE ###</span>
-        <span class="c1">##################</span>
-        
-        <span class="n">circuit_00</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
-        <span class="n">circuit_11</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT ABOVE ###</span>
+    <span class="c1">##################</span>
 
-        <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit_00</span><span class="p">)</span>
-        <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit_11</span><span class="p">)</span>
-
-<span class="c1"># Execute the circuit in qasm_simulator and retrieve the results</span>
-<span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
-<span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-
-<span class="c1"># Plot C versus (theta - phi) for each theta</span>
-<span class="n">icirc</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">itheta</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">phis</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">iphi</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
-        <span class="n">c_00</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span><span class="p">])</span>
-        <span class="n">c_11</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuits</span><span class="p">[</span><span class="n">icirc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT BELOW ###</span>
-        <span class="c1">##################</span>
-
-        <span class="c1">#y[iphi] = ?</span>
-        
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT ABOVE ###</span>
-        <span class="c1">##################</span>
-
-        <span class="n">icirc</span> <span class="o">+=</span> <span class="mi">2</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">theta_labels</span><span class="p">[</span><span class="n">itheta</span><span class="p">])</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta - \phi$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle \Psi | \sigma^{\theta}_A \sigma^{\phi}_B | \Psi \rangle$&#39;</span><span class="p">)</span>
+<span class="c1"># Making a 2D plot using imshow()</span>
+<span class="c1"># The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">c_values_ghz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">chis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dchi</span><span class="p">,</span> <span class="n">chis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dchi</span><span class="p">,</span> <span class="n">thetas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dtheta</span><span class="p">,</span> <span class="n">thetas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dtheta</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\chi$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>ベル状態からの結果と比べてみて、何が言えるでしょうか。</p>
+<p>ベル状態と明らかに違う挙動をしているのがわかります。原始的な方法ですが、計算した<code class="docutils literal notranslate"><span class="pre">c_values_ghz</span></code>から総当たりで<span class="math notranslate nohighlight">\(|S|\)</span>の最大値を計算してみましょう。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_abs_s</span> <span class="o">=</span> <span class="mf">0.</span>
+
+<span class="c1"># Use ndindex to iterate over all index combinations</span>
+<span class="k">for</span> <span class="n">ikappa</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">,</span> <span class="n">imu</span><span class="p">,</span> <span class="n">inu</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">,</span> <span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
+    <span class="n">abs_s</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">c_values_ghz</span><span class="p">[</span><span class="n">ikappa</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">]</span> <span class="o">-</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">ikappa</span><span class="p">,</span> <span class="n">inu</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">imu</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">imu</span><span class="p">,</span> <span class="n">inu</span><span class="p">])</span>
+    <span class="n">max_abs_s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">abs_s</span><span class="p">,</span> <span class="n">max_abs_s</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;max |S| = </span><span class="si">{</span><span class="n">max_abs_s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>量子ビットAとBに「古典的」な状態が実現しているようです。なぜでしょうか。（有限のショット数でシミュレーションをしているため、統計誤差によって<span class="math notranslate nohighlight">\(|S|\)</span>の値が微妙に2を超えてしまうかもしれません）</p>
+<p>余談ですが、この実験は量子力学における測定という行為の一つのモデルとして考えることもできます。測定装置もその装置の出力を読み取る我々も究極的には量子力学的存在なので、測定とは対象系と測定装置の間にエンタングルメントを生じさせることに他なりません。そのエンタングルメントの結果、対象系（この実験では量子ビットAB）では量子力学的な重ね合わせ状態（ベル状態）が壊れ、混合状態が生じるというわけです。</p>
 <p><strong>提出するもの</strong></p>
 <ul class="simple">
 <li><p>完成した回路のコード（EDIT BELOW / EDIT ABOVEの間を埋める）とシミュレーション結果によるプロット</p></li>
-<li><p>ベル状態と可分状態の混合状態とでの2体相関の違いに関する考察</p></li>
+<li><p>実験2で、「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態が作られたメカニズムの考察</p></li>
+<li><p>おまけ（評価対象外）：実験2で、量子ビットCをどのような基底で測定しても、その結果を無視する限りにおいて<span class="math notranslate nohighlight">\(C\)</span>の値は変わらないということの証明</p></li>
+<li><p>おまけ（評価対象外）：実験2で、量子ビットCをある基底で測定し、その結果が0であった時のみを考慮すると、ABにベル状態を回復することができる。そのような基底の同定と、できれば実験2のように量子回路を組んで実験1と同じプロットが得られることの確認</p></li>
 </ul>
 <dl class="footnote brackets">
 <dt class="label" id="simulator-noise"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
@@ -995,11 +1036,20 @@ S = C^0 - C^1 + C^2 + C^3 = \bra{\Psi} \sigma^{\pi/4}_B \sigma^0_A \ket{\Psi} - 
 <dt class="label" id="orthogonal"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
 <dd><p>ここまで状態ケットの内積に関する説明をしていませんが、線形代数に慣れている方は「量子力学の状態ケットはヒルベルト空間の要素である」と理解してください。慣れていない方は、量子ビットの直行する状態とは<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>に同じゲートをかけて得られる状態のことを言うと覚えておいてください。</p>
 </dd>
-<dt class="label" id="continuous-observables"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
+<dt class="label" id="unitary"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
+<dd><p>量子ゲートは特にすべてユニタリ演算子と呼ばれるクラスの演算子です。</p>
+</dd>
+<dt class="label" id="continuous-observables"><span class="brackets"><a class="fn-backref" href="#id8">4</a></span></dt>
 <dd><p>上で粒子の位置や運動量という例を挙げたので、<span class="math notranslate nohighlight">\(a_j \, (j=0,\dots,N-1)\)</span>と離散的な固有値が観測量の値だというと混乱するかもしれません。位置や運動量といった連続的な値を持つ観測量は、無数に固有値を持つエルミート演算子で表されます。そのような演算子のかかる状態空間は無限次元です。</p>
 </dd>
-<dt class="label" id="specifying-eigenvectors"><span class="brackets"><a class="fn-backref" href="#id8">4</a></span></dt>
+<dt class="label" id="pauli-decomposition"><span class="brackets"><a class="fn-backref" href="#id9">5</a></span></dt>
+<dd><p>ただし、<a class="reference internal" href="dynamics_simulation.html"><span class="doc">物理系を表現する</span></a>で議論するように、実際には量子ビット数が大きくなると演算子の対角化自体が困難になるので、まず観測量の演算子を「パウリ積」の和に分解し、個々のパウリ積の固有ベクトルを基底とした測定をします。</p>
+</dd>
+<dt class="label" id="specifying-eigenvectors"><span class="brackets"><a class="fn-backref" href="#id10">6</a></span></dt>
 <dd><p>量子ビットの一般の状態は実パラメータ2つで決まるので、<span class="math notranslate nohighlight">\(\sigma^{\theta, \phi}\)</span>などと書いたほうがより明示的ですが、ここでの議論では結局1パラメータしか使わないので、「何か一般の（次元を指定しない）パラメータ」として<span class="math notranslate nohighlight">\(\theta\)</span>と置いています。</p>
+</dd>
+<dt class="label" id="implicit-measurement"><span class="brackets"><a class="fn-backref" href="#id15">7</a></span></dt>
+<dd><p>実はただ量子ビットを放置するだけでも、測定をして結果を見ないのと同じ効果をもたらすことができます。これをthe principle of implicit measurementと呼びます。</p>
 </dd>
 </dl>
 </div>
