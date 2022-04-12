@@ -659,10 +659,6 @@ for counts, circuit, ax in zip(counts_list, circuits, axs.reshape(-1)):
     ax.yaxis.grid(True)
 ```
 
-```{code-cell} ipython3
-np.square(np.sin(np.pi / 8) - np.cos(np.pi / 8.)) / 4.
-```
-
 $c^2/2 = (s + c)^2/4 = 0.427$, $s^2/2 = (s - c)^2 / 4 = 0.073$なので、得られた確率は当たらずとも遠からずというところでしょうか。
 
 実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して "*Noisy* intermediate-scale quantum (NISQ) device" と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。
