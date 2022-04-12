@@ -35,6 +35,10 @@ local: true
 ```
 
 $\newcommand{\ket}[1]{|#1\rangle}$
+$\newcommand{\rmI}{\mathrm{I}}$
+$\newcommand{\rmII}{\mathrm{II}}$
+$\newcommand{\rmIII}{\mathrm{III}}$
+$\newcommand{\rmIV}{\mathrm{IV}}$
 
 +++
 
@@ -174,7 +178,7 @@ circuit.measure_all()
  
 測定は量子レジスタの状態を「覗き見る」ような操作ですが、一回の測定操作で具体的に起きることは、各量子ビットに対して0もしくは1という値が得られるというだけです。つまり、量子状態が$2^n$個の計算基底の複雑な重ね合わせであったとしても、測定をすると一つの計算基底に対応するビット列が出てくるだけということになります。しかも、一度測定してしまった量子ビットはもう状態を変えてしまっていて、複雑な重ね合わせは失われてしまいます。
 
-ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を繰り返し実行して測定すると、毎回ランダムにビット列が決まります。ただし、このランダムさには法則があって、**特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗**となっています。つまり、$n$ビットレジスタの状態$\sum_{j=0}^{2^n-1} c_j \ket{j}$があるとき、測定でビット列$k$が得られる確率は$|c_k|^2$です。根本的にはこの確率の分布$|c_0|^2, |c_1|^2, \dots, |c_{2^n-1}|^2$が量子計算の結果です。
+ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を繰り返し実行して測定すると、毎回ランダムにビット列が決まります。ただし、このランダムさには法則があって、**特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗**となっています。つまり、$n$ビットレジスタの状態$\sum_{j=0}^{2^n-1} c_j \ket{j}$があるとき、測定でビット列$k$が得られる確率は$|c_k|^2$です。根本的には、この確率の分布$|c_0|^2, |c_1|^2, \dots, |c_{2^n-1}|^2$こそが量子計算の結果です。
 
 +++
 
@@ -367,7 +371,7 @@ $$
 
 +++
 
-### 回路図の書き方と読み方
+### 回路図の描き方と読み方
 
 量子回路を可視化する方法として、「回路図」の標準的な描き方が決まっています。Qiskitでは`QuantumCircuit`オブジェクトの`draw()`というメソッドを使って自動描画できます。
 
@@ -381,130 +385,129 @@ circuit.draw('mpl')
 circuit.draw()
 ```
 
-回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第0、第1量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」に対応し、測定結果の0/1が記録される部分です。
+回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第0、第1量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」（量子現象のない物理学を「古典物理学」と呼ぶので、量子でない通常のコンピュータにまつわる概念にはよく「古典 classical」という接頭辞をつけます）に対応し、測定結果の0/1が記録される部分です。
 
 +++
 
 ## CHSH不等式を計算する回路を書く
 
-それではいよいよ本題に入りましょう。CHSH不等式は二体系の4つの観測量の関係式なので、2ビットの回路を4つ用意します。そして、それぞれにおいて「ベル状態」$1/\sqrt{2}(\ket{00} + \ket{11})$を実現します。ベル状態は「どちらの量子ビットについても$\ket{0}$でも$\ket{1}$でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、**二つの量子ビットはエンタングルしている**といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。
+それではいよいよ本題に入りましょう。CHSH不等式を「ベル状態」$1/\sqrt{2}(\ket{00} + \ket{11})$で検証します。ベル状態は「どちらの量子ビットについても$\ket{0}$でも$\ket{1}$でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、**二つの量子ビットはエンタングルしている**といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。
 
-ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。ここでは回路を4つ作って一度にIBMQに送るので、`circuits`というリストに回路を足していきます。
-
-CHSH不等式の検証用の観測量を作るために、量子ビット1に対し、回路0と2では測定の直前に$R_y(-\pi/4)$、1と3では$R_y(-3\pi/4)$を作用させます。また回路2と3では量子ビット0に$R_y(-\pi/2)$を同じく測定の直前に作用させます。
+ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。詳しい説明は{doc}`課題 <nonlocal_correlations>`に譲りますが、CHSH不等式の検証用の観測量を作るために、4つの回路I, II, III, IVを使います。回路IとIIIでは量子ビット1に対し測定の直前に$R_y(-\pi/4)$、IIとIVでは同様に$R_y(-3\pi/4)$を作用させます。また回路IIIとIVでは量子ビット0に$R_y(-\pi/2)$を同じく測定の直前に作用させます。4つの回路を一度にIBMQに送るので、`circuits`というリストに回路を足していきます。
 
 ```{code-cell} ipython3
 circuits = []
 
-# H, CX[0, 1], Ry(-π/4)[1]をかける回路
-circuit = QuantumCircuit(2, name='circuit0')
+# 回路I - H, CX[0, 1], Ry(-π/4)[1]をかける
+circuit = QuantumCircuit(2, name='circuit_I')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-np.pi / 4., 1)
+circuit.measure_all()
 # 回路リストに追加
 circuits.append(circuit)
 
-# H, CX[0, 1], Ry(-3π/4)[1]をかける回路
-circuit = QuantumCircuit(2, name='circuit1')
+# 回路II - H, CX[0, 1], Ry(-3π/4)[1]をかける
+circuit = QuantumCircuit(2, name='circuit_II')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-3. * np.pi / 4., 1)
+circuit.measure_all()
 # 回路リストに追加
 circuits.append(circuit)
 
-# H, CX[0, 1], Ry(-π/4)[1], Ry(-π/2)[0]をかける回路
-circuit = QuantumCircuit(2, name='circuit2')
+# 回路III - H, CX[0, 1], Ry(-π/4)[1], Ry(-π/2)[0]をかける
+circuit = QuantumCircuit(2, name='circuit_III')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-np.pi / 4., 1)
 circuit.ry(-np.pi / 2., 0)
+circuit.measure_all()
 # 回路リストに追加
 circuits.append(circuit)
 
-# H, CX[0, 1], Ry(-3π/4)[1], Ry(-π/2)[0]をかける回路
-circuit = QuantumCircuit(2, name='circuit3')
+# 回路IV - H, CX[0, 1], Ry(-3π/4)[1], Ry(-π/2)[0]をかける
+circuit = QuantumCircuit(2, name='circuit_IV')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-3. * np.pi / 4., 1)
 circuit.ry(-np.pi / 2., 0)
+circuit.measure_all()
 # 回路リストに追加
 circuits.append(circuit)
-
-# 全ての回路に測定操作を足す
-for circuit in circuits:
-    circuit.measure_all()
 
 # draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる
 # 一つのノートブックセルで複数プロットしたい時などに便利
-for circuit in circuits:
-    ax = plt.figure().add_subplot()
+fig, axs = plt.subplots(2, 2, figsize=[12., 6.])
+for circuit, ax in zip(circuits, axs.reshape(-1)):
     circuit.draw('mpl', ax=ax)
+    ax.set_title(circuit.name)
 ```
 
 それぞれの回路で2ビットレジスタの基底$\ket{00}, \ket{01}, \ket{10}, \ket{11}$が現れる確率を計算してみましょう。
 
-回路0の状態は
+回路Iの状態は
 
 $$
 \begin{align}
 R_{y1}\left(-\frac{\pi}{4}\right) C^0_1[X] H_0 \ket{0}_1\ket{0}_0 = & R_{y1}\left(-\frac{\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
-= & \frac{1}{\sqrt{2}} \left[(c\ket{0}_1 - s\ket{1}_1)\ket{0}_0 + (s\ket{0}_1 + c\ket{1}_1)\ket{1}_0\right]\\
+= & \frac{1}{\sqrt{2}} \big[(c\ket{0}_1 - s\ket{1}_1)\ket{0}_0 + (s\ket{0}_1 + c\ket{1}_1)\ket{1}_0\big]\\
 = & \frac{1}{\sqrt{2}} (c\ket{00} + s\ket{01} - s\ket{10} + c\ket{11}).
 \end{align}
 $$
 
 簡単のため$c = \cos(\pi/8), s = \sin(\pi/8)$とおきました。
 
-したがって回路0での確率$P^0_{l} \, (l=00,01,10,11)$は
+したがって回路Iでの確率$P^{\rmI}_{l} \, (l=00,01,10,11)$は
 
 $$
-P^0_{00} = P^0_{11} = \frac{c^2}{2} \\
-P^0_{01} = P^0_{10} = \frac{s^2}{2}
+P^{\rmI}_{00} = P^{\rmI}_{11} = \frac{c^2}{2} \\
+P^{\rmI}_{01} = P^{\rmI}_{10} = \frac{s^2}{2}
 $$
 
-同様に、回路1の状態は
+同様に、回路IIの状態は
 
 ```{math}
 :label: eqn-circuit1
 R_{y1}\left(-\frac{3\pi}{4}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) = \frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})
 ```
 
-で確率$P^1_{l}$は
+で確率$P^{\rmII}_{l}$は
 
 $$
-P^1_{00} = P^1_{11} = \frac{s^2}{2} \\
-P^1_{01} = P^1_{10} = \frac{c^2}{2}
+P^{\rmII}_{00} = P^{\rmII}_{11} = \frac{s^2}{2} \\
+P^{\rmII}_{01} = P^{\rmII}_{10} = \frac{c^2}{2}
 $$
 
-です。回路2の状態は
+です。回路IIIの状態は
 
 $$
 \begin{align}
 & R_{y1}\left(-\frac{\pi}{4}\right) R_{y0}\left(-\frac{\pi}{2}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
 = & \frac{1}{\sqrt{2}} \left[ \frac{1}{\sqrt{2}} (c\ket{0}_1 - s\ket{1}_1) (\ket{0}_0 - \ket{1}_0) + \frac{1}{\sqrt{2}} (s\ket{0}_1 + c\ket{1}_1) (\ket{0}_0 + \ket{1}_0) \right] \\
-= & \frac{1}{2} \left[ (s+c)\ket{00} + (s-c)\ket{01} - (s-c)\ket{10} + (s+c)\ket{11} \right]
+= & \frac{1}{2} \big[ (s+c)\ket{00} + (s-c)\ket{01} - (s-c)\ket{10} + (s+c)\ket{11} \big]
 \end{align}
 $$
 
-で確率$P^2_{l}$は
+で確率$P^{\rmIII}_{l}$は
 
 $$
-P^2_{00} = P^2_{11} = \frac{(s + c)^2}{4} \\
-P^2_{01} = P^2_{10} = \frac{(s - c)^2}{4}
+P^{\rmIII}_{00} = P^{\rmIII}_{11} = \frac{(s + c)^2}{4} \\
+P^{\rmIII}_{01} = P^{\rmIII}_{10} = \frac{(s - c)^2}{4}
 $$
 
-同様に回路3の状態と確率$P^3_i$は
+同様に回路IVの状態と確率$P^{\rmIV}_l$は
 
 $$
 \begin{align}
 & R_{y1}\left(-\frac{3\pi}{4}\right) R_{y0}\left(-\frac{\pi}{2}\right) \frac{1}{\sqrt{2}} (\ket{0}_1\ket{0}_0 + \ket{1}_1\ket{1}_0) \\
-= & \frac{1}{2} \left[ (s+c)\ket{00} - (s-c)\ket{01} + (s-c)\ket{10} + (s+c)\ket{11} \right]
+= & \frac{1}{2} \big[ (s+c)\ket{00} - (s-c)\ket{01} + (s-c)\ket{10} + (s+c)\ket{11} \big]
 \end{align}
 $$
 
 $$
-P^3_{00} = P^3_{11} = \frac{(s + c)^2}{4} \\
-P^3_{01} = P^3_{10} = \frac{(s - c)^2}{4}
+P^{\rmIV}_{00} = P^{\rmIV}_{11} = \frac{(s + c)^2}{4} \\
+P^{\rmIV}_{01} = P^{\rmIV}_{10} = \frac{(s - c)^2}{4}
 $$
 
 となります。
@@ -512,21 +515,21 @@ $$
 それぞれの回路でビット0と1で同じ値が観測される確率$P^{i}_{00} + P^{i}_{11}$から異なる値が観測される確率$P^{i}_{01} + P^{i}_{10}$を引いた値を$C^{i}$と定義します。
 
 $$
-C^0 = c^2 - s^2 = \cos\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
-C^1 = s^2 - c^2 = -\frac{1}{\sqrt{2}} \\
-C^2 = 2sc = \sin\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
-C^3 = 2sc = \frac{1}{\sqrt{2}}
+C^{\rmI} = c^2 - s^2 = \cos\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
+C^{\rmII} = s^2 - c^2 = -\frac{1}{\sqrt{2}} \\
+C^{\rmIII} = 2sc = \sin\left(\frac{\pi}{4}\right) = \frac{1}{\sqrt{2}} \\
+C^{\rmIV} = 2sc = \frac{1}{\sqrt{2}}
 $$
 
-なので、これらの組み合わせ$S = C^0 - C^1 + C^2 + C^3$の値は$2\sqrt{2}$です。
+なので、これらの組み合わせ$S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV}$の値は$2\sqrt{2}$です。
 
 実は、エンタングルメントが起こらない場合、この観測量$S$の値は2を超えられないことが知られています。例えば$R_y$ゲートをかける前の状態がベル状態ではなく、確率$\frac{1}{2}$で$\ket{00}$、確率$\frac{1}{2}$で$\ket{11}$という「混合状態」である場合、
 
 $$
-C^0 = \frac{1}{\sqrt{2}} \\
-C^1 = -\frac{1}{\sqrt{2}} \\
-C^2 = 0 \\
-C^3 = 0
+C^{\rmI} = \frac{1}{\sqrt{2}} \\
+C^{\rmII} = -\frac{1}{\sqrt{2}} \\
+C^{\rmIII} = 0 \\
+C^{\rmIV} = 0
 $$
 
 となり、$S = \sqrt{2} < 2$です。これがCHSH不等式です。
@@ -649,23 +652,29 @@ job = backend.retrieve_job('__job_id__')
 Qiskitから提供されている`plot_histogram`関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。
 
 ```{code-cell} ipython3
-for counts in counts_list:
-    ax = plt.figure().add_subplot()
+fig, axs = plt.subplots(2, 2, sharey=True, figsize=[12., 8.])
+for counts, circuit, ax in zip(counts_list, circuits, axs.reshape(-1)):
     plot_histogram(counts, ax=ax)
+    ax.set_title(circuit.name)
+    ax.yaxis.grid(True)
 ```
 
-上で、$c^2 = (\sqrt{2} + 1) / 2\sqrt{2} \sim 0.85$, $s^2 = (\sqrt{2} - 1) / 2\sqrt{2} \sim 0.15$なので、得られた確率は当たらずとも遠からずというところでしょうか。
+```{code-cell} ipython3
+np.square(np.sin(np.pi / 8) - np.cos(np.pi / 8.)) / 4.
+```
+
+$c^2/2 = (s + c)^2/4 = 0.427$, $s^2/2 = (s - c)^2 / 4 = 0.073$なので、得られた確率は当たらずとも遠からずというところでしょうか。
 
 実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して "*Noisy* intermediate-scale quantum (NISQ) device" と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。
 
 逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。{doc}`vqe`で紹介する変分量子回路を用いた最適化などがその候補として注目されています。
 
-さて、それでは最後にCHSH不等式の破れを確認してみましょう。$C^{0}, C^{1}, C^{2}, C^{3}$を計算して$S$を求めます。
+さて、それでは最後にCHSH不等式の破れを確認してみましょう。$C^{\rmI}, C^{\rmII}, C^{\rmIII}, C^{\rmIV}$を計算して$S$を求めます。
 
 下のコードで`counts`という辞書オブジェクトからキー`'00'`などに対応する値を取り出す際に`counts['00']`ではなく`counts.get('00', 0)`としています。二つの表現は`counts`に`'00'`というキーが定義されていれば全く同義ですが、キーが定義されていないときは、前者の場合エラーとして実行が止まるのに対して、後者ではデフォルト値として2個目の引数で指定されている`0`が返ってきます。qiskitの結果データは一度も測定されなかったビット列についてキーを持たないので、常に`get`でカウント数を抽出するようにしましょう。
 
 ```{code-cell} ipython3
-# C0, C1, C2, C3を一つのアレイにする
+# C^I, C^II, C^III, C^IVを一つのアレイにする
 #（今の場合ただのリストにしてもいいが、純粋な数字の羅列にはnumpy arrayを使うといいことが多い）
 C = np.zeros(4, dtype=float)
 
