@@ -61,6 +61,9 @@ with tempfile.TemporaryDirectory() as temp_home:
     # Move HOME so qiskit won't load the IBMQ credentials
     current_home = os.environ['HOME']
     os.environ['HOME'] = temp_home
+
+    # Also set a flag
+    os.environ['JUPYTERBOOK_BUILD'] = '1'
     
     # Also write the build configuration file here (update the repository parameter to remote_repo)
     with open(os.path.join(full_source_path, '_config.yml')) as src:

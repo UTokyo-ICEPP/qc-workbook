@@ -459,6 +459,16 @@ cobyla = COBYLA(maxiter=300)
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-input]
+
+# テキスト作成用のセル
+
+import os
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
+    del qc
+```
+
+```{code-cell} ipython3
 ---
 jupyter:
   outputs_hidden: false
@@ -466,6 +476,7 @@ pycharm:
   name: '#%%
 
     '
+tags: [raises-exception, remove-output]
 ---
 random_seed = 10598
 backend = Aer.get_backend('qasm_simulator')
@@ -475,23 +486,44 @@ quantum_instance = QuantumInstance(backend=backend,
                                    seed_transpiler=random_seed,
                                    skip_qobj_validation=True)
 # VQEアルゴリズムの実装
-vqe_cg = VQE(ansatz=qc, optimizer=cg, gradient=grad, quantum_instance=quantum_instance)
-vqe_gd = VQE(ansatz=qc, optimizer=gd, gradient=grad, quantum_instance=quantum_instance)
 vqe_gfree = VQE(ansatz=qc, optimizer=cobyla, quantum_instance=quantum_instance)
+result_vqe_gfree = vqe_gfree.compute_minimum_eigenvalue(obs)
 
-print('Result:')
+vqe_cg = VQE(ansatz=qc, optimizer=cg, gradient=grad, quantum_instance=quantum_instance)
+result_vqe_cg = vqe_cg.compute_minimum_eigenvalue(obs)
 
+vqe_gd = VQE(ansatz=qc, optimizer=gd, gradient=grad, quantum_instance=quantum_instance)
+result_vqe_gd = vqe_gd.compute_minimum_eigenvalue(obs)
+
+# 厳密解
 ee = NumPyMinimumEigensolver()
 result_ee = ee.compute_minimum_eigenvalue(obs)
-print('  Exact      =',result_ee.eigenvalue)
+```
 
-result_vqe_gfree = vqe_gfree.compute_minimum_eigenvalue(obs)
-print('  VQE(GFree) =',result_vqe_gfree.optimal_value)
+```{code-cell} ipython3
+:tags: [remove-input]
 
-result_vqe_cg = vqe_cg.compute_minimum_eigenvalue(obs)
-print('  VQE(CG)    =',result_vqe_cg.optimal_value)
-result_vqe_gd = vqe_gd.compute_minimum_eigenvalue(obs)
-print('  VQE(GD)    =',result_vqe_gd.optimal_value)
+# テキスト作成用のセルなので無視してよい
+
+import pickle
+with open('data/vqe_results.pkl', 'rb') as source:
+    result_ee, result_vqe_gfree, result_vqe_cg, result_vqe_gd = pickle.load(source)
+```
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+print('Result:')
+print(f'  Exact      = {result_ee.eigenvalue}')
+print(f'  VQE(GFree) = {result_vqe_gfree.optimal_value}')
+print(f'  VQE(CG)    = {result_vqe_cg.optimal_value}')
+print(f'  VQE(GD)    = {result_vqe_gd.optimal_value}')
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}

@@ -1,6 +1,4 @@
 ---
-execution:
-  timeout: -1
 jupytext:
   notebook_metadata_filter: all
   text_representation:
@@ -21,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.12
+  version: 3.8.10
 varInspector:
   cols:
     lenName: 16
@@ -357,6 +355,42 @@ def objective_function(params):
 では、最後にこの回路を実行して、結果を見てみましょう。
 
 ```{code-cell} ipython3
+:tags: [remove-input]
+
+# テキスト作成用のセル - わざと次のセルでエラーを起こさせる
+import os
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
+    del num_vars
+```
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+tags: [raises-exception, remove-output]
+---
+optimizer = COBYLA(maxiter=50, tol=0.05)
+ret = optimizer.optimize(num_vars=num_vars, objective_function=objective_function, initial_point=params)
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+
+# テキスト作成用のセルなので無視してよい
+try:
+    ret[0]
+except:
+    import pickle
+
+    with open('data/qc_machine_learning_xcube.pkl', 'rb') as source:
+        ret = pickle.load(source)
+```
+
+```{code-cell} ipython3
 ---
 jupyter:
   outputs_hidden: false
@@ -365,9 +399,6 @@ pycharm:
 
     '
 ---
-optimizer = COBYLA(maxiter=100, tol=0.05)
-ret = optimizer.optimize(num_vars=num_vars, objective_function=objective_function, initial_point=params)
-
 # 最適化したパラメータをプリントアウト
 print('ret[0] =',ret[0])
 
@@ -385,8 +416,7 @@ for x in x_list:
 plt.plot(x_train, y_train_noise, "o", label='Training Data (w/ Noise)')
 plt.plot(x_list, func_to_learn(x_list), label='Original Function')
 plt.plot(x_list, np.array(y_pred), label='Predicted Function')
-plt.legend()
-plt.show()
+plt.legend();
 ```
 
 生成された図を確認してください。ノイズを印加した学習データの分布から、元の関数$f(x)=x^3$をおおよそ導き出せていることが分かると思います。
@@ -564,6 +594,7 @@ pycharm:
   name: '#%%
 
     '
+tags: [raises-exception, remove-output]
 ---
 # シミュレータで実行する場合
 backend = Aer.get_backend('qasm_simulator')
@@ -603,13 +634,63 @@ vqc = VQC(num_qubits=feature_dim,
           optimizer=optimizer,
           quantum_instance=quantum_instance,
           callback=callback_graph)
+```
 
-vqc.fit(norm_train_data,train_label_one_hot)
+```{code-cell} ipython3
+:tags: [remove-input]
 
-train_score = vqc.score(norm_train_data,train_label_one_hot)
-test_score = vqc.score(norm_test_data,test_label_one_hot)
+# テキスト作成用のセル - わざと次のセルでエラーを起こさせる
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
+    vqc._callback = lambda: 'hi'
+```
 
-print('')
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+tags: [raises-exception, remove-output]
+---
+vqc.fit(norm_train_data, train_label_one_hot)
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+
+# テキスト作成用のセルなので無視してよい
+import pickle
+
+with open('data/vqc_machine_learning_susycost.pkl', 'rb') as source:
+    fig = pickle.load(source)
+
+with open('data/vqc_machine_learning_susyresult.pkl', 'rb') as source:
+    vqc._fit_result = pickle.load(source)
+
+print('''   Return from subroutine COBYLA because the MAXFUN limit has been reached.
+
+NFVALS =  300   F = 2.905943E+01    MAXCV = 0.000000E+00
+X = 3.203437E-01   6.027761E-02   2.181586E+00   5.954138E-01   1.228722E+00
+   4.306505E-01   3.107309E-02   1.239565E+00   1.676084E+00   4.498719E-01
+   3.813252E-01   9.527179E-01   1.487247E+00   1.099720E+00   9.211734E-01
+  -4.528583E-02   1.636395E+00   1.527914E+00   7.354293E-01   4.912828E-01
+   1.316776E+00   9.289197E-01   1.257069E-01   3.727158E-01''')
+```
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+train_score = vqc.score(norm_train_data, train_label_one_hot)
+test_score = vqc.score(norm_test_data, test_label_one_hot)
+
 print(f'--- Classification Train score: {train_score} ---')
 print(f'--- Classification Test score:  {test_score} ---')
 ```
@@ -626,14 +707,4 @@ print(f'--- Classification Test score:  {test_score} ---')
 
 ```{bibliography}
 :filter: docname in docnames
-```
-
-```{code-cell} ipython3
----
-pycharm:
-  name: '#%%
-
-    '
----
-
 ```

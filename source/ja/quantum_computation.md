@@ -109,38 +109,6 @@ def make_original_circuit(n1, n2):
     ### EDIT BELOW ###
     ##################
 
-    # Set register 1 and 2 to equal superpositions
-    circuit.h(reg1)
-    circuit.h(reg2)
-
-    circuit.h(reg3)
-
-    # Smallest unit of phi
-    dphi = 2. * np.pi / (2 ** reg3.size)
-
-    # Loop over reg1 and reg2
-    for reg_ctrl in [reg1, reg2]:
-        # Loop over qubits in the control register (reg1 or reg2)
-        for ictrl, qctrl in enumerate(reg_ctrl):
-            # Loop over qubits in the target register (reg3)
-            for itarg, qtarg in enumerate(reg3):
-                # C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}
-                circuit.cp(dphi * (2 ** (ictrl + itarg)), qctrl, qtarg)
-
-    # Insert a barrier for better visualization
-    circuit.barrier()
-
-    # Inverse QFT
-    for j in range(reg3.size // 2):
-        circuit.swap(reg3[j], reg3[-1 - j])
-
-    for itarg in range(reg3.size):
-        for ictrl in range(itarg):
-            power = ictrl - itarg - 1 + reg3.size
-            circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
-        circuit.h(reg3[itarg])
-
     #circuit.?
 
     ##################
@@ -194,6 +162,17 @@ def make_circuits(n1, n2, backend):
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-input]
+
+# テキスト作成用のセル
+
+import os
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
+    shots = backend.configuration().max_shots
+    del backend
+```
+
+```{code-cell} ipython3
 :tags: [remove-output, raises-exception]
 
 # List of circuits
@@ -225,12 +204,12 @@ else:
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input, remove-output]
+:tags: [remove-input]
 
-# テキスト作成用のセルなので無視してよい
+# テキスト作成用のセル
 
-if len(counts_list) != len(circuits):
-    import pickle
+import pickle
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
     with open('data/quantum_computation_fake_data.pkl', 'rb') as source:
         counts_list = pickle.load(source)
 ```
@@ -268,10 +247,8 @@ for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
 
 ちなみに、`ibm_kawasaki`という実機で同じコードを走らせると、下のような結果が得られます。
 
-```{code-cell} ipython3
-:tags: [remove-input]
-
-message = '''Original circuit with n1, n2 = 4, 4
+<pre>
+Original circuit with n1, n2 = 4, 4
   Transpiling..
   Done. Ops: N(rz)=170, N(x)=3, N(sx)=67, N(cx)=266
 Optimized circuit with n1, n2 = 4, 4
@@ -295,24 +272,22 @@ Original circuit with n1, n2 = 1, 1
 Optimized circuit with n1, n2 = 1, 1
   Transpiling..
   Done. Ops: N(rz)=27, N(x)=0, N(sx)=16, N(cx)=13
-'''
-print(message)
-```
+</pre>
 
-```{code-cell} ipython3
-:tags: [remove-input]
++++ {"tags": ["remove-input"]}
 
-message = '''Original circuit (4, 4): 990 / 32000 = 0.031 +- 0.001
+<pre>
+Original circuit (4, 4): 990 / 32000 = 0.031 +- 0.001
 Optimized circuit (4, 4): 879 / 32000 = 0.027 +- 0.001
 Original circuit (3, 3): 2435 / 32000 = 0.076 +- 0.001
-Optimized circuit \x1b[31m(3, 3)\x1b[0m: 2853 / 32000 = \x1b[31m0.089 +- 0.002\x1b[0m
+Optimized circuit <b>(3, 3)</b>: 2853 / 32000 = <b>0.089 +- 0.002</b>
 Original circuit (2, 2): 3243 / 32000 = 0.101 +- 0.002
-Optimized circuit \x1b[31m(2, 2)\x1b[0m: 7994 / 32000 = \x1b[31m0.250 +- 0.002\x1b[0m
-Original circuit \x1b[31m(1, 1)\x1b[0m: 25039 / 32000 = \x1b[31m0.782 +- 0.002\x1b[0m
-Optimized circuit \x1b[31m(1, 1)\x1b[0m: 26071 / 32000 = \x1b[31m0.815 +- 0.002\x1b[0m
-'''
-print(message)
-```
+Optimized circuit <b>(2, 2)</b>: 7994 / 32000 = <b>0.250 +- 0.002</b>
+Original circuit <b>(1, 1)</b>: 25039 / 32000 = <b>0.782 +- 0.002</b>
+Optimized circuit <b>(1, 1)</b>: 26071 / 32000 = <b>0.815 +- 0.002</b>
+</pre>
+
++++
 
 回路が均一にランダムに$0$から$2^{n_1 + n_2 + n_3} - 1$までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は$2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}$となります。実機では、(4, 4)と(3, 3)でどちらの回路も正答率がほとんどこの値に近くなっています。(2, 2)では効率化回路で明らかにランダムでない結果が出ています。(1, 1)では両回路とも正答率8割です。
 
@@ -333,7 +308,7 @@ QVにはゲートや測定のエラー率だけでなく、トランスパイラ
 [^qv]: QVはハードウェアの詳細に依存しないように定義されているので、量子ビット型の量子コンピュータであればIBMのマシンに限らずすべてQVで評価できます。実際、業界で徐々にQVを標準ベンチマークとして使う動きが広がってきているようです。
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+:tags: [remove-output, raises-exception]
 
 backend_qv8 = least_busy(provider.backends(filters=operational_backend(qv=8)))
 backend_qv16 = least_busy(provider.backends(filters=operational_backend(qv=16)))
@@ -343,7 +318,7 @@ print(f'Using backends {backend_qv8.name()} (QV 8), {backend_qv16.name()} (QV 16
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+:tags: [remove-output, raises-exception]
 
 n1 = n2 = 1
 
