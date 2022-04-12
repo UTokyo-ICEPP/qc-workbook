@@ -5,7 +5,7 @@ mkdir -p /packages/$src
 cp -r $src/* /packages/$src
 cd /packages/$src
 
-for dname in tests test __pycache__ test-examples datasets Tests _tests examples sample_data
+for dname in tests __pycache__ test-examples Tests _tests examples sample_data
 do
   for dir in $(find . -name $dname -type d)
   do

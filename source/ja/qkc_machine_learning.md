@@ -135,15 +135,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # scikit-learn imports
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 # Qiskit imports
-from qiskit import Aer, execute
+from qiskit import QuantumCircuit, Aer, transpile
 from qiskit.circuit import QuantumCircuit, Parameter, ParameterVector
 from qiskit.circuit.library import PauliFeatureMap, ZFeatureMap, ZZFeatureMap
 from qiskit.circuit.library import TwoLocal, NLocal, RealAmplitudes, EfficientSU2
@@ -281,11 +278,8 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 backend = Aer.get_backend('qasm_simulator')
-job = execute(qc_circuit,
-              backend,
-              shots=8192,
-              seed_simulator=random_seed,
-              seed_transpiler=random_seed)
+qc_circuit = transpile(qc_circuit, backend=backend, seed_transpiler=random_seed)
+job = backend.run(qc_circuit, shots=8192, seed_simulator=random_seed)
 
 counts = job.result().get_counts(qc_circuit)
 print(f"Probability of observing 0^n state = {counts['0'*feature_dim]/sum(counts.values())}")
