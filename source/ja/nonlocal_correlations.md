@@ -518,15 +518,27 @@ plt.scatter([3. * np.pi / 4.], [0.], c='white', marker='+');
 $$
 \begin{align}
 | S(\kappa, \lambda, \mu, \nu) | & = \big| \langle \sigma^{\lambda} \rangle \langle \sigma^{\kappa} \rangle - \langle \sigma^{\nu} \rangle \langle \sigma^{\kappa} \rangle + \langle \sigma^{\lambda} \rangle \langle \sigma^{\mu} \rangle + \langle \sigma^{\nu} \rangle \langle \sigma^{\mu} \rangle \big| \\
-& \leq | \langle \sigma^{\lambda} \rangle | | \langle \sigma^{\kappa} \rangle + \langle \sigma^{\mu} \rangle | + | \langle \sigma^{\nu} \rangle | | \langle \sigma^{\kappa} \rangle - \langle \sigma^{\mu} \rangle | \\
-& \leq 2 \left( | \langle \sigma^{\kappa} \rangle | + | \langle \sigma^{\mu} \rangle | \right) \\
+& \leq | \langle \sigma^{\lambda} \rangle | | \langle \sigma^{\kappa} + \sigma^{\mu} \rangle | + | \langle \sigma^{\nu} \rangle | | \langle \sigma^{\kappa} - \sigma^{\mu} \rangle | \\
+& \leq | \langle \sigma^{\kappa} + \sigma^{\mu} \rangle | + | \langle \sigma^{\kappa} - \sigma^{\mu} \rangle | \\
 & \leq 2
 \end{align}
 $$
 
-です。様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では$|S| \leq 2$」という命題の意味です。
+です。最後の不等式では、$-1 \leq x, y \leq 1$を満たす$x, y$について$|x+y| + |x-y| \leq 2$が常に成り立つことを利用しました。
 
-+++
+様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では$|S| \leq 2$」という命題の意味です。
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-1., 1., 100)[None, :]
+y = np.linspace(-1., 1., 100)[:, None]
+grid = np.abs(x + y) + np.abs(x - y)
+
+plt.imshow(grid)
+plt.colorbar();
+```
 
 ### 実験2
 
