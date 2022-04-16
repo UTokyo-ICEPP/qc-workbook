@@ -737,12 +737,23 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constructed an optimized addition circuit
+</pre></div>
+</div>
+</div>
 </div>
 <p>回路の効率化とは具体的にどういうことでしょうか。もともとの回路と効率化したものとを比べてみましょう。まずは、単純にオペレーションの数を比較します。ゲート一つ一つで一定の確率でエラーが起こるということは、同じことをする回路ならゲートの数が少ないほうがより正確な計算をしてくれます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the original circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_original</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of operations in the optimized circuit:&#39;</span><span class="p">,</span> <span class="n">circuit_optimized</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of operations in the original circuit: 83
+Number of operations in the optimized circuit: 331
 </pre></div>
 </div>
 </div>
