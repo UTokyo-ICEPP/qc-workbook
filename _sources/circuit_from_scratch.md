@@ -95,7 +95,7 @@ print(type(statevector), statevector.dtype)
 print(statevector)
 ```
 
-状態ベクトルは[numpy](https://numpy.org/)の`ndarray`配列オブジェクトとして実装されています。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。
+状態ベクトルは`np.asarray()`でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。
 
 状態ベクトルデータから数式の文字列を作る[`statevector_expr`という関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py)はこのワークブックのレポジトリからインポートしています。
 
