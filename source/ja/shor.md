@@ -197,6 +197,8 @@ for qubit in range(n_mq):
 
 位相推定用のレジスタに逆量子フーリエ変換を適用して、量子ビットを測定します。
 
+この{doc}`実習 <circuit_from_scratch>`の問題7を参考にして、QFTの**逆回路**`qft_dagger(n)`を書いてみてください。引数の$n$は測定用ビットの数`n_count`が入ることに注意します。
+
 ```{code-cell} ipython3
 ---
 pycharm:
@@ -511,7 +513,7 @@ QPEで得られる位相は何だったかを思い出すと、それは$U\ket{\
 オラクル$U_f$による操作$U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$とはどういうものか、もう少し考えてみましょう。$f(x) = a^x \bmod N$は、$x$の2進数表記
 
 $$
-x=(x_1x_2\cdots x_n)_2 = 2^{n-1}x_1+2^{n-2}x_2+\cdots+2^0x_n
+x=(x_{n-1}x_{n-2}\cdots x_0)_2 = 2^{n-1}x_{n-1}+2^{n-2}x_{n-2}+\cdots+2^0x_0
 $$
 
 を使って
@@ -519,8 +521,8 @@ $$
 $$
 \begin{aligned}
 f(x) & = a^x \bmod N \\
- & = a^{2^{n-1}x_1+2^{n-2}x_2+\cdots+2^0x_n} \bmod N \\
- & = a^{2^{n-1}x_1}a^{2^{n-2}x_2}\cdots a^{2^0x_n} \bmod N
+ & = a^{2^{n-1}x_{n-1}+2^{n-2}x_{n-2}+\cdots+2^0x_0} \bmod N \\
+ & = a^{2^{n-1}x_{n-1}}a^{2^{n-2}x_{n-2}}\cdots a^{2^0x_0} \bmod N
 \end{aligned}
 $$
 
@@ -533,7 +535,7 @@ $$
 :align: center
 ```
 
-$n$量子ビットQPEの[回路](#qpe_nqubit_fig)と比較すれば、このユニタリーはQPEの$U^{2^x}$演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された$a^x \bmod N$を適用してQPEの$U^{2^x}$演算を実現する手法を、**剰余指数化**と呼びます。
+$n$量子ビットQPEの{ref}`回路 <qpe_nqubit_fig>`と比較すれば、このユニタリーはQPEの$U^{2^x}$演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された$a^x \bmod N$を適用してQPEの$U^{2^x}$演算を実現する手法を、**剰余指数化**と呼びます。
 
 (shor_imp)=
 ## アルゴリズムの実装
@@ -655,37 +657,8 @@ n_count = 8
 a = 7
 ```
 
-次に、逆QFTの回路を考えます。この{doc}`実習 <circuit_from_scratch>`の問題7を参考、QFTの**逆回路**`qft_dagger(n)`を書いてみてください。引数の$n$は測定用ビットの数`n_count`が入ることに注意します。
-
-```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-def qft_dagger(n):
-    """n量子ビットの逆量子フーリエ変換回路を書く"""
-    qc = QuantumCircuit(n)
-
-    ##################
-    ### EDIT BELOW ###
-    ##################
-
-    #qc.?
-
-    ##################
-    ### EDIT ABOVE ###
-    ##################
-
-    qc.name = "QFT^dagger"
-    return qc
-```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
-
 
 
 ```{code-cell} ipython3
@@ -763,9 +736,9 @@ for output in answer:
 print('Register Output              Phase')
 print('----------------------------------')
 
-# 回路を実装できたら、以下のコードをコメントアウトして結果を確認
-for i in range(len(rows)):
-    print(f'{rows[i][0]:15s} {rows[i][1]:18s}')
+# 回路を実装できたら、以下のコードをアンコメントして結果を確認
+#for i in range(len(rows)):
+#    print(f'{rows[i][0]:15s} {rows[i][1]:18s}')
 ```
 
 得られた位相の情報から、連分数アルゴリズムを使用して$s$と$r$を見つけることができます。Pythonの組み込みの`fractions`(分数)モジュールを使用して、小数を`Fraction`オブジェクトに変換できます。
@@ -788,9 +761,9 @@ for phase in measured_phases:
 print('     Phase   Fraction     Guess for r')
 print('-------------------------------------')
 
-# 回路を実装できたら、以下のコードをコメントアウトして結果を確認
-for i in range(len(rows)):
-    print(f'{rows[i][0]:10f} {rows[i][1]:10s} {rows[i][2]:15d}')
+# 回路を実装できたら、以下のコードをアンコメントして結果を確認
+#for i in range(len(rows)):
+#    print(f'{rows[i][0]:10f} {rows[i][1]:10s} {rows[i][2]:15d}')
 ```
 
 `limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
