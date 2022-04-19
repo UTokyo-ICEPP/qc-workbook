@@ -35,6 +35,7 @@ local: true
 ```
 
 $\newcommand{\ket}[1]{|#1\rangle}$
+$\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 +++
 
@@ -50,7 +51,7 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 # まずは全てインポート
 import numpy as np
 from IPython.display import Math
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, transpile
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.show_state import statevector_expr
 
@@ -497,8 +498,6 @@ Math(expr)
 **解答**
 
 ````{toggle}
-この回路は次の問題の量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態$\ket{s}$（このとき$s$は整数）を上の状態に変換するのに対し、この問題では$s$は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。
-
 問題4と同じように、この状態も個々の量子ビットにおける$\ket{0}$と$\ket{1}$の重ね合わせの積として表現できます。そのためには$k$の二進数表現$k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)$を用いて、$\ket{k}$の位相を
 
 $$
@@ -536,163 +535,160 @@ for m in range(num_qubits):
 
 +++
 
-(QFT)=
-### 問題7: 量子フーリエ変換
+## 量子計算プリミティブ
 
-**問題**
+量子計算をする回路を実装するにあたって、いくつか知っておくと便利な「パーツ」があります。これらは単体で「アルゴリズム」と呼べるものではなく、量子コンピュータを使った様々な計算の過程で、状況に合わせて応用する回路の雛形です。
 
-$n$量子ビットレジスタの状態$\ket{j} \, (j \in \{0,1,\dots,2^n-1\})$を以下のように変換する回路を考え、$n=6, j=23$のケースを実装しなさい。
++++
 
-$$
-\ket{j} \rightarrow \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
-$$
+### 条件分岐
+
+古典的には、ほとんどのプログラムが条件分岐`if ... else ...`がなければ成り立ちません。量子コンピュータのプログラムである量子回路で、条件分岐に対応するものはなんでしょうか？
+
+#### 測定結果に基づいた分岐
+
+一つ考えうるのは、「回路のある時点である量子レジスタを測定し、その結果に応じて異なるゲートを他のレジスタにかける」という構造です。これまで測定とは量子回路の一番最後で行うものだと言ってきましたが、実は測定も一つのオペレーションとしてどこで行っても構いません。ただし、例えば状態$\ket{\psi} = \sum_{k} c_k \ket{k}$にあるレジスタを計算基底で測定し、$j$というビット列が得られたとすると、そのレジスタは$\ket{j}$という状態に「射影」されてしまい、元々の$\{c_k\}$という振幅の情報は失われます。
+
+例として、サイズ4のレジスタ1にequal superpositionを実現し、測定して得られた計算基底$j$に応じて$R_y(2 \pi \frac{j}{16})$をレジスタ2の量子ビットにかける回路を書いてみます。
 
 ```{code-cell} ipython3
-:tags: [output_scroll, remove-output]
+register1 = QuantumRegister(4, name='reg1')
+register2 = QuantumRegister(1, name='reg2')
+output1 = ClassicalRegister(4, name='out1') # 測定結果を保持する「古典レジスタ」オブジェクト
 
-num_qubits = 6
+circuit = QuantumCircuit(register1, register2, output1)
 
-circuit = QuantumCircuit(num_qubits)
+# register1にequal superpositionを実現
+circuit.h(register1)
+# register1を測定し、結果をoutput1に書き込む
+circuit.measure(register1, output1)
 
-j = 23
+# output1の各位iの0/1に応じて、dtheta * 2^iだけRyをかけると、全体としてRy(2pi * j/16)が実現する
+dtheta = 2. * np.pi / 16.
 
-## jの２進数表現で値が1になっているビットに対してXを作用させる -> 状態|j>を作る
+for idx in range(4):
+    # circuit.***.c_if(classical_bit, 1) <- classical_bitが1のときに***ゲートをかける
+    angle = dtheta * (2 ** idx)
+    circuit.ry(angle, register2[0]).c_if(output1[idx], 1)
 
-# まずjの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）
-# unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している
-j_bits = np.unpackbits(np.asarray(j, dtype=np.uint8), bitorder='little')
+circuit.draw('mpl')
+```
 
-# 次にj_bitsアレイのうち、ビットが立っているインデックスを得る
-j_indices = np.nonzero(j_bits)[0]
+測定オペレーションが入っているので、この回路をstatevector simulatorに渡すと、シミュレーションを実行するごとにレジスタ1の状態がランダムに決定されます。次のセルを複数回実行して、上の回路が狙い通り動いていることを確認してみましょう。
 
-# 最後にcircuit.x()
-for idx in j_indices:
-    circuit.x(idx)
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=[4, 1]))
+
+# cos(pi*0/16) = 1.000, sin(pi*0/16) = 0.000
+# cos(pi*1/16) = 0.981, sin(pi*1/16) = 0.195
+# cos(pi*2/16) = 0.924, sin(pi*2/16) = 0.383
+# cos(pi*3/16) = 0.831, sin(pi*3/16) = 0.556
+# cos(pi*4/16) = 0.707, sin(pi*4/16) = 0.707
+# cos(pi*5/16) = 0.556, sin(pi*5/16) = 0.831
+# cos(pi*6/16) = 0.383, sin(pi*6/16) = 0.924
+# cos(pi*7/16) = 0.195, sin(pi*7/16) = 0.981
+# cos(pi*8/16) = 0.000, sin(pi*8/16) = 1.000
+# cos(pi*9/16) = -0.195, sin(pi*9/16) = 0.981
+# cos(pi*10/16) = -0.383, sin(pi*10/16) = 0.924
+# cos(pi*11/16) = -0.556, sin(pi*11/16) = 0.831
+# cos(pi*12/16) = -0.707, sin(pi*12/16) = 0.707
+# cos(pi*13/16) = -0.831, sin(pi*13/16) = 0.556
+# cos(pi*14/16) = -0.924, sin(pi*14/16) = 0.383
+# cos(pi*15/16) = -0.981, sin(pi*15/16) = 0.195
+```
+
+#### 条件分岐としての制御ゲート
+
+上の方法は古典プログラミングとの対応が明らかですが、あまり「量子ネイティブ」な計算の仕方とは言えません。量子計算でより自然なのは、重ね合わせ状態の生成を条件分岐とみなし、全ての分岐が回路の中で同時に扱われるようにすることです。それは結局制御ゲートを使うということに他なりません。
+
+上の回路の量子条件分岐版は以下のようになります。
+
+```{code-cell} ipython3
+register1 = QuantumRegister(4, name='reg1')
+register2 = QuantumRegister(1, name='reg2')
+
+circuit = QuantumCircuit(register1, register2)
+
+circuit.h(register1)
+
+dtheta = 2. * np.pi / 16.
+
+for idx in range(4):
+    circuit.cry(dtheta * (2 ** idx), register1[idx], register2[0])
+
+circuit.draw('mpl')
+```
+
+今度は全ての分岐が重ね合わさった量子状態が実現しています。
+
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=[4, 1]))
+```
+
+### 関数
+
+整数値変数$x$を引数に取り、バイナリ値$f(x) \in \{0, 1\}$を返す関数$f$を量子回路で実装する一つの方法は、
+
+$$
+U_{f}\ket{x}\ket{y} = \ket{x}\ket{y \oplus f(x)} \quad (y \in \{0, 1\})
+$$
+
+となるようなゲートの組み合わせ$U_{f}$を見つけることです。ここで、$\oplus$は「2を法とする足し算」つまり和を2で割った余りを表します（$y=0$なら$y \oplus f(x) = f(x)$、$y=1$なら$y \oplus f(x) = 1 - f(x)$）。
+
+このような関数回路は量子アルゴリズムを考える上で頻出します。二点指摘しておくと、
+- 単に$U_{f}\ket{x}\ket{y} = \ket{x}\ket{f(x)}$とできないのは、量子回路は可逆でなければいけないという制約があるからです。もともと右のレジスタにあった$y$という情報を消してしまうような回路は不可逆なので、そのような$U_{f}$の回路実装は存在しません。
+- 関数の返り値がバイナリというのはかなり限定的な状況を考えているようですが、一般の整数値関数も単に「1の位を返す関数$f_0$」「2の位を返す関数$f_1$」...と重ねていくだけで表現できます。
+
+さて、このような$U_f$を実装する時も、やはり鍵となるのは制御ゲートです。例えば$x \in \{0, \dots, 7\}$を15から引く関数に対応する回路は
+
+```{code-cell} ipython3
+input_register = QuantumRegister(3, name='input')
+output_register = QuantumRegister(4, name='output')
+
+circuit = QuantumCircuit(input_register, output_register)
+
+# input_registerに適当な値（6）を入力
+circuit.x(input_register[1])
+circuit.x(input_register[2])
+
+circuit.barrier()
+
+# ここからが引き算をするU_f
+# まずoutput_registerの全てのビットを立てる
+circuit.x(output_register)
+for idx in range(3):
+    # その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする
+    circuit.cx(input_register[idx], output_register[idx])
     
-## Alternative method
-#for i in range(num_qubits):
-#    if ((j >> i) & 1) == 1:
-#        circuit.x(i)
-
-##################
-### EDIT BELOW ###
-##################
-# circuit.?
-##################
-### EDIT ABOVE ###
-##################
-
-sqrt_2_to_n = 2 ** (num_qubits // 2)
-amp_norm = (1. / sqrt_2_to_n, r'\frac{1}{%d}' % sqrt_2_to_n)
-phase_norm = (2 * np.pi / (2 ** num_qubits), r'\frac{2 \pi i}{%d}' % (2 ** num_qubits))
-expr = statevector_expr(circuit, amp_norm=amp_norm, phase_norm=phase_norm)
-Math(expr)
+circuit.draw('mpl')
 ```
 
-この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、{doc}`Shorの素因数分解 <shor>`を含め多くのアルゴリズムに応用されています{cite}`nielsen_chuang_qft`。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。
-
-古典計算機で離散フーリエ変換$j \rightarrow \{e^{2 \pi i j k/2^n}\}_k$を計算するには$\mathcal{O}(n2^n)$回の演算が必要であることが知られています。一方、QFTは最も効率的な実装{cite}`qft_nlogn`で$\mathcal{O}(n \log n)$個のゲートしか利用しません（下の実装では$\mathcal{O}(n^2)$）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。
-
-**解答**
-
-````{toggle}
-前の問題同様、基本は$H$ゲート$P$ゲートを使っていきますが、今回は$\ket{j}$という「入力」があるので、制御ゲートを利用する必要があります。
-
-ビットn-1に着目しましょう。前回同様$j_m \, (m=0,\dots,n-1, \, j_m=0,1)$を使って$j$の二進数表現を$j=\sum_{m=0}^{n-1} 2^m j_m$としておきます。ビットn-1の初期状態は$\ket{j_{n-1}}_{n-1}$なので、アダマールゲートをかけると
-
-$$
-H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac{j_{n-1}}{2}} \ket{1}_{n-1}\right]
-$$
-
-です。さらに、$j_{0}, \dots j_{n-2}$の情報をこのビットに盛り込むためにビット0からn-2まででそれぞれ制御した$C^m_{n-1}[P]$を使います。ただし、かける位相は制御ビットごとに異なります。
-
-$$
-\begin{align}
-& C^{n-2}_{n-1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-1}\left[P\left(\frac{2 \pi}{2^n}\right)\right] (H\ket{j_{n-1}}_{n-1}) \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-次に、ビットn-2にも同様の操作をします。ただし、制御はビットn-3以下からのみです。
-
-$$
-\begin{align}
-& C^{n-3}_{n-2}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-2}\left[P\left(\frac{2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-2}}_{n-2}) \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-2} + \exp \left(2 \pi i \frac{2 \sum_{m=0}^{n-2} 2^{m} j_m}{2^n}\right) \ket{1}_{n-2}\right] \ket{j_{n-3}}_{n-3} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-これをビット0まで繰り返します。制御は常に位数の小さいビットからです。
-
-$$
-\begin{align}
-& C^{n-4}_{n-3}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-3}\left[P\left(\frac{2^2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-3}}_{n-3}) \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-3} + \exp \left(2 \pi i \frac{2^2 \sum_{m=0}^{n-3} 2^{m} j_m}{2^n}\right) \ket{1}_{n-3}\right] \ket{j_{n-4}}_{n-4} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-$$
-\dots
-$$
-
-$$
-\begin{align}
-& C^{0}_{1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{1}}_{1}) \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{1} + \exp \left(2 \pi i \frac{2^{n-2} \sum_{m=0}^{1} 2^{m} j_m}{2^n}\right) \ket{1}_{1}\right] \ket{j_0}_0
-\end{align}
-$$
-
-$$
-\begin{align}
-& H\ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_{0}\right].
-\end{align}
-$$
-
-ここまでの全ての操作を順に適用すると、
-
-$$
-(H_0) (C^{0}_{1}[P]H_1) \cdots (C^{n-2}_{n-1}[P] \cdots C^{0}_{n-1}[P]H_{n-1}) \, \ket{j_{n-1}}_{n-1} \ket{j_{n-2}}_{n-2} \cdots \ket{j_{0}}_0 \\
-= \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
-$$
-
-$\newcommand{tk}{\tilde{k}}$
-
-例によって全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために$k$の代わりに整数$\tk$とその二進数表現$\tk_{l}$を使って、
-
-$$
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
-$$
-
-二重和が厄介な形をしていますが、$j_m, \tk_l \in {0, 1}$なので、$n-1-l+m >= n$のとき和の中身が$2^n$の倍数となり、$\exp (2 \pi i / 2^n \cdot a 2^n) = 1 \, \forall a \in \mathbb{N}$であることを用いると、$m$についての和を$n-1$までに拡張できます。さらに$k_l = \tk_{n-1 - l}$と定義すると、
-
-$$
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-1} 2^l k_l \right).
-$$
-
-つまり、ここまでの操作で得られる状態は
-
-$$
-\frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_0}_{n-1} \cdots \ket{k_{n-1}}_0
-$$
-
-であり、求める状態に対してビット順序が逆転したものになっていることがわかります。したがって、最後にSWAPを使ってビット順序を逆転させれば量子フーリエ変換が完成します。
-
-正解は
-
-```{code-block} python
-for itarg in range(num_qubits - 1, -1, -1):
-    circuit.h(itarg)
-    for ictrl in range(itarg - 1, -1, -1):
-        power = ictrl - itarg - 1 + num_qubits
-        circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
-        
-for i in range(num_qubits // 2):
-    circuit.swap(i, num_qubits - 1 - i)
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=[3, 4]))
 ```
 
-です。
-````
+入力レジスタの状態を色々変えて、状態ベクトルの変化を見てみましょう。
+
+### 状態ベクトルの内積
+
+次に紹介するテクニックは、もう少し固定化された回路の形をしています。
+
+二つの状態$\ket{\psi}$と$\ket{\phi}$の間の内積$\braket{\psi}{\phi}$を計算したいとしましょう。量子計算において内積とは、
+
+$$
+\begin{split}
+\ket{\psi} = \sum_{k=0}^{2^n-1} c_k \ket{k} \\
+\ket{\phi} = \sum_{k=0}^{2^n-1} d_k \ket{k}
+\end{split}
+$$
+
+であるとき
+
+$$
+\braket{\psi}{\phi} = \sum_{k=0}^{2^n-1} c^{*}_k d_k
+$$
+
+で定義されます。
 
 +++
 
@@ -700,4 +696,8 @@ for i in range(num_qubits // 2):
 
 ```{bibliography}
 :filter: docname in docnames
+```
+
+```{code-cell} ipython3
+
 ```
