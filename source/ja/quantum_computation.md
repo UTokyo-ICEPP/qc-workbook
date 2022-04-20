@@ -22,7 +22,7 @@ language_info:
   version: 3.8.10
 ---
 
-# 【課題】量子計算
+# 【課題】アダマールテスト
 
 ```{contents} 目次
 ---
@@ -34,6 +34,8 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
@@ -49,11 +51,11 @@ print('notebook ready')
 
 ```{image} figs/hadamard_test.png
 :alt: hadamard_test
-:width: 600px
+:width: 300px
 :align: center
 ```
 
-図中、ゲート$G$は$H$または$R_x(\pi/2)$、$U$は下のレジスタにかかる任意の回路です。
+図中、ゲート$G$は$H$または$R_x(\pi/2)$、$U$はdataレジスタにかかる任意の回路です。
 
 $G=H$ならば、回路の終状態は
 
@@ -107,7 +109,7 @@ $$
 
 が得られます。
 
-アダマールテストを利用すれば、状態$\ket{\psi}$を$\ket{0}$から作る回路$U_{\psi}$が既知のとき、$\ket{\psi}$の計算基底での展開$\sum_k c_k \ket{k}$を振幅の位相情報も含めて推定することができます。そのためには、上でデータレジスタの初期状態を$\ket{0}$、$U$を$U^{-1}_k U_{\psi}$とします。ただし$U_k$は$\ket{0}$から$\ket{k}$を作る回路です。すると、$G=H$と$G=R_x(\pi/2)$とでアダマールテストをすることで、$\braket{0}{U^{-1}_k \psi} = \braket{k}{\psi} = c_k$が計算できます（最初の等号が成立する証明は、実習の{ref}`inverse_circuit`を参照してください）。これを$0$から$2^n - 1$までの$k$について繰り返せば、$\{c_k\}_k$を完全に求められます。
+アダマールテストを利用すれば、状態$\ket{\psi}$を$\ket{0}$から作る回路$U_{\psi}$が既知のとき、$\ket{\psi}$の計算基底での展開$\sum_k c_k \ket{k}$を振幅の位相情報も含めて推定することができます。そのためには、上でデータレジスタの初期状態を$\ket{0}$、$U$を$U^{-1}_k U_{\psi}$とします。ただし$U_k$は$\ket{0}$から$\ket{k}$を作る回路です。すると、$G=H$と$G=R_x(\pi/2)$とでアダマールテストをすることで、$\braket{0}{U^{-1}_k \psi} = \braket{k}{\psi} = c_k$の実部と虚部がそれぞれ計算できます（最初の等号が成立する証明は、実習の{ref}`inverse_circuit`を参照してください）。これを$0$から$2^n - 1$までの$k$について繰り返せば、$\{c_k\}_k$を完全に求められます。
 
 以下で、既知だけど何か複雑な状態$\ket{\psi}$の状態ベクトルを調べてみましょう。まずは$U_{\psi}$を定義します。
 
@@ -164,6 +166,8 @@ def make_cukinv_gate(k):
 次のセルで$k=0$から$2^n-1$までそれぞれ2通りのアダマールテストを行い、$\ket{\psi}$の計算基底展開を求めてください。
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 reg_data = QuantumRegister(data_width, name='data')
 reg_test = QuantumRegister(1, name='test')
 creg_test = ClassicalRegister(1)
@@ -178,19 +182,20 @@ for k in ks:
     circuit_re = QuantumCircuit(reg_data, reg_test, creg_test)
     circuit_im = QuantumCircuit(reg_data, reg_test, creg_test)
     
-    circuit_re.append(cupsi_gate, qargs=([reg_test[0]] + reg_data[:]))
-
     ##################
     ### EDIT BELOW ###
     ##################
 
     # 制御ゲートをcircuitに組み込む例
     # circuit.append(cupsi_gate, qargs=([reg_test[0]] + reg_data[:]))
-
+    
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
+    circuit_re.measure(reg_test, creg_test)
+    circuit_im.measure(reg_test, creg_test)
+
     circuits_re.append(circuit_re)
     circuits_im.append(circuit_im)
 
@@ -210,28 +215,34 @@ statevector = np.empty(2 ** data_width, dtype=np.complex128)
 for k in ks:
     counts_re = counts_list_re[k]
     counts_im = counts_list_im[k]
-    statevector[k] = (counts_re['0'] - counts_re['1']) / shots
-    statevector[k] += 1.j * (counts_im['0'] - counts_im['1']) / shots
+    statevector[k] = (counts_re.get('0', 0) - counts_re.get('1', 0)) / shots
+    statevector[k] += 1.j * (counts_im.get('0', 0) - counts_im.get('1', 0)) / shots
 ```
 
 ```{code-cell} ipython3
-plt.plot(ks, statevector.real, label='Re')
-plt.plot(ks, statevector.imag, label='Im')
+:tags: [remove-output]
+
+plt.plot(ks, statevector.real, label='Re($c_k$)')
+plt.plot(ks, statevector.imag, label='Im($c_k$)')
+plt.xlabel('k')
 plt.legend();
 ```
 
 得られた結果と`statevector_simulator`で計算される状態ベクトルとを比較してみましょう。
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 sv_simulator = Aer.get_backend('statevector_simulator')
 
 circuit = transpile(upsi, backend=sv_simulator)
 statevector_truth = np.asarray(sv_simulator.run(circuit).result().data()['statevector'])
 
-plt.plot(ks, statevector_truth.real, label='Re truth')
-plt.plot(ks, statevector_truth.imag, label='Im truth')
-plt.scatter(ks, statevector.real, label='Re')
-plt.scatter(ks, statevector.imag, label='Im')
+plt.plot(ks, statevector_truth.real, label='Re($c_k$) truth')
+plt.plot(ks, statevector_truth.imag, label='Im($c_k$) truth')
+plt.scatter(ks, statevector.real, label='Re($c_k$)')
+plt.scatter(ks, statevector.imag, label='Im($c_k$)')
+plt.xlabel('k')
 plt.legend();
 ```
 
@@ -322,6 +333,8 @@ def make_haystack_needle():
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 haystack_needle = make_haystack_needle()
 haystack_needle.draw('mpl')
 ```
@@ -329,6 +342,8 @@ haystack_needle.draw('mpl')
 回路が完成したら、`qasm_simulator`で実行し、ヒストグラムをプロットしてください。
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 simulator = Aer.get_backend('qasm_simulator')
 haystack_needle = transpile(haystack_needle, backend=simulator)
 sim_job = simulator.run(haystack_needle, shots=10000)

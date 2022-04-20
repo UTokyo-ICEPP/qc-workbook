@@ -26,6 +26,8 @@ language_info:
 
 実習の内容の延長です。ここでは並列足し算回路を実機で実行します。
 
+## 効率化前後の回路の比較
+
 実習のおさらいをすると、まずもともとの足し算のロジックをそのまま踏襲した回路を作り、それではゲート数が多すぎるので効率化した回路を作成しました。
 
 実は効率化した回路でもまだゲートの数が多すぎて、4ビット+4ビットの計算では答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、$(n_1, n_2)$の値として(4, 4)以外に(3, 3)、(2, 2)、(1, 1)も同時に試すことにしましょう。
@@ -314,7 +316,7 @@ Optimized circuit <b>(1, 1)</b>: 26071 / 32000 = <b>0.815 +- 0.002</b>
 
 +++
 
-### Quantum Volume
+## Quantum Volume
 
 量子コンピュータがエラーを起こす頻度は、マシンによって違います。さらに言えば個々の量子ビットごとに1量子ビットゲートのエラー率と測定のエラー率[^measurement_error]があり、また量子ビット間の接続ごとにCNOTのエラー率があります。これまで使ってきた`find_best_chain()`という関数は、与えられたバックエンドの中でこれらのエラー率の積が最も小さくなるような量子ビットの並びを選んでくるものでした。
 
@@ -373,4 +375,10 @@ _, log_gate_error_qv32, log_readout_error_qv32 = find_best_chain(backend_qv32, 4
 print(f'QV 8 error rates: {log_gate_error_qv8:.2f} (CNOT), {log_readout_error_qv8} (readout)')
 print(f'QV 16 error rates: {log_gate_error_qv16:.2f} (CNOT), {log_readout_error_qv16} (readout)')
 print(f'QV 32 error rates: {log_gate_error_qv32:.2f} (CNOT), {log_readout_error_qv32} (readout)')
+```
+
+## 参考文献
+
+```{bibliography}
+:filter: docname in docnames
 ```

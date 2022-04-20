@@ -100,7 +100,7 @@ print(statevector)
 
 状態ベクトルは`np.asarray()`でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。
 
-状態ベクトルデータから数式の文字列を作る[`statevector_expr`という関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py)はこのワークブックのレポジトリからインポートしています。
+状態ベクトルデータから数式の文字列を作る[`statevector_expr`という関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py)はこのワークブックのレポジトリからインポートしています。
 
 ```{code-cell} ipython3
 expr = statevector_expr(statevector)
@@ -619,7 +619,8 @@ circuit.draw('mpl')
 今度は全ての分岐が重ね合わさった量子状態が実現しています。
 
 ```{code-cell} ipython3
-Math(statevector_expr(circuit, register_sizes=[4, 1]))
+lines = statevector_expr(circuit, register_sizes=[4, 1], terms_per_row=6)
+Math(r' \\ '.join(lines))
 ```
 
 ### 関数
@@ -1067,11 +1068,3 @@ Math(statevector_expr(circuit, register_sizes=(1, 1, 1)))
 ```
 
 上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが$\ket{\text{in}}$と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```
