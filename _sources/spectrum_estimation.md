@@ -121,7 +121,6 @@ for i in range(eigvals.shape[0]):
 
 ```{image} figs/qpe_wo_iqft.png
 :alt: qpe_wo_iqft
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```

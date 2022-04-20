@@ -35,6 +35,7 @@ local: true
 ```
 
 $\newcommand{\ket}[1]{|#1\rangle}$
+$\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 +++
 
@@ -49,8 +50,9 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 
 # まずは全てインポート
 import numpy as np
+import matplotlib.pyplot as plt
 from IPython.display import Math
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, transpile
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.show_state import statevector_expr
 
@@ -80,24 +82,25 @@ circuit.draw('mpl')
 状態ベクトルシミュレーションを実行する際も`transpile`とバックエンドの`run`関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので`get_counts`ではなく`result.data()['statevector']`を参照します。
 
 ```{code-cell} ipython3
-# 再び「おまじない」のtranspileをしてから、run()に渡す
-circuit = transpile(circuit, backend=simulator)
-job = simulator.run(circuit)
-result = job.result()
-qiskit_statevector = result.data()['statevector']
+def get_statevector_array(circuit):
+    # 再び「おまじない」のtranspileをしてから、run()に渡す
+    circuit = transpile(circuit, backend=simulator)
+    job = simulator.run(circuit)
+    result = job.result()
+    qiskit_statevector = result.data()['statevector']
 
-# result.data()['statevector']は通常の配列オブジェクト（ndarray）ではなくqiskit独自のクラスのインスタンス
-print(type(qiskit_statevector))
+    # result.data()['statevector']は通常の配列オブジェクト（ndarray）ではなくqiskit独自のクラスのインスタンス
+    # ただし np.asarray() で numpy の ndarray に変換可能
+    return np.asarray(qiskit_statevector)
 
-# ただし np.asarray() で numpy の ndarray に変換可能
-statevector = np.asarray(qiskit_statevector)
+statevector = get_statevector_array(circuit)
 print(type(statevector), statevector.dtype)
 print(statevector)
 ```
 
 状態ベクトルは`np.asarray()`でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。
 
-状態ベクトルデータから数式の文字列を作る[`statevector_expr`という関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py)はこのワークブックのレポジトリからインポートしています。
+状態ベクトルデータから数式の文字列を作る[`statevector_expr`という関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py)はこのワークブックのレポジトリからインポートしています。
 
 ```{code-cell} ipython3
 expr = statevector_expr(statevector)
@@ -133,26 +136,18 @@ Math(expr)
     \sqrt{X} \ket{1} = \frac{1}{2} \left[(1 - i) \ket{0} + (1 + i) \ket{1}\right]
     ```
   - circuit.sx(i)
-* - $U_1$, $P$
+* - $P$
   - 1
   - パラメータ$\phi$を取り、$\ket{1}$に位相$e^{i\phi}$をかける。$P(\phi)$は$R_{z}(\phi)$と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られる。
   - `circuit.p(phi, i)`
-* - $U_3$
-  - 1
-  - パラメータ$\theta, \phi, \lambda$を取り、単一量子ビットの任意の状態を実現する。
-    ```{math}
-    U_3(\theta, \phi, \lambda)\ket{0} = \cos\left(\frac{\theta}{2}\right) \ket{0} + e^{i\phi}\sin\left(\frac{\theta}{2}\right) \ket{1} \\
-    U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\right) \ket{0} + e^{i(\phi+\lambda)}\cos\left(\frac{\theta}{2}\right) \ket{1}
-    ```
-  - `circuit.u3(theta, phi, lambda, i)`
-* - $C^i_j[U_1]$, $C^i_j[P]$
+* - $C^i_j[P]$
   - 2
   - パラメータ$\phi$を取り、ビット$i, j$が1であるような計算基底の位相を$\phi$前進させる。
     ```{math}
-    C^i_j[U_1(\phi)] \ket{00} = \ket{00} \\
-    C^i_j[U_1(\phi)] \ket{01} = \ket{01} \\
-    C^i_j[U_1(\phi)] \ket{10} = \ket{10} \\
-    C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}
+    C^i_j[P(\phi)] \ket{00} = \ket{00} \\
+    C^i_j[P(\phi)] \ket{01} = \ket{01} \\
+    C^i_j[P(\phi)] \ket{10} = \ket{10} \\
+    C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}
     ```
   - `circuit.cp(phi, i, j)`
 * - SWAP
@@ -453,6 +448,7 @@ circuit.x(3)
 
 +++
 
+(equal_superposition_with_phase)=
 ### 問題6: Equal superpositionに位相を付ける
 
 **問題**
@@ -497,8 +493,6 @@ Math(expr)
 **解答**
 
 ````{toggle}
-この回路は次の問題の量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態$\ket{s}$（このとき$s$は整数）を上の状態に変換するのに対し、この問題では$s$は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。
-
 問題4と同じように、この状態も個々の量子ビットにおける$\ket{0}$と$\ket{1}$の重ね合わせの積として表現できます。そのためには$k$の二進数表現$k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)$を用いて、$\ket{k}$の位相を
 
 $$
@@ -536,168 +530,541 @@ for m in range(num_qubits):
 
 +++
 
-(QFT)=
-### 問題7: 量子フーリエ変換
+## 量子計算プリミティブ
 
-**問題**
-
-$n$量子ビットレジスタの状態$\ket{j} \, (j \in \{0,1,\dots,2^n-1\})$を以下のように変換する回路を考え、$n=6, j=23$のケースを実装しなさい。
-
-$$
-\ket{j} \rightarrow \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
-$$
-
-```{code-cell} ipython3
-:tags: [output_scroll, remove-output]
-
-num_qubits = 6
-
-circuit = QuantumCircuit(num_qubits)
-
-j = 23
-
-## jの２進数表現で値が1になっているビットに対してXを作用させる -> 状態|j>を作る
-
-# まずjの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）
-# unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している
-j_bits = np.unpackbits(np.asarray(j, dtype=np.uint8), bitorder='little')
-
-# 次にj_bitsアレイのうち、ビットが立っているインデックスを得る
-j_indices = np.nonzero(j_bits)[0]
-
-# 最後にcircuit.x()
-for idx in j_indices:
-    circuit.x(idx)
-    
-## Alternative method
-#for i in range(num_qubits):
-#    if ((j >> i) & 1) == 1:
-#        circuit.x(i)
-
-##################
-### EDIT BELOW ###
-##################
-# circuit.?
-##################
-### EDIT ABOVE ###
-##################
-
-sqrt_2_to_n = 2 ** (num_qubits // 2)
-amp_norm = (1. / sqrt_2_to_n, r'\frac{1}{%d}' % sqrt_2_to_n)
-phase_norm = (2 * np.pi / (2 ** num_qubits), r'\frac{2 \pi i}{%d}' % (2 ** num_qubits))
-expr = statevector_expr(circuit, amp_norm=amp_norm, phase_norm=phase_norm)
-Math(expr)
-```
-
-この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、{doc}`Shorの素因数分解 <shor>`を含め多くのアルゴリズムに応用されています{cite}`nielsen_chuang_qft`。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。
-
-古典計算機で離散フーリエ変換$j \rightarrow \{e^{2 \pi i j k/2^n}\}_k$を計算するには$\mathcal{O}(n2^n)$回の演算が必要であることが知られています。一方、QFTは最も効率的な実装{cite}`qft_nlogn`で$\mathcal{O}(n \log n)$個のゲートしか利用しません（下の実装では$\mathcal{O}(n^2)$）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。
-
-**解答**
-
-````{toggle}
-前の問題同様、基本は$H$ゲート$P$ゲートを使っていきますが、今回は$\ket{j}$という「入力」があるので、制御ゲートを利用する必要があります。
-
-ビットn-1に着目しましょう。前回同様$j_m \, (m=0,\dots,n-1, \, j_m=0,1)$を使って$j$の二進数表現を$j=\sum_{m=0}^{n-1} 2^m j_m$としておきます。ビットn-1の初期状態は$\ket{j_{n-1}}_{n-1}$なので、アダマールゲートをかけると
-
-$$
-H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac{j_{n-1}}{2}} \ket{1}_{n-1}\right]
-$$
-
-です。さらに、$j_{0}, \dots j_{n-2}$の情報をこのビットに盛り込むためにビット0からn-2まででそれぞれ制御した$C^m_{n-1}[P]$を使います。ただし、かける位相は制御ビットごとに異なります。
-
-$$
-\begin{align}
-& C^{n-2}_{n-1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-1}\left[P\left(\frac{2 \pi}{2^n}\right)\right] (H\ket{j_{n-1}}_{n-1}) \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-次に、ビットn-2にも同様の操作をします。ただし、制御はビットn-3以下からのみです。
-
-$$
-\begin{align}
-& C^{n-3}_{n-2}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-2}\left[P\left(\frac{2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-2}}_{n-2}) \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-2} + \exp \left(2 \pi i \frac{2 \sum_{m=0}^{n-2} 2^{m} j_m}{2^n}\right) \ket{1}_{n-2}\right] \ket{j_{n-3}}_{n-3} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-これをビット0まで繰り返します。制御は常に位数の小さいビットからです。
-
-$$
-\begin{align}
-& C^{n-4}_{n-3}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-3}\left[P\left(\frac{2^2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-3}}_{n-3}) \cdots \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{n-3} + \exp \left(2 \pi i \frac{2^2 \sum_{m=0}^{n-3} 2^{m} j_m}{2^n}\right) \ket{1}_{n-3}\right] \ket{j_{n-4}}_{n-4} \cdots \ket{j_0}_0
-\end{align}
-$$
-
-$$
-\dots
-$$
-
-$$
-\begin{align}
-& C^{0}_{1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{1}}_{1}) \ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_{1} + \exp \left(2 \pi i \frac{2^{n-2} \sum_{m=0}^{1} 2^{m} j_m}{2^n}\right) \ket{1}_{1}\right] \ket{j_0}_0
-\end{align}
-$$
-
-$$
-\begin{align}
-& H\ket{j_0}_0 \\
-= & \frac{1}{\sqrt{2}} \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_{0}\right].
-\end{align}
-$$
-
-ここまでの全ての操作を順に適用すると、
-
-$$
-(H_0) (C^{0}_{1}[P]H_1) \cdots (C^{n-2}_{n-1}[P] \cdots C^{0}_{n-1}[P]H_{n-1}) \, \ket{j_{n-1}}_{n-1} \ket{j_{n-2}}_{n-2} \cdots \ket{j_{0}}_0 \\
-= \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
-$$
-
-$\newcommand{tk}{\tilde{k}}$
-
-例によって全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために$k$の代わりに整数$\tk$とその二進数表現$\tk_{l}$を使って、
-
-$$
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
-$$
-
-二重和が厄介な形をしていますが、$j_m, \tk_l \in {0, 1}$なので、$n-1-l+m >= n$のとき和の中身が$2^n$の倍数となり、$\exp (2 \pi i / 2^n \cdot a 2^n) = 1 \, \forall a \in \mathbb{N}$であることを用いると、$m$についての和を$n-1$までに拡張できます。さらに$k_l = \tk_{n-1 - l}$と定義すると、
-
-$$
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-1} 2^l k_l \right).
-$$
-
-つまり、ここまでの操作で得られる状態は
-
-$$
-\frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_0}_{n-1} \cdots \ket{k_{n-1}}_0
-$$
-
-であり、求める状態に対してビット順序が逆転したものになっていることがわかります。したがって、最後にSWAPを使ってビット順序を逆転させれば量子フーリエ変換が完成します。
-
-正解は
-
-```{code-block} python
-for itarg in range(num_qubits - 1, -1, -1):
-    circuit.h(itarg)
-    for ictrl in range(itarg - 1, -1, -1):
-        power = ictrl - itarg - 1 + num_qubits
-        circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
-        
-for i in range(num_qubits // 2):
-    circuit.swap(i, num_qubits - 1 - i)
-```
-
-です。
-````
+量子計算をする回路を実装するにあたって、いくつか知っておくと便利な「パーツ」があります。これらは単体で「アルゴリズム」と呼べるものではなく、量子コンピュータを使った様々な計算の過程で、状況に合わせて応用する回路の雛形です。
 
 +++
 
-## 参考文献
+### 条件分岐
 
-```{bibliography}
-:filter: docname in docnames
+古典的には、ほとんどのプログラムが条件分岐`if ... else ...`がなければ成り立ちません。量子コンピュータのプログラムである量子回路で、条件分岐に対応するものはなんでしょうか？
+
+#### 測定結果に基づいた分岐
+
+一つ考えうるのは、「回路のある時点である量子レジスタを測定し、その結果に応じて異なるゲートを他のレジスタにかける」という構造です。これまで測定とは量子回路の一番最後で行うものだと言ってきましたが、実は測定も一つのオペレーションとしてどこで行っても構いません。ただし、例えば状態$\ket{\psi} = \sum_{k} c_k \ket{k}$にあるレジスタを計算基底で測定し、$j$というビット列が得られたとすると、そのレジスタは$\ket{j}$という状態に「射影」されてしまい、元々の$\{c_k\}$という振幅の情報は失われます。
+
+例として、サイズ4のレジスタ1にequal superpositionを実現し、測定して得られた計算基底$j$に応じて$R_y(2 \pi \frac{j}{16})$をレジスタ2の量子ビットにかける回路を書いてみます。
+
+```{code-cell} ipython3
+register1 = QuantumRegister(4, name='reg1')
+register2 = QuantumRegister(1, name='reg2')
+output1 = ClassicalRegister(4, name='out1') # 測定結果を保持する「古典レジスタ」オブジェクト
+
+circuit = QuantumCircuit(register1, register2, output1)
+
+# register1にequal superpositionを実現
+circuit.h(register1)
+# register1を測定し、結果をoutput1に書き込む
+circuit.measure(register1, output1)
+
+# output1の各位iの0/1に応じて、dtheta * 2^iだけRyをかけると、全体としてRy(2pi * j/16)が実現する
+dtheta = 2. * np.pi / 16.
+
+for idx in range(4):
+    # circuit.***.c_if(classical_bit, 1) <- classical_bitが1のときに***ゲートをかける
+    angle = dtheta * (2 ** idx)
+    circuit.ry(angle, register2[0]).c_if(output1[idx], 1)
+
+circuit.draw('mpl')
 ```
+
+測定オペレーションが入っているので、この回路をstatevector simulatorに渡すと、シミュレーションを実行するごとにレジスタ1の状態がランダムに決定されます。次のセルを複数回実行して、上の回路が狙い通り動いていることを確認してみましょう。
+
+入力と出力のレジスタの値が別々に表示されるよう、`statevector_expr`の`register_sizes`という引数を利用して、5ビットの回路を4ビットと1ビットに分けて解釈するよう指定します。
+
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=[4, 1]))
+
+# cos(pi*0/16) = 1.000, sin(pi*0/16) = 0.000
+# cos(pi*1/16) = 0.981, sin(pi*1/16) = 0.195
+# cos(pi*2/16) = 0.924, sin(pi*2/16) = 0.383
+# cos(pi*3/16) = 0.831, sin(pi*3/16) = 0.556
+# cos(pi*4/16) = 0.707, sin(pi*4/16) = 0.707
+# cos(pi*5/16) = 0.556, sin(pi*5/16) = 0.831
+# cos(pi*6/16) = 0.383, sin(pi*6/16) = 0.924
+# cos(pi*7/16) = 0.195, sin(pi*7/16) = 0.981
+# cos(pi*8/16) = 0.000, sin(pi*8/16) = 1.000
+# cos(pi*9/16) = -0.195, sin(pi*9/16) = 0.981
+# cos(pi*10/16) = -0.383, sin(pi*10/16) = 0.924
+# cos(pi*11/16) = -0.556, sin(pi*11/16) = 0.831
+# cos(pi*12/16) = -0.707, sin(pi*12/16) = 0.707
+# cos(pi*13/16) = -0.831, sin(pi*13/16) = 0.556
+# cos(pi*14/16) = -0.924, sin(pi*14/16) = 0.383
+# cos(pi*15/16) = -0.981, sin(pi*15/16) = 0.195
+```
+
+#### 条件分岐としての制御ゲート
+
+上の方法は古典プログラミングとの対応が明らかですが、あまり「量子ネイティブ」な計算の仕方とは言えません。量子計算でより自然なのは、重ね合わせ状態の生成を条件分岐とみなし、全ての分岐が回路の中で同時に扱われるようにすることです。それは結局制御ゲートを使うということに他なりません。
+
+上の回路の量子条件分岐版は以下のようになります。
+
+```{code-cell} ipython3
+register1 = QuantumRegister(4, name='reg1')
+register2 = QuantumRegister(1, name='reg2')
+
+circuit = QuantumCircuit(register1, register2)
+
+circuit.h(register1)
+
+dtheta = 2. * np.pi / 16.
+
+for idx in range(4):
+    circuit.cry(dtheta * (2 ** idx), register1[idx], register2[0])
+
+circuit.draw('mpl')
+```
+
+今度は全ての分岐が重ね合わさった量子状態が実現しています。
+
+```{code-cell} ipython3
+lines = statevector_expr(circuit, register_sizes=[4, 1], terms_per_row=6)
+Math(r' \\ '.join(lines))
+```
+
+### 関数
+
+整数値変数$x$を引数に取り、バイナリ値$f(x) \in \{0, 1\}$を返す関数$f$を量子回路で実装する一つの方法は、
+
+$$
+U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
+$$
+
+となるようなゲートの組み合わせ$U_{f}$を見つけることです。ここで、$\oplus$は「2を法とする足し算」つまり和を2で割った余りを表します（$y=0$なら$y \oplus f(x) = f(x)$、$y=1$なら$y \oplus f(x) = 1 - f(x)$）。要するに、$U_{f}$は「$f(x)$の値が0だったら何もせず、1だったら右のケットをビット反転させる」というオペレーションです。
+
+このような関数回路は量子アルゴリズムを考える上で頻出します。二点指摘しておくと、
+- 単に$U_{f}\ket{y}\ket{x} = \ket{f(x)}\ket{x}$とできないのは、量子回路は可逆でなければいけないという制約があるからです。もともと右のレジスタにあった$y$という情報を消してしまうような回路は不可逆なので、そのような$U_{f}$の回路実装は存在しません。
+- 関数の返り値がバイナリというのはかなり限定的な状況を考えているようですが、一般の整数値関数も単に「1の位を返す関数$f_0$」「2の位を返す関数$f_1$」...と重ねていくだけで表現できます。
+
+さて、このような$U_f$を実装する時も、やはり鍵となるのは制御ゲートです。例えば、実際に4ビット整数値関数に拡張した$f=f_3 f_2 f_1 f_0$を$x \in \{0, \dots, 7\}$を15から引く関数としたとき、それに対応する回路は
+
+```{code-cell} ipython3
+input_register = QuantumRegister(3, name='input')
+output_register = QuantumRegister(4, name='output')
+
+circuit = QuantumCircuit(input_register, output_register)
+
+# input_registerに適当な値（6）を入力
+circuit.x(input_register[1])
+circuit.x(input_register[2])
+
+circuit.barrier()
+
+# ここからが引き算をするU_f
+# まずoutput_registerの全てのビットを立てる
+circuit.x(output_register)
+for idx in range(3):
+    # その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする
+    circuit.cx(input_register[idx], output_register[idx])
+    
+circuit.draw('mpl')
+```
+
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=[3, 4]))
+```
+
+入力レジスタの状態を色々変えて、状態ベクトルの変化を見てみましょう。
+
+### 状態ベクトルの内積
+
+次に紹介するのは、二つの状態$\ket{\psi}$と$\ket{\phi}$の間の内積の絶対値自乗$|\braket{\psi}{\phi}|^2$を計算するテクニックです。
+
+まず、量子計算において二つの状態ベクトルの間の内積は、
+
+$$
+\begin{split}
+\ket{\psi} = \sum_{k=0}^{2^n-1} c_k \ket{k} \\
+\ket{\phi} = \sum_{k=0}^{2^n-1} d_k \ket{k}
+\end{split}
+$$
+
+に対して
+
+```{math}
+:label: inner_product
+\braket{\psi}{\phi} = \sum_{k=0}^{2^n-1} c^{*}_k d_k
+```
+
+で定義できます。内積の重要な性質として
+
+$$
+\begin{split}
+0 \leq |\braket{\psi}{\phi}|^2 \leq 1 \\
+|\braket{\psi}{\phi}|^2 = 1 \; \text{iff} \; \ket{\psi} \sim \ket{\phi}
+\end{split}
+$$
+
+（単位ベクトルにおけるCauchy-Schwarzの不等式）があります。二つの状態ベクトルが物理的に同一であるときに内積の絶対値が最大になるので、内積の絶対値は状態の「近さ」を表す指標になります。また、内積が0になるとき、二つのベクトルは直交すると言います。
+
+それから、状態ベクトルの内積と密接に関わる量として、状態ベクトルの重ね合わせ
+
+$$
+\ket{\psi} + \ket{\phi} = \sum_k (c_k + d_k) \ket{k} = \sum_k z_k \ket{k}
+$$
+
+の2-ノルム
+
+$$
+\lVert \ket{\psi} + \ket{\phi} \rVert_2 = \sum_k |z_k|^2
+$$
+
+があります。単一の状態ベクトル$\ket{\psi}$では「量子力学の決まりごと」$\braket{\psi}{\psi} = \sum_k |c_k|^2 = 1$（$\ket{\psi}$は単位ベクトル）より2-ノルムが常に1ですが、上のような重ね合わせに対しては
+
+$$
+\begin{split}
+\sum_k |z_k|^2 & = \sum_k (c_k + d_k)^* (c_k + d_k) \\
+& = \sum_k \left( |c_k|^2 + |d_k|^2 + c_k^* d_k + d_k^* c_k \right) \\
+& = 2 \left(1 + \mathrm{Re}\braket{\psi}{\phi} \right)
+\end{split}
+$$
+
+となり、2-ノルムが内積$\braket{\psi}{\phi}$に依存します。
+
+内積や2-ノルムの計算は量子計算の様々な局面で登場します。それではその計算をする量子回路の組み方を見ていきましょう。実は2通りの異なる方法があります。
+
++++
+
+#### SWAPテスト
+
+状態$\ket{\psi}$と$\ket{\phi}$（具体的に実装するためここでは3量子ビットの状態とする）が二つのレジスタに実現しているような次の回路を実行し、`test_output`で0が出る確率を$P_0$、1が出る確率を$P_1$とすると、
+
+```{math}
+:label: swap_test
+P_0 - P_1 = |\braket{\psi}{\phi}|^2
+```
+
+が成り立ちます。
+
+```{code-cell} ipython3
+data_width = 3
+
+fig, axs = plt.subplots(1, 2)
+
+# 適当な状態|ψ>を作る回路
+psi_circuit = QuantumCircuit(data_width, name='|ψ>')
+psi_circuit.ry(0.7, 2)
+psi_circuit.cx(2, 1)
+psi_circuit.rz(0.5, 1)
+psi_circuit.cx(1, 0)
+psi_circuit.draw('mpl', ax=axs[0])
+axs[0].set_title(r'$\psi$')
+
+# 適当な状態|φ>を作る回路
+phi_circuit = QuantumCircuit(data_width, name='|φ>')
+phi_circuit.rx(1.2, 0)
+phi_circuit.ry(2.1, 1)
+phi_circuit.cx(0, 2)
+phi_circuit.cz(1, 2)
+phi_circuit.ry(0.8, 2)
+phi_circuit.draw('mpl', ax=axs[1])
+axs[1].set_title(r'$\phi$')
+
+# パーツが全て揃ったので、内積を計算する回路を作る
+reg_data1 = QuantumRegister(data_width, name='data1')
+reg_data2 = QuantumRegister(data_width, name='data2')
+reg_test = QuantumRegister(1, name='test')
+out = ClassicalRegister(1, name='out')
+
+circuit = QuantumCircuit(reg_data1, reg_data2, reg_test, out, name='SWAP_test')
+# 状態|ψ>と|φ>をデータレジスタに実現
+# 他の回路や別に定義したゲートを回路オブジェクトに組み込むときはappend()メソッドを使う
+# qargsでもとの回路の量子ビットを組み込み先のどの量子ビットに対応させるかを指定する
+circuit.append(psi_circuit, qargs=reg_data1)
+circuit.append(phi_circuit, qargs=reg_data2)
+
+# 回路図が見やすくなるようにバリアを入れる（計算上は何もしない操作）
+circuit.barrier()
+
+# ここからがSWAPテスト
+circuit.h(reg_test)
+
+for idx in range(data_width):
+    circuit.cswap(reg_test[0], reg_data1[idx], reg_data2[idx])
+
+circuit.h(reg_test)
+
+circuit.measure(reg_test, out)
+```
+
+```{code-cell} ipython3
+circuit.draw('mpl')
+```
+
+式{eq}`swap_test`を導いてみましょう。
+
+```{toggle}
+全体回路の状態は初期状態$\ket{0}_{\mathrm{t}}\ket{0}_{\mathrm{d2}}\ket{0}_{\mathrm{d1}}$から始めて
+
+$$
+\begin{align}
+& \ket{0}_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}}\ket{\psi}_{\mathrm{d1}} \\
+\rightarrow & \frac{1}{\sqrt{2}} (\ket{0} + \ket{1})_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} \\
+\rightarrow & \frac{1}{\sqrt{2}} (\ket{0}_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{1}_{\mathrm{t}} \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \\
+\rightarrow & \frac{1}{2} \left[ (\ket{0} + \ket{1})_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + (\ket{0} - \ket{1})_{\mathrm{t}} \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}} \right] \\
+= & \frac{1}{2} \left[ \ket{0}_{\mathrm{t}} (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) + \ket{1}_{\mathrm{t}} (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} - \ket{\psi}_{\mathrm{d_2}} \ket{\phi}_{\mathrm{d1}}) \right]
+\end{align}
+$$
+
+と移っていきます。最後にテストレジスタ$\mathrm{t}$を測定します。
+
+ここでポイントは、一般に二つのレジスタ$a, b$上に作られる量子状態
+
+$$
+\sum_{kl} z_{kl} \ket{l}_b \ket{k}_a
+$$
+
+のレジスタ$b$だけを測定したとき、結果$j$が得られる確率は
+
+$$
+P_j = \sum_k |z_{kj}|^2 = \left\lVert \sum_k z_{kj} \ket{k}_a \right\rVert_2
+$$
+
+つまり$\ket{j}_b$の「係数」になっている$a$レジスタのベクトルの2-ノルムである、という点です。
+
+したがって、テストレジスタで0と1が測定される確率$P_0$と$P_1$は
+
+$$
+\begin{align}
+P_0 & = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \rVert_2 = \frac{1}{2} (1 + \mathrm{Re}\braket{\psi}{\phi}\braket{\phi}{\psi}) \\
+P_1 & = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} - \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \rVert_2 = \frac{1}{2} (1 - \mathrm{Re}\braket{\psi}{\phi}\braket{\phi}{\psi})
+\end{align}
+$$
+
+となります。$\braket{\psi}{\phi}\braket{\phi}{\psi} = |\braket{\psi}{\phi}|^2$は実数なので、たしかに式{eq}`swap_test`が成り立ちます。
+```
+
+実際の回路でも確認してみましょう。入力の状態は
+
+```{code-cell} ipython3
+Math(statevector_expr(psi_circuit, state_label=r'\psi'))
+```
+
+```{code-cell} ipython3
+Math(statevector_expr(phi_circuit, state_label=r'\phi'))
+```
+
+で、$|\braket{\psi}{\phi}|^2$は
+
+```{code-cell} ipython3
+sv_psi = get_statevector_array(psi_circuit)
+sv_phi = get_statevector_array(phi_circuit)
+print(np.square(np.abs(np.sum(sv_psi.conjugate() * sv_phi))))
+```
+
+それに対し上の回路を1000000回実行した時の$P_0 - P_1$は
+
+```{code-cell} ipython3
+qasm_simulator = Aer.get_backend('qasm_simulator')
+shots = 1000000
+
+circuit = transpile(circuit, backend=qasm_simulator)
+counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+
+print((counts['0'] - counts['1']) / shots)
+```
+
+です。
+
++++
+
+(inverse_circuit)=
+#### 逆回路の利用
+
+上の回路では入力状態$\ket{\psi}$や$\ket{\phi}$を適当な量子回路で作りましたが、見ればわかるようにSWAPテストは入力の生成過程によらず成り立ちます。例えばなんらかの「量子メモリ」デバイスがあって、そこから二つのデータレジスタに直接$\ket{\psi}$と$\ket{\phi}$がロードされてもいいわけです。ところが、現在の実際の量子コンピューティングにおいては、量子コンピュータ中の状態というのは全て$\ket{0}$にゲートをかけていくことでしか作れません。
+
+入力状態が既知の回路で作られる場合は、SWAPテストよりもコンパクトで効率的な内積の絶対値自乗の計算方法があります。次のような回路を組むと、測定値が0である確率を$P_0$として
+
+```{math}
+:label: inverse_circuit
+P_0 = |\braket{\psi}{\phi}|^2
+```
+
+が成り立ちます。
+
+```{code-cell} ipython3
+reg_data = QuantumRegister(data_width, name='data')
+circuit = QuantumCircuit(reg_data)
+
+circuit.append(phi_circuit, qargs=reg_data)
+# psi_circuit.inverse() -> psi_circuitの逆回路
+circuit.append(psi_circuit.inverse(), qargs=reg_data)
+
+circuit.measure_all()
+
+circuit.draw('mpl')
+```
+
+ポイントは`psi_circuit.inverse()`で得られる`psi_circuit`の逆回路です。逆回路とは、ゲートの順番を反転させ、全てのゲートをその逆操作で置き換えたものです。$\ket{0}$から$\ket{\psi}$を作る回路を$U_{\psi}$と表すと、逆回路は$U_{\psi}^{-1}$もしくは$U_{\psi}^{\dagger}$と書かれ、
+
+$$
+U_{\psi}^{-1} U_{\psi} \ket{0} = \ket{0}
+$$
+
+です。一般に、状態$\ket{\lambda} = \sum_k z_k \ket{k}$を測定して0を得る確率$|z_0|^2$は内積の定義{eq}`inner_product`から$|\braket{0}{\lambda}|^2$と書けるので、上の回路の測定前の状態を$U_{\psi}^{-1} U_{\phi} \ket{0} =: \ket{U^{-1}_{\psi} \phi}$と表すと、
+
+$$
+P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2
+$$
+
+となります。ここから式{eq}`inverse_circuit`を導くには、量子力学と線形代数をよりはっきり結びつけて後者の言葉を使えば簡単ですが、量子回路と量子状態の概念を出発点として式{eq}`inverse_circuit`を証明することもできます。少し本筋から外れてしまいますが、以下に証明を載せておきます。
+
++++
+
+```{toggle}
+まず、任意の量子回路を表す写像$U$と任意の量子状態$\ket{\lambda}, \ket{\theta}$を考えます。量子回路は量子状態を量子状態に移すので、$U\ket{\lambda}$は単位ベクトル、つまり
+
+$$
+\lVert U \ket{\lambda} \rVert^2 = 1
+$$
+
+です。$\chi$を複素数としたとき、ベクトル$(\ket{\lambda} + \chi \ket{\theta}) / \lVert \ket{\lambda} + \chi \ket{\theta} \rVert$も単位ベクトルなので、
+
+$$
+\left\lVert U \frac{\ket{\lambda} + \chi \ket{\theta}}{\lVert \ket{\lambda} + \chi \ket{\theta} \rVert} \right\rVert^2 = 1
+$$
+
+したがって
+
+$$
+\begin{align}
+2 + 2 \mathrm{Re}(\chi \braket{U \lambda}{U \theta}) = 2 + 2 \mathrm{Re}(\chi\braket{\lambda}{\theta}) \\
+\therefore \mathrm{Re}(\chi \braket{U \lambda}{U \theta}) = \mathrm{Re}(\chi \braket{\lambda}{\theta})
+\end{align}
+$$
+
+ここで$\chi=1$と$\chi=i$をそれぞれ考えると、$\braket{U \lambda}{U \theta}$と$\braket{\lambda}{\theta}$の実部と虚部が共に等しいので
+
+$$
+\braket{U \lambda}{U \theta} = \braket{\lambda}{\theta}.
+$$
+
+ところが右辺は
+
+$$
+\braket{\lambda}{\theta} = \braket{\lambda}{U^{-1} U \theta}
+$$
+
+でもあり、これが任意の$\theta$で成立するので、結局任意の状態$\rho$で
+
+$$
+\braket{\lambda}{U^{-1} \rho} = \braket{U \lambda}{\rho}
+$$
+
+が言えます。これより
+
+$$
+P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2 = |\braket{\psi}{\phi}|^2
+$$
+
+です。
+```
+
++++
+
+上の回路で式{eq}`inverse_circuit`を確認しましょう。
+
+```{code-cell} ipython3
+shots = 1000000
+
+circuit = transpile(circuit, backend=qasm_simulator)
+counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+
+print(counts['000'] / shots)
+```
+
+## 複製不可能定理とテレポーテーション
+
+量子アルゴリズムを考え、実装する時に非常に重要なのが、**任意の未知の量子状態の独立な複製を作る量子回路は存在しない**という複製不可能定理（no-cloning theorem）です。この定理は具体的には、入力状態$\ket{\psi}_{\mathrm{in}}$と、同じビット数の初期化した出力レジスタ$\ket{0}_{\mathrm{out}}$がある時、$\psi$に依存しない回路$U$で
+
+$$
+U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}} \ket{\psi}_{\mathrm{out}}
+$$
+
+を実現するものはないということを主張しています。
+
+証明は簡単です。
+
++++
+
+```{toggle}
+二つの入力状態$\psi$と$\phi$を考え、左辺の内積を取ると（上の逆回路での内積計算の証明を利用して）
+
+$$
+|\braket{U(\psi_{\mathrm{in}}, 0_{\mathrm{out}})}{U(\phi_{\mathrm{in}}, 0_{\mathrm{out}})}| = |\braket{\psi}{\phi}\braket{0}{0}| = |\braket{\psi}{\phi}|.
+$$
+
+ところが右辺の内積は
+
+$$
+|\braket{\psi_{\mathrm{in}}, \psi_{\mathrm{out}}}{\phi_{\mathrm{in}}, \phi_{\mathrm{out}}}| = |\braket{\psi}{\phi}|^2.
+$$
+
+等価関係$\sim$は位相を無視して同値ということだったので、両辺の内積のノルムは等しいはずであり、
+
+$$
+|\braket{\psi}{\phi}| = |\braket{\psi}{\phi}|^2.
+$$
+
+これは$|\braket{\psi}{\phi}|=0$または$|\braket{\psi}{\phi}|=1$を意味し、$\ket{\psi}$と$\ket{\phi}$が任意の状態であるという仮定と矛盾します。
+```
+
++++
+
+複製不可能定理は量子回路で実行できる計算のクラスを大幅に制限します。例えば、何かの計算を途中で打ち切ってその時点での量子状態をなんらかのメモリデバイスに保存できたとして、その状態をコピーすることができないので、結局そこから計算を再開できるのは一度だけということになります。
+
+任意の量子状態を複製することはできませんが、あるレジスタの量子状態を他のレジスタに移し替えることは可能です。このような操作を量子テレポーテーションと呼びます。テレポーテーションでは元々のレジスタの量子状態が失われるので、状態をコピーしたことにはなりません。
+
+1ビットの情報を転送する回路は以下のようになります。
+
+```{code-cell} ipython3
+# まずは入力ビットを適当な状態にする回路を作る
+# circuit.u (U3 gate)は3パラメータで一つの量子ビットを完全にコントロールするゲート
+prep_circuit = QuantumCircuit(1, name='prep')
+prep_circuit.u(0.7, 1.8, 2.1, 0)
+
+reg_in = QuantumRegister(1, name='in')
+reg_out = QuantumRegister(2, name='out')
+res_in = ClassicalRegister(1)
+res_ent = ClassicalRegister(1)
+
+circuit = QuantumCircuit(reg_in, reg_out, res_in, res_ent)
+
+# まずreg_inをprep_circuitの状態にする
+circuit.append(prep_circuit, qargs=reg_in)
+
+# reg_outはベル状態に用意する
+circuit.h(reg_out[0])
+circuit.cx(reg_out[0], reg_out[1])
+
+# reg_inとreg_outの第一ビットをエンタングルさせる
+circuit.cx(reg_in[0], reg_out[0])
+
+# reg_inにアダマールゲートをかけ、測定する
+circuit.h(reg_in[0])
+circuit.measure(reg_in[0], res_in[0])
+
+# reg_outのエンタングルしたビットも測定する
+circuit.measure(reg_out[0], res_ent[0])
+
+# reg_out[1]にreg_in, reg_entの測定結果に応じたゲートをかける
+circuit.x(reg_out[1]).c_if(res_ent[0], 1)
+circuit.z(reg_out[1]).c_if(res_in[0], 1)
+
+circuit.draw('mpl')
+```
+
+入力ビットの状態は
+
+```{code-cell} ipython3
+Math(statevector_expr(prep_circuit, state_label=r'\text{in}'))
+```
+
+回路の終状態は
+
+```{code-cell} ipython3
+Math(statevector_expr(circuit, register_sizes=(1, 1, 1)))
+```
+
+上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが$\ket{\text{in}}$と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。

@@ -56,7 +56,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="計算をする量子回路の実装" href="extreme_simd.html" />
+    <link rel="next" title="【課題】アダマールテスト" href="quantum_computation.html" />
     <link rel="prev" title="【課題】量子相関を調べる" href="nonlocal_correlations.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -130,22 +130,22 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
   <a class="reference internal" href="quantum_computation.html">
-   【課題】量子計算
+   【課題】アダマールテスト
   </a>
  </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  量子ダイナミクスシミュレーション
+  量子コンピュータでの並列計算
  </span>
 </p>
 <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   計算をする量子回路の実装
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -154,6 +154,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
    【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="addition_on_ibmq.html">
+   【参考】足し算を実機で行う
   </a>
  </li>
 </ul>
@@ -414,20 +419,61 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
+    <a class="reference internal nav-link" href="#equal-superposition-with-phase">
      問題6: Equal superpositionに位相を付ける
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qft">
-     問題7: 量子フーリエ変換
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id16">
-   参考文献
+  <a class="reference internal nav-link" href="#id13">
+   量子計算プリミティブ
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     条件分岐
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id15">
+       測定結果に基づいた分岐
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id16">
+       条件分岐としての制御ゲート
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id17">
+     関数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id18">
+     状態ベクトルの内積
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#swap">
+       SWAPテスト
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#inverse-circuit">
+       逆回路の利用
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id20">
+   複製不可能定理とテレポーテーション
   </a>
  </li>
 </ul>
@@ -503,20 +549,61 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
+    <a class="reference internal nav-link" href="#equal-superposition-with-phase">
      問題6: Equal superpositionに位相を付ける
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qft">
-     問題7: 量子フーリエ変換
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id16">
-   参考文献
+  <a class="reference internal nav-link" href="#id13">
+   量子計算プリミティブ
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     条件分岐
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id15">
+       測定結果に基づいた分岐
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id16">
+       条件分岐としての制御ゲート
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id17">
+     関数
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id18">
+     状態ベクトルの内積
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#swap">
+       SWAPテスト
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#inverse-circuit">
+       逆回路の利用
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id20">
+   複製不可能定理とテレポーテーション
   </a>
  </li>
 </ul>
@@ -534,38 +621,56 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id56">状態ベクトルシミュレータで量子状態を調べる</a></p></li>
-<li><p><a class="reference internal" href="#other-gates" id="id57">その他のゲート</a></p>
+<li><p><a class="reference internal" href="#id3" id="id21">状態ベクトルシミュレータで量子状態を調べる</a></p></li>
+<li><p><a class="reference internal" href="#other-gates" id="id22">その他のゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id5" id="id58">1、2量子ビット</a></p></li>
-<li><p><a class="reference internal" href="#id6" id="id59">3量子ビット以上</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id23">1、2量子ビット</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id24">3量子ビット以上</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id7" id="id60">量子状態生成</a></p>
+<li><p><a class="reference internal" href="#id7" id="id25">量子状態生成</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id8" id="id61">問題1: 1量子ビット、相対位相付き</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id62">問題2: ベル状態、相対位相付き</a></p></li>
-<li><p><a class="reference internal" href="#ghz" id="id63">問題3: GHZ状態</a></p></li>
-<li><p><a class="reference internal" href="#equal-superposition" id="id64">問題4: Equal superposition</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id65">問題5: 特定の基底の符号を反転させる</a></p></li>
-<li><p><a class="reference internal" href="#id12" id="id66">問題6: Equal superpositionに位相を付ける</a></p></li>
-<li><p><a class="reference internal" href="#qft" id="id67">問題7: 量子フーリエ変換</a></p></li>
+<li><p><a class="reference internal" href="#id8" id="id26">問題1: 1量子ビット、相対位相付き</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id27">問題2: ベル状態、相対位相付き</a></p></li>
+<li><p><a class="reference internal" href="#ghz" id="id28">問題3: GHZ状態</a></p></li>
+<li><p><a class="reference internal" href="#equal-superposition" id="id29">問題4: Equal superposition</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id30">問題5: 特定の基底の符号を反転させる</a></p></li>
+<li><p><a class="reference internal" href="#equal-superposition-with-phase" id="id31">問題6: Equal superpositionに位相を付ける</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id16" id="id68">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id32">量子計算プリミティブ</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id14" id="id33">条件分岐</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id15" id="id34">測定結果に基づいた分岐</a></p></li>
+<li><p><a class="reference internal" href="#id16" id="id35">条件分岐としての制御ゲート</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id17" id="id36">関数</a></p></li>
+<li><p><a class="reference internal" href="#id18" id="id37">状態ベクトルの内積</a></p>
+<ul>
+<li><p><a class="reference internal" href="#swap" id="id38">SWAPテスト</a></p></li>
+<li><p><a class="reference internal" href="#inverse-circuit" id="id39">逆回路の利用</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id20" id="id40">複製不可能定理とテレポーテーション</a></p></li>
 </ul>
 </div>
-<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\braket}[2]{\langle #1 | #2 \rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id56">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id21">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>第一回の課題で利用したQCシミュレータ<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は、実機と同様に量子回路の測定結果をヒストグラムとして返してくれるものでした。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>（状態ベクトルシミュレータ）を利用します。状態ベクトルシミュレータは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。</p>
 <p>シミュレータへのアクセスは<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>同様<code class="docutils literal notranslate"><span class="pre">Aer</span></code>からです。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Math</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">statevector_expr</span>
 
@@ -610,32 +715,32 @@ const thebe_selector_output = ".output, .cell_output"
 <p>状態ベクトルシミュレーションを実行する際も<code class="docutils literal notranslate"><span class="pre">transpile</span></code>とバックエンドの<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">result.data()['statevector']</span></code>を参照します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 再び「おまじない」のtranspileをしてから、run()に渡す</span>
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
-<span class="n">job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-<span class="n">qiskit_statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_statevector_array</span><span class="p">(</span><span class="n">circuit</span><span class="p">):</span>
+    <span class="c1"># 再び「おまじない」のtranspileをしてから、run()に渡す</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">qiskit_statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
 
-<span class="c1"># result.data()[&#39;statevector&#39;]は通常の配列オブジェクト（ndarray）ではなくqiskit独自のクラスのインスタンス</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">qiskit_statevector</span><span class="p">))</span>
+    <span class="c1"># result.data()[&#39;statevector&#39;]は通常の配列オブジェクト（ndarray）ではなくqiskit独自のクラスのインスタンス</span>
+    <span class="c1"># ただし np.asarray() で numpy の ndarray に変換可能</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">qiskit_statevector</span><span class="p">)</span>
 
-<span class="c1"># ただし np.asarray() で numpy の ndarray に変換可能</span>
-<span class="n">statevector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">qiskit_statevector</span><span class="p">)</span>
+<span class="n">statevector</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">statevector</span><span class="p">),</span> <span class="n">statevector</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;qiskit.providers.aer.backends.compatibility.Statevector&#39;&gt;
-&lt;class &#39;numpy.ndarray&#39;&gt; complex128
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;numpy.ndarray&#39;&gt; complex128
 [ 0.27059805+0.j  0.65328148+0.j -0.65328148+0.j  0.27059805+0.j]
 </pre></div>
 </div>
 </div>
 </div>
 <p>状態ベクトルは<code class="docutils literal notranslate"><span class="pre">np.asarray()</span></code>でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。</p>
-<p>状態ベクトルデータから数式の文字列を作る<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。</p>
+<p>状態ベクトルデータから数式の文字列を作る<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py"><code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
@@ -653,10 +758,10 @@ const thebe_selector_output = ".output, .cell_output"
 <p>前回より、<a class="reference internal" href="chsh_inequality.html#equation-eqn-circuit1">(1)</a>は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})\)</span>（<span class="math notranslate nohighlight">\(s:=\sin(\pi/8)=0.271\sqrt{2}\)</span>, <span class="math notranslate nohighlight">\(c:=\cos(\pi/8)=0.653\sqrt{2}\)</span>）という状態を作るもののはずでした。実際に計算された終状態の状態ベクトルが一致しています。</p>
 </div>
 <div class="section" id="other-gates">
-<span id="id4"></span><h2><a class="toc-backref" href="#id57">その他のゲート</a><a class="headerlink" href="#other-gates" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id22">その他のゲート</a><a class="headerlink" href="#other-gates" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="chsh_inequality.html"><span class="doc">CHSH不等式の破れを確認する</span></a>で、よく使われる1量子ビットゲートと2量子ビット制御ゲートを紹介しましたが、他にも知っておくと便利なゲートがいくつかあります。</p>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id58">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <table class="table">
 <colgroup>
 <col style="width: 25%" />
@@ -681,32 +786,23 @@ const thebe_selector_output = ".output, .cell_output"
 </td>
 <td><p>circuit.sx(i)</p></td>
 </tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(P\)</span></p></td>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(P\)</span></p></td>
 <td><p>1</p></td>
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、<span class="math notranslate nohighlight">\(\ket{1}\)</span>に位相<span class="math notranslate nohighlight">\(e^{i\phi}\)</span>をかける。<span class="math notranslate nohighlight">\(P(\phi)\)</span>は<span class="math notranslate nohighlight">\(R_{z}(\phi)\)</span>と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られる。</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.p(phi,</span> <span class="pre">i)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(U_3\)</span></p></td>
-<td><p>1</p></td>
-<td><p>パラメータ<span class="math notranslate nohighlight">\(\theta, \phi, \lambda\)</span>を取り、単一量子ビットの任意の状態を実現する。</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}U_3(\theta, \phi, \lambda)\ket{0} = \cos\left(\frac{\theta}{2}\right) \ket{0} + e^{i\phi}\sin\left(\frac{\theta}{2}\right) \ket{1} \\
-U_3(\theta, \phi, \lambda)\ket{1} = -e^{i\lambda}\sin\left(\frac{\theta}{2}\right) \ket{0} + e^{i(\phi+\lambda)}\cos\left(\frac{\theta}{2}\right) \ket{1}\end{split}\]</div>
-</td>
-<td><p><code class="docutils literal notranslate"><span class="pre">circuit.u3(theta,</span> <span class="pre">phi,</span> <span class="pre">lambda,</span> <span class="pre">i)</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(C^i_j[U_1]\)</span>, <span class="math notranslate nohighlight">\(C^i_j[P]\)</span></p></td>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C^i_j[P]\)</span></p></td>
 <td><p>2</p></td>
 <td><p>パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、ビット<span class="math notranslate nohighlight">\(i, j\)</span>が1であるような計算基底の位相を<span class="math notranslate nohighlight">\(\phi\)</span>前進させる。</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}C^i_j[U_1(\phi)] \ket{00} = \ket{00} \\
-C^i_j[U_1(\phi)] \ket{01} = \ket{01} \\
-C^i_j[U_1(\phi)] \ket{10} = \ket{10} \\
-C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
+\[\begin{split}C^i_j[P(\phi)] \ket{00} = \ket{00} \\
+C^i_j[P(\phi)] \ket{01} = \ket{01} \\
+C^i_j[P(\phi)] \ket{10} = \ket{10} \\
+C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </td>
 <td><p><code class="docutils literal notranslate"><span class="pre">circuit.cp(phi,</span> <span class="pre">i,</span> <span class="pre">j)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>SWAP</p></td>
+<tr class="row-odd"><td><p>SWAP</p></td>
 <td><p>2</p></td>
 <td><p>二つの量子ビットの量子状態を交換する。CNOT三回で実装できる。</p>
 <div class="math notranslate nohighlight">
@@ -723,7 +819,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </table>
 </div>
 <div class="section" id="id6">
-<h3><a class="toc-backref" href="#id59">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます（最終的には1量子ビットゲートと2量子ビット制御ゲートに分解して実行されます）。</p>
 <p>3量子ビット以上にかかるゲートも基本は制御ゲートで、よく使われるのは制御ビットが複数あるような多重制御（multi-controlled）ゲート<span class="math notranslate nohighlight">\(C^{ij\dots}_{k}[U]\)</span>です。そのうち制御ビットが2つで標的ビット1つに<span class="math notranslate nohighlight">\(X\)</span>をかける<span class="math notranslate nohighlight">\(C^{ij}_{k}[X]\)</span>は特別多用され、Toffoliゲートとも呼ばれます。</p>
 <p>多重制御ゲートでない3量子ビットゲートの例として、controlled SWAPというものも存在します。制御ビット1つで他の2つの量子ビットの間の量子状態交換を制御します。当然制御ビットを増やしたmulti-controlled SWAPというものも考えられます。</p>
@@ -739,11 +835,11 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <div class="section" id="id7">
-<h2><a class="toc-backref" href="#id60">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id25">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。</p>
 <p>実は<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>関数には回路オブジェクトを直接渡すこともできるので（内部でシミュレータを実行し状態ベクトルオブジェクトを取得する）、ここからはその機能を利用します。また、コード中登場する<code class="docutils literal notranslate"><span class="pre">amp_norm</span></code>や<code class="docutils literal notranslate"><span class="pre">phase_norm</span></code>は、表示される数式において振幅や位相の共通因子をくくりだすために設定されています。</p>
 <div class="section" id="id8">
-<h3><a class="toc-backref" href="#id61">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id26">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>1量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -785,7 +881,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <div class="section" id="id9">
-<h3><a class="toc-backref" href="#id62">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id27">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>2量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -823,7 +919,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <div class="section" id="ghz">
-<h3><a class="toc-backref" href="#id63">問題3: GHZ状態</a><a class="headerlink" href="#ghz" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id28">問題3: GHZ状態</a><a class="headerlink" href="#ghz" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>3量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -861,7 +957,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <div class="section" id="equal-superposition">
-<h3><a class="toc-backref" href="#id64">問題4: Equal superposition</a><a class="headerlink" href="#equal-superposition" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id29">問題4: Equal superposition</a><a class="headerlink" href="#equal-superposition" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -906,7 +1002,7 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 </div>
 <div class="section" id="id10">
-<h3><a class="toc-backref" href="#id65">問題5: 特定の基底の符号を反転させる</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id30">問題5: 特定の基底の符号を反転させる</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>問題4の4ビットequal superposition状態において、基底<span class="math notranslate nohighlight">\(\ket{5}\)</span>の符号を反転させなさい。</p>
 <div class="cell tag_remove-output docutils container">
@@ -949,8 +1045,8 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <p>ビット1と3にかかっている<span class="math notranslate nohighlight">\(X\)</span>ゲートは当然他の基底にも影響するので、例えば<span class="math notranslate nohighlight">\(\ket{0011}\)</span>は<span class="math notranslate nohighlight">\(\ket{0110}\)</span>となります。しかし、1と3に<span class="math notranslate nohighlight">\(X\)</span>をかけて<span class="math notranslate nohighlight">\(\ket{1111}\)</span>になるのは<span class="math notranslate nohighlight">\(\ket{0101}\)</span>だけなので、逆操作でちゃんと「後片付け」さえすれば、この一連の操作で<span class="math notranslate nohighlight">\(\ket{5}\)</span>だけをいじることができます。</p>
 </div>
 </div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id66">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="equal-superposition-with-phase">
+<span id="id12"></span><h3><a class="toc-backref" href="#id31">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#equal-superposition-with-phase" title="Permalink to this headline">¶</a></h3>
 <p><strong>問題</strong></p>
 <p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -988,7 +1084,6 @@ C^i_j[U_1(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <p><strong>解答</strong></p>
 <div class="toggle docutils container">
-<p>この回路は次の問題の量子フーリエ変換と深く関係しますが、量子フーリエ変換では任意の状態<span class="math notranslate nohighlight">\(\ket{s}\)</span>（このとき<span class="math notranslate nohighlight">\(s\)</span>は整数）を上の状態に変換するのに対し、この問題では<span class="math notranslate nohighlight">\(s\)</span>は外から与えられているパラメータです。そのため回路もだいぶ簡単になり、実は制御ゲートなしで実装できます。</p>
 <p>問題4と同じように、この状態も個々の量子ビットにおける<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせの積として表現できます。そのためには<span class="math notranslate nohighlight">\(k\)</span>の二進数表現<span class="math notranslate nohighlight">\(k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)\)</span>を用いて、<span class="math notranslate nohighlight">\(\ket{k}\)</span>の位相を</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1018,158 +1113,587 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 <p>が正解となります。</p>
 </div>
 </div>
-<div class="section" id="qft">
-<span id="id13"></span><h3><a class="toc-backref" href="#id67">問題7: 量子フーリエ変換</a><a class="headerlink" href="#qft" title="Permalink to this headline">¶</a></h3>
-<p><strong>問題</strong></p>
-<p><span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタの状態<span class="math notranslate nohighlight">\(\ket{j} \, (j \in \{0,1,\dots,2^n-1\})\)</span>を以下のように変換する回路を考え、<span class="math notranslate nohighlight">\(n=6, j=23\)</span>のケースを実装しなさい。</p>
-<div class="math notranslate nohighlight">
-\[
-\ket{j} \rightarrow \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
-\]</div>
-<div class="cell tag_output_scroll tag_remove-output docutils container">
+</div>
+<div class="section" id="id13">
+<h2><a class="toc-backref" href="#id32">量子計算プリミティブ</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>量子計算をする回路を実装するにあたって、いくつか知っておくと便利な「パーツ」があります。これらは単体で「アルゴリズム」と呼べるものではなく、量子コンピュータを使った様々な計算の過程で、状況に合わせて応用する回路の雛形です。</p>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id33">条件分岐</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>古典的には、ほとんどのプログラムが条件分岐<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">...</span> <span class="pre">else</span> <span class="pre">...</span></code>がなければ成り立ちません。量子コンピュータのプログラムである量子回路で、条件分岐に対応するものはなんでしょうか？</p>
+<div class="section" id="id15">
+<h4><a class="toc-backref" href="#id34">測定結果に基づいた分岐</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<p>一つ考えうるのは、「回路のある時点である量子レジスタを測定し、その結果に応じて異なるゲートを他のレジスタにかける」という構造です。これまで測定とは量子回路の一番最後で行うものだと言ってきましたが、実は測定も一つのオペレーションとしてどこで行っても構いません。ただし、例えば状態<span class="math notranslate nohighlight">\(\ket{\psi} = \sum_{k} c_k \ket{k}\)</span>にあるレジスタを計算基底で測定し、<span class="math notranslate nohighlight">\(j\)</span>というビット列が得られたとすると、そのレジスタは<span class="math notranslate nohighlight">\(\ket{j}\)</span>という状態に「射影」されてしまい、元々の<span class="math notranslate nohighlight">\(\{c_k\}\)</span>という振幅の情報は失われます。</p>
+<p>例として、サイズ4のレジスタ1にequal superpositionを実現し、測定して得られた計算基底<span class="math notranslate nohighlight">\(j\)</span>に応じて<span class="math notranslate nohighlight">\(R_y(2 \pi \frac{j}{16})\)</span>をレジスタ2の量子ビットにかける回路を書いてみます。</p>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">6</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">register1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg1&#39;</span><span class="p">)</span>
+<span class="n">register2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg2&#39;</span><span class="p">)</span>
+<span class="n">output1</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;out1&#39;</span><span class="p">)</span> <span class="c1"># 測定結果を保持する「古典レジスタ」オブジェクト</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">register1</span><span class="p">,</span> <span class="n">register2</span><span class="p">,</span> <span class="n">output1</span><span class="p">)</span>
 
-<span class="n">j</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="c1"># register1にequal superpositionを実現</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">register1</span><span class="p">)</span>
+<span class="c1"># register1を測定し、結果をoutput1に書き込む</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">register1</span><span class="p">,</span> <span class="n">output1</span><span class="p">)</span>
 
-<span class="c1">## jの２進数表現で値が1になっているビットに対してXを作用させる -&gt; 状態|j&gt;を作る</span>
+<span class="c1"># output1の各位iの0/1に応じて、dtheta * 2^iだけRyをかけると、全体としてRy(2pi * j/16)が実現する</span>
+<span class="n">dtheta</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">16.</span>
 
-<span class="c1"># まずjの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）</span>
-<span class="c1"># unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している</span>
-<span class="n">j_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="c1"># circuit.***.c_if(classical_bit, 1) &lt;- classical_bitが1のときに***ゲートをかける</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">dtheta</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">register2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">c_if</span><span class="p">(</span><span class="n">output1</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="c1"># 次にj_bitsアレイのうち、ビットが立っているインデックスを得る</span>
-<span class="n">j_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">j_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># 最後にcircuit.x()</span>
-<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">j_indices</span><span class="p">:</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-    
-<span class="c1">## Alternative method</span>
-<span class="c1">#for i in range(num_qubits):</span>
-<span class="c1">#    if ((j &gt;&gt; i) &amp; 1) == 1:</span>
-<span class="c1">#        circuit.x(i)</span>
-
-<span class="c1">##################</span>
-<span class="c1">### EDIT BELOW ###</span>
-<span class="c1">##################</span>
-<span class="c1"># circuit.?</span>
-<span class="c1">##################</span>
-<span class="c1">### EDIT ABOVE ###</span>
-<span class="c1">##################</span>
-
-<span class="n">sqrt_2_to_n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">amp_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">sqrt_2_to_n</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\frac</span><span class="si">{1}</span><span class="s1">{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">sqrt_2_to_n</span><span class="p">)</span>
-<span class="n">phase_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;\frac{2 \pi i}{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">))</span>
-<span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">amp_norm</span><span class="o">=</span><span class="n">amp_norm</span><span class="p">,</span> <span class="n">phase_norm</span><span class="o">=</span><span class="n">phase_norm</span><span class="p">)</span>
-<span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_36_0.png" src="_images/circuit_from_scratch_36_0.png" />
 </div>
-<p>この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています<span id="id14">[<a class="reference internal" href="#id20" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5, pages 216-247. Cambridge University Press, 2000.">NC00</a>]</span>。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。</p>
-<p>古典計算機で離散フーリエ変換<span class="math notranslate nohighlight">\(j \rightarrow \{e^{2 \pi i j k/2^n}\}_k\)</span>を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装<span id="id15">[<a class="reference internal" href="#id25" title="L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In Proceedings 41st Annual Symposium on Foundations of Computer Science, volume, 515-525. 2000. doi:10.1109/SFCS.2000.892139.">HalesHallgren00</a>]</span>で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。</p>
-<p><strong>解答</strong></p>
-<div class="toggle docutils container">
-<p>前の問題同様、基本は<span class="math notranslate nohighlight">\(H\)</span>ゲート<span class="math notranslate nohighlight">\(P\)</span>ゲートを使っていきますが、今回は<span class="math notranslate nohighlight">\(\ket{j}\)</span>という「入力」があるので、制御ゲートを利用する必要があります。</p>
-<p>ビットn-1に着目しましょう。前回同様<span class="math notranslate nohighlight">\(j_m \, (m=0,\dots,n-1, \, j_m=0,1)\)</span>を使って<span class="math notranslate nohighlight">\(j\)</span>の二進数表現を<span class="math notranslate nohighlight">\(j=\sum_{m=0}^{n-1} 2^m j_m\)</span>としておきます。ビットn-1の初期状態は<span class="math notranslate nohighlight">\(\ket{j_{n-1}}_{n-1}\)</span>なので、アダマールゲートをかけると</p>
-<div class="math notranslate nohighlight">
-\[
-H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac{j_{n-1}}{2}} \ket{1}_{n-1}\right]
-\]</div>
-<p>です。さらに、<span class="math notranslate nohighlight">\(j_{0}, \dots j_{n-2}\)</span>の情報をこのビットに盛り込むためにビット0からn-2まででそれぞれ制御した<span class="math notranslate nohighlight">\(C^m_{n-1}[P]\)</span>を使います。ただし、かける位相は制御ビットごとに異なります。</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{align}
-&amp; C^{n-2}_{n-1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-1}\left[P\left(\frac{2 \pi}{2^n}\right)\right] (H\ket{j_{n-1}}_{n-1}) \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0 \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \ket{j_{n-2}}_{n-2} \cdots \ket{j_0}_0
-\end{align}
-\end{split}\]</div>
-<p>次に、ビットn-2にも同様の操作をします。ただし、制御はビットn-3以下からのみです。</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{align}
-&amp; C^{n-3}_{n-2}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-2}\left[P\left(\frac{2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-2}}_{n-2}) \cdots \ket{j_0}_0 \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-2} + \exp \left(2 \pi i \frac{2 \sum_{m=0}^{n-2} 2^{m} j_m}{2^n}\right) \ket{1}_{n-2}\right] \ket{j_{n-3}}_{n-3} \cdots \ket{j_0}_0
-\end{align}
-\end{split}\]</div>
-<p>これをビット0まで繰り返します。制御は常に位数の小さいビットからです。</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{align}
-&amp; C^{n-4}_{n-3}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] \cdots C^{0}_{n-3}\left[P\left(\frac{2^2 \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{n-3}}_{n-3}) \cdots \ket{j_0}_0 \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{n-3} + \exp \left(2 \pi i \frac{2^2 \sum_{m=0}^{n-3} 2^{m} j_m}{2^n}\right) \ket{1}_{n-3}\right] \ket{j_{n-4}}_{n-4} \cdots \ket{j_0}_0
-\end{align}
-\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[
-\dots
-\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{align}
-&amp; C^{0}_{1}\left[P\left(\frac{2^{n-2} \cdot 2 \pi}{2^n}\right)\right] (H\ket{j_{1}}_{1}) \ket{j_0}_0 \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_{1} + \exp \left(2 \pi i \frac{2^{n-2} \sum_{m=0}^{1} 2^{m} j_m}{2^n}\right) \ket{1}_{1}\right] \ket{j_0}_0
-\end{align}
-\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{align}
-&amp; H\ket{j_0}_0 \\
-= &amp; \frac{1}{\sqrt{2}} \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_{0}\right].
-\end{align}
-\end{split}\]</div>
-<p>ここまでの全ての操作を順に適用すると、</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-(H_0) (C^{0}_{1}[P]H_1) \cdots (C^{n-2}_{n-1}[P] \cdots C^{0}_{n-1}[P]H_{n-1}) \, \ket{j_{n-1}}_{n-1} \ket{j_{n-2}}_{n-2} \cdots \ket{j_{0}}_0 \\
-= \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
-\end{split}\]</div>
-<p><span class="math notranslate nohighlight">\(\newcommand{tk}{\tilde{k}}\)</span></p>
-<p>例によって全ての量子ビットに<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>が現れるので、右辺は振幅<span class="math notranslate nohighlight">\(\{c_k\}\)</span>を用いて<span class="math notranslate nohighlight">\(\sum_{k=0}^{2^n-1} c_k \ket{k}\)</span>の形で表せます。後の利便性のために<span class="math notranslate nohighlight">\(k\)</span>の代わりに整数<span class="math notranslate nohighlight">\(\tk\)</span>とその二進数表現<span class="math notranslate nohighlight">\(\tk_{l}\)</span>を使って、</p>
-<div class="math notranslate nohighlight">
-\[
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
-\]</div>
-<p>二重和が厄介な形をしていますが、<span class="math notranslate nohighlight">\(j_m, \tk_l \in {0, 1}\)</span>なので、<span class="math notranslate nohighlight">\(n-1-l+m &gt;= n\)</span>のとき和の中身が<span class="math notranslate nohighlight">\(2^n\)</span>の倍数となり、<span class="math notranslate nohighlight">\(\exp (2 \pi i / 2^n \cdot a 2^n) = 1 \, \forall a \in \mathbb{N}\)</span>であることを用いると、<span class="math notranslate nohighlight">\(m\)</span>についての和を<span class="math notranslate nohighlight">\(n-1\)</span>までに拡張できます。さらに<span class="math notranslate nohighlight">\(k_l = \tk_{n-1 - l}\)</span>と定義すると、</p>
-<div class="math notranslate nohighlight">
-\[
-c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-1} 2^l k_l \right).
-\]</div>
-<p>つまり、ここまでの操作で得られる状態は</p>
-<div class="math notranslate nohighlight">
-\[
-\frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_0}_{n-1} \cdots \ket{k_{n-1}}_0
-\]</div>
-<p>であり、求める状態に対してビット順序が逆転したものになっていることがわかります。したがって、最後にSWAPを使ってビット順序を逆転させれば量子フーリエ変換が完成します。</p>
-<p>正解は</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">itarg</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">itarg</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ictrl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">power</span> <span class="o">=</span> <span class="n">ictrl</span> <span class="o">-</span> <span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">num_qubits</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">num_qubits</span><span class="p">),</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">itarg</span><span class="p">)</span>
-        
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
-    <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+</div>
+<p>測定オペレーションが入っているので、この回路をstatevector simulatorに渡すと、シミュレーションを実行するごとにレジスタ1の状態がランダムに決定されます。次のセルを複数回実行して、上の回路が狙い通り動いていることを確認してみましょう。</p>
+<p>入力と出力のレジスタの値が別々に表示されるよう、<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>の<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>という引数を利用して、5ビットの回路を4ビットと1ビットに分けて解釈するよう指定します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+<span class="c1"># cos(pi*0/16) = 1.000, sin(pi*0/16) = 0.000</span>
+<span class="c1"># cos(pi*1/16) = 0.981, sin(pi*1/16) = 0.195</span>
+<span class="c1"># cos(pi*2/16) = 0.924, sin(pi*2/16) = 0.383</span>
+<span class="c1"># cos(pi*3/16) = 0.831, sin(pi*3/16) = 0.556</span>
+<span class="c1"># cos(pi*4/16) = 0.707, sin(pi*4/16) = 0.707</span>
+<span class="c1"># cos(pi*5/16) = 0.556, sin(pi*5/16) = 0.831</span>
+<span class="c1"># cos(pi*6/16) = 0.383, sin(pi*6/16) = 0.924</span>
+<span class="c1"># cos(pi*7/16) = 0.195, sin(pi*7/16) = 0.981</span>
+<span class="c1"># cos(pi*8/16) = 0.000, sin(pi*8/16) = 1.000</span>
+<span class="c1"># cos(pi*9/16) = -0.195, sin(pi*9/16) = 0.981</span>
+<span class="c1"># cos(pi*10/16) = -0.383, sin(pi*10/16) = 0.924</span>
+<span class="c1"># cos(pi*11/16) = -0.556, sin(pi*11/16) = 0.831</span>
+<span class="c1"># cos(pi*12/16) = -0.707, sin(pi*12/16) = 0.707</span>
+<span class="c1"># cos(pi*13/16) = -0.831, sin(pi*13/16) = 0.556</span>
+<span class="c1"># cos(pi*14/16) = -0.924, sin(pi*14/16) = 0.383</span>
+<span class="c1"># cos(pi*15/16) = -0.981, sin(pi*15/16) = 0.195</span>
 </pre></div>
 </div>
-<p>です。</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle =  - 0.195 |0:9\rangle + 0.981 |1:9\rangle\]</div>
 </div>
 </div>
 </div>
 <div class="section" id="id16">
-<h2><a class="toc-backref" href="#id68">参考文献</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
-<p id="id17"><dl class="citation">
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id14">NC00</a></span></dt>
-<dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 5, pages 216–247. Cambridge University Press, 2000.</p>
-</dd>
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id15">HalesHallgren00</a></span></dt>
-<dd><p>L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In <em>Proceedings 41st Annual Symposium on Foundations of Computer Science</em>, volume, 515–525. 2000. <a class="reference external" href="https://doi.org/10.1109/SFCS.2000.892139">doi:10.1109/SFCS.2000.892139</a>.</p>
-</dd>
-</dl>
-</p>
+<h4><a class="toc-backref" href="#id35">条件分岐としての制御ゲート</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+<p>上の方法は古典プログラミングとの対応が明らかですが、あまり「量子ネイティブ」な計算の仕方とは言えません。量子計算でより自然なのは、重ね合わせ状態の生成を条件分岐とみなし、全ての分岐が回路の中で同時に扱われるようにすることです。それは結局制御ゲートを使うということに他なりません。</p>
+<p>上の回路の量子条件分岐版は以下のようになります。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">register1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg1&#39;</span><span class="p">)</span>
+<span class="n">register2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg2&#39;</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">register1</span><span class="p">,</span> <span class="n">register2</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">register1</span><span class="p">)</span>
+
+<span class="n">dtheta</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">16.</span>
+
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">cry</span><span class="p">(</span><span class="n">dtheta</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">idx</span><span class="p">),</span> <span class="n">register1</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">register2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_40_0.png" src="_images/circuit_from_scratch_40_0.png" />
+</div>
+</div>
+<p>今度は全ての分岐が重ね合わさった量子状態が実現しています。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">terms_per_row</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39; </span><span class="se">\\</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle | \text{final} \rangle = 0.250 |0:0\rangle + 0.245 |0:1\rangle + 0.231 |0:2\rangle + 0.208 |0:3\rangle + 0.177 |0:4\rangle + 0.139 |0:5\rangle \\  + 0.096 |0:6\rangle + 0.049 |0:7\rangle - 0.049 |0:9\rangle - 0.096 |0:10\rangle - 0.139 |0:11\rangle - 0.177 |0:12\rangle \\  - 0.208 |0:13\rangle - 0.231 |0:14\rangle - 0.245 |0:15\rangle + 0.049 |1:1\rangle + 0.096 |1:2\rangle + 0.139 |1:3\rangle \\  + 0.177 |1:4\rangle + 0.208 |1:5\rangle + 0.231 |1:6\rangle + 0.245 |1:7\rangle + 0.250 |1:8\rangle + 0.245 |1:9\rangle \\  + 0.231 |1:10\rangle + 0.208 |1:11\rangle + 0.177 |1:12\rangle + 0.139 |1:13\rangle + 0.096 |1:14\rangle + 0.049 |1:15\rangle\end{split}\]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id17">
+<h3><a class="toc-backref" href="#id36">関数</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>整数値変数<span class="math notranslate nohighlight">\(x\)</span>を引数に取り、バイナリ値<span class="math notranslate nohighlight">\(f(x) \in \{0, 1\}\)</span>を返す関数<span class="math notranslate nohighlight">\(f\)</span>を量子回路で実装する一つの方法は、</p>
+<div class="math notranslate nohighlight">
+\[
+U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
+\]</div>
+<p>となるようなゲートの組み合わせ<span class="math notranslate nohighlight">\(U_{f}\)</span>を見つけることです。ここで、<span class="math notranslate nohighlight">\(\oplus\)</span>は「2を法とする足し算」つまり和を2で割った余りを表します（<span class="math notranslate nohighlight">\(y=0\)</span>なら<span class="math notranslate nohighlight">\(y \oplus f(x) = f(x)\)</span>、<span class="math notranslate nohighlight">\(y=1\)</span>なら<span class="math notranslate nohighlight">\(y \oplus f(x) = 1 - f(x)\)</span>）。要するに、<span class="math notranslate nohighlight">\(U_{f}\)</span>は「<span class="math notranslate nohighlight">\(f(x)\)</span>の値が0だったら何もせず、1だったら右のケットをビット反転させる」というオペレーションです。</p>
+<p>このような関数回路は量子アルゴリズムを考える上で頻出します。二点指摘しておくと、</p>
+<ul class="simple">
+<li><p>単に<span class="math notranslate nohighlight">\(U_{f}\ket{y}\ket{x} = \ket{f(x)}\ket{x}\)</span>とできないのは、量子回路は可逆でなければいけないという制約があるからです。もともと右のレジスタにあった<span class="math notranslate nohighlight">\(y\)</span>という情報を消してしまうような回路は不可逆なので、そのような<span class="math notranslate nohighlight">\(U_{f}\)</span>の回路実装は存在しません。</p></li>
+<li><p>関数の返り値がバイナリというのはかなり限定的な状況を考えているようですが、一般の整数値関数も単に「1の位を返す関数<span class="math notranslate nohighlight">\(f_0\)</span>」「2の位を返す関数<span class="math notranslate nohighlight">\(f_1\)</span>」…と重ねていくだけで表現できます。</p></li>
+</ul>
+<p>さて、このような<span class="math notranslate nohighlight">\(U_f\)</span>を実装する時も、やはり鍵となるのは制御ゲートです。例えば、実際に4ビット整数値関数に拡張した<span class="math notranslate nohighlight">\(f=f_3 f_2 f_1 f_0\)</span>を<span class="math notranslate nohighlight">\(x \in \{0, \dots, 7\}\)</span>を15から引く関数としたとき、それに対応する回路は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+<span class="n">output_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">input_register</span><span class="p">,</span> <span class="n">output_register</span><span class="p">)</span>
+
+<span class="c1"># input_registerに適当な値（6）を入力</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">input_register</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">input_register</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># ここからが引き算をするU_f</span>
+<span class="c1"># まずoutput_registerの全てのビットを立てる</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">output_register</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="c1"># その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">input_register</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">output_register</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+    
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_44_0.png" src="_images/circuit_from_scratch_44_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle =  |9:6\rangle\]</div>
+</div>
+</div>
+<p>入力レジスタの状態を色々変えて、状態ベクトルの変化を見てみましょう。</p>
+</div>
+<div class="section" id="id18">
+<h3><a class="toc-backref" href="#id37">状態ベクトルの内積</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>次に紹介するのは、二つの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>の間の内積の絶対値自乗<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|^2\)</span>を計算するテクニックです。</p>
+<p>まず、量子計算において二つの状態ベクトルの間の内積は、</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\ket{\psi} = \sum_{k=0}^{2^n-1} c_k \ket{k} \\
+\ket{\phi} = \sum_{k=0}^{2^n-1} d_k \ket{k}
+\end{split}
+\end{split}\]</div>
+<p>に対して</p>
+<div class="math notranslate nohighlight" id="equation-inner-product">
+<span class="eqno">(7)<a class="headerlink" href="#equation-inner-product" title="Permalink to this equation">¶</a></span>\[\braket{\psi}{\phi} = \sum_{k=0}^{2^n-1} c^{*}_k d_k\]</div>
+<p>で定義できます。内積の重要な性質として</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+0 \leq |\braket{\psi}{\phi}|^2 \leq 1 \\
+|\braket{\psi}{\phi}|^2 = 1 \; \text{iff} \; \ket{\psi} \sim \ket{\phi}
+\end{split}
+\end{split}\]</div>
+<p>（単位ベクトルにおけるCauchy-Schwarzの不等式）があります。二つの状態ベクトルが物理的に同一であるときに内積の絶対値が最大になるので、内積の絶対値は状態の「近さ」を表す指標になります。また、内積が0になるとき、二つのベクトルは直交すると言います。</p>
+<p>それから、状態ベクトルの内積と密接に関わる量として、状態ベクトルの重ね合わせ</p>
+<div class="math notranslate nohighlight">
+\[
+\ket{\psi} + \ket{\phi} = \sum_k (c_k + d_k) \ket{k} = \sum_k z_k \ket{k}
+\]</div>
+<p>の2-ノルム</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert \ket{\psi} + \ket{\phi} \rVert_2 = \sum_k |z_k|^2
+\]</div>
+<p>があります。単一の状態ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>では「量子力学の決まりごと」<span class="math notranslate nohighlight">\(\braket{\psi}{\psi} = \sum_k |c_k|^2 = 1\)</span>（<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>は単位ベクトル）より2-ノルムが常に1ですが、上のような重ね合わせに対しては</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\sum_k |z_k|^2 &amp; = \sum_k (c_k + d_k)^* (c_k + d_k) \\
+&amp; = \sum_k \left( |c_k|^2 + |d_k|^2 + c_k^* d_k + d_k^* c_k \right) \\
+&amp; = 2 \left(1 + \mathrm{Re}\braket{\psi}{\phi} \right)
+\end{split}
+\end{split}\]</div>
+<p>となり、2-ノルムが内積<span class="math notranslate nohighlight">\(\braket{\psi}{\phi}\)</span>に依存します。</p>
+<p>内積や2-ノルムの計算は量子計算の様々な局面で登場します。それではその計算をする量子回路の組み方を見ていきましょう。実は2通りの異なる方法があります。</p>
+<div class="section" id="swap">
+<h4><a class="toc-backref" href="#id38">SWAPテスト</a><a class="headerlink" href="#swap" title="Permalink to this headline">¶</a></h4>
+<p>状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>（具体的に実装するためここでは3量子ビットの状態とする）が二つのレジスタに実現しているような次の回路を実行し、<code class="docutils literal notranslate"><span class="pre">test_output</span></code>で0が出る確率を<span class="math notranslate nohighlight">\(P_0\)</span>、1が出る確率を<span class="math notranslate nohighlight">\(P_1\)</span>とすると、</p>
+<div class="math notranslate nohighlight" id="equation-swap-test">
+<span class="eqno">(8)<a class="headerlink" href="#equation-swap-test" title="Permalink to this equation">¶</a></span>\[P_0 - P_1 = |\braket{\psi}{\phi}|^2\]</div>
+<p>が成り立ちます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_width</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># 適当な状態|ψ&gt;を作る回路</span>
+<span class="n">psi_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;|ψ&gt;&#39;</span><span class="p">)</span>
+<span class="n">psi_circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">psi_circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">psi_circuit</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">psi_circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">psi_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">)</span>
+
+<span class="c1"># 適当な状態|φ&gt;を作る回路</span>
+<span class="n">phi_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;|φ&gt;&#39;</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">2.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">phi_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi$&#39;</span><span class="p">)</span>
+
+<span class="c1"># パーツが全て揃ったので、内積を計算する回路を作る</span>
+<span class="n">reg_data1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data1&#39;</span><span class="p">)</span>
+<span class="n">reg_data2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data2&#39;</span><span class="p">)</span>
+<span class="n">reg_test</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg_data1</span><span class="p">,</span> <span class="n">reg_data2</span><span class="p">,</span> <span class="n">reg_test</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SWAP_test&#39;</span><span class="p">)</span>
+<span class="c1"># 状態|ψ&gt;と|φ&gt;をデータレジスタに実現</span>
+<span class="c1"># 他の回路や別に定義したゲートを回路オブジェクトに組み込むときはappend()メソッドを使う</span>
+<span class="c1"># qargsでもとの回路の量子ビットを組み込み先のどの量子ビットに対応させるかを指定する</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">psi_circuit</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="n">reg_data1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="n">reg_data2</span><span class="p">)</span>
+
+<span class="c1"># 回路図が見やすくなるようにバリアを入れる（計算上は何もしない操作）</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># ここからがSWAPテスト</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg_test</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_width</span><span class="p">):</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">cswap</span><span class="p">(</span><span class="n">reg_test</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reg_data1</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">reg_data2</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg_test</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">reg_test</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7fa53233ae40&gt;
+</pre></div>
+</div>
+<img alt="_images/circuit_from_scratch_48_1.png" src="_images/circuit_from_scratch_48_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_49_0.png" src="_images/circuit_from_scratch_49_0.png" />
+</div>
+</div>
+<p>式<a class="reference internal" href="#equation-swap-test">(8)</a>を導いてみましょう。</p>
+<div class="toggle docutils container">
+<p>全体回路の状態は初期状態<span class="math notranslate nohighlight">\(\ket{0}_{\mathrm{t}}\ket{0}_{\mathrm{d2}}\ket{0}_{\mathrm{d1}}\)</span>から始めて</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; \ket{0}_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}}\ket{\psi}_{\mathrm{d1}} \\
+\rightarrow &amp; \frac{1}{\sqrt{2}} (\ket{0} + \ket{1})_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} \\
+\rightarrow &amp; \frac{1}{\sqrt{2}} (\ket{0}_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{1}_{\mathrm{t}} \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \\
+\rightarrow &amp; \frac{1}{2} \left[ (\ket{0} + \ket{1})_{\mathrm{t}} \ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + (\ket{0} - \ket{1})_{\mathrm{t}} \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}} \right] \\
+= &amp; \frac{1}{2} \left[ \ket{0}_{\mathrm{t}} (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) + \ket{1}_{\mathrm{t}} (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} - \ket{\psi}_{\mathrm{d_2}} \ket{\phi}_{\mathrm{d1}}) \right]
+\end{align}
+\end{split}\]</div>
+<p>と移っていきます。最後にテストレジスタ<span class="math notranslate nohighlight">\(\mathrm{t}\)</span>を測定します。</p>
+<p>ここでポイントは、一般に二つのレジスタ<span class="math notranslate nohighlight">\(a, b\)</span>上に作られる量子状態</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{kl} z_{kl} \ket{l}_b \ket{k}_a
+\]</div>
+<p>のレジスタ<span class="math notranslate nohighlight">\(b\)</span>だけを測定したとき、結果<span class="math notranslate nohighlight">\(j\)</span>が得られる確率は</p>
+<div class="math notranslate nohighlight">
+\[
+P_j = \sum_k |z_{kj}|^2 = \left\lVert \sum_k z_{kj} \ket{k}_a \right\rVert_2
+\]</div>
+<p>つまり<span class="math notranslate nohighlight">\(\ket{j}_b\)</span>の「係数」になっている<span class="math notranslate nohighlight">\(a\)</span>レジスタのベクトルの2-ノルムである、という点です。</p>
+<p>したがって、テストレジスタで0と1が測定される確率<span class="math notranslate nohighlight">\(P_0\)</span>と<span class="math notranslate nohighlight">\(P_1\)</span>は</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+P_0 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} + \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \rVert_2 = \frac{1}{2} (1 + \mathrm{Re}\braket{\psi}{\phi}\braket{\phi}{\psi}) \\
+P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}} - \ket{\psi}_{\mathrm{d2}} \ket{\phi}_{\mathrm{d1}}) \rVert_2 = \frac{1}{2} (1 - \mathrm{Re}\braket{\psi}{\phi}\braket{\phi}{\psi})
+\end{align}
+\end{split}\]</div>
+<p>となります。<span class="math notranslate nohighlight">\(\braket{\psi}{\phi}\braket{\phi}{\psi} = |\braket{\psi}{\phi}|^2\)</span>は実数なので、たしかに式<a class="reference internal" href="#equation-swap-test">(8)</a>が成り立ちます。</p>
+</div>
+<p>実際の回路でも確認してみましょう。入力の状態は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">psi_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\psi&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \psi \rangle = 0.939e^{1.92 \cdot \pi i} |0\rangle + 0.343e^{0.08 \cdot \pi i} |7\rangle\]</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\phi&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \phi \rangle = 0.378 |0\rangle + 0.109i |1\rangle + 0.659 |2\rangle - 0.191i |3\rangle + 0.160 |4\rangle - 0.259i |5\rangle + 0.279 |6\rangle + 0.451i |7\rangle\]</div>
+</div>
+</div>
+<p>で、<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|^2\)</span>は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sv_psi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">psi_circuit</span><span class="p">)</span>
+<span class="n">sv_phi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv_psi</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="o">*</span> <span class="n">sv_phi</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20287760299395322
+</pre></div>
+</div>
+</div>
+</div>
+<p>それに対し上の回路を1000000回実行した時の<span class="math notranslate nohighlight">\(P_0 - P_1\)</span>は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">shots</span> <span class="o">=</span> <span class="mi">1000000</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">((</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.202488
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>です。</p>
+</div>
+<div class="section" id="inverse-circuit">
+<span id="id19"></span><h4><a class="toc-backref" href="#id39">逆回路の利用</a><a class="headerlink" href="#inverse-circuit" title="Permalink to this headline">¶</a></h4>
+<p>上の回路では入力状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>や<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>を適当な量子回路で作りましたが、見ればわかるようにSWAPテストは入力の生成過程によらず成り立ちます。例えばなんらかの「量子メモリ」デバイスがあって、そこから二つのデータレジスタに直接<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>がロードされてもいいわけです。ところが、現在の実際の量子コンピューティングにおいては、量子コンピュータ中の状態というのは全て<span class="math notranslate nohighlight">\(\ket{0}\)</span>にゲートをかけていくことでしか作れません。</p>
+<p>入力状態が既知の回路で作られる場合は、SWAPテストよりもコンパクトで効率的な内積の絶対値自乗の計算方法があります。次のような回路を組むと、測定値が0である確率を<span class="math notranslate nohighlight">\(P_0\)</span>として</p>
+<div class="math notranslate nohighlight" id="equation-inverse-circuit">
+<span class="eqno">(9)<a class="headerlink" href="#equation-inverse-circuit" title="Permalink to this equation">¶</a></span>\[P_0 = |\braket{\psi}{\phi}|^2\]</div>
+<p>が成り立ちます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_data</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg_data</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="n">reg_data</span><span class="p">)</span>
+<span class="c1"># psi_circuit.inverse() -&gt; psi_circuitの逆回路</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">psi_circuit</span><span class="o">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">qargs</span><span class="o">=</span><span class="n">reg_data</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_59_0.png" src="_images/circuit_from_scratch_59_0.png" />
+</div>
+</div>
+<p>ポイントは<code class="docutils literal notranslate"><span class="pre">psi_circuit.inverse()</span></code>で得られる<code class="docutils literal notranslate"><span class="pre">psi_circuit</span></code>の逆回路です。逆回路とは、ゲートの順番を反転させ、全てのゲートをその逆操作で置き換えたものです。<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を作る回路を<span class="math notranslate nohighlight">\(U_{\psi}\)</span>と表すと、逆回路は<span class="math notranslate nohighlight">\(U_{\psi}^{-1}\)</span>もしくは<span class="math notranslate nohighlight">\(U_{\psi}^{\dagger}\)</span>と書かれ、</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\psi}^{-1} U_{\psi} \ket{0} = \ket{0}
+\]</div>
+<p>です。一般に、状態<span class="math notranslate nohighlight">\(\ket{\lambda} = \sum_k z_k \ket{k}\)</span>を測定して0を得る確率<span class="math notranslate nohighlight">\(|z_0|^2\)</span>は内積の定義<a class="reference internal" href="#equation-inner-product">(7)</a>から<span class="math notranslate nohighlight">\(|\braket{0}{\lambda}|^2\)</span>と書けるので、上の回路の測定前の状態を<span class="math notranslate nohighlight">\(U_{\psi}^{-1} U_{\phi} \ket{0} =: \ket{U^{-1}_{\psi} \phi}\)</span>と表すと、</p>
+<div class="math notranslate nohighlight">
+\[
+P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2
+\]</div>
+<p>となります。ここから式<a class="reference internal" href="#equation-inverse-circuit">(9)</a>を導くには、量子力学と線形代数をよりはっきり結びつけて後者の言葉を使えば簡単ですが、量子回路と量子状態の概念を出発点として式<a class="reference internal" href="#equation-inverse-circuit">(9)</a>を証明することもできます。少し本筋から外れてしまいますが、以下に証明を載せておきます。</p>
+<div class="toggle docutils container">
+<p>まず、任意の量子回路を表す写像<span class="math notranslate nohighlight">\(U\)</span>と任意の量子状態<span class="math notranslate nohighlight">\(\ket{\lambda}, \ket{\theta}\)</span>を考えます。量子回路は量子状態を量子状態に移すので、<span class="math notranslate nohighlight">\(U\ket{\lambda}\)</span>は単位ベクトル、つまり</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert U \ket{\lambda} \rVert^2 = 1
+\]</div>
+<p>です。<span class="math notranslate nohighlight">\(\chi\)</span>を複素数としたとき、ベクトル<span class="math notranslate nohighlight">\((\ket{\lambda} + \chi \ket{\theta}) / \lVert \ket{\lambda} + \chi \ket{\theta} \rVert\)</span>も単位ベクトルなので、</p>
+<div class="math notranslate nohighlight">
+\[
+\left\lVert U \frac{\ket{\lambda} + \chi \ket{\theta}}{\lVert \ket{\lambda} + \chi \ket{\theta} \rVert} \right\rVert^2 = 1
+\]</div>
+<p>したがって</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+2 + 2 \mathrm{Re}(\chi \braket{U \lambda}{U \theta}) = 2 + 2 \mathrm{Re}(\chi\braket{\lambda}{\theta}) \\
+\therefore \mathrm{Re}(\chi \braket{U \lambda}{U \theta}) = \mathrm{Re}(\chi \braket{\lambda}{\theta})
+\end{align}
+\end{split}\]</div>
+<p>ここで<span class="math notranslate nohighlight">\(\chi=1\)</span>と<span class="math notranslate nohighlight">\(\chi=i\)</span>をそれぞれ考えると、<span class="math notranslate nohighlight">\(\braket{U \lambda}{U \theta}\)</span>と<span class="math notranslate nohighlight">\(\braket{\lambda}{\theta}\)</span>の実部と虚部が共に等しいので</p>
+<div class="math notranslate nohighlight">
+\[
+\braket{U \lambda}{U \theta} = \braket{\lambda}{\theta}.
+\]</div>
+<p>ところが右辺は</p>
+<div class="math notranslate nohighlight">
+\[
+\braket{\lambda}{\theta} = \braket{\lambda}{U^{-1} U \theta}
+\]</div>
+<p>でもあり、これが任意の<span class="math notranslate nohighlight">\(\theta\)</span>で成立するので、結局任意の状態<span class="math notranslate nohighlight">\(\rho\)</span>で</p>
+<div class="math notranslate nohighlight">
+\[
+\braket{\lambda}{U^{-1} \rho} = \braket{U \lambda}{\rho}
+\]</div>
+<p>が言えます。これより</p>
+<div class="math notranslate nohighlight">
+\[
+P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2 = |\braket{\psi}{\phi}|^2
+\]</div>
+<p>です。</p>
+</div>
+<p>上の回路で式<a class="reference internal" href="#equation-inverse-circuit">(9)</a>を確認しましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shots</span> <span class="o">=</span> <span class="mi">1000000</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;000&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.201961
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h2><a class="toc-backref" href="#id40">複製不可能定理とテレポーテーション</a><a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<p>量子アルゴリズムを考え、実装する時に非常に重要なのが、<strong>任意の未知の量子状態の独立な複製を作る量子回路は存在しない</strong>という複製不可能定理（no-cloning theorem）です。この定理は具体的には、入力状態<span class="math notranslate nohighlight">\(\ket{\psi}_{\mathrm{in}}\)</span>と、同じビット数の初期化した出力レジスタ<span class="math notranslate nohighlight">\(\ket{0}_{\mathrm{out}}\)</span>がある時、<span class="math notranslate nohighlight">\(\psi\)</span>に依存しない回路<span class="math notranslate nohighlight">\(U\)</span>で</p>
+<div class="math notranslate nohighlight">
+\[
+U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}} \ket{\psi}_{\mathrm{out}}
+\]</div>
+<p>を実現するものはないということを主張しています。</p>
+<p>証明は簡単です。</p>
+<div class="toggle docutils container">
+<p>二つの入力状態<span class="math notranslate nohighlight">\(\psi\)</span>と<span class="math notranslate nohighlight">\(\phi\)</span>を考え、左辺の内積を取ると（上の逆回路での内積計算の証明を利用して）</p>
+<div class="math notranslate nohighlight">
+\[
+|\braket{U(\psi_{\mathrm{in}}, 0_{\mathrm{out}})}{U(\phi_{\mathrm{in}}, 0_{\mathrm{out}})}| = |\braket{\psi}{\phi}\braket{0}{0}| = |\braket{\psi}{\phi}|.
+\]</div>
+<p>ところが右辺の内積は</p>
+<div class="math notranslate nohighlight">
+\[
+|\braket{\psi_{\mathrm{in}}, \psi_{\mathrm{out}}}{\phi_{\mathrm{in}}, \phi_{\mathrm{out}}}| = |\braket{\psi}{\phi}|^2.
+\]</div>
+<p>等価関係<span class="math notranslate nohighlight">\(\sim\)</span>は位相を無視して同値ということだったので、両辺の内積のノルムは等しいはずであり、</p>
+<div class="math notranslate nohighlight">
+\[
+|\braket{\psi}{\phi}| = |\braket{\psi}{\phi}|^2.
+\]</div>
+<p>これは<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|=0\)</span>または<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|=1\)</span>を意味し、<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>が任意の状態であるという仮定と矛盾します。</p>
+</div>
+<p>複製不可能定理は量子回路で実行できる計算のクラスを大幅に制限します。例えば、何かの計算を途中で打ち切ってその時点での量子状態をなんらかのメモリデバイスに保存できたとして、その状態をコピーすることができないので、結局そこから計算を再開できるのは一度だけということになります。</p>
+<p>任意の量子状態を複製することはできませんが、あるレジスタの量子状態を他のレジスタに移し替えることは可能です。このような操作を量子テレポーテーションと呼びます。テレポーテーションでは元々のレジスタの量子状態が失われるので、状態をコピーしたことにはなりません。</p>
+<p>1ビットの情報を転送する回路は以下のようになります。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは入力ビットを適当な状態にする回路を作る</span>
+<span class="c1"># circuit.u (U3 gate)は3パラメータで一つの量子ビットを完全にコントロールするゲート</span>
+<span class="n">prep_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;prep&#39;</span><span class="p">)</span>
+<span class="n">prep_circuit</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">reg_in</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
+<span class="n">reg_out</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span>
+<span class="n">res_in</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res_ent</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg_in</span><span class="p">,</span> <span class="n">reg_out</span><span class="p">,</span> <span class="n">res_in</span><span class="p">,</span> <span class="n">res_ent</span><span class="p">)</span>
+
+<span class="c1"># まずreg_inをprep_circuitの状態にする</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prep_circuit</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="n">reg_in</span><span class="p">)</span>
+
+<span class="c1"># reg_outはベル状態に用意する</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg_out</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">reg_out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reg_out</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># reg_inとreg_outの第一ビットをエンタングルさせる</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">reg_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reg_out</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># reg_inにアダマールゲートをかけ、測定する</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg_in</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">reg_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_in</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># reg_outのエンタングルしたビットも測定する</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">reg_out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_ent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># reg_out[1]にreg_in, reg_entの測定結果に応じたゲートをかける</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg_out</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">c_if</span><span class="p">(</span><span class="n">res_ent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="n">reg_out</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">c_if</span><span class="p">(</span><span class="n">res_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/circuit_from_scratch_67_0.png" src="_images/circuit_from_scratch_67_0.png" />
+</div>
+</div>
+<p>入力ビットの状態は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">prep_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\text</span><span class="si">{in}</span><span class="s1">&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{in} \rangle = 0.939 |0\rangle + 0.343e^{0.57 \cdot \pi i} |1\rangle\]</div>
+</div>
+</div>
+<p>回路の終状態は</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle = 0.939 |0:0:1\rangle + 0.343e^{0.57 \cdot \pi i} |1:0:1\rangle\]</div>
+</div>
+</div>
+<p>上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが<span class="math notranslate nohighlight">\(\ket{\text{in}}\)</span>と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。</p>
 <dl class="footnote brackets">
 <dt class="label" id="mcz"><span class="brackets"><a class="fn-backref" href="#id11">1</a></span></dt>
 <dd><p>（多重）制御<span class="math notranslate nohighlight">\(P\)</span>ゲートはどのビットを制御と呼んでも標的と呼んでも同じ作用をするので、<span class="math notranslate nohighlight">\(C^{123}_0[P(\pi)]\)</span>でもなんでも構いません。</p>
@@ -1210,10 +1734,10 @@ c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-
             <p class="prev-next-title">【課題】量子相関を調べる</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="extreme_simd.html" title="next page">
+    <a class='right-next' id="next-link" href="quantum_computation.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">計算をする量子回路の実装</p>
+        <p class="prev-next-title">【課題】アダマールテスト</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

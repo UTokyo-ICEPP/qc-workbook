@@ -130,22 +130,22 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
   <a class="reference internal" href="quantum_computation.html">
-   【課題】量子計算
+   【課題】アダマールテスト
   </a>
  </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  量子ダイナミクスシミュレーション
+  量子コンピュータでの並列計算
  </span>
 </p>
 <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   計算をする量子回路の実装
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -154,6 +154,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
    【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="addition_on_ibmq.html">
+   【参考】足し算を実機で行う
   </a>
  </li>
 </ul>
@@ -417,11 +422,11 @@ const thebe_selector_output = ".output, .cell_output"
 <h2>問題設定<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="grover.html"><span class="doc">グローバーのアルゴリズム</span></a>では、<span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素を持つリスト（<span class="math notranslate nohighlight">\(=[0,1,2,\cdots,63]\)</span>）から45を見つける問題を考えました。ここではこの6量子ビットの探索問題をベースに考えますが、問題は以下のようなものです。</p>
 <p>あるボードがあって、そのボードにはビット毎に0か1を書き込むことができます。例えば45であれば、2進数表記<span class="math notranslate nohighlight">\(45=101101\)</span>を6つの枠を持つボードに書き込みます。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_kadai1.png"><img alt="grover_kadai1" class="bg-primary mb-1 align-center" src="_images/grover_kadai1.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/grover_kadai1.png"><img alt="grover_kadai1" class="align-center" src="_images/grover_kadai1.png" style="width: 500px;" /></a>
 <p>このボードは、ある桁のビットを「押す」と、そのビットと一つ隣のビットが反転するという特徴があります。例えば、45のボードの上から2桁目のビットを「押す」と、<span class="math notranslate nohighlight">\(21=010101\)</span>に変わると言った具合です。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_kadai2.png"><img alt="grover_kadai2" class="bg-primary mb-1 align-center" src="_images/grover_kadai2.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/grover_kadai2.png"><img alt="grover_kadai2" class="align-center" src="_images/grover_kadai2.png" style="width: 500px;" /></a>
 <p>この課題では、このボードを使ってある数字（例えば45）を別の数字（例えば13）に変換するという問題を考えます。特に、最小の押し下げ回数で目的の数字が得られるにはどのビットを押し下げるのが良いか、そのビット位置を見つける問題です。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/grover_kadai3.png"><img alt="grover_kadai3" class="bg-primary mb-1 align-center" src="_images/grover_kadai3.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/grover_kadai3.png"><img alt="grover_kadai3" class="align-center" src="_images/grover_kadai3.png" style="width: 500px;" /></a>
 </div>
 <div class="section" id="id3">
 <h2>ヒント<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>

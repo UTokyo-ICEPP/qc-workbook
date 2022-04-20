@@ -114,7 +114,6 @@ $$
 
 ```{image} figs/grover.png
 :alt: grover
-:class: bg-primary mb-1
 :width: 600px
 :align: center
 ```
@@ -123,7 +122,6 @@ $G$は「**グローバーの反復**」とも呼ばれるユニタリー演算�
 
 ```{image} figs/grover_iter.png
 :alt: grover_iter
-:class: bg-primary mb-1
 :width: 550px
 :align: center
 ```
@@ -134,7 +132,6 @@ $U_w$と$U_0$は、それぞれ上で説明した解$w$の位相を反転する�
 
 ```{image} figs/grover_iter1.png
 :alt: grover_iter1
-:class: bg-primary mb-1
 :width: 600px
 :align: center
 ```
@@ -179,7 +176,6 @@ $$
 
 ```{image} figs/grover_rot1.png
 :alt: grover_rot1
-:class: bg-primary mb-1
 :width: 300px
 :align: center
 ```
@@ -192,7 +188,6 @@ $$
 
 ```{image} figs/grover_rot2.png
 :alt: grover_rot2
-:class: bg-primary mb-1
 :width: 300px
 :align: center
 ```
@@ -216,7 +211,6 @@ $$
 
 ```{image} figs/grover_rot3.png
 :alt: grover_rot3
-:class: bg-primary mb-1
 :width: 300px
 :align: center
 ```
@@ -234,7 +228,6 @@ $$
 
 ```{image} figs/grover_rot4.png
 :alt: grover_rot4
-:class: bg-primary mb-1
 :width: 300px
 :align: center
 ```
@@ -274,7 +267,6 @@ $$
 
 ```{image} figs/grover_amp.png
 :alt: grover_amp
-:class: bg-primary mb-1
 :width: 800px
 :align: center
 ```
@@ -348,7 +340,6 @@ from qc_workbook.utils import operational_backend
 
 ```{image} figs/grover_6bits_45.png
 :alt: grover_6bits_45
-:class: bg-primary mb-1
 :width: 600px
 :align: center
 ```

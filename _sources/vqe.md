@@ -134,7 +134,6 @@ $$
 
 ```{image} figs/vqe_u3.png
 :alt: vqe_u3
-:class: bg-primary mb-1
 :width: 400px
 :align: center
 ```
@@ -262,7 +261,6 @@ nq = 2  # 量子ビットの数
 
 ```{image} figs/vqe_2q_u3.png
 :alt: vqe_2q_u3
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```

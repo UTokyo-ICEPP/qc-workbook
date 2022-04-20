@@ -130,22 +130,22 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
   <a class="reference internal" href="quantum_computation.html">
-   【課題】量子計算
+   【課題】アダマールテスト
   </a>
  </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  量子ダイナミクスシミュレーション
+  量子コンピュータでの並列計算
  </span>
 </p>
 <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   計算をする量子回路の実装
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="dynamics_simulation.html">
    物理系を表現する
@@ -154,6 +154,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="more_dynamics.html">
    【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="addition_on_ibmq.html">
+   【参考】足し算を実機で行う
   </a>
  </li>
 </ul>
@@ -642,7 +647,7 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 <div class="section" id="id13">
 <h3><a class="toc-backref" href="#id65">変分フォームを使った実例</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>ではここで、単一量子ビットの変分フォームを利用してパラメータ最適化の例を実行してみましょう。例として、ランダムな確率分布のベクトル<span class="math notranslate nohighlight">\(\vec{x}\)</span>（要素数は2）を入力として与えた時、出力の確率分布が<span class="math notranslate nohighlight">\(\vec{x}\)</span>に近くなるように単一量子ビットの変分フォームを決定するという問題を考えます（2つの確率分布の近さはL1距離によって定義します）。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/vqe_u3.png"><img alt="vqe_u3" class="bg-primary mb-1 align-center" src="_images/vqe_u3.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/vqe_u3.png"><img alt="vqe_u3" class="align-center" src="_images/vqe_u3.png" style="width: 400px;" /></a>
 <p>最初に、Pythonでランダムな確率分布のベクトルを作成します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -747,9 +752,9 @@ U3(\theta, \phi, \lambda) = \begin{pmatrix}\cos\frac{\theta}{2} &amp; -e^{i\lamb
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target Distribution:          [0.5136 0.4864]
-Obtained Distribution:        [0.5089 0.4911]
-Cost Value (L1-Distance):     0.002940
-Parameters Found:             [1.555  1.1458 1.6894]
+Obtained Distribution:        [0.5113 0.4887]
+Cost Value (L1-Distance):     0.006940
+Parameters Found:             [1.5429 1.346  0.718 ]
 </pre></div>
 </div>
 </div>
@@ -763,7 +768,7 @@ Parameters Found:             [1.555  1.1458 1.6894]
 </div>
 </div>
 <p>として再度実行するとどういう結果が得られるでしょうか。量子回路とオプティマイザーの関係はこのようになってますね。</p>
-<a class="bg-primary mb-1 reference internal image-reference" href="_images/vqe_2q_u3.png"><img alt="vqe_2q_u3" class="bg-primary mb-1 align-center" src="_images/vqe_2q_u3.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/vqe_2q_u3.png"><img alt="vqe_2q_u3" class="align-center" src="_images/vqe_2q_u3.png" style="width: 500px;" /></a>
 <p>やってみると分かりますが、結果は1量子ビットの場合と比べて良くないですね。どうすれば良くなるでしょうか？（やり方は複数あると思います）</p>
 <p><strong>一つの解決策：変分フォームにエンタングルメントを導入する</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nq</span><span class="p">):</span>

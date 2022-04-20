@@ -50,7 +50,6 @@ local: true
 
 ```{image} figs/LHC_ATLAS.png
 :alt: LHC_ATLAS
-:class: bg-primary mb-1
 :width: 1000px
 :align: center
 ```
@@ -68,7 +67,6 @@ ATLASやCMS実験の検出器は、異なる性質を持った検出器を内側
 
 ```{image} figs/tracking.png
 :alt: tracking
-:class: bg-primary mb-1
 :width: 1000px
 :align: center
 ```
@@ -126,7 +124,6 @@ from qiskit.utils import QuantumInstance
 
 ```{image} figs/track_segment.png
 :alt: track_segment
-:class: bg-primary mb-1
 :width: 350px
 :align: center
 ```

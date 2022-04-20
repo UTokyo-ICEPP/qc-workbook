@@ -36,7 +36,6 @@ language_info:
 
 ```{image} figs/grover_kadai1.png
 :alt: grover_kadai1
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```
@@ -45,7 +44,6 @@ language_info:
 
 ```{image} figs/grover_kadai2.png
 :alt: grover_kadai2
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```
@@ -54,7 +52,6 @@ language_info:
 
 ```{image} figs/grover_kadai3.png
 :alt: grover_kadai3
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```
