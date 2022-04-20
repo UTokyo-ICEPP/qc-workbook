@@ -75,7 +75,6 @@ $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 
 ```{image} figs/neural_net.png
 :alt: var_circuit
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```
@@ -90,7 +89,6 @@ $$
 
 ```{image} figs/neuron.png
 :alt: var_circuit
-:class: bg-primary mb-1
 :width: 350px
 :align: center
 ```
@@ -129,7 +127,6 @@ $$
 
 ```{image} figs/var_circuit.png
 :alt: var_circuit
-:class: bg-primary mb-1
 :width: 700px
 :align: center
 ```
@@ -433,7 +430,6 @@ plt.legend();
 
 ```{image} figs/susy_bg.png
 :alt: susy_bg
-:class: bg-primary mb-1
 :width: 700px
 :align: center
 ```

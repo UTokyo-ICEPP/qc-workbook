@@ -74,7 +74,6 @@ QPEが考える問題はどういうものかと言うと、「あるユニタ�
 
 ```{image} figs/qpe_1qubit.png
 :alt: qpe_1qubit
-:class: bg-primary mb-1
 :width: 300px
 :align: center
 ```
@@ -97,7 +96,6 @@ QPEが考える問題はどういうものかと言うと、「あるユニタ�
 
 ```{image} figs/qpe_wo_iqft.png
 :alt: qpe_wo_iqft
-:class: bg-primary mb-1
 :width: 500px
 :align: center
 ```
@@ -126,7 +124,6 @@ $$
 <a id='qpe_nqubit_fig'></a>
 ```{image} figs/qpe.png
 :alt: qpe
-:class: bg-primary mb-1
 :width: 700px
 :align: center
 ```

@@ -67,7 +67,6 @@ $$
 
 ```{image} figs/qke_circuit.png
 :alt: qke_circuit
-:class: bg-primary mb-1
 :width: 700px
 :align: center
 ```
