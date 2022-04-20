@@ -26,7 +26,7 @@ language_info:
 
 +++
 
-量子状態生成の感覚がつかめてきたところで、量子計算をするとはどういうことかに話を移して行きましょう。
+量子計算をする回路の感覚がつかめてきたところで、量子計算をするとはどういうことかに話を移して行きましょう。
 
 ```{contents} 目次
 ---
@@ -45,40 +45,73 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 - **並列性を利用する**：Equal superposition状態で見たように、$n$量子ビットがあるとき、比較的簡単な操作で$2^n$個の計算基底が顕に登場する状態が作れます。また、この状態には全ての量子ビットが関与するため、どのビットに対するゲート操作も全ての計算基底に影響を及ぼします。つまり、各ゲート操作が常に$2^n$重の並列演算となります。
 - **干渉を利用する**：量子振幅は複素数なので、二つの振幅が足し合わされるとき、それぞれの位相によって和の振幅の値が変わります。特に絶対値が等しく位相が逆である（$\pi$だけ異なる）場合和が0となるので、そのことを利用して回路の量子状態の重ね合わせから特定の計算基底を除くといったことが可能です。
 
-この2つの要素のうち、特に干渉を上手に使ったアルゴリズムを見出すのが難しいため、量子コンピュータの応用可能性にまだ未知数な部分が大きい、というのが現状です。今回の実習でも、干渉を利用する部分もありますが、主に並列性ということに着目します。
+この2つの要素のうち、特に干渉を上手に使ったアルゴリズムを見出すのが難しいため、量子コンピュータの応用可能性にまだ未知数な部分が大きい、というのが現状です。
 
 ## 巨大SIMDマシンとしての量子コンピュータ
 
 SIMD (single instruction multiple data)とは並列計算パラダイムの一つで、プロセッサの命令（instruction）が多数のデータに同時に適用されるケースを指します。私達の身の回りの（古典）コンピュータのプロセッサにもSIMD用のインストラクションセットが搭載されており、例えば（2021年11月現在）最先端の商用CPUでは、16個の単精度浮動小数点数に対し同時に四則演算や平方根の計算を行えます。
 
-量子コンピュータでは、第一回の実習で触れられたように、すべてのゲートがすべての計算基底に作用します。ゲート操作を命令、各計算基底の振幅をデータとして解釈すれば、これは常に$2^n$個のデータに命令を与えながら計算をしていることにあたります。量子コンピュータは巨大SIMDマシンとも考えられるのです。
+量子コンピュータでは、すべてのゲートがすべての計算基底に作用します。ゲート操作を命令、各計算基底の振幅をデータとして解釈すれば、これは常に$2^n$個のデータに命令を与えながら計算をしていることにあたります。量子コンピュータは巨大SIMDマシンとも考えられるのです。
 
-ただし、これもすでに触れられたことですが、巨大並列計算ができたとしても、そのデータをすべて引き出すことはできません[^and_you_dont_want_to]ので、古典計算機のSIMDとはいろいろな意味で単純に比較できるものではありません。
+ただし、すでに触れられたことですが、巨大並列計算ができたとしても、そのデータをすべて引き出すことはできません[^and_you_dont_want_to]ので、古典計算機のSIMDとはいろいろな意味で単純に比較できるものではありません。
 
-とはいえ、並列計算を行っているんだということを実感できると、より量子コンピュータを使う感覚が身に付いてくると思われるので、今回は最も単純に「足し算」をたくさん並列に行う回路を書いてみましょう。
+とはいえ、並列計算を行っているんだということを実感できると、量子コンピュータの使い道のイメージも湧きやすくなると思われますので、今回の実習では量子計算の並列性が顕著に現れるような例を見ていきましょう。
 
 [^and_you_dont_want_to]: そもそも、例えば65量子ビットの計算機からすべてのデータを保存しようと思うと、各振幅を128（古典）ビットの浮動小数点複素数で表現したとすれば512EiB (エクサバイト)のストレージが必要です。これはだいたい現在インターネットを行き来する情報二ヶ月分に相当するので、保存するファシリティを作るにはそれなりの投資が必要です。
 
 +++
 
 (QFT)=
-### 問題7: 量子フーリエ変換
+## 量子フーリエ変換
 
-**問題**
+量子計算で並列性と振幅の干渉を巧みに利用した顕著な例として、量子フーリエ変換（Quantum Fourier transform, QFT）というサブルーチン（アルゴリズムの部品）があります。QFTは{doc}`Shorの素因数分解 <shor>`を含め多くのアルゴリズムに応用されています{cite}`nielsen_chuang_qft`。現在知られている中で最も重要な量子サブルーチンと言っても過言ではないでしょう。
 
-$n$量子ビットレジスタの状態$\ket{j} \, (j \in \{0,1,\dots,2^n-1\})$を以下のように変換する回路を考え、$n=6, j=23$のケースを実装しなさい。
+QFTとは、$n$量子ビットレジスタの状態$\ket{j} \, (j \in \{0,1,\dots,2^n-1\})$を以下のように変換する操作です。
 
 $$
-\ket{j} \rightarrow \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
+U_{\mathrm{QFT}} \ket{j} = \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
 $$
+
+QFTは量子回路で実装でき、線形なので、状態$\ket{\psi} = \sum_{j=0}^{2^n-1} c_j \ket{j}$に対しては
+
+$$
+\begin{split}
+U_{\mathrm{QFT}} \ket{\psi} & = \frac{1}{\sqrt{2^n}} \sum_{j=0}^{2^n-1} c_j \sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k} \\
+& = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \tilde{c}_k \ket{k} \quad \left( \tilde{c}_k = \sum_{j=0}^{2^n-1} c_j e^{2\pi i jk/2^n} \right)
+\end{split}
+$$
+
+となり、振幅$\{c_j\}_j$の離散フーリエ変換が引き起こされることがわかります。
+
+古典計算機で$2^n$個のサンプルの離散フーリエ変換を計算するには$\mathcal{O}(n2^n)$回の演算が必要であることが知られています。一方、QFTは最も効率的な実装{cite}`qft_nlogn`で$\mathcal{O}(n \log n)$個のゲートしか利用しません（下の実装では$\mathcal{O}(n^2)$）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。
+
+例として$n=6$の時のQFT回路を載せておきます。
 
 ```{code-cell} ipython3
-:tags: [output_scroll, remove-output]
+:tags: [remove-output]
+
+# まずは全てインポート
+import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import Math
+from qiskit import QuantumRegister, QuantumCircuit, IBMQ, Aer, transpile
+from qiskit.tools.monitor import job_monitor
+from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qc_workbook.show_state import statevector_expr
+from qc_workbook.optimized_additions import optimized_additions
+from qc_workbook.utils import operational_backend, find_best_chain
+
+print('notebook ready')
+```
+
+```{code-cell} ipython3
+:tags: []
 
 num_qubits = 6
 
 circuit = QuantumCircuit(num_qubits)
 
+# 具体的にするため、入力状態を|23>とする
 j = 23
 
 ## jの２進数表現で値が1になっているビットに対してXを作用させる -> 状態|j>を作る
@@ -86,10 +119,8 @@ j = 23
 # まずjの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）
 # unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している
 j_bits = np.unpackbits(np.asarray(j, dtype=np.uint8), bitorder='little')
-
 # 次にj_bitsアレイのうち、ビットが立っているインデックスを得る
 j_indices = np.nonzero(j_bits)[0]
-
 # 最後にcircuit.x()
 for idx in j_indices:
     circuit.x(idx)
@@ -99,13 +130,34 @@ for idx in j_indices:
 #    if ((j >> i) & 1) == 1:
 #        circuit.x(i)
 
-##################
-### EDIT BELOW ###
-##################
-# circuit.?
-##################
-### EDIT ABOVE ###
-##################
+circuit.barrier()
+
+## ここからがQFT
+
+# n-1から0まで標的ビットについてループ
+for itarg in range(num_qubits - 1, -1, -1):
+    # 標的ビットにアダマールゲートをかける
+    circuit.h(itarg)
+    # target - 1から0まで制御ビットについてループ
+    for ictrl in range(itarg - 1, -1, -1):
+        # 標的と制御ビットのインデックスに応じた角度で制御Pゲートをかける
+        power = ictrl - itarg - 1 + num_qubits
+        circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
+        
+    # 回路図を見やすくするためにバリアを入れる
+    circuit.barrier()
+
+# 最後にビットの順番を反転させる
+for i in range(num_qubits // 2):
+    circuit.swap(i, num_qubits - 1 - i)
+    
+## ここまでがQFT
+
+circuit.draw('mpl')
+```
+
+```{code-cell} ipython3
+:tags: []
 
 sqrt_2_to_n = 2 ** (num_qubits // 2)
 amp_norm = (1. / sqrt_2_to_n, r'\frac{1}{%d}' % sqrt_2_to_n)
@@ -114,16 +166,10 @@ expr = statevector_expr(circuit, amp_norm=amp_norm, phase_norm=phase_norm)
 Math(expr)
 ```
 
-この操作は量子フーリエ変換（Quantum Fourier transform, QFT）と呼ばれ、{doc}`Shorの素因数分解 <shor>`を含め多くのアルゴリズムに応用されています{cite}`nielsen_chuang_qft`。現在知られている中で最も重要な量子サブルーチン（アルゴリズムの部品）と言っても過言ではないでしょう。
+上の回路でどうQFTが実現できるのか、初見で一目でわかる人は世界で数人しかいないでしょう。実際に状態を書き下しながら回路を追ってみましょう。
 
-古典計算機で離散フーリエ変換$j \rightarrow \{e^{2 \pi i j k/2^n}\}_k$を計算するには$\mathcal{O}(n2^n)$回の演算が必要であることが知られています。一方、QFTは最も効率的な実装{cite}`qft_nlogn`で$\mathcal{O}(n \log n)$個のゲートしか利用しません（下の実装では$\mathcal{O}(n^2)$）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。
-
-**解答**
-
-````{toggle}
-前の問題同様、基本は$H$ゲート$P$ゲートを使っていきますが、今回は$\ket{j}$という「入力」があるので、制御ゲートを利用する必要があります。
-
-ビットn-1に着目しましょう。前回同様$j_m \, (m=0,\dots,n-1, \, j_m=0,1)$を使って$j$の二進数表現を$j=\sum_{m=0}^{n-1} 2^m j_m$としておきます。ビットn-1の初期状態は$\ket{j_{n-1}}_{n-1}$なので、アダマールゲートをかけると
+```{toggle}
+まずビットn-1に着目します。前回の{ref}`equal_superposition_with_phase`の導出で行ったのと同様に、$j_m \, (m=0,\dots,n-1, \, j_m=0,1)$を使って$j$の二進数表現を$j=\sum_{m=0}^{n-1} 2^m j_m$としておきます。ビットn-1の初期状態は$\ket{j_{n-1}}_{n-1}$なので、アダマールゲートをかけると
 
 $$
 H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac{j_{n-1}}{2}} \ket{1}_{n-1}\right]
@@ -181,9 +227,9 @@ $$
 = \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
 $$
 
-$\newcommand{tk}{\tilde{k}}$
+$\newcommand{tk}{\bar{k}}$
 
-例によって全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために$k$の代わりに整数$\tk$とその二進数表現$\tk_{l}$を使って、
+全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために$k$の代わりに整数$\tk$とその二進数表現$\tk_{l}$を使って、
 
 $$
 c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
@@ -201,23 +247,19 @@ $$
 \frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_0}_{n-1} \cdots \ket{k_{n-1}}_0
 $$
 
-であり、求める状態に対してビット順序が逆転したものになっていることがわかります。したがって、最後にSWAPを使ってビット順序を逆転させれば量子フーリエ変換が完成します。
-
-正解は
-
-```{code-block} python
-for itarg in range(num_qubits - 1, -1, -1):
-    circuit.h(itarg)
-    for ictrl in range(itarg - 1, -1, -1):
-        power = ictrl - itarg - 1 + num_qubits
-        circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
-        
-for i in range(num_qubits // 2):
-    circuit.swap(i, num_qubits - 1 - i)
-```
-
 です。
-````
+
+最後にSWAPを使ってビット順序を逆転させると、
+
+$$
+\begin{split}
+& \frac{1}{\sqrt{2^n}} \sum_{k_l=0,1} \exp \left(\frac{2 \pi i}{2^n} j \sum_{l=0}^{n-1} 2^l k_l \right) \ket{k_{n-1}}_{n-1} \cdots \ket{k_{0}}_0 \\
+= & \frac{1}{\sqrt{2^n}} \sum_{k} \exp \left(\frac{2 \pi i}{2^n} j k \right) \ket{k}
+\end{split}
+$$
+
+が得られます。
+```
 
 +++
 
@@ -227,25 +269,75 @@ for i in range(num_qubits // 2):
 
 足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです{cite}`quantum_addition`。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。
 
-まずは計算の流れを数式で追ってみましょう。整数$a$と$b$の足し算を考えます。まず、2つのレジスタをそれぞれ状態$\ket{a}$と$\ket{b}$に用意します。以下のように、第3のレジスタ（初期状態$\ket{0}$）の状態が和$a+b$を表すようにすることが目標です。それぞれのレジスタは十分に大きい（レジスタ$i$のビット数を$n_i$として$2^{n_1} > a$, $2^{n_2} > b$, $2^{n_3} > a + b$）とします。
+このサブルーチンは整数$a$と$b$が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。
 
 $$
 \ket{a}\ket{b}\ket{0} \rightarrow \ket{a}\ket{b}\ket{a+b}
 $$
 
+計算の流れをかいつまんで言うと、まず出力レジスタがequal superposition状態に初期化され、そこに二つの入力レジスタを制御とした$C[P]$ゲートがかけられていきます。ポイントは$C[P]$を利用することで出力レジスタの計算基底の位相に$a + b$が現れることで、最後にそこに対して逆フーリエ変換（Inverse QFT）を行うと、今度は出力レジスタが$a + b$に対応した計算基底状態になるという仕組みです。
+
+次のセルで定義された`setup_addition`関数がサブルーチンの実装です。
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+def setup_addition(circuit, reg1, reg2, reg3):
+    """Set up an addition subroutine to a circuit with three registers
+    """
+    
+    # Equal superposition in register 3
+    # (Single-qubit gate methods in QuantumCircuit accepts a QuantumRegister or a
+    # list of qubit indices in addition to the usual single qubit index)
+    circuit.h(reg3)
+
+    # Smallest unit of phi
+    dphi = 2. * np.pi / (2 ** reg3.size)
+
+    # Loop over reg1 and reg2
+    for reg_ctrl in [reg1, reg2]:
+        # Loop over qubits in the control register (reg1 or reg2)
+        for ictrl, qctrl in enumerate(reg_ctrl):
+            # Loop over qubits in the target register (reg3)
+            for itarg, qtarg in enumerate(reg3):
+                # C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}
+                circuit.cp(dphi * (2 ** (ictrl + itarg)), qctrl, qtarg)
+
+    # Insert a barrier for better visualization
+    circuit.barrier()
+
+    # Inverse QFT
+    for j in range(reg3.size // 2):
+        circuit.swap(reg3[j], reg3[-1 - j])
+
+    for itarg in range(reg3.size):
+        for ictrl in range(itarg):
+            power = ictrl - itarg - 1 + reg3.size
+            circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
+        
+        circuit.h(reg3[itarg])
+        
+print('Defined function setup_addition')
+```
+
+サブルーチンを具体的に数式で追ってみましょう。
+
+```{toggle}
+まず、2つの入力レジスタをそれぞれ状態$\ket{a}$と$\ket{b}$に用意します。出力レジスタの初期状態は$\ket{0}$です。それぞれのレジスタは十分に大きい（レジスタ$i$のビット数を$n_i$として$2^{n_1} > a$, $2^{n_2} > b$, $2^{n_3} > a + b$）とします。
+
 量子フーリエ変換は、ビット数$n$のレジスタの計算基底$\ket{j}$を
 
 $$
-\ket{j} \xrightarrow{\text{Q.F.T.}} \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
+U_{\mathrm{QFT}}\ket{j} = \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
 $$
 
 という状態に変える操作でした。では、その逆を考えると、整数$a+b < 2^n$について
 
 $$
-\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i (a+b)k/2^n} \ket{k} \xrightarrow{\text{Q.F.T.}^{-1}} \ket{a+b}
+U_{\mathrm{QFT}}^{-1} \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i (a+b)k/2^n} \ket{k} = \ket{a+b}
 $$
 
-ができることがわかります。すべての量子ゲートには逆操作が存在するので、すべての量子サブルーチンは逆回しできます。
+ができることがわかります。
 
 左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。整数$a, b, k$の二進分解
 
@@ -293,71 +385,12 @@ $$
 $$
 
 となり、めでたく$\ket{a+b}$のフーリエ変換状態が実現されました。
-
-では以上の操作をQiskitで実装してみましょう。レジスタ1と2は4ビットとして、$a=9, b=13$を考えます。後の便利のために、まずは足し算のサブルーチン部分だけを関数化します。
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-# まずは全てインポート
-import numpy as np
-import matplotlib.pyplot as plt
-from IPython.display import Math
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, Aer, transpile
-from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
-from qc_workbook.show_state import statevector_expr
-from qc_workbook.optimized_additions import optimized_additions
-from qc_workbook.utils import operational_backend, find_best_chain
-
-print('notebook ready')
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
-def setup_addition(circuit, reg1, reg2, reg3):
-    """Set up an addition subroutine to a circuit with three registers
-    """
-    
-    # Equal superposition in register 3
-    # (Single-qubit gate methods in QuantumCircuit accepts a QuantumRegister or a
-    # list of qubit indices in addition to the usual single qubit index)
-    circuit.h(reg3)
-
-    # Smallest unit of phi
-    dphi = 2. * np.pi / (2 ** reg3.size)
-
-    # Loop over reg1 and reg2
-    for reg_ctrl in [reg1, reg2]:
-        # Loop over qubits in the control register (reg1 or reg2)
-        for ictrl, qctrl in enumerate(reg_ctrl):
-            # Loop over qubits in the target register (reg3)
-            for itarg, qtarg in enumerate(reg3):
-                # C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}
-                circuit.cp(dphi * (2 ** (ictrl + itarg)), qctrl, qtarg)
-
-    # Insert a barrier for better visualization
-    circuit.barrier()
-
-    # Inverse QFT
-    for j in range(reg3.size // 2):
-        circuit.swap(reg3[j], reg3[-1 - j])
-
-    for itarg in range(reg3.size):
-        for ictrl in range(itarg):
-            power = ictrl - itarg - 1 + reg3.size
-            circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
-        circuit.h(reg3[itarg])
-        
-print('Defined function setup_addition')
-```
-
-回路を作り、レジスタ1と2をそれぞれ入力9と13を表すように初期化します。
+実際に`setup_addition`を使って足し算をしてみましょう。レジスタ1と2は4ビットとして、$a=9, b=13$を考えます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
+:tags: []
 
 a = 9
 b = 13
@@ -367,7 +400,7 @@ n1 = np.ceil(np.log2(a + 1)).astype(int)
 n2 = np.ceil(np.log2(b + 1)).astype(int)
 n3 = np.ceil(np.log2(a + b + 1)).astype(int)
 
-print('n1 =', n1, 'n2 =', n2, 'n3 =', n3)
+print(f'n1 ={n1}, n2 ={n2}, n3 ={n3}')
 
 reg1 = QuantumRegister(n1, 'r1')
 reg2 = QuantumRegister(n2, 'r2')
@@ -391,10 +424,10 @@ setup_addition(circuit, reg1, reg2, reg3)
 circuit.draw('mpl', scale=0.6, fold=100)
 ```
 
-再び`statevector_expr`関数を使って終状態を確認してみましょう。入力と出力のレジスタの値が別々に表示されるよう、`register_sizes`という引数を利用して、13ビットの回路を$n_1 + n_2 + n_3$ビットに分けて解釈するよう指定します。
+再び`statevector_expr`関数を使って終状態を確認してみましょう。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
+:tags: []
 
 expr = statevector_expr(circuit, register_sizes=(n1, n2, n3))
 Math(expr)
@@ -423,7 +456,7 @@ $$
 この回路は下でもう一度作り直すので、回路を作る関数を定義しておきます。コード中`circuit.h()`に量子ビット番号ではなくレジスタオブジェクトを渡しています。`setup_addition`のコード中にも説明がありますが、Qiskitでは便利のために、`QuantumObject`クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
+:tags: []
 
 n1 = 4
 n2 = 4
@@ -455,6 +488,8 @@ Math(expr)
 上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。課題では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、[専用に効率化した等価回路](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py)を代わりに使用します。
 
 ```{code-cell} ipython3
+:tags: [remove-output]
+
 # 元の回路に測定を加える
 circuit.measure_all()
 circuit_original = circuit
