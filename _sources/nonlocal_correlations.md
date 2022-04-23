@@ -557,7 +557,7 @@ for idx in np.ndindex(ntheta, nchi):
     
     circuit = QuantumCircuit(3, name=f'circuit_{idx[0]}_{idx[1]}')
     
-    # Create a circuit that forms a Bell state and then measures the two qubits
+    # Create a circuit that forms a GHZ state and then measures the two qubits
     # along theta and chi bases
 
     ##################
