@@ -229,7 +229,7 @@ $$
 
 $\newcommand{tk}{\bar{k}}$
 
-全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために$k$の代わりに整数$\tk$とその二進数表現$\tk_{l}$を使って、
+全ての量子ビットに$\ket{0}$と$\ket{1}$が現れるので、右辺は振幅$\{c_k\}_k$を用いて$\sum_{k=0}^{2^n-1} c_k \ket{k}$の形で表せます。後の利便性のために計算基底のラベルを$k$ではなく$\tk$とし、$\tk$の二進数表現$\tk=\sum_{l=0}^{n-1} 2^l \tk_{l}$を使うと
 
 $$
 c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
@@ -269,41 +269,38 @@ $$
 
 足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです{cite}`quantum_addition`。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。
 
-このサブルーチンは整数$a$と$b$が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。
+このサブルーチンは自然数$a$と$b$が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。
 
 $$
-\ket{a}\ket{b}\ket{0} \rightarrow \ket{a}\ket{b}\ket{a+b}
+\ket{0}_{\mathrm{out}}\ket{b}_{\mathrm{in2}}\ket{a}_{\mathrm{in1}} \rightarrow \ket{a+b}_{\mathrm{out}}\ket{b}_{\mathrm{in2}}\ket{a}_{\mathrm{in1}}
 $$
 
 計算の流れをかいつまんで言うと、まず出力レジスタがequal superposition状態に初期化され、そこに二つの入力レジスタを制御とした$C[P]$ゲートがかけられていきます。ポイントは$C[P]$を利用することで出力レジスタの計算基底の位相に$a + b$が現れることで、最後にそこに対して逆フーリエ変換（Inverse QFT）を行うと、今度は出力レジスタが$a + b$に対応した計算基底状態になるという仕組みです。
 
-次のセルで定義された`setup_addition`関数がサブルーチンの実装です。
+次のセルで定義された`setup_addition`関数がサブルーチンの実装です。コード中`circuit.h()`に量子ビット番号ではなくレジスタオブジェクトを渡しています。`setup_addition`のコード中にも説明がありますが、Qiskitでは便利のために、`QuantumObject`クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
 def setup_addition(circuit, reg1, reg2, reg3):
-    """Set up an addition subroutine to a circuit with three registers
-    """
-    
-    # Equal superposition in register 3
-    # (Single-qubit gate methods in QuantumCircuit accepts a QuantumRegister or a
-    # list of qubit indices in addition to the usual single qubit index)
+    # reg3にequal superpositionを生成
+    # QuantumCircuitの1量子ビットゲートに対応するメソッド（circuit.hなど）に単一の量子ビットの代わりに
+    # レジスタや量子ビットのリストを渡すと、含まれる全ての量子ビットに同じゲートをかけてくれる
     circuit.h(reg3)
 
-    # Smallest unit of phi
+    # 位相の単位（dphiの整数倍の位相をCPゲートでかけていく）
     dphi = 2. * np.pi / (2 ** reg3.size)
 
-    # Loop over reg1 and reg2
+    # reg1とreg2それぞれの量子ビットで制御する
     for reg_ctrl in [reg1, reg2]:
-        # Loop over qubits in the control register (reg1 or reg2)
+        # 制御ビットに関するループ
         for ictrl, qctrl in enumerate(reg_ctrl):
-            # Loop over qubits in the target register (reg3)
+            # reg3の標的ビットに関するループ
             for itarg, qtarg in enumerate(reg3):
                 # C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}
                 circuit.cp(dphi * (2 ** (ictrl + itarg)), qctrl, qtarg)
 
-    # Insert a barrier for better visualization
+    # 回路図を見やすくするためのバリア
     circuit.barrier()
 
     # Inverse QFT
@@ -331,7 +328,7 @@ $$
 U_{\mathrm{QFT}}\ket{j} = \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
 $$
 
-という状態に変える操作でした。では、その逆を考えると、整数$a+b < 2^n$について
+という状態に変える操作でした。では、その逆を考えると、自然数$a+b < 2^n$について
 
 $$
 U_{\mathrm{QFT}}^{-1} \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i (a+b)k/2^n} \ket{k} = \ket{a+b}
@@ -339,7 +336,7 @@ $$
 
 ができることがわかります。
 
-左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。整数$a, b, k$の二進分解
+左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。自然数$a, b, k$の二進分解
 
 $$
 a = \sum_{m=0}^{n_1-1} 2^m a_m \\
@@ -359,14 +356,14 @@ $$
 
 $$
 \begin{align}
-\ket{a}\ket{b}\ket{0} & \xrightarrow{H^{\otimes n_3}} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \ket{k} \\
-& \xrightarrow{C^{1;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k_0}{2^{n_3}} \right) \ket{k} \\
-& \xrightarrow{C^{1;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+\ket{0}\ket{b}\ket{a} & \xrightarrow{H^{\otimes n_3}} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \ket{k} \ket{b}\ket{a} \\
+& \xrightarrow{C^{1;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+& \xrightarrow{C^{1;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots & \\
-& \xrightarrow{C^{1;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k}{2^{n_3}} \right) \ket{k} \\
-& \xrightarrow{C^{1;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k + 2a_1 k_0}{2^{n_3}} \right) \ket{k} \\
+& \xrightarrow{C^{1;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+& \xrightarrow{C^{1;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k + 2a_1 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots & \\
-& \xrightarrow{C^{1;n_1 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_1-1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a k}{2^{n_3}} \right) \ket{k}
+& \xrightarrow{C^{1;n_1 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_1-1} \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a}
 \end{align}
 $$
 
@@ -374,13 +371,13 @@ $$
 
 $$
 \begin{align}
-& \xrightarrow{C^{2;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 k_0}{2^{n_3}} \right) \ket{k} \\
-& \xrightarrow{C^{2;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+& \xrightarrow{C^{2;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+& \xrightarrow{C^{2;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots & \\
-& \xrightarrow{C^{2;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k}{2^{n_3}} \right) \ket{k} \\
-& \xrightarrow{C^{2;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k + 2b_1 k_0}{2^{n_3}} \right) \ket{k} \\
+& \xrightarrow{C^{2;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+& \xrightarrow{C^{2;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k + 2b_1 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots & \\
-& \xrightarrow{C^{2;n_2 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_2 - 1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b) k}{2^{n_3}} \right) \ket{k}
+& \xrightarrow{C^{2;n_2 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_2 - 1} \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b) k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a}
 \end{align}
 $$
 
@@ -395,33 +392,35 @@ $$
 a = 9
 b = 13
 
-# Calculate the necessary register sizes
+# 入力の値を二進数表現できる最小のビット数を計算
 n1 = np.ceil(np.log2(a + 1)).astype(int)
 n2 = np.ceil(np.log2(b + 1)).astype(int)
 n3 = np.ceil(np.log2(a + b + 1)).astype(int)
 
-print(f'n1 ={n1}, n2 ={n2}, n3 ={n3}')
+print(f'n1={n1}, n2={n2}, n3={n3}')
 
 reg1 = QuantumRegister(n1, 'r1')
 reg2 = QuantumRegister(n2, 'r2')
 reg3 = QuantumRegister(n3, 'r3')
 
-# QuantumCircuit can be instantiated from multiple registers
+# QuantumCircuitは量子ビット数の代わりにレジスタを渡しても作成できる
 circuit = QuantumCircuit(reg1, reg2, reg3)
 
-# Set register 1 to state |a>
+# reg1を|a>にする
 a_bits = np.unpackbits(np.asarray(a, dtype=np.uint8), bitorder='little')
 for idx in np.nonzero(a_bits)[0]:
     circuit.x(reg1[idx])
 
-# Set register 2 to state |b>
+# reg2を|b>にする
 b_bits = np.unpackbits(np.asarray(b, dtype=np.uint8), bitorder='little')
 for idx in np.nonzero(b_bits)[0]:
     circuit.x(reg2[idx])
-        
+
+# 足し算ルーチンを呼ぶ
 setup_addition(circuit, reg1, reg2, reg3)
 
-circuit.draw('mpl', scale=0.6, fold=100)
+# 回路図を確認
+circuit.draw('mpl')
 ```
 
 再び`statevector_expr`関数を使って終状態を確認してみましょう。
@@ -436,7 +435,7 @@ Math(expr)
 結果表示された状態は期待通り単一の計算基底$22:13:9$、つまりレジスタ1, 2, 3がそれぞれ$\ket{9}, \ket{13}, \ket{22}$となっている状態です（回路全体でビットを右から書いて状態を表示するため、レジスタも右から左に並びます）。つまり、めでたく状態の変遷
 
 $$
-\ket{9}\ket{13}\ket{0} \rightarrow \ket{9}\ket{13}\ket{22}
+\ket{0}\ket{13}\ket{9} \rightarrow \ket{22}\ket{13}\ket{9}
 $$
 
 が実現しました。
@@ -448,12 +447,10 @@ $$
 上では小学一年生ができる足し算を一回行うために13個の量子ビットと67個のゲートを利用しました。しかし、出来上がった回路は入力の値（9と13）によらず、4ビットで表現できる2つの整数すべてに対して成り立ちます（一般に2つの$n$ビット数の和は$n+1$ビットに収まるので、レジスタ3の大きさにも不足はありません）。さらに、量子演算は線形（つまり演算$U$について$U(\sum_{k} c_k \ket{k}) = \sum_{k} c_k U\ket{k}$）なので、初期状態としてレジスタ1と2がどんな計算基底の重ね合わせにあっても、それぞれの組み合わせに対してレジスタ3の状態が和を表してくれます。特に、初期状態がequal superpositionであれば、この回路は
 
 $$
-\sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{0} \rightarrow \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{j+k}
+\frac{1}{\sqrt{2^{n_1 + n_2}}} \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{0}\ket{k}\ket{j} \rightarrow \frac{1}{\sqrt{2^{n_1 + n_2}}} \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j+k}\ket{k}\ket{j}
 $$
 
 を行うので、$\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)$個のゲートで$2^{n_1+n_2}$通りの足し算を並列に行います。実際にこれを確認してみましょう。
-
-この回路は下でもう一度作り直すので、回路を作る関数を定義しておきます。コード中`circuit.h()`に量子ビット番号ではなくレジスタオブジェクトを渡しています。`setup_addition`のコード中にも説明がありますが、Qiskitでは便利のために、`QuantumObject`クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。
 
 ```{code-cell} ipython3
 :tags: []
@@ -466,10 +463,9 @@ reg1 = QuantumRegister(n1, 'r1')
 reg2 = QuantumRegister(n2, 'r2')
 reg3 = QuantumRegister(n3, 'r3')
 
-# QuantumCircuit can be instantiated from multiple registers
 circuit = QuantumCircuit(reg1, reg2, reg3)
 
-# Set register 1 and 2 to equal superpositions
+# reg1とreg2をequal superpositionにする
 circuit.h(reg1)
 circuit.h(reg2)
 
@@ -633,8 +629,8 @@ def plot_counts(counts, n1, n2, ax):
     for key, value in counts.items():
         heights.append(value)
 
-        # Keys of counts are single binaries; need to split them into three parts and interpret as decimals
-        # Example 4 + 4 digits:
+        # countsのキーはひとつなぎの二進数なので、出力, 入力2, 入力1の値が読み取れるように切り分ける
+        # 4 + 4 桁なら
         #  00110 0101 0001 -> 6 = 5 + 1
         #  n3    n2   n1
         x1 = int(key[-n1:], 2) # last n1 digits
