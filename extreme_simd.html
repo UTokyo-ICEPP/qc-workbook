@@ -120,7 +120,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  量子回路で計算をする
+  量子回路を作る
  </span>
 </p>
 <ul class="nav bd-sidenav">
@@ -690,7 +690,7 @@ H\ket{j_{n-1}}_{n-1} = \frac{1}{\sqrt{2}} \left[\ket{0}_{n-1} + e^{2 \pi i \frac
 = \frac{1}{\sqrt{2^n}} \left[\ket{0}_{n-1} + \exp \left(2 \pi i \frac{\sum_{m=0}^{n-1} 2^{m} j_m}{2^n}\right) \ket{1}_{n-1}\right] \cdots \left[\ket{0}_0 + \exp \left(2 \pi i \frac{2^{n-1} \sum_{m=0}^{0} 2^{m} j_m}{2^n}\right) \ket{1}_0\right].
 \end{split}\]</div>
 <p><span class="math notranslate nohighlight">\(\newcommand{tk}{\bar{k}}\)</span></p>
-<p>全ての量子ビットに<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>が現れるので、右辺は振幅<span class="math notranslate nohighlight">\(\{c_k\}\)</span>を用いて<span class="math notranslate nohighlight">\(\sum_{k=0}^{2^n-1} c_k \ket{k}\)</span>の形で表せます。後の利便性のために<span class="math notranslate nohighlight">\(k\)</span>の代わりに整数<span class="math notranslate nohighlight">\(\tk\)</span>とその二進数表現<span class="math notranslate nohighlight">\(\tk_{l}\)</span>を使って、</p>
+<p>全ての量子ビットに<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>が現れるので、右辺は振幅<span class="math notranslate nohighlight">\(\{c_k\}_k\)</span>を用いて<span class="math notranslate nohighlight">\(\sum_{k=0}^{2^n-1} c_k \ket{k}\)</span>の形で表せます。後の利便性のために計算基底のラベルを<span class="math notranslate nohighlight">\(k\)</span>ではなく<span class="math notranslate nohighlight">\(\tk\)</span>とし、<span class="math notranslate nohighlight">\(\tk\)</span>の二進数表現<span class="math notranslate nohighlight">\(\tk=\sum_{l=0}^{n-1} 2^l \tk_{l}\)</span>を使うと</p>
 <div class="math notranslate nohighlight">
 \[
 c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{l=0}^{n-1}\sum_{m=0}^{l} 2^{n-1-l+m} j_m \tk_l \right).
@@ -721,37 +721,34 @@ c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-
 <h2><a class="toc-backref" href="#id58">量子フーリエ変換による足し算</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p>これまで量子「計算機」の話をしていながら、単純であるはずの四則演算のやりかたについて触れていませんでした。理由は、実は量子コンピュータでは四則演算がそんなに単純でないから、です。</p>
 <p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです<span id="id9">[<a class="reference internal" href="#id25" title="Thomas G Draper. Addition on a quantum computer. 2000. arXiv:quant-ph/0008033.">Dra00</a>]</span>。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
-<p>このサブルーチンは整数<span class="math notranslate nohighlight">\(a\)</span>と<span class="math notranslate nohighlight">\(b\)</span>が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。</p>
+<p>このサブルーチンは自然数<span class="math notranslate nohighlight">\(a\)</span>と<span class="math notranslate nohighlight">\(b\)</span>が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。</p>
 <div class="math notranslate nohighlight">
 \[
-\ket{a}\ket{b}\ket{0} \rightarrow \ket{a}\ket{b}\ket{a+b}
+\ket{0}_{\mathrm{out}}\ket{b}_{\mathrm{in2}}\ket{a}_{\mathrm{in1}} \rightarrow \ket{a+b}_{\mathrm{out}}\ket{b}_{\mathrm{in2}}\ket{a}_{\mathrm{in1}}
 \]</div>
 <p>計算の流れをかいつまんで言うと、まず出力レジスタがequal superposition状態に初期化され、そこに二つの入力レジスタを制御とした<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートがかけられていきます。ポイントは<span class="math notranslate nohighlight">\(C[P]\)</span>を利用することで出力レジスタの計算基底の位相に<span class="math notranslate nohighlight">\(a + b\)</span>が現れることで、最後にそこに対して逆フーリエ変換（Inverse QFT）を行うと、今度は出力レジスタが<span class="math notranslate nohighlight">\(a + b\)</span>に対応した計算基底状態になるという仕組みです。</p>
-<p>次のセルで定義された<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>関数がサブルーチンの実装です。</p>
+<p>次のセルで定義された<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>関数がサブルーチンの実装です。コード中<code class="docutils literal notranslate"><span class="pre">circuit.h()</span></code>に量子ビット番号ではなくレジスタオブジェクトを渡しています。<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>のコード中にも説明がありますが、Qiskitでは便利のために、<code class="docutils literal notranslate"><span class="pre">QuantumObject</span></code>クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set up an addition subroutine to a circuit with three registers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1"># Equal superposition in register 3</span>
-    <span class="c1"># (Single-qubit gate methods in QuantumCircuit accepts a QuantumRegister or a</span>
-    <span class="c1"># list of qubit indices in addition to the usual single qubit index)</span>
+    <span class="c1"># reg3にequal superpositionを生成</span>
+    <span class="c1"># QuantumCircuitの1量子ビットゲートに対応するメソッド（circuit.hなど）に単一の量子ビットの代わりに</span>
+    <span class="c1"># レジスタや量子ビットのリストを渡すと、含まれる全ての量子ビットに同じゲートをかけてくれる</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">)</span>
 
-    <span class="c1"># Smallest unit of phi</span>
+    <span class="c1"># 位相の単位（dphiの整数倍の位相をCPゲートでかけていく）</span>
     <span class="n">dphi</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">reg3</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="c1"># Loop over reg1 and reg2</span>
+    <span class="c1"># reg1とreg2それぞれの量子ビットで制御する</span>
     <span class="k">for</span> <span class="n">reg_ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">]:</span>
-        <span class="c1"># Loop over qubits in the control register (reg1 or reg2)</span>
+        <span class="c1"># 制御ビットに関するループ</span>
         <span class="k">for</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg_ctrl</span><span class="p">):</span>
-            <span class="c1"># Loop over qubits in the target register (reg3)</span>
+            <span class="c1"># reg3の標的ビットに関するループ</span>
             <span class="k">for</span> <span class="n">itarg</span><span class="p">,</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg3</span><span class="p">):</span>
                 <span class="c1"># C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}</span>
                 <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">ictrl</span> <span class="o">+</span> <span class="n">itarg</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
 
-    <span class="c1"># Insert a barrier for better visualization</span>
+    <span class="c1"># 回路図を見やすくするためのバリア</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
 
     <span class="c1"># Inverse QFT</span>
@@ -778,13 +775,13 @@ c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-
 \[
 U_{\mathrm{QFT}}\ket{j} = \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i jk/2^n} \ket{k}
 \]</div>
-<p>という状態に変える操作でした。では、その逆を考えると、整数<span class="math notranslate nohighlight">\(a+b &lt; 2^n\)</span>について</p>
+<p>という状態に変える操作でした。では、その逆を考えると、自然数<span class="math notranslate nohighlight">\(a+b &lt; 2^n\)</span>について</p>
 <div class="math notranslate nohighlight">
 \[
 U_{\mathrm{QFT}}^{-1} \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i (a+b)k/2^n} \ket{k} = \ket{a+b}
 \]</div>
 <p>ができることがわかります。</p>
-<p>左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。整数<span class="math notranslate nohighlight">\(a, b, k\)</span>の二進分解</p>
+<p>左辺の状態を作るには、これも量子フーリエ変換のアルゴリズムを参考にします。自然数<span class="math notranslate nohighlight">\(a, b, k\)</span>の二進分解</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 a = \sum_{m=0}^{n_1-1} 2^m a_m \\
@@ -801,27 +798,27 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\ket{a}\ket{b}\ket{0} &amp; \xrightarrow{H^{\otimes n_3}} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \ket{k} \\
-&amp; \xrightarrow{C^{1;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k_0}{2^{n_3}} \right) \ket{k} \\
-&amp; \xrightarrow{C^{1;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+\ket{0}\ket{b}\ket{a} &amp; \xrightarrow{H^{\otimes n_3}} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \ket{k} \ket{b}\ket{a} \\
+&amp; \xrightarrow{C^{1;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+&amp; \xrightarrow{C^{1;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots &amp; \\
-&amp; \xrightarrow{C^{1;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k}{2^{n_3}} \right) \ket{k} \\
-&amp; \xrightarrow{C^{1;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k + 2a_1 k_0}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{1;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+&amp; \xrightarrow{C^{1;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a_0 k + 2a_1 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots &amp; \\
-&amp; \xrightarrow{C^{1;n_1 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_1-1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a k}{2^{n_3}} \right) \ket{k}
+&amp; \xrightarrow{C^{1;n_1 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_1-1} \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{a k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a}
 \end{align}
 \end{split}\]</div>
 <p>続いてレジスタ2のビットを制御として、同様の<span class="math notranslate nohighlight">\(C[P]\)</span>ゲートをかけていくと、</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-&amp; \xrightarrow{C^{2;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 k_0}{2^{n_3}} \right) \ket{k} \\
-&amp; \xrightarrow{C^{2;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{2;0}_{3;0}[P(2\pi \cdot 2^0 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+&amp; \xrightarrow{C^{2;0}_{3;1}[P(2\pi \cdot 2^0 \cdot 2^1/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{ak + b_0 (k_0 + 2k_1)}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots &amp; \\
-&amp; \xrightarrow{C^{2;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k}{2^{n_3}} \right) \ket{k} \\
-&amp; \xrightarrow{C^{2;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k + 2b_1 k_0}{2^{n_3}} \right) \ket{k} \\
+&amp; \xrightarrow{C^{2;0}_{3;n_3 - 1}[P(2\pi \cdot 2^0 \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
+&amp; \xrightarrow{C^{2;1}_{3;0}[P(2\pi \cdot 2^1 \cdot 2^0/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b_0) k + 2b_1 k_0}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a} \\
 \cdots &amp; \\
-&amp; \xrightarrow{C^{2;n_2 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_2 - 1} \cdot 2^{n_3 - 1}/2^{n_3})]} \ket{a}\ket{b} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b) k}{2^{n_3}} \right) \ket{k}
+&amp; \xrightarrow{C^{2;n_2 - 1}_{3;n_3 - 1}[P(2\pi \cdot 2^{n_2 - 1} \cdot 2^{n_3 - 1}/2^{n_3})]} \frac{1}{\sqrt{2^{n_3}}} \sum_{k=0}^{2^{n_3}-1} \exp \left( 2\pi i \frac{(a + b) k}{2^{n_3}} \right) \ket{k} \ket{b}\ket{a}
 \end{align}
 \end{split}\]</div>
 <p>となり、めでたく<span class="math notranslate nohighlight">\(\ket{a+b}\)</span>のフーリエ変換状態が実現されました。</p>
@@ -832,38 +829,40 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">9</span>
 <span class="n">b</span> <span class="o">=</span> <span class="mi">13</span>
 
-<span class="c1"># Calculate the necessary register sizes</span>
+<span class="c1"># 入力の値を二進数表現できる最小のビット数を計算</span>
 <span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">n2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">n3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;n1 =</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, n2 =</span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">, n3 =</span><span class="si">{</span><span class="n">n3</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;n1=</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, n2=</span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">, n3=</span><span class="si">{</span><span class="n">n3</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">reg1</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">)</span>
 <span class="n">reg2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">)</span>
 <span class="n">reg3</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="s1">&#39;r3&#39;</span><span class="p">)</span>
 
-<span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
+<span class="c1"># QuantumCircuitは量子ビット数の代わりにレジスタを渡しても作成できる</span>
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
-<span class="c1"># Set register 1 to state |a&gt;</span>
+<span class="c1"># reg1を|a&gt;にする</span>
 <span class="n">a_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">a_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg1</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
 
-<span class="c1"># Set register 2 to state |b&gt;</span>
+<span class="c1"># reg2を|b&gt;にする</span>
 <span class="n">b_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">b_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">reg2</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
-        
+
+<span class="c1"># 足し算ルーチンを呼ぶ</span>
 <span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
-<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">fold</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># 回路図を確認</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n1 =4, n2 =4, n3 =5
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n1=4, n2=4, n3=5
 </pre></div>
 </div>
 <img alt="_images/extreme_simd_11_1.png" src="_images/extreme_simd_11_1.png" />
@@ -885,7 +884,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>結果表示された状態は期待通り単一の計算基底<span class="math notranslate nohighlight">\(22:13:9\)</span>、つまりレジスタ1, 2, 3がそれぞれ<span class="math notranslate nohighlight">\(\ket{9}, \ket{13}, \ket{22}\)</span>となっている状態です（回路全体でビットを右から書いて状態を表示するため、レジスタも右から左に並びます）。つまり、めでたく状態の変遷</p>
 <div class="math notranslate nohighlight">
 \[
-\ket{9}\ket{13}\ket{0} \rightarrow \ket{9}\ket{13}\ket{22}
+\ket{0}\ket{13}\ket{9} \rightarrow \ket{22}\ket{13}\ket{9}
 \]</div>
 <p>が実現しました。</p>
 </div>
@@ -894,10 +893,9 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>上では小学一年生ができる足し算を一回行うために13個の量子ビットと67個のゲートを利用しました。しかし、出来上がった回路は入力の値（9と13）によらず、4ビットで表現できる2つの整数すべてに対して成り立ちます（一般に2つの<span class="math notranslate nohighlight">\(n\)</span>ビット数の和は<span class="math notranslate nohighlight">\(n+1\)</span>ビットに収まるので、レジスタ3の大きさにも不足はありません）。さらに、量子演算は線形（つまり演算<span class="math notranslate nohighlight">\(U\)</span>について<span class="math notranslate nohighlight">\(U(\sum_{k} c_k \ket{k}) = \sum_{k} c_k U\ket{k}\)</span>）なので、初期状態としてレジスタ1と2がどんな計算基底の重ね合わせにあっても、それぞれの組み合わせに対してレジスタ3の状態が和を表してくれます。特に、初期状態がequal superpositionであれば、この回路は</p>
 <div class="math notranslate nohighlight">
 \[
-\sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{0} \rightarrow \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j}\ket{k}\ket{j+k}
+\frac{1}{\sqrt{2^{n_1 + n_2}}} \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{0}\ket{k}\ket{j} \rightarrow \frac{1}{\sqrt{2^{n_1 + n_2}}} \sum_{j=0}^{2^{n_1}-1} \sum_{k=0}^{2^{n_2}-1} \ket{j+k}\ket{k}\ket{j}
 \]</div>
 <p>を行うので、<span class="math notranslate nohighlight">\(\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)\)</span>個のゲートで<span class="math notranslate nohighlight">\(2^{n_1+n_2}\)</span>通りの足し算を並列に行います。実際にこれを確認してみましょう。</p>
-<p>この回路は下でもう一度作り直すので、回路を作る関数を定義しておきます。コード中<code class="docutils literal notranslate"><span class="pre">circuit.h()</span></code>に量子ビット番号ではなくレジスタオブジェクトを渡しています。<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>のコード中にも説明がありますが、Qiskitでは便利のために、<code class="docutils literal notranslate"><span class="pre">QuantumObject</span></code>クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span>
@@ -908,10 +906,9 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <span class="n">reg2</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">)</span>
 <span class="n">reg3</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="s1">&#39;r3&#39;</span><span class="p">)</span>
 
-<span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
 
-<span class="c1"># Set register 1 and 2 to equal superpositions</span>
+<span class="c1"># reg1とreg2をequal superpositionにする</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
 
@@ -1062,8 +1059,8 @@ Number of operations in the optimized circuit: 331
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">heights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-        <span class="c1"># Keys of counts are single binaries; need to split them into three parts and interpret as decimals</span>
-        <span class="c1"># Example 4 + 4 digits:</span>
+        <span class="c1"># countsのキーはひとつなぎの二進数なので、出力, 入力2, 入力1の値が読み取れるように切り分ける</span>
+        <span class="c1"># 4 + 4 桁なら</span>
         <span class="c1">#  00110 0101 0001 -&gt; 6 = 5 + 1</span>
         <span class="c1">#  n3    n2   n1</span>
         <span class="n">x1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="n">n1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># last n1 digits</span>
