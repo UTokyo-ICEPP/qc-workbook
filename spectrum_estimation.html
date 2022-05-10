@@ -460,23 +460,23 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id50">エネルギースペクトルを求める</a></p></li>
-<li><p><a class="reference internal" href="#id5" id="id51">ハイゼンベルグモデル再考</a></p></li>
-<li><p><a class="reference internal" href="#id6" id="id52">位相推定によるスペクトル分解</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id53">問題1: スペクトル推定を実装し、厳密解と照らし合わせる</a></p></li>
-<li><p><a class="reference internal" href="#id8" id="id54">問題2: 非自明な系の振る舞いを調べる</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id55">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id51">エネルギースペクトルを求める</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id52">ハイゼンベルグモデル再考</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id53">位相推定によるスペクトル分解</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id54">問題1: スペクトル推定を実装し、厳密解と照らし合わせる</a></p></li>
+<li><p><a class="reference internal" href="#id8" id="id55">問題2: 非自明な系の振る舞いを調べる</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id56">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id50">エネルギースペクトルを求める</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id51">エネルギースペクトルを求める</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="vqe.html"><span class="doc">後の実習</span></a>にも現れるように、物理学や化学において、系のエネルギー固有値（スペクトル）と対応する固有状態を求めるということは非常に重要な問題です。系のエネルギースペクトルを求めることとは、系を表すハミルトニアンを決め、それを対角化することに対応します。</p>
 <p>しかし、<a class="reference internal" href="dynamics_simulation.html"><span class="doc">前回の実習</span></a>でも出てきたように、一般的に量子系の次元数は莫大で、ハミルトニアンの対角化の肝となる逆行列の計算をまともに行うことはできません。同実習では、そのような場合でも、ハミルトニアンが効率的な鈴木・トロッター分解を許す形であれば、量子コンピュータを使って時間発展シミュレーションを行えるということを示しました。ただし、このシミュレーションでは、系のエネルギー固有値や固有状態を明示的に利用しませんでした。</p>
 <p>実は、同じ時間発展シミュレーションの手法と、<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で登場した位相推定の手法を組み合わせると、エネルギー固有値も数値的に求めることができます<span id="id4">[<a class="reference internal" href="#id28" title="Alán Aspuru-Guzik, Anthony D. Dutoi, Peter J. Love, and Martin Head-Gordon. Simulated quantum computation of molecular energies. Science, 309(5741):1704–1707, 2005. URL: https://science.sciencemag.org/content/309/5741/1704, arXiv:https://science.sciencemag.org/content/309/5741/1704.full.pdf, doi:10.1126/science.1113479.">AGDLHG05</a>]</span>。さらに、工夫によっては対応する固有状態も調べられます。ここでは外部磁場のかかったハイゼンベルグモデルを題材に、位相推定によるエネルギースペクトル分解をしてみましょう。</p>
 </div>
 <div class="section" id="id5">
-<h2><a class="toc-backref" href="#id51">ハイゼンベルグモデル再考</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id52">ハイゼンベルグモデル再考</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>前回登場したハイゼンベルグモデルのハミルトニアンは</p>
 <div class="math notranslate nohighlight">
 \[
@@ -550,7 +550,7 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 <p>最後の部分で、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_statevector</span></code>関数</a>を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値<span class="math notranslate nohighlight">\(-2J\)</span>）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値<span class="math notranslate nohighlight">\(6J\)</span>）は<span class="math notranslate nohighlight">\(1/\sqrt{2} (-\ket{01} + \ket{10})\)</span>です。</p>
 </div>
 <div class="section" id="id6">
-<h2><a class="toc-backref" href="#id52">位相推定によるスペクトル分解</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id53">位相推定によるスペクトル分解</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>それでは本題に入りましょう。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で登場した下の図において、<span class="math notranslate nohighlight">\(U\)</span>が何らかのハミルトニアン<span class="math notranslate nohighlight">\(H\)</span>による適当な時間<span class="math notranslate nohighlight">\(\tau\)</span>の時間発展演算子<span class="math notranslate nohighlight">\(U_H(-\tau)\)</span>である場合、何が言えるでしょうか。</p>
 <a class="reference internal image-reference" href="_images/qpe_wo_iqft.png"><img alt="qpe_wo_iqft" class="align-center" src="_images/qpe_wo_iqft.png" style="width: 500px;" /></a>
 <p>以下では、図中上のレジスタ（初期状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>）を読み出し(readout)レジスタR、下のレジスタ（初期状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>）を状態(state)レジスタSと呼びます。RとSのビット数をそれぞれ<span class="math notranslate nohighlight">\(n_R\)</span>, <span class="math notranslate nohighlight">\(n_S\)</span>とします。また、図では読み出しレジスタの最低位（1の位）に対応するビットが一番下に描かれており、Qiskitでの描画法と逆になっていることに注意してください。</p>
@@ -581,10 +581,10 @@ U_H(-\tau) \ket{\psi} = \exp\left(i\omega \tau \Theta\right) \ket{\psi}
 \]</div>
 <p>となります。したがって、<span class="math notranslate nohighlight">\(\Theta\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\{\ket{\phi_m}\}\)</span>で<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-spectral-decomposition">
-<span class="eqno">(18)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
+<span class="eqno">(19)<a class="headerlink" href="#equation-spectral-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}\]</div>
 <p>と書けるなら、対応する固有値を<span class="math notranslate nohighlight">\(\{\theta_m\}\)</span>とし、<span class="math notranslate nohighlight">\(\kappa_m = 2^{n_R} \theta_m\)</span>を用いて</p>
 <div class="math notranslate nohighlight" id="equation-spectrum-estimation-final">
-<span class="eqno">(19)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(20)<a class="headerlink" href="#equation-spectrum-estimation-final" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
 \text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S &amp; = \frac{1}{2^{n_R}} \sum_{k=0}^{2^{n_R} - 1} \sum_{j=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m \exp\left[\frac{2 \pi i j}{2^{n_R}} (\kappa_m - k)\right] \ket{k}_R \ket{\phi_m}_S \\
 &amp; = \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} \psi_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S.
 \end{align}\end{split}\]</div>
@@ -609,11 +609,11 @@ H = \sum_{k} h_k \sigma_k
 \mu = \min_{s_k = \pm 1} \left| \sum_{k} s_k h_k \right|
 \]</div>
 <p>以上です。この値を求めるには原理的には<span class="math notranslate nohighlight">\(2^{L}\)</span>（<span class="math notranslate nohighlight">\(L\)</span>はハミルトニアンの項数）通りの組み合わせを調べる必要がありますが、実際のハミルトニアンは通常そこまで複雑な形をしていないので、これも難しくないと考えられます。レジスタRのビット数<span class="math notranslate nohighlight">\(n_R\)</span>は<span class="math notranslate nohighlight">\(2^{n_R}\mu/(\hbar \omega)\)</span>が読みだせるように設定します。</p>
-<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(18)</a>で<span class="math notranslate nohighlight">\(\psi_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
+<p>これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子<span class="math notranslate nohighlight">\(U\)</span>を作用させる対象の状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>です。第<span class="math notranslate nohighlight">\(m\)</span>準位のエネルギー固有値を知りたい場合、式<a class="reference internal" href="#equation-spectral-decomposition">(19)</a>で<span class="math notranslate nohighlight">\(\psi_m \neq 0\)</span>でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の<span class="math notranslate nohighlight">\(m\)</span>についてそのような状態を準備することはできません。</p>
 <p>一方、系の最低エネルギー<span class="math notranslate nohighlight">\(\hbar \omega \theta_0\)</span>なら、<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>の手法などを用いて最低エネルギー状態の近似を実現し、それをSの初期状態とすることで、比較的に安定して求めることは可能です。そのため、上の手法は原理的にはスペクトルの完全な分解に使えますが、実際には最低エネルギーとその固有ベクトルを正確に求めるために利用することが多いと考えられます。</p>
 </div>
 <div class="section" id="id7">
-<h2><a class="toc-backref" href="#id53">問題1: スペクトル推定を実装し、厳密解と照らし合わせる</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id54">問題1: スペクトル推定を実装し、厳密解と照らし合わせる</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>それでは、位相推定を利用してハイゼンベルグモデルのハミルトニアンのスペクトルを求めてみましょう。</p>
 <p><span class="math notranslate nohighlight">\(U_H(-\tau)\)</span>を量子コンピュータ上で計算するために、鈴木・トロッター分解を使います。<span class="math notranslate nohighlight">\(ZZ, XX, YY\)</span>回転ゲートの実装法は<a class="reference internal" href="dynamics_simulation.html"><span class="doc">物理系を表現する</span></a>を参照してください。</p>
 <p>次のセルでは鈴木・トロッター分解の1ステップ（トロッターステップと呼ばれます）に対応する関数を返す関数を定義しています。やや込み入った構造ですが、こうすることで返される関数は1ステップ分の位相だけを引数に取る形にでき、ハイゼンベルグモデルの物理とスペクトル推定のアルゴリズムを分けて考えることができます。外側の関数の引数である<code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">hbar_omega</span></code>は内側の関数の中でも使用できます。</p>
@@ -728,7 +728,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 <p>まずは、上で厳密解を求めた<span class="math notranslate nohighlight">\(n=2, g=0\)</span>のケースを調べます。状態レジスタの初期状態を</p>
 <div class="math notranslate nohighlight" id="equation-two-qubit-init">
-<span class="eqno">(20)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
+<span class="eqno">(21)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
 <p>とします。ここで<span class="math notranslate nohighlight">\(\ket{\phi_i}\)</span>は最初に求めた固有ベクトルの4つの厳密解です。</p>
 <p>今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を<span class="math notranslate nohighlight">\(\hbar \omega = 16J\)</span>として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が<span class="math notranslate nohighlight">\(2^{n_R} (6/16)\)</span>なので、<span class="math notranslate nohighlight">\(n_R = 1 + 3\)</span>とすればオーバーフローを回避できます。</p>
 <div class="cell tag_remove-output docutils container">
@@ -770,7 +770,7 @@ H = \sum_{k} h_k \sigma_k
 </div>
 </div>
 </div>
-<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(20)</a>なので、回路の終状態は</p>
+<p>状態レジスタの初期状態が式<a class="reference internal" href="#equation-two-qubit-init">(21)</a>なので、回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \frac{1}{2} \ket{-2}_{R} \ket{00}_{S} - \frac{1}{2\sqrt{2}} \ket{-2}_{R} \left( \ket{01}_{S} + \ket{10}_{S} \right) + \frac{1}{2} \ket{-2}_{R} \ket{11}_{S} - \frac{1}{2\sqrt{2}} \ket{6}_{R} \left( \ket{01}_{S} - \ket{10}_{S} \right)
@@ -784,20 +784,20 @@ H = \sum_{k} h_k \sigma_k
 </ul>
 </div>
 <div class="section" id="id8">
-<h2><a class="toc-backref" href="#id54">問題2: 非自明な系の振る舞いを調べる</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id55">問題2: 非自明な系の振る舞いを調べる</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p>今度は<span class="math notranslate nohighlight">\(n=4\)</span>のハイゼンベルグモデルで、全エネルギースペクトルを<span class="math notranslate nohighlight">\(g\)</span>の関数として求めてみましょう。<span class="math notranslate nohighlight">\(n=4\)</span>なので最初にやったような対角化もまだ簡単にできますが、ここではあえて量子計算のみに頼ってみます。</p>
 <p>全てのエネルギー固有値を知るためにはSの初期状態を工夫しなければいけませんが、今回は事前の情報がないので、しらみつぶし戦略をとります。つまり、計算基底<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{15}\)</span>までをそれぞれ初期状態としてスペクトル推定を繰り返し、得られる情報をつなぎ合わせて全体のスペクトルを求めます。</p>
-<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(19)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l}\)</span> <span class="math notranslate nohighlight">\((l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
+<p>全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式<a class="reference internal" href="#equation-spectrum-estimation-final">(20)</a>で<span class="math notranslate nohighlight">\(\ket{\psi} = \ket{l}\)</span> <span class="math notranslate nohighlight">\((l=0,\dots,2^{n_S} - 1)\)</span>とおき、</p>
 <div class="math notranslate nohighlight" id="equation-phim-decomposition">
-<span class="eqno">(21)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}\]</div>
+<span class="eqno">(22)<a class="headerlink" href="#equation-phim-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}\]</div>
 <p>とします。すると回路の終状態は</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} c^l_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S
 \]</div>
-<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(21)</a>が成り立つとき</p>
+<p>となります。実は式<a class="reference internal" href="#equation-phim-decomposition">(22)</a>が成り立つとき</p>
 <div class="math notranslate nohighlight" id="equation-l-decomposition">
-<span class="eqno">(22)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}\]</div>
+<span class="eqno">(23)<a class="headerlink" href="#equation-l-decomposition" title="Permalink to this equation">¶</a></span>\[\ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}\]</div>
 <p>も成り立つ<a class="footnote-reference brackets" href="#unitarity" id="id9">1</a>ので、終状態の回路をRとSの計算基底で測定し、<span class="math notranslate nohighlight">\(k, h\)</span>を得る確率を<span class="math notranslate nohighlight">\(P_l(k, h)\)</span>とすると</p>
 <div class="math notranslate nohighlight">
 \[
@@ -966,7 +966,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 </ul>
 <p><strong>ヒント</strong></p>
 <p>（<span class="math notranslate nohighlight">\(P(k)\)</span>の導出に関して）
-式<a class="reference internal" href="#equation-phim-decomposition">(21)</a>と<a class="reference internal" href="#equation-l-decomposition">(22)</a>を眺めると、</p>
+式<a class="reference internal" href="#equation-phim-decomposition">(22)</a>と<a class="reference internal" href="#equation-l-decomposition">(23)</a>を眺めると、</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{l=0}^{2^{n_S} - 1} c^l_m c^{l*}_n = \delta_{mn}
@@ -974,13 +974,14 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <p>が成り立つことがわかります。ここで<span class="math notranslate nohighlight">\(\delta_{mn}\)</span>はクロネッカーの<span class="math notranslate nohighlight">\(\delta\)</span>記号で、<span class="math notranslate nohighlight">\(m=n\)</span>のとき1、それ以外では0の値を持つ因子です。</p>
 </div>
 <div class="section" id="id10">
-<h2><a class="toc-backref" href="#id55">参考文献</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
-<p id="id11"><dl class="citation">
+<h2><a class="toc-backref" href="#id56">参考文献</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="docutils container" id="id11">
+<dl class="citation">
 <dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id4">AGDLHG05</a></span></dt>
 <dd><p>Alán Aspuru-Guzik, Anthony D. Dutoi, Peter J. Love, and Martin Head-Gordon. Simulated quantum computation of molecular energies. <em>Science</em>, 309(5741):1704–1707, 2005. URL: <a class="reference external" href="https://science.sciencemag.org/content/309/5741/1704">https://science.sciencemag.org/content/309/5741/1704</a>, <a class="reference external" href="https://arxiv.org/abs/https://science.sciencemag.org/content/309/5741/1704.full.pdf">arXiv:https://science.sciencemag.org/content/309/5741/1704.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1126/science.1113479">doi:10.1126/science.1113479</a>.</p>
 </dd>
 </dl>
-</p>
+</div>
 <dl class="footnote brackets">
 <dt class="label" id="unitarity"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
 <dd><p>これは<span class="math notranslate nohighlight">\(\{\ket{l}\}\)</span>と<span class="math notranslate nohighlight">\(\{\ket{\phi_m}\}\)</span>がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。</p>

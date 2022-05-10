@@ -377,7 +377,12 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id6">
+  <a class="reference internal nav-link" href="#measurement-error-mitigation">
+   測定エラーの緩和
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
    参考文献
   </a>
  </li>
@@ -412,7 +417,12 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id6">
+  <a class="reference internal nav-link" href="#measurement-error-mitigation">
+   測定エラーの緩和
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
    参考文献
   </a>
  </li>
@@ -440,6 +450,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit_experiments.library</span> <span class="kn">import</span> <span class="n">CorrelatedReadoutError</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.optimized_additions</span> <span class="kn">import</span> <span class="n">optimized_additions</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span><span class="p">,</span> <span class="n">find_best_chain</span>
 
@@ -495,11 +506,11 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="c1"># Loop over reg1 and reg2</span>
     <span class="k">for</span> <span class="n">reg_ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">]:</span>
         <span class="c1"># Loop over qubits in the control register (reg1 or reg2)</span>
-        <span class="k">for</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="n">reg_ctrl</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">qctrl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg_ctrl</span><span class="p">):</span>
             <span class="c1"># Loop over qubits in the target register (reg3)</span>
-            <span class="k">for</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="n">reg3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">itarg</span><span class="p">,</span> <span class="n">qtarg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reg3</span><span class="p">):</span>
                 <span class="c1"># C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}</span>
-                <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">qctrl</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">qtarg</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
+                <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">ictrl</span> <span class="o">+</span> <span class="n">itarg</span><span class="p">)),</span> <span class="n">qctrl</span><span class="p">,</span> <span class="n">qtarg</span><span class="p">)</span>
 
     <span class="c1"># Insert a barrier for better visualization</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
@@ -532,9 +543,6 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
 
     <span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">ibit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">creg</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">ibit</span><span class="p">,</span> <span class="n">ibit</span><span class="p">)</span>
     
     <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
@@ -651,7 +659,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<p>ちなみに、<code class="docutils literal notranslate"><span class="pre">ibm_kawasaki</span></code>という実機で同じコードを走らせると、下のような結果が得られます。</p>
+<p>ちなみに、<code class="docutils literal notranslate"><span class="pre">ibm_kawasaki</span></code>というマシンで同じコードを走らせると、下のような結果が得られます。</p>
 <pre>
 Original circuit with n1, n2 = 4, 4
   Transpiling..
@@ -692,7 +700,7 @@ Optimized circuit <b>(1, 1)</b>: 26071 / 32000 = <b>0.815 +- 0.002</b>
 <div class="section" id="quantum-volume">
 <h2>Quantum Volume<a class="headerlink" href="#quantum-volume" title="Permalink to this headline">¶</a></h2>
 <p>量子コンピュータがエラーを起こす頻度は、マシンによって違います。さらに言えば個々の量子ビットごとに1量子ビットゲートのエラー率と測定のエラー率<a class="footnote-reference brackets" href="#measurement-error" id="id3">1</a>があり、また量子ビット間の接続ごとにCNOTのエラー率があります。これまで使ってきた<code class="docutils literal notranslate"><span class="pre">find_best_chain()</span></code>という関数は、与えられたバックエンドの中でこれらのエラー率の積が最も小さくなるような量子ビットの並びを選んでくるものでした。</p>
-<p>マシン自体のパフォーマンスを比較するには、<code class="docutils literal notranslate"><span class="pre">find_best_chain</span></code>でやるように各マシンの中から最も性能の良い量子ビットの組み合わせを選んできて、その上でベンチマークとなる回路を実行します。IBMQではそのようにして量子コンピュータ一つ一つをQuantum Volume（QV、量子体積）<span id="id4">[<a class="reference internal" href="#id17" title="Andrew W. Cross, Lev S. Bishop, Sarah Sheldon, Paul D. Nation, and Jay M. Gambetta. Validating quantum computers using randomized model circuits. Phys. Rev. A, 100:032328, Sep 2019. URL: https://link.aps.org/doi/10.1103/PhysRevA.100.032328, doi:10.1103/PhysRevA.100.032328.">CBS+19</a>]</span>という指標で評価しています。<a class="footnote-reference brackets" href="#qv" id="id5">2</a>。QVは簡単に言えば「量子コンピュータ上である特定の形を持った回路を安定的に実行できる量子ビット数と回路の長さ」を測っていて、QVの値が大きいマシンほど高性能と言えます。
+<p>マシン自体のパフォーマンスを比較するには、<code class="docutils literal notranslate"><span class="pre">find_best_chain</span></code>でやるように各マシンの中から最も性能の良い量子ビットの組み合わせを選んできて、その上でベンチマークとなる回路を実行します。IBMQではそのようにして量子コンピュータ一つ一つをQuantum Volume（QV、量子体積）<span id="id4">[<a class="reference internal" href="#id19" title="Andrew W. Cross, Lev S. Bishop, Sarah Sheldon, Paul D. Nation, and Jay M. Gambetta. Validating quantum computers using randomized model circuits. Phys. Rev. A, 100:032328, Sep 2019. URL: https://link.aps.org/doi/10.1103/PhysRevA.100.032328, doi:10.1103/PhysRevA.100.032328.">CBS+19</a>]</span>という指標で評価しています。<a class="footnote-reference brackets" href="#qv" id="id5">2</a>。QVは簡単に言えば「量子コンピュータ上である特定の形を持った回路を安定的に実行できる量子ビット数と回路の長さ」を測っていて、QVの値が大きいマシンほど高性能と言えます。
 QVにはゲートや測定のエラー率だけでなく、トランスパイラの性能なども関係します。2022年4月現在、IBMQのマシンでQVの最大値は128です。</p>
 <p><code class="docutils literal notranslate"><span class="pre">open</span></code>のプロバイダで使える5量子ビットマシンのうちでも、QVの値が異なるものがあるので、1ビット+1ビットの自明な例にはなってしまいますが、バックエンドを選んで足し算の正答率を比較してみましょう。</p>
 <div class="cell tag_remove-output tag_raises-exception docutils container">
@@ -714,15 +722,19 @@ QVにはゲートや測定のエラー率だけでなく、トランスパイラ
 <span class="k">for</span> <span class="n">backend</span> <span class="ow">in</span> <span class="p">[</span><span class="n">backend_qv8</span><span class="p">,</span> <span class="n">backend_qv16</span><span class="p">,</span> <span class="n">backend_qv32</span><span class="p">]:</span>
     <span class="n">circuits</span> <span class="o">=</span> <span class="n">make_circuits</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
     <span class="n">shots</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">max_shots</span>
-    <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
     <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    
+<span class="k">for</span> <span class="n">job</span><span class="p">,</span> <span class="n">qv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;QV </span><span class="si">{</span><span class="n">qv</span><span class="si">}</span><span class="s1"> job&#39;</span><span class="p">)</span>
+    <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">job</span><span class="p">,</span> <span class="n">qv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]):</span>
-
     <span class="n">counts_list</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
     
     <span class="k">for</span> <span class="n">counts</span><span class="p">,</span> <span class="n">ctype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">counts_list</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="s1">&#39;Optimized&#39;</span><span class="p">]):</span>
         <span class="n">n_correct</span> <span class="o">=</span> <span class="n">count_correct_additions</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">shots</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="n">r_correct</span> <span class="o">=</span> <span class="n">n_correct</span> <span class="o">/</span> <span class="n">shots</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;QV </span><span class="si">{</span><span class="n">qv</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">ctype</span><span class="si">}</span><span class="s1"> circuit (</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">): </span><span class="si">{</span><span class="n">n_correct</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">shots</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">r_correct</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> +- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_correct</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">r_correct</span><span class="p">)</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
@@ -746,20 +758,72 @@ QVにはゲートや測定のエラー率だけでなく、トランスパイラ
 </div>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>参考文献<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p id="id7"><dl class="citation">
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id4">CBS+19</a></span></dt>
+<div class="section" id="measurement-error-mitigation">
+<span id="id6"></span><h2>測定エラーの緩和<a class="headerlink" href="#measurement-error-mitigation" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="extreme_simd.html"><span class="doc">計算をする量子回路の実装</span></a>でも軽く触れましたが、現状ではCNOTゲートのエラー率は1量子ビットゲートのエラー率より一桁程度高くなっています。CNOTを含むゲートで発生するエラーは本格的なエラー訂正が可能になるまでは何も対処しようがなく、そのため上ではCNOTを極力減らす回路を書きました。しかし、そのようなアプローチには限界があります。</p>
+<p>一方、測定におけるエラーは、エラー率が実は決して無視できない高さであると同時に、統計的にだいたい再現性がある（あるビット列<span class="math notranslate nohighlight">\(x\)</span>が得られるべき状態から別のビット列<span class="math notranslate nohighlight">\(y\)</span>が得られる確率が、状態の生成法に依存しにくい）という性質があります。そのため、測定エラーは事後的に緩和（部分的補正）できます。そのためには<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの<span class="math notranslate nohighlight">\(2^n\)</span>個すべての計算基底状態について、相当するビット列が100%の確率で得られるべき回路を作成し、それを測定した結果を利用します。</p>
+<p>例えば<span class="math notranslate nohighlight">\(n=2\)</span>で状態<span class="math notranslate nohighlight">\(\ket{x} \, (x = 00, 01, 10, 11)\)</span>を測定してビット列<span class="math notranslate nohighlight">\(y\)</span>を得る確率が<span class="math notranslate nohighlight">\(\epsilon^x_y\)</span>だとします。このとき実際の量子計算をして測定で得られた確率分布が<span class="math notranslate nohighlight">\(\{p_y\}\)</span>であったとすると、その計算で本来得られるべき確率分布<span class="math notranslate nohighlight">\(\{P_x\}\)</span>は連立方程式</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+p_{00} = P_{00} \epsilon^{00}_{00} + P_{01} \epsilon^{01}_{00} + P_{10} \epsilon^{10}_{00} + P_{11} \epsilon^{11}_{00} \\
+p_{01} = P_{00} \epsilon^{00}_{01} + P_{01} \epsilon^{01}_{01} + P_{10} \epsilon^{10}_{01} + P_{11} \epsilon^{11}_{01} \\
+p_{10} = P_{00} \epsilon^{00}_{10} + P_{01} \epsilon^{01}_{10} + P_{10} \epsilon^{10}_{10} + P_{11} \epsilon^{11}_{10} \\
+p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon^{10}_{11} + P_{11} \epsilon^{11}_{11}
+\end{split}\]</div>
+<p>を解けば求まります。つまり、行列<span class="math notranslate nohighlight">\(\epsilon^x_y\)</span>の逆をベクトル<span class="math notranslate nohighlight">\(p_y\)</span>にかければいいわけです<a class="footnote-reference brackets" href="#actually-fits" id="id7">3</a>。</p>
+<p>Qiskitでは測定エラー緩和用の関数やクラスが提供されているので、それを使って実際にエラーを求め、上の足し算の結果の改善を試みましょう。</p>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># QV32のマシンでの結果の改善を試みる</span>
+<span class="n">qubits</span> <span class="o">=</span> <span class="n">find_best_chain</span><span class="p">(</span><span class="n">backend_qv32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># 測定エラー緩和の一連の操作（2^4通りの回路生成、ジョブの実行、結果の解析）がCorrelatedReadoutErrorクラスの内部で行われる</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">CorrelatedReadoutError</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+<span class="n">experiment</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">backend_qv32</span><span class="p">)</span>
+
+<span class="c1"># mitigatorオブジェクトが上でいうε^x_yの逆行列を保持している</span>
+<span class="n">mitigator</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">analysis_results</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># jobs配列の最後がQV32。get_counts(1)で最適化された回路での結果を得る</span>
+<span class="n">raw_counts</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">shots</span> <span class="o">=</span> <span class="n">backend_qv32</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">max_shots</span>
+<span class="c1"># ここから下はおまじない</span>
+<span class="n">quasiprobs</span> <span class="o">=</span> <span class="n">mitigator</span><span class="o">.</span><span class="n">quasi_probabilities</span><span class="p">(</span><span class="n">raw_counts</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+<span class="n">mitigated_probs</span> <span class="o">=</span> <span class="n">quasiprobs</span><span class="o">.</span><span class="n">nearest_probability_distribution</span><span class="p">()</span><span class="o">.</span><span class="n">binary_probabilities</span><span class="p">()</span>
+<span class="n">mitigated_counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="n">shots</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mitigated_probs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+<span class="n">n_correct</span> <span class="o">=</span> <span class="n">count_correct_additions</span><span class="p">(</span><span class="n">mitigated_counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">r_correct</span> <span class="o">=</span> <span class="n">n_correct</span> <span class="o">/</span> <span class="n">shots</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;QV 32 optimized circuit with error mitigation (</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">): </span><span class="si">{</span><span class="n">n_correct</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">shots</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">r_correct</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> +- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_correct</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">r_correct</span><span class="p">)</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>参考文献<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="docutils container" id="id9">
+<dl class="citation">
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id4">CBS+19</a></span></dt>
 <dd><p>Andrew W. Cross, Lev S. Bishop, Sarah Sheldon, Paul D. Nation, and Jay M. Gambetta. Validating quantum computers using randomized model circuits. <em>Phys. Rev. A</em>, 100:032328, Sep 2019. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevA.100.032328">https://link.aps.org/doi/10.1103/PhysRevA.100.032328</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevA.100.032328">doi:10.1103/PhysRevA.100.032328</a>.</p>
 </dd>
 </dl>
-</p>
+</div>
 <dl class="footnote brackets">
 <dt class="label" id="measurement-error"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
 <dd><p>測定のエラーとは、具体的には状態<span class="math notranslate nohighlight">\(\ket{0}\)</span>や<span class="math notranslate nohighlight">\(\ket{1}\)</span>を測定したときにどのくらいの割合で0や1でない結果を得るかということを表した値です。</p>
 </dd>
 <dt class="label" id="qv"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
 <dd><p>QVはハードウェアの詳細に依存しないように定義されているので、量子ビット型の量子コンピュータであればIBMのマシンに限らずすべてQVで評価できます。実際、業界で徐々にQVを標準ベンチマークとして使う動きが広がってきているようです。</p>
+</dd>
+<dt class="label" id="actually-fits"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
+<dd><p>実際には数値的安定性などの理由から、単純に逆行列をかけるわけではなくフィッティングが行われますが、発想はここで書いたものと変わりません。</p>
 </dd>
 </dl>
 </div>
