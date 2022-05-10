@@ -41,6 +41,7 @@ import matplotlib.pyplot as plt
 from qiskit import QuantumRegister, QuantumCircuit, IBMQ, transpile
 from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
 from qiskit.tools.monitor import job_monitor
+from qiskit_experiments.library import CorrelatedReadoutError
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
 
@@ -95,11 +96,11 @@ def setup_addition(circuit, reg1, reg2, reg3):
     # Loop over reg1 and reg2
     for reg_ctrl in [reg1, reg2]:
         # Loop over qubits in the control register (reg1 or reg2)
-        for qctrl in reg_ctrl:
+        for ictrl, qctrl in enumerate(reg_ctrl):
             # Loop over qubits in the target register (reg3)
-            for qtarg in reg3:
+            for itarg, qtarg in enumerate(reg3):
                 # C[P(phi)], phi = 2pi * 2^{ictrl} * 2^{itarg} / 2^{n3}
-                circuit.cp(dphi * (2 ** (qctrl.index + qtarg.index)), qctrl, qtarg)
+                circuit.cp(dphi * (2 ** (ictrl + itarg)), qctrl, qtarg)
 
     # Insert a barrier for better visualization
     circuit.barrier()
@@ -132,9 +133,6 @@ def make_original_circuit(n1, n2):
     circuit.h(reg2)
 
     setup_addition(circuit, reg1, reg2, reg3)
-    
-    for ibit in range(creg.size):
-        circuit.measure(ibit, ibit)
     
     circuit.measure_all()
 
@@ -266,7 +264,7 @@ for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
         icirc += 1
 ```
 
-ちなみに、`ibm_kawasaki`という実機で同じコードを走らせると、下のような結果が得られます。
+ちなみに、`ibm_kawasaki`というマシンで同じコードを走らせると、下のような結果が得られます。
 
 <pre>
 Original circuit with n1, n2 = 4, 4
@@ -347,15 +345,19 @@ jobs = []
 for backend in [backend_qv8, backend_qv16, backend_qv32]:
     circuits = make_circuits(n1, n2, backend)
     shots = backend.configuration().max_shots
-    job = backend.run(circuits)
+    job = backend.run(circuits, shots=shots)
     jobs.append(job)
+    
+for job, qv in zip(jobs, [8, 16, 32]):
+    print(f'QV {qv} job')
+    job_monitor(job, interval=2)
 
 for job, qv in zip(jobs, [8, 16, 32]):
-
     counts_list = job.result().get_counts()
     
     for counts, ctype in zip(counts_list, ['Original', 'Optimized']):
         n_correct = count_correct_additions(counts, n1, n2)
+        shots = sum(counts.values())
         r_correct = n_correct / shots
         print(f'QV {qv} {ctype} circuit ({n1}, {n2}): {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
 ```
@@ -375,6 +377,61 @@ _, log_gate_error_qv32, log_readout_error_qv32 = find_best_chain(backend_qv32, 4
 print(f'QV 8 error rates: {log_gate_error_qv8:.2f} (CNOT), {log_readout_error_qv8} (readout)')
 print(f'QV 16 error rates: {log_gate_error_qv16:.2f} (CNOT), {log_readout_error_qv16} (readout)')
 print(f'QV 32 error rates: {log_gate_error_qv32:.2f} (CNOT), {log_readout_error_qv32} (readout)')
+```
+
++++ {"tags": ["remove-output", "raises-exception"]}
+
+(measurement_error_mitigation)=
+## 測定エラーの緩和
+
+{doc}`extreme_simd`でも軽く触れましたが、現状ではCNOTゲートのエラー率は1量子ビットゲートのエラー率より一桁程度高くなっています。CNOTを含むゲートで発生するエラーは本格的なエラー訂正が可能になるまでは何も対処しようがなく、そのため上ではCNOTを極力減らす回路を書きました。しかし、そのようなアプローチには限界があります。
+
+一方、測定におけるエラーは、エラー率が実は決して無視できない高さであると同時に、統計的にだいたい再現性がある（あるビット列$x$が得られるべき状態から別のビット列$y$が得られる確率が、状態の生成法に依存しにくい）という性質があります。そのため、測定エラーは事後的に緩和（部分的補正）できます。そのためには$n$ビットレジスタの$2^n$個すべての計算基底状態について、相当するビット列が100%の確率で得られるべき回路を作成し、それを測定した結果を利用します。
+
+例えば$n=2$で状態$\ket{x} \, (x = 00, 01, 10, 11)$を測定してビット列$y$を得る確率が$\epsilon^x_y$だとします。このとき実際の量子計算をして測定で得られた確率分布が$\{p_y\}$であったとすると、その計算で本来得られるべき確率分布$\{P_x\}$は連立方程式
+
+$$
+p_{00} = P_{00} \epsilon^{00}_{00} + P_{01} \epsilon^{01}_{00} + P_{10} \epsilon^{10}_{00} + P_{11} \epsilon^{11}_{00} \\
+p_{01} = P_{00} \epsilon^{00}_{01} + P_{01} \epsilon^{01}_{01} + P_{10} \epsilon^{10}_{01} + P_{11} \epsilon^{11}_{01} \\
+p_{10} = P_{00} \epsilon^{00}_{10} + P_{01} \epsilon^{01}_{10} + P_{10} \epsilon^{10}_{10} + P_{11} \epsilon^{11}_{10} \\
+p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon^{10}_{11} + P_{11} \epsilon^{11}_{11}
+$$
+
+を解けば求まります。つまり、行列$\epsilon^x_y$の逆をベクトル$p_y$にかければいいわけです[^actually_fits]。
+
+Qiskitでは測定エラー緩和用の関数やクラスが提供されているので、それを使って実際にエラーを求め、上の足し算の結果の改善を試みましょう。
+
+[^actually_fits]: 実際には数値的安定性などの理由から、単純に逆行列をかけるわけではなくフィッティングが行われますが、発想はここで書いたものと変わりません。
+
+```{code-cell} ipython3
+:tags: [raises-exception, remove-output]
+
+# QV32のマシンでの結果の改善を試みる
+qubits = find_best_chain(backend_qv32, 4)
+
+# 測定エラー緩和の一連の操作（2^4通りの回路生成、ジョブの実行、結果の解析）がCorrelatedReadoutErrorクラスの内部で行われる
+experiment = CorrelatedReadoutError(qubits)
+experiment.analysis.set_options(plot=True)
+result = experiment.run(backend_qv32)
+
+# mitigatorオブジェクトが上でいうε^x_yの逆行列を保持している
+mitigator = result.analysis_results(0).value
+```
+
+```{code-cell} ipython3
+:tags: [remove-output, raises-exception]
+
+# jobs配列の最後がQV32。get_counts(1)で最適化された回路での結果を得る
+raw_counts = jobs[-1].result().get_counts(1)
+shots = backend_qv32.configuration().max_shots
+# ここから下はおまじない
+quasiprobs = mitigator.quasi_probabilities(raw_counts, shots=shots)
+mitigated_probs = quasiprobs.nearest_probability_distribution().binary_probabilities()
+mitigated_counts = dict((key, value * shots) for key, value in mitigated_probs.items())
+
+n_correct = count_correct_additions(mitigated_counts, n1, n2)
+r_correct = n_correct / shots
+print(f'QV 32 optimized circuit with error mitigation ({n1}, {n2}): {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
 ```
 
 ## 参考文献

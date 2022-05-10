@@ -56,9 +56,8 @@ $\newcommand{\minusket}{\ket{-}}$
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, Aer, transpile
-from qiskit.tools.monitor import job_monitor
 # このワークブック独自のモジュール
-from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts, insert_initial_counts
+from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts
 from qc_workbook.hamiltonian import make_hamiltonian, diagonalized_evolution
 ```
 
@@ -415,7 +414,12 @@ plt.plot(time_points, number_density(bit_exp))
 
 # Plot the simulation results
 time_points = np.linspace(0., omegadt * M, M + 1, endpoint=True)
-insert_initial_counts(sim_counts_list, initial_state)
+
+initial_probs = np.square(np.abs(initial_state))
+fmt = f'{{:0{num_spins}b}}'
+initial_counts = dict((fmt.format(idx), prob) for idx, prob in enumerate(initial_probs) if prob != 0.)
+sim_counts_list = [initial_counts] + sim_counts_list
+
 _, bit_exp = bit_expectations_counts(time_points, sim_counts_list, n)
 
 plt.plot(time_points, number_density(bit_exp), 'o')
