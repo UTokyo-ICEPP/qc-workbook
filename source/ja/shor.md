@@ -146,11 +146,11 @@ pycharm:
     '
 ---
 # Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
+from fractions import Fraction
 import matplotlib.pyplot as plt
 import numpy as np
-import math
 
-from qiskit import IBMQ, QuantumCircuit, Aer, transpile
+from qiskit import IBMQ, QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
 from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
@@ -170,31 +170,35 @@ pycharm:
 
     '
 ---
-n_mq = 3
+n_meas = 3
 
-# n_mq+1ビット量子回路
-qc = QuantumCircuit(n_mq+1, n_mq)
+# 位相測定用のレジスタ
+qreg_meas = QuantumRegister(n_meas, name='meas')
+# 固有ベクトルを保持するレジスタ
+qreg_aux = QuantumRegister(1, name='aux')
+# 位相測定の結果が書き出される古典レジスタ
+creg_meas = ClassicalRegister(n_meas, name='out')
 
-for qubit in range(n_mq):
-    qc.h(qubit)
-qc.x(n_mq)
+# 2つの量子レジスタと1つの古典レジスタから量子回路を作る
+qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
 
-# angle/(2*pi)がQPEで求めたい位相
-angle = math.pi/2
-#angle = 2*math.pi/3
+# それぞれのレジスタを初期化
+qc.h(qreg_meas)
+qc.x(qreg_aux)
 
-nr = 1
-for qubit in range(n_mq):
-    for i in range(nr):
-        qc.cp(angle, qubit, n_mq)
-    nr *= 2
+# angle/(2π)がQPEで求めたい位相
+angle = np.pi / 2
+
+# S = P(π/2)なので、(Controlled-S)^x を CP(xπ/2) で代替
+for x, ctrl in enumerate(qreg_meas):
+    qc.cp(angle * (2 ** x), ctrl, qreg_aux[0])
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 位相推定用のレジスタに逆量子フーリエ変換を適用して、量子ビットを測定します。
 
-この{doc}`実習 <circuit_from_scratch>`の問題7を参考にして、QFTの**逆回路**`qft_dagger(n)`を書いてみてください。引数の$n$は測定用ビットの数`n_count`が入ることに注意します。
+この{ref}`実習 <fourier_addition>`を参考にして、QFTの**逆回路**`qft_dagger(qreg)`を書いてみてください。引数の`qreg`は測定用レジスタオブジェクトです。
 
 ```{code-cell} ipython3
 ---
@@ -203,15 +207,55 @@ pycharm:
 
     '
 ---
-def qft_dagger(n):
+def qft_dagger(qreg):
     """逆量子フーリエ変換用の回路"""
-    qc = QuantumCircuit(n)
+    qc = QuantumCircuit(qreg)
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+    
+    #qc.?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+    qc.name = "QFT^dagger"
+
+    return qc
+
+qc.barrier()
+qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
+qc.barrier()
+qc.measure(qreg_meas, creg_meas)
+qc.draw('mpl')
+```
+
+**解答**
+
+````{toggle}
+
+{ref}`fourier_addition`の`setup_addition`関数中のInverse QFTと書かれている部分を利用します。
+
+```{code-block} python
+def qft_dagger(qreg):
+    """逆量子フーリエ変換用の回路"""
+    qc = QuantumCircuit(qreg)
 
     ##################
     ### EDIT BELOW ###
     ##################
 
-    #qc?
+    for j in range(qreg.size // 2):
+        qc.swap(qreg[j], qreg[-1 - j])
+
+    for itarg in range(qreg.size):
+        for ictrl in range(itarg):
+            power = ictrl - itarg - 1
+            qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
+        
+        qc.h(itarg)
 
     ##################
     ### EDIT ABOVE ###
@@ -219,13 +263,47 @@ def qft_dagger(n):
 
     qc.name = "QFT^dagger"
     return qc
+```
 
-qc.barrier()
-qc.append(qft_dagger(n_mq),list(range(n_mq)))
-qc.barrier()
-for n in range(n_mq):
-    qc.measure(n,n)
-qc.draw('mpl')
+````
+
+```{code-cell} ipython3
+:tags: [remove-input, remove-output]
+
+## テキスト作成用のセル
+
+def qft_dagger(qreg):
+    qc = QuantumCircuit(qreg)
+
+    for j in range(qreg.size // 2):
+        qc.swap(qreg[j], qreg[-1 - j])
+
+    for itarg in range(qreg.size):
+        for ictrl in range(itarg):
+            power = ictrl - itarg - 1
+            qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
+        
+        qc.h(itarg)
+
+    qc.name = "IQFT"
+    return qc
+
+qreg_meas = QuantumRegister(n_meas, name='meas')
+qreg_aux = QuantumRegister(1, name='aux')
+creg_meas = ClassicalRegister(n_meas, name='out')
+
+qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
+
+qc.h(qreg_meas)
+qc.x(qreg_aux)
+
+angle = np.pi / 2
+
+for x, ctrl in enumerate(qreg_meas):
+    qc.cp(angle * (2 ** x), ctrl, qreg_aux[0])
+    
+qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
+qc.measure(qreg_meas, creg_meas)
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -241,6 +319,7 @@ pycharm:
   name: '#%%
 
     '
+tags: []
 ---
 simulator = Aer.get_backend('aer_simulator')
 shots = 2048
@@ -250,7 +329,7 @@ answer = results.get_counts()
 
 def show_distribution(answer):
     n = len(answer)
-    x = [int(key,2) for key in list(answer.keys())]
+    x = [int(key, 2) for key in list(answer.keys())]
     y = list(answer.values())
 
     fig, ax = plt.subplots()
@@ -259,9 +338,10 @@ def show_distribution(answer):
     def autolabel(rects):
         for rect in rects:
             height = rect.get_height()
-            ax.annotate('{:.3f}'.format(height/sum(y)),
-                        xy=(rect.get_x()+rect.get_width()/2, height),xytext=(0,0),
-                        textcoords="offset points",ha='center', va='bottom')
+            ax.annotate(f'{height/sum(y):.3f}',
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 0),
+                        textcoords="offset points", ha='center', va='bottom')
     autolabel(rect)
     plt.ylabel('Probabilities')
     plt.show()
@@ -274,7 +354,7 @@ show_distribution(answer)
 答えは10進数で2になっていますね。ここで測定した答えは$\ket{2^n\theta}$だったことを思い出すと、$\theta=2/2^3=1/4$となって正しい$\theta$が得られたことが分かります。
 
 ここで見た量子回路はシンプルですが、いろいろ拡張して振る舞いを理解するのに役立ちます。例えば、以下の問題を調べてみてください。
-- （グローバル因子を除いて）$S=R_Z(\pi/2)$ゲートの例を見ましたが、角度を$0<\phi<\pi$の範囲で変えた$R_Z(\phi)$ゲートではどうなるでしょうか？
+- （グローバル因子を除いて）$S=P(\pi/2)$ゲートの例を見ましたが、角度を$0<\phi<\pi$の範囲で変えた$P(\phi)$ゲートではどうなるでしょうか？
 - 角度の選び方によっては、得られる位相の精度が悪くなります。その場合、どうすればより良い精度で測定できるでしょうか？
 - $S$ゲートの場合固有ベクトルは$\ket{1}$でしたが、$\ket{1}$以外の状態を使うとどうなりますか？特に固有ベクトルと線形従属なベクトルを使った場合の振る舞いを見てみてください。
 
@@ -301,9 +381,9 @@ except IBMQAccountCredentialsNotFound:
 
 provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=6))
+backend_list = provider.backends(filters=operational_backend(min_qubits=4))
 backend = least_busy(backend_list)
-print("least busy backend: ", backend)
+print(f"least busy backend: {backend.name()}")
 ```
 
 ```{code-cell} ipython3
@@ -391,7 +471,7 @@ $$
 :align: center
 ```
 
-上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つずつなのは、15が4ビット（$n=4$）で表現できるからです（15の2進数表記 = $1111_2$）。状態は全て$\ket{0}$に初期化されているものとして、測定用ビットの状態を$\ket{x}$、作業用ビットの状態を$\ket{w}$とします。
+上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つずつなのは、15が4ビット（$n=4$）で表現できるからです（15の2進数表記 = $1111_2$）。状態は全て$\ket{0}$に初期化されているものとして、測定用レジスタの状態を$\ket{x}$、作業用レジスタの状態を$\ket{w}$とします。
 $U_f$は以下のようなオラクル
 
 ```{image} figs/shor_oracle2.png
@@ -400,9 +480,9 @@ $U_f$は以下のようなオラクル
 :align: center
 ```
 
-で、作業用ビットの出力状態が$\ket{w\oplus f(x)}$になるものと理解しておきます（詳細は後で説明します）。関数$f(x)$は$f(x) = a^x \bmod N$とします。
+で、作業用レジスタの出力状態が$\ket{w\oplus f(x)}$になるものと理解しておきます（詳細は後で説明します）。関数$f(x)$は$f(x) = a^x \bmod N$とします。
 
-では、同様に回路のステップ 1-5ごとに量子状態を見ていきましょう。まずステップ 1で測定用量子ビットの等しい重ね合わせ状態を生成します。各計算基底は0から15までの整数で書いておくことにします。
+では、同様に回路のステップ 1-5ごとに量子状態を見ていきましょう。まずステップ 1で測定用量子レジスタの等しい重ね合わせ状態を生成します。各計算基底は0から15までの整数で書いておくことにします。
 
 - ステップ 1 :$\frac{1}{\sqrt{2^4}}\left[\sum_{j=0}^{2^4-1}\ket{j}\right]\ket{0}^{\otimes 4} = \frac{1}{4}\left[\ket{0}+\ket{1}+\cdots+\ket{15}\right]\ket{0}^{\otimes 4}$
 
@@ -417,17 +497,17 @@ $$
 \end{aligned}
 $$
 
-ステップ 2の後に作業用ビットを測定します。$\ket{w}$は$\ket{7^x \bmod 15}$、つまり$\ket{1}$, $\ket{7}$, $\ket{4}$, $\ket{13}$のどれかなので、例えば測定の結果13が得られたとします。その場合、測定用ビットの状態は
+ステップ 2の後に作業用レジスタを測定します。$\ket{w}$は$\ket{7^x \bmod 15}$、つまり$\ket{1}$, $\ket{7}$, $\ket{4}$, $\ket{13}$のどれかなので、例えば測定の結果13が得られたとします。その場合、測定用レジスタの状態は
 
 - ステップ 3 :$\frac{1}{2}\left[\ket{3}+\ket{7}+\ket{11}+\ket{15}\right]$
 
-となります。次に、測定用ビットに逆量子フーリエ変換$\rm{QFT}^\dagger$を適用します。逆量子フーリエ変換はある状態$\ket{j}$を$\ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}\ket{k}$に変換するので、
+となります。次に、測定用レジスタに逆量子フーリエ変換$\rm{QFT}^\dagger$を適用します。逆量子フーリエ変換はある状態$\ket{j}$を$\ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}\ket{k}$に変換するので、
 
 - ステップ 4 :
 
 $$
 \begin{aligned}
-&\frac{1}{2}QFT^\dagger\left[\ket{3}+\ket{7}+\ket{11}+\ket{15}\right]\\
+&\frac{1}{2}\mathrm{QFT}^\dagger\left[\ket{3}+\ket{7}+\ket{11}+\ket{15}\right]\\
 =&\frac{1}{2}\frac1{\sqrt{2^4}}\sum_{k=0}^{2^4-1}\left[e^{\frac{-2\pi i\cdot3k}{2^4}}+e^{\frac{-2\pi i\cdot7k}{2^4}}+e^{\frac{-2\pi i\cdot11k}{2^4}}+e^{\frac{-2\pi i\cdot15k}{2^4}}\right]\ket{k}\\
 =&\frac{1}{8}\left[4\ket{0}+4i\ket{4}-4\ket{8}-4i\ket{12}\right]
 \end{aligned}
@@ -435,9 +515,11 @@ $$
 
 となります。ここで、状態として$\ket{0}$, $\ket{4}$, $\ket{8}$, $\ket{12}$しか出てこないところが鍵で、量子状態の干渉を使って不要な答えの振幅を小さくしているわけです。
 
-- ステップ 5 :最後に測定用ビットを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。
+- ステップ 5 :最後に測定用レジスタを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。
 
 ステップ 2で$7^x \bmod 15$を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。
+
++++
 
 (shor_measurement)=
 ### 測定結果の解析
@@ -446,13 +528,14 @@ $$
 
 ショアのアルゴリズムの量子回路として、これまで$\ket{w}=\ket{0}^{\otimes n}$を初期状態として、$U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ $(f(x) = a^x \bmod N)$ となるオラクル$U_f$を考えてきました。この$U_f$を実装するために、以下のようなユニタリー演算子$U$を考えてみます。
 
-$$
+```{math}
+:label: U_action
 U\ket{m} =
 \begin{cases}
 \ket{am \bmod N)} & 0 \leq m \leq N - 1 \\
 \ket{m} & N \leq m \leq 2^n-1
 \end{cases}
-$$
+```
 
 このユニタリーは、
 
@@ -466,7 +549,7 @@ $$
 \begin{aligned}
 U_f\ket{x}\ket{0}&=\ket{x}\ket{0 \oplus (a^x \bmod N)}\\
 &=\ket{x}\ket{a^x \bmod N}\\
-&=U^x\ket{x}\ket{1}
+&=\ket{x} U^x \ket{1}
 \end{aligned}
 $$
 
@@ -476,7 +559,7 @@ $$
 \ket{\psi_s} \equiv \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1}e^{-2\pi isk/r}\ket{a^k \bmod N}
 $$
 
-（$s$は$0<s<r-1$の整数）となるベクトル$\ket{\psi_s}$を定義すると、
+（$s$は$0 \leq s \leq r-1$の整数）となるベクトル$\ket{\psi_s}$を定義すると、
 
 $$
 \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}\ket{\psi_s}=\ket{1}
@@ -534,19 +617,6 @@ $n$量子ビットQPEの{ref}`回路 <qpe_nqubit_fig>`と比較すれば、こ�
 ## アルゴリズムの実装
 ここから、ショアのアルゴリズムを実装していきます。
 
-```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-from numpy.random import randint
-from fractions import Fraction
-```
-
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_period)=
@@ -577,21 +647,28 @@ yvals = [np.mod(a**x, N) for x in xvals]
 # matplotlibを使って描画
 fig, ax = plt.subplots()
 ax.plot(xvals, yvals, linewidth=1, linestyle='dotted', marker='x')
-ax.set(xlabel='$x$', ylabel='$%i^x$ mod $%i$' % (a, N),
+ax.set(xlabel='$x$', ylabel=f'${a}^x$ mod {N}',
        title="Example of Periodic Function in Shor's Algorithm")
+
 try: # グラフ上にrをプロット
     r = yvals[1:].index(1) + 1
-    plt.annotate(text='', xy=(0,1), xytext=(r,1), arrowprops=dict(arrowstyle='<->'))
-    plt.annotate(text='$r=%i$' % r, xy=(r/3,1.5))
-except:
+except ValueError:
     print('Could not find period, check a < N and have no common factors.')
+else:
+    plt.annotate(text='', xy=(0, 1), xytext=(r, 1), arrowprops={'arrowstyle': '<->'})
+    plt.annotate(text=f'$r={r}$', xy=(r / 3, 1.5))
 ```
 
 (shor_imp_oracle)=
 ### オラクルの実装
+
 以下では、$N=15$を素因数に分解してみます。上で説明したように、$U\ket{m}=\ket{am \bmod N}$となるユニタリー$U$を$x$回繰り返すことで、オラクル$U_f$を実装します。
 
-練習問題として、$U\ket{m}=\ket{am \bmod 15}$を実行する関数`U_amod15`を以下に実装してください（`U_amod15`は制御ゲートですが、標的ビットのユニタリー演算に対応する部分を書いてみてください）。
+練習問題として、$C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$を実行する関数`c_amod15`を以下に実装してください（`c_amod15`全体は制御ゲートを返しますが、標的レジスタのユニタリー演算、特に$U$に対応する部分を書いてください）。
+
+関数の引数`a`は15より小さく15と互いに素な整数のみを考えます。また、実は一般に$a = N-1$の場合、$\modequiv{a^2}{1}{N}$なので位数$r$は2、したがって$a^{r/2} = a$、$\modequiv{a + 1}{0}{N}$となり、ショアのアルゴリズムには使えないことが分かります。したがって、考えるべき`a`の値は13以下です。
+
+一般の$a$と$N$についてこのようなユニタリを作るには非常に込み入った回路が必要になりますが{cite}`shor_oracle`、$N=15$に限った場合は数行のコードで実装できます。
 
 ```{code-cell} ipython3
 ---
@@ -602,33 +679,202 @@ pycharm:
 
     '
 ---
-def c_amod15(a, power):
+def c_amod15(a, l):
     """mod 15による制御ゲート"""
-    if a not in [2,4,7,8,11,13,14]:
-        raise ValueError("'a' must be 2,4,7,8,11,13 or 14")
+
+    if a not in [2, 4, 7, 8, 11, 13]:
+        raise ValueError("'a' must be 2, 4, 7, 8, 11, or 13")
 
     U = QuantumCircuit(4)
 
     ##################
     ### EDIT BELOW ###
     ##################
-
-    #U.?
+    
+    #if a == 2:
+    #    ...
+    #elif a == 4:
+    #    ...
+    #    ...
 
     ##################
     ### EDIT ABOVE ###
     ##################
+    
+    # Uを2^l回繰り返す
+    U_power = U.repeat(2 ** l)
 
-    # 以下で制御ゲートに変換
-    U = U.to_gate()
-    U.name = f"{a}^{power} mod 15"
-    c_U = U.control()
-    return c_U
+    # U_powerをゲートに変換
+    gate = U_power.to_gate()
+    gate.name = f"{a}^{2 ** l} mod 15"
+    
+    # gateを制御ゲートに変換
+    c_gate = gate.control()
+    return c_gate
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-`power`は繰り返しの回数を表します。
+**解答**
+
+````{toggle}
+まず、`a=2, 4, 8`のケースを考えます。$m$を二進数分解して
+
+```{math}
+m=\sum_{j=0}^{3} 2^j m_j \, (m_j=0,1)
+```
+
+とすると、
+
+```{math}
+:label: ammod15
+am \bmod 15 = \left( \sum_{j=0}^{3} 2^{j+\log_2 a} m_j \right) \bmod 15
+```
+
+ですが、$15 = 2^4 - 1$で、一般に自然数$n, m$と$n-pm < m$となる最小の自然数$p$について
+
+```{math}
+2^n \bmod (2^m - 1) = 2^{n-pm}
+```
+
+が成り立つので（証明は簡単なので考えてみてください）、$2^{j+\log_2 a} \bmod 15$は$j=0, 1, 2, 3$に対して値$1, 2, 4, 8$をそれぞれ一度だけ取ります。
+
+したがって$m \leq 14$に対しては式{eq}`ammod15`の右辺の括弧の各項について15の剰余を取っても和が15以上にならないので
+
+```{math}
+am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
+```
+
+つまり、$a$倍して15での剰余を取る操作を各ビットに対して独立に考えて良いことがわかります。そこで実際に$2^{j+\log_2 a} \bmod 15$の値を書き出してみると
+
+|       | $j=0$ | $j=1$ | $j=2$ | $j=3$ |
+|-------|-------|-------|-------|-------|
+| $a=2$ | 2     |  4    | 8     | 1     |
+| $a=4$ | 4     |  8    | 1     | 2     |
+| $a=8$ | 8     |  1    | 2     | 4     |
+
+となります。このような作用はサイクリックなビットシフトとして記述でき、例えば`a=2`なら
+
+```{math}
+\begin{align}
+0001 & \rightarrow 0010 \\
+0010 & \rightarrow 0100 \\
+0100 & \rightarrow 1000 \\
+1000 & \rightarrow 0001
+\end{align}
+```
+
+となればいいので、量子回路としてはSWAPゲートを利用して実装できます。
+
+```{code-block} python
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    if a == 2:
+        # 下の位を上に移すので、上の位から順にSWAPしていく
+        U.swap(3, 2)
+        U.swap(2, 1)
+        U.swap(1, 0)
+    elif a == 4:
+        # 「一つ飛ばし」のビットシフト
+        U.swap(3, 1)
+        U.swap(2, 0)
+    elif a == 8:
+        # 下から順
+        U.swap(1, 0)
+        U.swap(2, 1)
+        U.swap(3, 2)
+        
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+```
+
+このようにSWAPゲートを利用すると、おまけの利点として、$m=15$の場合は$U$がレジスタの状態を変えないので、式{eq}`U_action`が正しく実現されることになります。ただ、下でこの関数を実際に使う時には、作業用レジスタに$\ket{15}$という状態が現れることは実はないので、この点はあまり重要ではありません。
+
+残りの`a=7, 11, 13`はどうでしょうか。ここでも15という数字の特殊性が発揮されます。$7 = 15 - 8$、$11 = 15 - 4$、$13 = 15 - 2$であることに着目すると、
+
+```{math}
+\begin{align}
+7m \bmod 15 & = (15 - 8)m \bmod 15 = 15 - (8m \bmod 15) \\
+11m \bmod 15 & = (15 - 4)m \bmod 15 = 15 - (4m \bmod 15) \\
+13m \bmod 15 & = (15 - 2)m \bmod 15 = 15 - (2m \bmod 15),
+\end{align}
+```
+
+つまり、上の`a=2, 4, 8`のケースの結果を15から引くような回路を作ればいいことがわかります。そして、4ビットのレジスタにおいて15から値を引くというのは、全てのビットを反転させる（$X$ゲートをかける）ことに対応するので、最終的には
+
+```{code-block} python
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    if a in [2, 13]:
+        # 下の位を上に移すので、上の位から順にSWAPしていく
+        U.swap(3, 2)
+        U.swap(2, 1)
+        U.swap(1, 0)
+    elif a in [4, 11]:
+        # 「一つ飛ばし」のビットシフト
+        U.swap(3, 1)
+        U.swap(2, 0)
+    elif a in [8, 7]:
+        # 下から順
+        U.swap(1, 0)
+        U.swap(2, 1)
+        U.swap(3, 2)
+        
+    if a in [7, 11, 13]:
+        U.x([0, 1, 2, 3])
+        
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+```
+
+が正解です。
+````
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+tags: [remove-input, remove-output]
+---
+# テキスト作成用のセル
+
+def c_amod15(a, l):
+    U = QuantumCircuit(4, name='U')
+
+    if a in [2, 13]:
+        U.swap(3, 2)
+        U.swap(2, 1)
+        U.swap(1, 0)
+    elif a in [4, 11]:
+        U.swap(3, 1)
+        U.swap(2, 0)
+    elif a in [8, 7]:
+        U.swap(1, 0)
+        U.swap(2, 1)
+        U.swap(3, 2)
+        
+    if a in [7, 11, 13]:
+        U.x([0, 1, 2, 3])
+        
+    U_power = U.repeat(2 ** l)
+
+    gate = U_power.to_gate()
+    gate.name = f"{a}^{2 ** l} mod 15"
+    c_gate = gate.control()
+    return c_gate
+```
+
++++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_circuit)=
 ### 回路全体の実装
@@ -644,43 +890,36 @@ pycharm:
 
     '
 ---
-# 測定用ビットの数
-n_count = 8
-
+# 15と互いに素な数
 a = 7
-```
 
+# 測定用ビットの数（位相推定の精度）
+n_meas = 8
 
-+++ {"pycharm": {"name": "#%% md\n"}}
+# 位相測定用のレジスタ
+qreg_meas = QuantumRegister(n_meas, name='meas')
+# Uを作用させる作業用レジスタ
+qreg_aux = QuantumRegister(4, name='aux')
+# 位相測定の結果が書き出される古典レジスタ
+creg_meas = ClassicalRegister(n_meas, name='out')
 
+# 2つの量子レジスタと1つの古典レジスタから量子回路を作る
+qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
 
-```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-# n_count個の測定用量子ビットと、Uを操作するための4つの作業用量子ビットで量子回路を作る
-qc = QuantumCircuit(n_count+4, n_count)
-
-# 測定用量子ビットにHゲートをかけて初期化
-qc.h(list(range(n_count)))
-
-# 作業用量子レジスタを|1>の状態にする
-qc.x(n_count)
+# 測定用レジスタをequal superpositionに初期化
+qc.h(qreg_meas)
+# 作業用レジスタを|1>に初期化
+qc.x(qreg_aux[0])
 
 # 制御Uゲートを適用
-for q in range(n_count):
-    qc.append(c_amod15(a, 2**q), [q]+[i+n_count for i in range(4)])
+for l, ctrl in enumerate(qreg_meas):
+    qc.append(c_amod15(a, l), qargs=([ctrl] + qreg_aux[:]))
 
 # 逆QFTを適用
-qc.append(qft_dagger(n_count), list(range(n_count)))
+qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
 
 # 回路を測定
-qc.measure(list(range(n_count)), list(range(n_count)))
+qc.measure(qreg_meas, creg_meas)
 qc.draw('mpl')
 ```
 
@@ -720,18 +959,17 @@ pycharm:
 rows, measured_phases = [], []
 for output in answer:
     decimal = int(output, 2)  # 10進数に変換
-    phase = decimal/(2**n_count)
+    phase = decimal / (2 ** n_meas)
     measured_phases.append(phase)
     # これらの値をテーブルの行に追加：
-    rows.append([f"{decimal}",
-                 f"{decimal}/{2 ** n_count} = {phase:.2f}"])
-# 結果を表示
-print('Register Output              Phase')
-print('----------------------------------')
+    rows.append(f"{decimal:3d}      {decimal:3d}/{2 ** n_meas} = {phase:.3f}")
 
-# 回路を実装できたら、以下のコードをアンコメントして結果を確認
-#for i in range(len(rows)):
-#    print(f'{rows[i][0]:15s} {rows[i][1]:18s}')
+# 結果を表示
+print('Register Output    Phase')
+print('------------------------')
+
+for row in rows:
+    print(row)
 ```
 
 得られた位相の情報から、連分数アルゴリズムを使用して$s$と$r$を見つけることができます。Pythonの組み込みの`fractions`(分数)モジュールを使用して、小数を`Fraction`オブジェクトに変換できます。
@@ -748,15 +986,14 @@ pycharm:
 rows = []
 for phase in measured_phases:
     frac = Fraction(phase).limit_denominator(15)
-    rows.append([phase, f"{frac.numerator}/{frac.denominator}", frac.denominator])
+    rows.append(f'{phase:10.3f}      {frac.numerator:2d}/{frac.denominator:2d} {frac.denominator:13d}')
 
 # 結果を表示
-print('     Phase   Fraction     Guess for r')
+print('     Phase   Fraction   Guess for r')
 print('-------------------------------------')
 
-# 回路を実装できたら、以下のコードをアンコメントして結果を確認
-#for i in range(len(rows)):
-#    print(f'{rows[i][0]:10f} {rows[i][1]:10s} {rows[i][2]:15d}')
+for row in rows:
+    print(row)
 ```
 
 `limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
