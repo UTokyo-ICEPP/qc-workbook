@@ -72,22 +72,6 @@ def bit_expectations_counts(time_points, counts_list, num_bits):
 
     return x, y
 
-
-def insert_initial_counts(counts_list, initial_state):
-    """Prepend a virtual 'counts' dictionary computed from the initial statevector to the counts list.
-    
-    Args:
-        counts_list (List(Dict)): List of quantum experiment results, as given by Qiskit job.result().get_counts()
-        initial_state (np.ndarray(shape=(2 ** num_spins), dtype=np.complex128)): Initial state vector.
-    """
-    
-    num_bits = np.round(np.log2(initial_state.shape[0])).astype(int)
-
-    initial_probs = np.square(np.abs(initial_state))
-    fmt = '{{:0{}b}}'.format(num_bits)
-    initial_counts = dict((fmt.format(idx), prob) for idx, prob in enumerate(initial_probs) if prob != 0.)
-    counts_list.insert(0, initial_counts)
-    
     
 def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_theory_curve=False, spin_component='z'):
     """Compute the expectation value of the Z(/X/Y) component of each spin in the Heisenberg model from the quantum
@@ -155,7 +139,10 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
     time_points = np.linspace(0., num_steps * omegadt, num_steps + 1, endpoint=True)
     
     # Prepend the initial "counts" to the experiment results
-    insert_initial_counts(counts_list, initial_state)
+    initial_probs = np.square(np.abs(initial_state))
+    fmt = f'{{:0{num_spins}b}}'
+    initial_counts = dict((fmt.format(idx), prob) for idx, prob in enumerate(initial_probs) if prob != 0.)
+    counts_list = [initial_counts] + counts_list
 
     # Compute the bit expectation values from the counts
     x, y = bit_expectations_counts(time_points, counts_list, num_spins)

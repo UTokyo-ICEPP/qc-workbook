@@ -52,16 +52,16 @@ $$
 などと表現され、時刻$t$のある系の状態$\ket{\psi (t)}$の時間微分（左辺）が$\ket{\psi (t)}$へのハミルトニアンという演算子の作用で定まる（右辺）ということを表しています。ただしこの「微分形」の方程式は我々の目的には少し使いづらいので、ここでは等価な「積分形」にして
 
 $$
-\ket{\psi (t_1)} = \exp \left( -\frac{i}{\hbar} \int_{t_0}^{t_1} H dt \right) \ket{\psi (t_0)}
+\ket{\psi (t_1)} = T \left[ \exp \left( -\frac{i}{\hbar} \int_{t_0}^{t_1} H dt \right) \right] \ket{\psi (t_0)}
 $$
 
-と書いておきます。特に、ハミルトニアン$H$が直接時間に依存しない場合は
+と書いておきます。$T[\cdot]$は「時間順序演算子」と呼ばれ重要な役割を持ちますが、説明を割愛し、以下ではハミルトニアン$H$が直接時間に依存しない場合の
 
 $$
-\ket{\psi (t_1)} = \exp \left( -\frac{i}{\hbar} (t_1 - t_0) H \right) \ket{\psi (t_0)}
+\ket{\psi (t_1)} = \exp \left( -\frac{i}{\hbar} H (t_1 - t_0) \right) \ket{\psi (t_0)}
 $$
 
-です。以下このケースのみを考えます。量子状態に対する演算子（線形演算子）の指数関数もまた演算子なので、積分形のシュレーディンガー方程式は「$e^{-i/\hbar (t_1-t_0) H}$という演算子が系を時刻$t_0$の初期状態$\ket{\psi(t_0)}$から時刻$t_1$の状態$\ket{\psi(t_1)}$に発展させる」と読めます。さらに、定義上ハミルトニアンは「エルミート演算子」であり、それに虚数単位をかけて指数の冪にした$e^{-i/\hbar t H}$（以下これを時間発展演算子$U_H(t)$と呼びます）は「ユニタリ演算子」です（このあたりの線形代数の用語にあまり馴染みがなくても、そういうものかと思ってもらえれば結構です）。
+のみを考えます。量子状態に対する演算子（線形演算子）の指数関数もまた演算子なので、積分形のシュレーディンガー方程式は「$e^{-i/\hbar H (t_1-t_0)}$という演算子が系を時刻$t_0$の初期状態$\ket{\psi(t_0)}$から時刻$t_1$の状態$\ket{\psi(t_1)}$に発展させる」と読めます。さらに、定義上ハミルトニアンは「エルミート演算子」であり、それに虚数単位をかけて指数の冪にした$e^{-i/\hbar H t}$（以下これを時間発展演算子$U_H(t)$と呼びます）は「ユニタリ演算子」です（このあたりの線形代数の用語にあまり馴染みがなくても、そういうものかと思ってもらえれば結構です）。
 
 ユニタリ演算子は量子計算の言葉で言えばゲートにあたります。したがって、ある量子系に関して、その初期状態を量子レジスタで表現でき、時間発展演算子を量子コンピュータの基本ゲートの組み合わせで実装できれば、その系のダイナミクス（＝時間発展）シミュレーションを量子コンピュータで行うことができます。
 
@@ -110,7 +110,10 @@ $$
 
 ```{math}
 :label: spin_exact
-\ket{\psi (t_1)} = U_H(t_1 - t_0) \ket{\psi (t_0)} = \exp [-i \omega (t_1 - t_0) \sigma^X] \upket = \cos[\omega (t_1 - t_0)] \upket - i \sin[\omega (t_1 - t_0)] \downket
+\begin{align}
+\ket{\psi (t_1)} = U_H(t_1 - t_0) \ket{\psi (t_0)} & = \exp [-i \omega (t_1 - t_0) \sigma^X] \upket \\
+& = \cos[\omega (t_1 - t_0)] \upket - i \sin[\omega (t_1 - t_0)] \downket
+\end{align}
 ```
 
 です。任意の時刻$t_1$のスピンの状態が基底$\upket$と$\downket$の重ね合わせとして表現されました。
@@ -125,7 +128,7 @@ $$
 
 すでに触れましたが、上の例で核のスピンは量子ビットのように2つの基底ケットを持ちます（2次元量子系です）。さらに、お気づきの方も多いと思いますが、$\sigma^X$の$\upket$と$\downket$への作用は$X$ゲートの$\ket{0}$と$\ket{1}$への作用そのものです。このことから、核磁気の歳差運動が極めて自然に量子コンピュータでシミュレートできることがわかるかと思います。
 
-実際には、時間発展演算子は$\sigma^X$そのものではなくその指数関数なので、量子コンピュータでも$\exp (-i \theta/2 X)$に対応する$R_{x} (\theta)$ゲートを利用します。これまで紹介されませんでしたが、$R_{x}$ゲートはパラメータ$\theta$をとり、
+実際には、時間発展演算子は$\sigma^X$そのものではなくその指数関数なので、量子コンピュータでも$\exp (-i \frac{\theta}{2} X)$に対応する$R_{x} (\theta)$ゲートを利用します。これまで紹介されませんでしたが、$R_{x}$ゲートはパラメータ$\theta$をとり、
 
 $$
 R_{x}(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} - i\sin\frac{\theta}{2}\ket{1} \\
@@ -185,7 +188,7 @@ $$
 固有値$\hbar \omega_j$のハミルトニアン$H$の固有ベクトル$\ket{\phi_j}$は自動的に時間発展演算子$U_H(t)$の固有値$e^{-i\omega_j t}$の固有ベクトルでもあります。
 
 $$
-U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} t H \right) \ket{\phi_j} = \exp (-i \omega_j t) \ket{\phi_j}.
+U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} H t \right) \ket{\phi_j} = \exp (-i \omega_j t) \ket{\phi_j}.
 $$
 
 したがって、系の初期状態$\ket{\psi (t_0)}$が
@@ -226,9 +229,9 @@ $$
 \Delta t = \frac{t_1 - t_0}{M}, \quad M \gg 1
 $$
 
-に分割し、$\Delta t$だけの時間発展$U_H(\Delta t)$を近似する演算子$\tilde{U}_{H;\Delta t}$を考えることです。この$\tilde{U}_{H;\Delta t}$での状態の遷移の様子がわかるのであれば、それを$M$回繰り返すことで、求める終状態が近似できます。
+に分割し、$\Delta t$だけの時間発展$U_H(\Delta t)$を考えることです。もちろん、$U_H(t)$が閉じた形式で書けないのなら当然$U_H(\Delta t)$も書けないので、時間を分割しただけでは状況は変わりません。しかし、$\Delta t$が十分短いとき、$U_H(\Delta t)$に対応する計算可能な近似演算子$\tilde{U}_{H;\Delta t}$を見つけることができる場合があり、この$\tilde{U}_{H;\Delta t}$での状態の遷移の様子がわかるのであれば、それを$M$回繰り返すことで、求める終状態が近似できることになります。
 
-通常$H$はわかっており、任意の状態$\ket{\psi}$に対して$H\ket{\psi}$が計算できるので、例えば$\mathcal{O}((\Delta t)^2)$を無視する近似で
+例えば、通常$H$はわかっており、任意の状態$\ket{\psi}$に対して$H\ket{\psi}$が計算できるので、$\mathcal{O}((\Delta t)^2)$を無視する近似で
 
 $$
 \tilde{U}_{H;\Delta t} = I - \frac{i \Delta t}{\hbar} H
@@ -238,22 +241,39 @@ $$
 
 しかし、このスキームは量子コンピュータでの実装に向いていません。上で述べたように量子コンピュータのゲートはユニタリ演算子に対応するのに対して、$I - i\Delta t / \hbar H$はユニタリでないからです。代わりに、量子コンピュータでのダイナミクスシミュレーションでよく用いられるのが鈴木・トロッター分解という近似法です{cite}`nielsen_chuang_dynamics`。
 
-鈴木・トロッター分解は、ハミルトニアンを$H = \sum_{k=1}^{L} H_k$と$L$個のエルミート演算子$H_k$の和に分解したときに、
+鈴木・トロッター分解が使えるケースとは、
 
-```{math}
-:label: trotter_formula
-\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)
-```
+- $U_H(t)$は量子回路として実装が難しい。
+- ハミルトニアンが$H = \sum_{k=1}^{L} H_k$のように複数の部分ハミルトニアン$\{H_k\}_k$の和に分解できる。
+- 個々の$H_k$に対しては$U_{H_k}(t) = \exp(-\frac{i t}{\hbar} H_k)$が簡単に実装できる。
 
-が成り立つという定理に基づきます。個々の$H_k$について$U_{H_k}(\Delta t) = \exp (-i/\hbar \Delta t H_k)$の量子ゲートによる実装が知られていれば、右辺の第一項が実装できるので、ステップ数$M$で決まる精度でダイナミクスが近似できます。
-
-やや立ち入った話になりますが、この定理の重要なポイントは、一般に線形演算子$A, B$に対して、特殊な条件が満たされる（$A$と$B$が「可換」である）場合を除いて
+のような場合です。もしも$H$や$H_k$が演算子ではなく単なる実数であれば、$\exp\left(\sum_k A_k\right) = \prod_k e^{A_k}$なので、$U_H(t) = \prod_k U_{H_k}(t)$となります。ところが、一般に線形演算子$A, B$に対して、特殊な条件が満たされる（$A$と$B$が「可換」である）場合を除いて
 
 $$
 \exp(A + B) \neq \exp(A)\exp(B)
 $$
 
-であるということです。この関係があるからこそ、式{eq}`trotter_formula`で$U_{H_k}(t)$が実装できても$U_H(t)$が実装できるとは限らないのです。しかし、十分短い時間$\Delta t$[^sufficiently_small]についてであれば、$U_H(\Delta t)$を$U_{H_k}(\Delta t)$の積として表しても、その誤差が計算結果に大きく影響しない、ということをこの定理は言っています。
+なので、そのような簡単な関係は成り立ちません。しかし、
+
+$$
+\exp \left(- \frac{i \Delta t}{\hbar} H \right) = \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) + \mathcal{O}((\Delta t)^2)
+$$
+
+という、Baker-Campbell-Hausdorfの公式の応用式は成り立ちます。これによると、時間分割の極限では、
+
+$$
+\lim_{\substack{M \rightarrow \infty \\ \Delta t \rightarrow 0}} \left[ \prod_{k=1}^{L} \exp \left(-\frac{i \Delta t}{\hbar} H_k \right) \right]^M = \exp \left(-\frac{i}{\hbar} H (t_1 - t_0) \right).
+$$
+
+つまり、$U_H(\Delta t)$を
+
+$$
+\tilde{U}_{H;\Delta t} = \prod_k U_{H_k}(\Delta t)
+$$
+
+で近似すると、$[\tilde{U}_{H;\Delta t}]^M$と$U_H(t_1 - t_0)$の間の誤差は$\Delta t$を短くすることで[^sufficiently_small]いくらでも小さくできます。
+
+鈴木・トロッター分解とは、このように全体の時間発展$U_H(t_1 - t_0)$を短い時間発展$U_H(\Delta t)$の繰り返しにし、さらに$U_H(\Delta t)$をゲート実装できる部分ユニタリの積$\prod_k U_{H_k}(\Delta t)$で近似する手法のことを言います。
 
 [^exact_at_limit]: 実際、この手続きは$M \rightarrow \infty$の極限で厳密に$U(t_1 - t_0)$による時間発展となります。
 [^sufficiently_small]: 具体的には、$\Omega = H/\hbar, \Omega_k = H_k/\hbar$として$\exp(-i\Delta t \Omega) - \prod_{k} \exp(-i\Delta t \Omega_k) = (\Delta t)^2/2 \sum_{k \neq l} [\Omega_k, \Omega_l] + \mathcal{O}((\Delta t)^3)$なので、任意の状態$\ket{\psi}$について$(\Delta t)^2 \sum_{k \neq l} \bra{\psi} [\Omega_k, \Omega_l] \ket{\psi} \ll 1$が成り立つとき、$\Delta t$が十分小さいということになります。
@@ -339,7 +359,7 @@ $$
 \end{align}
 $$
 
-です。つまり、2つのスピンの「パリティ」（同一かどうか）に応じてかかる位相の符号が違います。
+です。つまり、2つのスピンの「パリティ」（同一かどうか）に応じて、かかる位相の符号が違います。
 
 パリティに関する演算をするにはCNOTを使います。例えば以下の回路
 
@@ -428,58 +448,59 @@ circuit.draw('mpl')
 
 # まずは全てインポート
 import numpy as np
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, IBMQ, transpile
+from qiskit import QuantumCircuit, Aer, IBMQ, transpile
 from qiskit.tools.monitor import job_monitor
 from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
-from qiskit.ignis.mitigation.measurement import complete_meas_cal, CompleteMeasFitter
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
 from qc_workbook.utils import operational_backend
 ```
 
 ```{code-cell} ipython3
-n = 5
+n_spins = 5
 M = 10
 omegadt = 0.1
 
 circuits = []
 
-circuit = QuantumCircuit(n)
+circuit = QuantumCircuit(n_spins)
 
-# Bit 0 in state 1/sqrt(2)(|0> + |1>)
+# 第0ビットを 1/√2 (|0> + |1>) にする
 circuit.h(0)
 
+# Δtでの時間発展をM回繰り返すループ
 for istep in range(M):
-    for j in range(n - 1):
+    # ハミルトニアンのn-1個の項への分解に関するループ
+    for jspin in range(n_spins - 1):
         # ZZ
-        circuit.cx(j, j + 1)
-        circuit.rz(-omegadt, j + 1)
-        circuit.cx(j, j + 1)
+        circuit.cx(jspin, jspin + 1)
+        circuit.rz(-omegadt, jspin + 1)
+        circuit.cx(jspin, jspin + 1)
 
         # XX
-        circuit.h(j)
-        circuit.h(j + 1)
-        circuit.cx(j, j + 1)
-        circuit.rz(-omegadt, j + 1)
-        circuit.cx(j, j + 1)
-        circuit.h(j)
-        circuit.h(j + 1)
+        circuit.h(jspin)
+        circuit.h(jspin + 1)
+        circuit.cx(jspin, jspin + 1)
+        circuit.rz(-omegadt, jspin + 1)
+        circuit.cx(jspin, jspin + 1)
+        circuit.h(jspin)
+        circuit.h(jspin + 1)
 
         # YY
-        circuit.p(-np.pi / 2., j)
-        circuit.p(-np.pi / 2., j + 1)
-        circuit.h(j)
-        circuit.h(j + 1)
-        circuit.cx(j, j + 1)
-        circuit.rz(-omegadt, j + 1)
-        circuit.cx(j, j + 1)
-        circuit.h(j)
-        circuit.h(j + 1)
-        circuit.p(np.pi / 2., j)
-        circuit.p(np.pi / 2., j + 1)
+        circuit.p(-np.pi / 2., jspin)
+        circuit.p(-np.pi / 2., jspin + 1)
+        circuit.h(jspin)
+        circuit.h(jspin + 1)
+        circuit.cx(jspin, jspin + 1)
+        circuit.rz(-omegadt, jspin + 1)
+        circuit.cx(jspin, jspin + 1)
+        circuit.h(jspin)
+        circuit.h(jspin + 1)
+        circuit.p(np.pi / 2., jspin)
+        circuit.p(np.pi / 2., jspin + 1)
 
-    # Save a copy of the circuit at this point
-    # measure_all(inplace=False) creates a copy of the circuit with a full measurement at the end
+    # この時点での回路のコピーをリストに保存
+    # measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す
     circuits.append(circuit.measure_all(inplace=False))
     
 print(f'{len(circuits)} circuits created')
@@ -488,26 +509,26 @@ print(f'{len(circuits)} circuits created')
 量子回路シミュレーターで実行し、各ビットにおける$Z$方向スピンの期待値をプロットしましょう。プロット用の関数は比較的長くなってしまいますが実習の本質とそこまで関係しないので、[別ファイル](https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py)に定義してあります。関数はジョブの実行結果、系のスピンの数、初期状態、ステップ間隔を引数にとります。
 
 ```{code-cell} ipython3
-# Define the initial statevector
-initial_state = np.zeros(2 ** n, dtype=np.complex128)
+# 初期状態 |00000> は配列では [1/√2 1/√2 0 0 ...]
+initial_state = np.zeros(2 ** n_spins, dtype=np.complex128)
 initial_state[0:2] = np.sqrt(0.5)
 
 shots = 100000
 
 qasm_simulator = Aer.get_backend('qasm_simulator')
 
-circuits = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits, shots=shots)
+circuits_qasm = transpile(circuits, backend=qasm_simulator)
+sim_job = qasm_simulator.run(circuits_qasm, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
    
-plot_heisenberg_spins(sim_counts_list, n, initial_state, omegadt, add_theory_curve=True)
+plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
 ```
 
 ビット0でのスピンの不整合が徐々に他のビットに伝搬していく様子が観察できました。
 
 また、上のように関数`plot_heisenberg_spins`に`add_theory_curve=True`という引数を渡すと、ハミルトニアンを対角化して計算した厳密解のカーブも同時にプロットします。トロッター分解による解が、厳密解から少しずつずれていっている様子も観察できます。興味があれば$\Delta t$を小さく（$M$を大きく）して、ずれがどう変わるか確認してみてください。
 
-実機でも同様の結果が得られるでしょうか。QV32の5量子ビットマシンで確認してみましょう。
+実機でも同様の結果が得られるか確認してみましょう。
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
@@ -519,11 +540,18 @@ except IBMQAccountCredentialsNotFound:
     
 provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
 
-backend_list = provider.backends(filter=operational_backend(min_qubits=n, min_qv=32))
+backend_list = provider.backends(filters=operational_backend(min_qubits=n_spins, min_qv=32))
 backend = least_busy(backend_list)
 
-circuits = tranpile(circuits, backend=backend, optimization_level=3)
-job = backend.run(circuits, shots=8192)
+print(f'Job will run on {backend.name()}')
+```
+
+```{code-cell} ipython3
+:tags: [raises-exception, remove-output]
+
+circuits_ibmq = transpile(circuits, backend=backend)
+
+job = backend.run(circuits_ibmq, shots=8192)
 
 job_monitor(job, interval=2)
 
@@ -533,69 +561,8 @@ counts_list = job.result().get_counts()
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-plot_heisenberg_spins(counts_list, n, initial_state, omegadt)
+plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
 ```
-
-+++ {"tags": ["remove-output", "raises-exception"]}
-
-(measurement_error_mitigation)=
-### おまけ：測定エラーの緩和
-
-{doc}`第二回の課題 <quantum_computation>`でも触れましたが、実機ではCNOTゲートと測定で主にエラーが起きます。課題ではCNOTを極力減らす回路を書きましたが、今回のシミュレーションではなかなかこれ以上CNOTを減らす工夫のしようがなさそうです。
-
-そこで、今度は測定エラーに注目します。測定エラーは統計的にだいたい再現性がある（あるビット列$x$が得られるべき状態から別のビット列$y$が得られる確率が、状態の生成法に依存しにくい）ので、事後的に緩和（部分的補正）できます。そのためには$n$ビットレジスタの$2^n$個すべての計算基底状態について、相当するビット列が100%の確率で得られるべき回路を作成し、それを測定した結果を利用します。
-
-例えば$n=2$で状態$\ket{x} \, (x = 00, 01, 10, 11)$を測定してビット列$y$を得る確率が$\epsilon^x_y$だとします。このとき実際の量子計算をして測定で得られた確率分布が$\{p_y\}$であったとすると、その計算で本来得られるべき確率分布$\{P_x\}$は連立方程式
-
-$$
-p_{00} = P_{00} \epsilon^{00}_{00} + P_{01} \epsilon^{01}_{00} + P_{10} \epsilon^{10}_{00} + P_{11} \epsilon^{11}_{00} \\
-p_{01} = P_{00} \epsilon^{00}_{01} + P_{01} \epsilon^{01}_{01} + P_{10} \epsilon^{10}_{01} + P_{11} \epsilon^{11}_{01} \\
-p_{10} = P_{00} \epsilon^{00}_{10} + P_{01} \epsilon^{01}_{10} + P_{10} \epsilon^{10}_{10} + P_{11} \epsilon^{11}_{10} \\
-p_{11} = P_{00} \epsilon^{00}_{11} + P_{01} \epsilon^{01}_{11} + P_{10} \epsilon^{10}_{11} + P_{11} \epsilon^{11}_{11}
-$$
-
-を解けば求まります。つまり、行列$\epsilon^x_y$の逆をベクトル$p_y$にかければいいわけです[^actually_fits]。
-
-Qiskitでは測定エラー緩和用の関数やクラスが提供されているので、それを使って実際にエラーを求め、上のシミュレーションの結果の改善を試みましょう。
-
-[^actually_fits]: 実際には数値的安定性などの理由から、単純に逆行列をかけるわけではなくフィッティングが行われますが、発想はここで書いたものと変わりません。
-
-```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
-# Define 32 calibration measurement circuits from a 5-qubit register
-qreg = QuantumRegister(5)
-meas_calibs, state_labels = complete_meas_cal(qr=qreg, circlabel='mcal')
-
-# Run the circuits
-meas_calibs = transpile(meas_calibs, backend=backend)
-calib_job = backend.run(meas_calibs, shots=8192)
-
-job_monitor(calib_job, interval=2)
-
-calib_result = calib_job.result()
-```
-
-```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
-# Create an error corrector object
-meas_fitter = CompleteMeasFitter(calib_result, state_labels, circlabel='mcal')
-
-# Get the filter object
-meas_filter = meas_fitter.filter
-
-# Results with mitigation
-mitigated_counts_list = []
-for counts in counts_list:
-    mitigated_counts_list.append(meas_filter.apply(counts))
-
-plot_heisenberg_spins(mitigated_counts_list, n, initial_state, omegadt)
-```
-
-違いはみられたでしょうか？（劇的な違いは期待できません。）
-
-+++
 
 ## 参考文献
 
