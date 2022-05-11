@@ -929,7 +929,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </div>
 <div class="section" id="id11">
 <h2><a class="toc-backref" href="#id61">シミュレータでの実行</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<p>上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。課題では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py">専用に効率化した等価回路</a>を代わりに使用します。</p>
+<p>上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。<a class="reference internal" href="addition_on_ibmq.html"><span class="doc">【参考】足し算を実機で行う</span></a>では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py">専用に効率化した等価回路</a>を代わりに使用します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 元の回路に測定を加える</span>
@@ -961,7 +961,7 @@ Number of operations in the optimized circuit: 331
 <p>効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。</p>
 <div class="section" id="transpilation">
 <span id="id12"></span><h3><a class="toc-backref" href="#id62">トランスパイルと物理的回路</a><a class="headerlink" href="#transpilation" title="Permalink to this headline">¶</a></h3>
-<p>これまで何度も登場しましたが、量子回路オブジェクトを実機やシミュレータの<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドに渡す前に、必ず<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数が呼んでいました。この関数はトランスパイルという変換を回路に施します。実機においてトランスパイルとは、様々な複合ゲートからなる論理的な回路から、実機のハードウェアに実装されている「基本ゲート」のみで書かれる物理的な回路を作ることを言います<a class="footnote-reference brackets" href="#physical" id="id13">2</a>。</p>
+<p>これまで何度も登場しましたが、量子回路オブジェクトを実機やシミュレータの<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドに渡す前に、必ず<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を呼んでいました。この関数はトランスパイルという変換を回路に施します。実機においてトランスパイルとは、様々な複合ゲートからなる論理的な回路から、実機のハードウェアに実装されている「基本ゲート」のみで書かれる物理的な回路を作ることを言います<a class="footnote-reference brackets" href="#physical" id="id13">2</a>。</p>
 <p>基本ゲートとは何でしょうか。実は、<a class="reference internal" href="chsh_inequality.html#common-gates"><span class="std std-ref">第一回</span></a>や<a class="reference internal" href="circuit_from_scratch.html#other-gates"><span class="std std-ref">第二回の前半</span></a>で様々なゲートを紹介しましたが、量子コンピュータの物理的実体（超伝導振動子など）で実際に行える量子操作にはごく少数の種類しかありません。例えば、IBMのマシンでは<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(\sqrt{X}\)</span>, <span class="math notranslate nohighlight">\(R_{z}\)</span>, CNOTの4通りです。しかし、この4つの組み合わせで全てのゲートを作ることができます。そのようなゲートの集合を基本ゲートと呼んでいます。</p>
 <p>足し算回路の愚直な実装と効率化した実装の比較に話を戻すと、上で比べていたのはあくまで複合ゲートを使った論理的な回路でした。論理的な回路はどのようにでも書ける（極端に言えば回路全体を一つの「足し算ゲート」と呼んでしまうこともできる）ので、回路のゲート数の比較はトランスパイル後でなければ意味がありません。</p>
 <p>いい機会なので、実機での量子計算について少し詳細に考えてみましょう。トランスパイルがまさに論理的なアルゴリズムの世界と物理的実装の世界のインターフェースとなるので、この過程に注目します。</p>
@@ -986,7 +986,7 @@ Number of operations in the optimized circuit: 331
 <h3><a class="toc-backref" href="#id63">回路の比較</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>上を踏まえて、改めて2つの足し算回路を比較してみましょう。</p>
 <p>これまで<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を回路とバックエンド以外の引数を渡さずに実行してきましたが、実はこの関数の実行時に様々なオプションを使ってトランスパイルの設定を細かくコントロールすることができます。今回の効率化した回路は一列に並んだ量子ビット列上でSWAPを一切使わずに実装できるようになっているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。バックエンド上のどの量子ビット列を使うかは、<code class="docutils literal notranslate"><span class="pre">find_best_chain</span></code>という関数で自動的に決めます。</p>
-<p>本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、<code class="docutils literal notranslate"><span class="pre">'ibm-q/open/main'</span></code>プロバイダを使ってている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。</p>
+<p>本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、<code class="docutils literal notranslate"><span class="pre">'ibm-q/open/main'</span></code>プロバイダを使っている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># よりアクセス権の広いプロバイダを使える場合は、下を書き換える</span>
