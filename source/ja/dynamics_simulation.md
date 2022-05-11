@@ -509,7 +509,7 @@ print(f'{len(circuits)} circuits created')
 量子回路シミュレーターで実行し、各ビットにおける$Z$方向スピンの期待値をプロットしましょう。プロット用の関数は比較的長くなってしまいますが実習の本質とそこまで関係しないので、[別ファイル](https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py)に定義してあります。関数はジョブの実行結果、系のスピンの数、初期状態、ステップ間隔を引数にとります。
 
 ```{code-cell} ipython3
-# 初期状態 |00000> は配列では [1/√2 1/√2 0 0 ...]
+# 初期状態 |0> x |0> x |0> x |0> x 1/√2(|0>+|1>) は配列では [1/√2 1/√2 0 0 ...]
 initial_state = np.zeros(2 ** n_spins, dtype=np.complex128)
 initial_state[0:2] = np.sqrt(0.5)
 

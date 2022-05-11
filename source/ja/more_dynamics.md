@@ -214,7 +214,7 @@ Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと
 
 ### ハミルトニアンを物質場のみで記述する
 
-$\newcommand{\mfrac}[2]{\genfrac{}{}{2pt}{0}{#1}{#2}}$
+$\newcommand{\flhalf}[1]{\left\lfloor \frac{#1}{2} \right\rfloor}$
 
 このままのハミルトニアンではまだデジタルモデルが構築しにくいので、ゲージを固定して$\theta$と$L$を除いてしまいます[^another_approach]。まず$\Phi_j$を以下のように再定義します。
 
@@ -240,13 +240,13 @@ $$
 なので、
 
 $$
-L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1
+L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \flhalf{j} - 1
 $$
 
-となります。ここで太線の分数$\genfrac{}{}{2pt}{1}{j}{2}$は切り捨ての割り算$[j - (j \bmod 2)]/2$（Pythonでの`j // 2`と同等）です。この電場を式{eq}`kogut_susskind_hamiltonian`に代入して
+となります。ここで$\flhalf{j}$は切り捨ての割り算$[j - (j \bmod 2)]/2$（Pythonでの`j // 2`と同等）です。この電場を式{eq}`kogut_susskind_hamiltonian`に代入して
 
 $$
-H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \mfrac{j}{2} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
+H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \flhalf{j} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
 $$
 
 が得られます。
@@ -283,7 +283,7 @@ $$
 となります。まとめると、
 
 $$
-H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \mfrac{n-j}{2} \right] \sigma^Z_j \right\}
+H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
 $$
 
 です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。
@@ -292,7 +292,7 @@ $$
 
 ### 問題
 
-上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、$\plusket$と$\minusket$をそれぞれ$\ket{0}$と$\ket{1}$に対応させて、8ビット量子レジスタに対して実装してください。初期状態は真空、つまり$\ket{-+-+-+-+}$（右端がサイト$j=0$）とし、系全体の粒子数密度の期待値
+上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、$\plusket$と$\minusket$をそれぞれ$\ket{0}$と$\ket{1}$に対応させて、8ビット量子レジスタに対して実装してください。初期状態は真空、つまりどのサイトにも粒子・反粒子が存在しない状態$\ket{+-+-+-+-}$とし、系全体の粒子数密度の期待値
 
 $$
 \nu = \left\langle \frac{1}{n} \sum_{j=0}^{n-1} \frac{1}{2} \left[(-1)^{j+1} \sigma^Z_j + 1\right] \right\rangle
@@ -412,14 +412,14 @@ _, bit_exp = bit_expectations_sv(time_points, statevectors)
 
 plt.plot(time_points, number_density(bit_exp))
 
-# Plot the simulation results
-time_points = np.linspace(0., omegadt * M, M + 1, endpoint=True)
-
+# Prepend the "counts" (=probability distribution) for the initial state to counts_list
 initial_probs = np.square(np.abs(initial_state))
-fmt = f'{{:0{num_spins}b}}'
+fmt = f'{{:0{n}b}}'
 initial_counts = dict((fmt.format(idx), prob) for idx, prob in enumerate(initial_probs) if prob != 0.)
 sim_counts_list = [initial_counts] + sim_counts_list
 
+# Plot the simulation results
+time_points = np.linspace(0., omegadt * M, M + 1, endpoint=True)
 _, bit_exp = bit_expectations_counts(time_points, sim_counts_list, n)
 
 plt.plot(time_points, number_density(bit_exp), 'o')
