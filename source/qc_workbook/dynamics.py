@@ -1,7 +1,43 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from qiskit import QuantumCircuit
+
 from .hamiltonian import tensor_product, make_hamiltonian, diagonalized_evolution
+
+def make_heisenberg_circuits(n_spins, M, omegadt):
+    circuits = []
+
+    circuit = QuantumCircuit(n_spins)
+
+    # 第0ビットを 1/√2 (|0> + |1>) にする
+    circuit.h(0)
+
+    # Δtでの時間発展をM回繰り返すループ
+    for istep in range(M):
+        # ハミルトニアンのn-1個の項への分解に関するループ
+        for jspin in range(n_spins - 1):
+            # ZZ
+            circuit.cx(jspin, jspin + 1)
+            circuit.rz(-omegadt, jspin + 1)
+            circuit.cx(jspin, jspin + 1)
+            
+            # XX YY
+            circuit.h([jspin, jspin + 1])
+            circuit.s([jspin, jspin + 1])
+            circuit.cx(jspin, jspin + 1)
+            circuit.rx(-omegadt, jspin)
+            circuit.rz(-omegadt, jspin + 1)
+            circuit.cx(jspin, jspin + 1)
+            circuit.sdg([jspin, jspin + 1])
+            circuit.h([jspin, jspin + 1])
+
+        # この時点での回路のコピーをリストに保存
+        # measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す
+        circuits.append(circuit.measure_all(inplace=False))
+        
+    return circuits
+
 
 def bit_expectations_sv(time_points, statevectors):
     """Compute the bit expectation values at each time point from statevectors.
@@ -116,7 +152,7 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
         if spin_basis_change is not None:
             basis_change = tensor_product([spin_basis_change] * num_spins)
             statevectors = basis_change @ statevectors
-            iniital_state = basis_change @ initial_state
+            initial_state = basis_change @ initial_state
 
         x, y = bit_expectations_sv(time_points, statevectors)
 
