@@ -111,7 +111,7 @@ for i in range(eigvals.shape[0]):
     show_state(eigvectors[:, i], binary=True, state_label=r'\phi_{} (E={}J)'.format(i, eigvals[i]))
 ```
 
-最後の部分で、[`show_statevector`関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py)を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値$-2J$）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値$6J$）は$1/\sqrt{2} (-\ket{01} + \ket{10})$です。
+最後の部分で、[`show_state`関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py)を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値$-2J$）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値$6J$）は$1/\sqrt{2} (-\ket{01} + \ket{10})$です。
 
 +++
 
@@ -214,101 +214,105 @@ $$
 
 $U_H(-\tau)$を量子コンピュータ上で計算するために、鈴木・トロッター分解を使います。$ZZ, XX, YY$回転ゲートの実装法は{doc}`dynamics_simulation`を参照してください。
 
-次のセルでは鈴木・トロッター分解の1ステップ（トロッターステップと呼ばれます）に対応する関数を返す関数を定義しています。やや込み入った構造ですが、こうすることで返される関数は1ステップ分の位相だけを引数に取る形にでき、ハイゼンベルグモデルの物理とスペクトル推定のアルゴリズムを分けて考えることができます。外側の関数の引数である`n`, `g`, `hbar_omega`は内側の関数の中でも使用できます。
+次のセルでは$U_H(-2\pi/\omega)$を鈴木・トロッター分解した量子回路を返す関数を定義しています。引数`num_steps`で分解の細かさを指定できます。
 
 ```{code-cell} ipython3
-def make_trotter_step_heisenberg(n, g, hbar_omega=None):
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     """Return a function that implements a single Trotter step for the Heisenberg model.
     
+    The Heisenberg model Hamiltonian is
+    H = -J * sum_of_sigmas = hbar*ω * Θ
+    
+    The returned circuit implements a negative time evolution
+    U = exp(-i H*(-τ)/hbar)
+    where τ = 2π / ω, which leads to
+    U = exp(i 2π Θ).
+    
+    Because we employ the Suzuki-Trotter decomposition, the actual circuit corresponds to
+    U = [exp(i 2π/num_steps Θ)]^num_steps.
+
     Args:
-        n (int): Number of spins in the model.
+        state_register (QuantumRegister): Register to perform the Suzuki-Trotter simulation.
+        energy_norm (float): J/(hbar*ω).
         g (float): External field strength relative to the coupling constant J.
-        hbar_omega (None or float): If not None, provides a custom Hamiltonian normalization in units of J.
-        
+        num_steps (float): Number of steps to divide the time evolution of ωτ=2π.
+
     Returns:
-        function(dphi: float)->QuantumCircuit: A function that returns a circuit corresponding to a single Trotter step by dphi.
+        QuantumCircuit: A quantum circuit implementing the Trotter simulation of the Heisenberg
+        model.
     """
+    circuit = QuantumCircuit(state_register, name='ΔU')
 
-    if hbar_omega is None:
-        # H = -J sum[XX + YY + ZZ + gZ]
-        # |sum[]| < (3 + |g|) * n
-        # -> hbar * omega = 2 * (3 + |g|) * n * J
-        #    Theta = -1 / 2 / [(3 + |g|) * n] * sum[]
-        hbar_omega = 2. * (3. + abs(g)) * n
-        
-    def trotter_step_heisenberg(dphi):
-        """
-        Evolve the state by exp[i * dphi * Theta].
-        Theta = H / (hbar * omega) is the normalized Hamiltonian.
+    n_spins = state_register.size
+    step_size = 2. * np.pi / num_steps
+
+    # Implement the circuit corresponding to exp(i*step_size*Θ) below, where Θ is defined by
+    # Θ = -J/(hbar*ω) * sum_of_sigmas = -energy_norm * sum_of_sigmas
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    # circuit.?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
     
-        Args:
-            dphi (float): Trotter step size.
-            
-        Returns:
-            QuantumCircuit: A circuit corresponding to a single Trotter step.
-        """
-        
-        circuit = QuantumCircuit(n)
-        
-        ##################
-        ### EDIT BELOW ###
-        ##################
+    circuit = circuit.repeat(num_steps)
+    circuit.name = 'U'
 
-        #circuit.?
-
-        ##################
-        ### EDIT ABOVE ###
-        ##################
-        
-        return circuit
-    
-    return trotter_step_heisenberg
+    return circuit
 ```
 
-次のセルでスペクトル推定のアルゴリズムを実装しています。まず、トロッターステップを実装する関数（上の関数から返される関数）と整数を引数に取り、$U$のべき乗に対応するゲートを返す関数`propagator`を定義します。関数`spectrum_estimation`は回路オブジェクトとトロッターステップ関数を引数に取り、`propagator`を使ってスペクトル推定を行います。
+次のセルでスペクトル推定のアルゴリズムを実装しています。この関数は状態レジスタ、読み出しレジスタ、時間発展回路を引数に取り、スペクトル推定の量子回路を返します。
 
 ```{code-cell} ipython3
-def propagator(trotter_step, power, num_steps=6):
-    """Call trotter_step(2 * pi / num_steps) for power * num_steps times and convert the circuit to a gate.
-    
-    Args:
-        trotter_step (callable): A function implementing a single Trotter step.
-        power (int): Number of repetitions of the 2pi evolution.
-        num_steps (int): Number of Trotter steps per 2pi evolution.
-        
-    Returns:
-        Gate: Propagator circuit converted to a gate.
-    """
-    
-    circuit = QuantumCircuit(name='propagator^{}'.format(power))
-    circuit += trotter_step(2. * np.pi / num_steps).repeat(power * num_steps)
-    return circuit.to_gate()
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
 
-def spectrum_estimation(circuit, trotter_step):
+    '
+---
+def spectrum_estimation(state_register, readout_register, u_circuit):
     """Perform a spectrum estimation given a circuit containing state and readout registers and a callable implementing
     a single Trotter step.
-    
+
     Args:
-        circuit (QuantumCircuit): Circuit with two registers 'state' and 'readout'.
-        trotter_step (callable): A function returning a QuantumCircuit corresponding to a Trotter step.
+        state_register (QuantumRegister): State register.
+        readout_register (QuantumRegister): Readout register.
+        u_circuit (QuantumCircuit): A circuit implementing U_H(-2π/ω).
+        
+    Returns:
+        QuantumCircuit: A circuit implementing the spectrum estimation of the given Hamiltonian.
     """
-    
-    state_register = next(reg for reg in circuit.qregs if reg.name == 'state')
-    readout_register = next(reg for reg in circuit.qregs if reg.name == 'readout')
-    
+    circuit = QuantumCircuit(state_register, readout_register, name='Spectrum estimation')
+
     # Set the R register to an equal superposition
     circuit.h(readout_register)
 
     # Apply controlled-U operations to the circuit
-    for qubit in readout_register:
-        # Create a gate from repeated execution of the Trotter step, and convert it to a controlled gate
-        controlled_u = propagator(trotter_step, 2 ** qubit.index).control(1)
+    for iq, qubit in enumerate(readout_register):
+        # Repeat the 2π evolution by 2^iq and convert it to a controlled gate
+        controlled_u_gate = u_circuit.repeat(2 ** iq).to_gate().control(1)
+
         # Append the controlled gate specifying the control and target qubits
-        circuit.append(controlled_u, qargs=([qubit] + state_register[:]))
+        circuit.append(controlled_u_gate, qargs=([qubit] + state_register[:]))
+        
+    circuit.barrier()
 
     # Inverse QFT
-    for j in range(readout_register.size // 2):
-        circuit.swap(readout_register[j], readout_register[-1 - j])
+    for iq in range(readout_register.size // 2):
+        circuit.swap(readout_register[iq], readout_register[-1 - iq])
 
     dphi = 2. * np.pi / (2 ** readout_register.size)
 
@@ -318,48 +322,115 @@ def spectrum_estimation(circuit, trotter_step):
             circuit.cp(-dphi * (2 ** power), readout_register[jctrl], readout_register[jtarg])
 
         circuit.h(readout_register[jtarg])
+        
+    return circuit
 ```
 
-まずは、上で厳密解を求めた$n=2, g=0$のケースを調べます。状態レジスタの初期状態を
+この問題では、上で厳密解を求めた$n=2, g=0$のケースを調べます。今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を$\hbar \omega = 16J$として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が$2^{n_R} (6/16)$なので、$n_R = 1 + 3$とすればオーバーフローを回避できます。
+
+次のセルでシミュレーションとスペクトル推定のパラメータを設定します。
+
+```{code-cell} ipython3
+## Physics model parameter
+g = 0.
+
+## Spectrum estimation parameters
+# Hamiltonian normalization
+energy_norm = 1. / 16. # J/(hbar*ω)
+# Number of steps per 2pi evolution
+# Tune this parameter to find the best balance of simulation accuracy versus circuit depth
+num_steps = 6
+# Register sizes
+n_state = 2
+n_readout = 4
+
+## Registers
+state_register = QuantumRegister(n_state, 'state')
+readout_register = QuantumRegister(n_readout, 'readout')
+```
+
+上で正しく関数をかけているか確認しておきましょう。
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
+u_circuit.draw('mpl')
+```
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
+se_circuit.draw('mpl')
+```
+
+状態レジスタの初期状態を
 
 ```{math}
 :label: two_qubit_init
 \frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}
 ```
 
-とします。ここで$\ket{\phi_i}$は最初に求めた固有ベクトルの4つの厳密解です。
-
-今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を$\hbar \omega = 16J$として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が$2^{n_R} (6/16)$なので、$n_R = 1 + 3$とすればオーバーフローを回避できます。
+とする関数を書きます。ここで$\ket{\phi_i}$は最初に求めた固有ベクトルの4つの厳密解です。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-n_state = 2
-n_readout = 4
-g = 0.
-hbar_omega = 16. # 16J but we are setting J=1
+def make_initial_state(state_register, readout_register):
+    circuit = QuantumCircuit(state_register, readout_register)
 
-state_register = QuantumRegister(n_state, 'state')
-readout_register = QuantumRegister(n_readout, 'readout')
-circuit = QuantumCircuit(state_register, readout_register)
+    # Set the initial state of the state vector to (1/2)|00> - (1/sqrt(2))|01> + (1/2)|11>
+    ##################
+    ### EDIT BELOW ###
+    ##################
 
-# Set the initial state of the state vector to (1/2)|00> - (1/sqrt(2))|01> + (1/2)|11>
-##################
-### EDIT BELOW ###
-##################
+    #circuit.?
 
-#circuit.?
-
-##################
-### EDIT ABOVE ###
-##################
-
-trotter_step = make_trotter_step_heisenberg(n_state, g, hbar_omega=hbar_omega)
-
-spectrum_estimation(circuit, trotter_step)
+    ##################
+    ### EDIT ABOVE ###
+    ##################
     
-circuit.measure_all()
+    return circuit
 
+
+init_circuit = make_initial_state(state_register, readout_register)
+init_circuit.draw('mpl')
+```
+
+最後に全てを組み合わせます。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+tags: [remove-output]
+---
+u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
+se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
+
+circuit = make_initial_state(state_register, readout_register)
+circuit.compose(se_circuit, inplace=True)
+circuit.measure_all()
+circuit.draw('mpl')
+```
+
+シミュレータで実行してヒストグラムを得ます。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+tags: [remove-output]
+---
 # Run the circuit in qasm_simulator and plot the histogram
 qasm_simulator = Aer.get_backend('qasm_simulator')
 circuit = transpile(circuit, backend=qasm_simulator)
@@ -442,15 +513,15 @@ $|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので
 [^unitarity]: これは$\{\ket{l}\}$と$\{\ket{\phi_m}\}$がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。
 
 ```{code-cell} ipython3
-def get_spectrum_for_comp_basis(n_state, n_readout, l, g, hbar_omega=None, use_qasm=False):
+def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=False):
     """Compute and return the distribution P_l(k, h) as an ndarray.
     
     Args:
         n_state (int): Size of the state register.
         n_readout (int): Size of the readout register.
         l (int): Index of the initial-state computational basis in the state register.
+        energy_norm (float): Hamiltonian normalization.
         g (float): Parameter g of the Heisenberg model.
-        hbar_omega (None or float): Hamiltonian normalization.
         use_qasm (bool): Use the qasm_simulator if True.
     """
     
@@ -463,10 +534,11 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, g, hbar_omega=None, use_q
     for iq in range(n_state):
         if ((l >> iq) & 1) == 1:
             circuit.x(state_register[iq])
+            
+    u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
+    se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
 
-    # Run the spectrum estimation
-    trotter_step = make_trotter_step_heisenberg(n_state, g, hbar_omega=hbar_omega)
-    spectrum_estimation(circuit, trotter_step)
+    circuit.compose(se_circuit, inplace=True)
 
     # Extract the probability distribution as an array of shape (2 ** n_readout, 2 ** n_state)
     if use_qasm:
@@ -514,7 +586,7 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, g, hbar_omega=None, use_q
 
 n_state = 4
 n_readout = 5
-hbar_omega = 24.
+energy_norm = 1. / 24.
 
 g_values = np.linspace(0., 0.5, 6, endpoint=True)
 
@@ -527,7 +599,7 @@ def get_full_spectrum(g):
     spectrum = np.zeros(2 ** n_readout, dtype=float)
     
     for l in range(2 ** n_state):
-        probs = get_spectrum_for_comp_basis(n_state, n_readout, l, g, hbar_omega=hbar_omega)
+        probs = get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g)
         print('Computed spectrum for g = {:.1f} l = {:d}'.format(g, l))
 
         ##################
@@ -549,7 +621,7 @@ spectra[0] = np.roll(get_full_spectrum(0.), 2 ** (n_readout - 1))
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-plt.plot(np.linspace(-0.5 * hbar_omega, 0.5 * hbar_omega, 2 ** n_readout), spectra[0], 'o')
+plt.plot(np.linspace(-0.5 / energy_norm, 0.5 / energy_norm, 2 ** n_readout), spectra[0], 'o')
 plt.xlabel('E/J')
 plt.ylabel('P(E)')
 ```
