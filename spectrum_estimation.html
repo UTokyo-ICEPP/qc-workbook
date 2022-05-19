@@ -547,7 +547,7 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 <img alt="_images/spectrum_estimation_4_3.png" src="_images/spectrum_estimation_4_3.png" />
 </div>
 </div>
-<p>最後の部分で、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/utils/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_statevector</span></code>関数</a>を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値<span class="math notranslate nohighlight">\(-2J\)</span>）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値<span class="math notranslate nohighlight">\(6J\)</span>）は<span class="math notranslate nohighlight">\(1/\sqrt{2} (-\ket{01} + \ket{10})\)</span>です。</p>
+<p>最後の部分で、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py"><code class="docutils literal notranslate"><span class="pre">show_state</span></code>関数</a>を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値<span class="math notranslate nohighlight">\(-2J\)</span>）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値<span class="math notranslate nohighlight">\(6J\)</span>）は<span class="math notranslate nohighlight">\(1/\sqrt{2} (-\ket{01} + \ket{10})\)</span>です。</p>
 </div>
 <div class="section" id="id6">
 <h2><a class="toc-backref" href="#id53">位相推定によるスペクトル分解</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
@@ -616,103 +616,91 @@ H = \sum_{k} h_k \sigma_k
 <h2><a class="toc-backref" href="#id54">問題1: スペクトル推定を実装し、厳密解と照らし合わせる</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>それでは、位相推定を利用してハイゼンベルグモデルのハミルトニアンのスペクトルを求めてみましょう。</p>
 <p><span class="math notranslate nohighlight">\(U_H(-\tau)\)</span>を量子コンピュータ上で計算するために、鈴木・トロッター分解を使います。<span class="math notranslate nohighlight">\(ZZ, XX, YY\)</span>回転ゲートの実装法は<a class="reference internal" href="dynamics_simulation.html"><span class="doc">物理系を表現する</span></a>を参照してください。</p>
-<p>次のセルでは鈴木・トロッター分解の1ステップ（トロッターステップと呼ばれます）に対応する関数を返す関数を定義しています。やや込み入った構造ですが、こうすることで返される関数は1ステップ分の位相だけを引数に取る形にでき、ハイゼンベルグモデルの物理とスペクトル推定のアルゴリズムを分けて考えることができます。外側の関数の引数である<code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">hbar_omega</span></code>は内側の関数の中でも使用できます。</p>
+<p>次のセルでは<span class="math notranslate nohighlight">\(U_H(-2\pi/\omega)\)</span>を鈴木・トロッター分解した量子回路を返す関数を定義しています。引数<code class="docutils literal notranslate"><span class="pre">num_steps</span></code>で分解の細かさを指定できます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_trotter_step_heisenberg</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">hbar_omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a function that implements a single Trotter step for the Heisenberg model.</span>
 <span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        n (int): Number of spins in the model.</span>
-<span class="sd">        g (float): External field strength relative to the coupling constant J.</span>
-<span class="sd">        hbar_omega (None or float): If not None, provides a custom Hamiltonian normalization in units of J.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        function(dphi: float)-&gt;QuantumCircuit: A function that returns a circuit corresponding to a single Trotter step by dphi.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">hbar_omega</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># H = -J sum[XX + YY + ZZ + gZ]</span>
-        <span class="c1"># |sum[]| &lt; (3 + |g|) * n</span>
-        <span class="c1"># -&gt; hbar * omega = 2 * (3 + |g|) * n * J</span>
-        <span class="c1">#    Theta = -1 / 2 / [(3 + |g|) * n] * sum[]</span>
-        <span class="n">hbar_omega</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="o">*</span> <span class="n">n</span>
-        
-    <span class="k">def</span> <span class="nf">trotter_step_heisenberg</span><span class="p">(</span><span class="n">dphi</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Evolve the state by exp[i * dphi * Theta].</span>
-<span class="sd">        Theta = H / (hbar * omega) is the normalized Hamiltonian.</span>
+<span class="sd">    The Heisenberg model Hamiltonian is</span>
+<span class="sd">    H = -J * sum_of_sigmas = hbar*ω * Θ</span>
 <span class="sd">    </span>
-<span class="sd">        Args:</span>
-<span class="sd">            dphi (float): Trotter step size.</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            QuantumCircuit: A circuit corresponding to a single Trotter step.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT BELOW ###</span>
-        <span class="c1">##################</span>
+<span class="sd">    The returned circuit implements a negative time evolution</span>
+<span class="sd">    U = exp(-i H*(-τ)/hbar)</span>
+<span class="sd">    where τ = 2π / ω, which leads to</span>
+<span class="sd">    U = exp(i 2π Θ).</span>
+<span class="sd">    </span>
+<span class="sd">    Because we employ the Suzuki-Trotter decomposition, the actual circuit corresponds to</span>
+<span class="sd">    U = [exp(i 2π/num_steps Θ)]^num_steps.</span>
 
-        <span class="c1">#circuit.?</span>
+<span class="sd">    Args:</span>
+<span class="sd">        state_register (QuantumRegister): Register to perform the Suzuki-Trotter simulation.</span>
+<span class="sd">        energy_norm (float): J/(hbar*ω).</span>
+<span class="sd">        g (float): External field strength relative to the coupling constant J.</span>
+<span class="sd">        num_steps (float): Number of steps to divide the time evolution of ωτ=2π.</span>
 
-        <span class="c1">##################</span>
-        <span class="c1">### EDIT ABOVE ###</span>
-        <span class="c1">##################</span>
-        
-        <span class="k">return</span> <span class="n">circuit</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        QuantumCircuit: A quantum circuit implementing the Trotter simulation of the Heisenberg</span>
+<span class="sd">        model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ΔU&#39;</span><span class="p">)</span>
+
+    <span class="n">n_spins</span> <span class="o">=</span> <span class="n">state_register</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">step_size</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">num_steps</span>
+
+    <span class="c1"># Implement the circuit corresponding to exp(i*step_size*Θ) below, where Θ is defined by</span>
+    <span class="c1"># Θ = -J/(hbar*ω) * sum_of_sigmas = -energy_norm * sum_of_sigmas</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT BELOW ###</span>
+    <span class="c1">##################</span>
+
+    <span class="c1"># circuit.?</span>
+
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT ABOVE ###</span>
+    <span class="c1">##################</span>
     
-    <span class="k">return</span> <span class="n">trotter_step_heisenberg</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_steps</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;U&#39;</span>
+
+    <span class="k">return</span> <span class="n">circuit</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>次のセルでスペクトル推定のアルゴリズムを実装しています。まず、トロッターステップを実装する関数（上の関数から返される関数）と整数を引数に取り、<span class="math notranslate nohighlight">\(U\)</span>のべき乗に対応するゲートを返す関数<code class="docutils literal notranslate"><span class="pre">propagator</span></code>を定義します。関数<code class="docutils literal notranslate"><span class="pre">spectrum_estimation</span></code>は回路オブジェクトとトロッターステップ関数を引数に取り、<code class="docutils literal notranslate"><span class="pre">propagator</span></code>を使ってスペクトル推定を行います。</p>
+<p>次のセルでスペクトル推定のアルゴリズムを実装しています。この関数は状態レジスタ、読み出しレジスタ、時間発展回路を引数に取り、スペクトル推定の量子回路を返します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">propagator</span><span class="p">(</span><span class="n">trotter_step</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Call trotter_step(2 * pi / num_steps) for power * num_steps times and convert the circuit to a gate.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        trotter_step (callable): A function implementing a single Trotter step.</span>
-<span class="sd">        power (int): Number of repetitions of the 2pi evolution.</span>
-<span class="sd">        num_steps (int): Number of Trotter steps per 2pi evolution.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        Gate: Propagator circuit converted to a gate.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;propagator^</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">power</span><span class="p">))</span>
-    <span class="n">circuit</span> <span class="o">+=</span> <span class="n">trotter_step</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">num_steps</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">power</span> <span class="o">*</span> <span class="n">num_steps</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">circuit</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">spectrum_estimation</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">trotter_step</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spectrum_estimation</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">u_circuit</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Perform a spectrum estimation given a circuit containing state and readout registers and a callable implementing</span>
 <span class="sd">    a single Trotter step.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        circuit (QuantumCircuit): Circuit with two registers &#39;state&#39; and &#39;readout&#39;.</span>
-<span class="sd">        trotter_step (callable): A function returning a QuantumCircuit corresponding to a Trotter step.</span>
+<span class="sd">        state_register (QuantumRegister): State register.</span>
+<span class="sd">        readout_register (QuantumRegister): Readout register.</span>
+<span class="sd">        u_circuit (QuantumCircuit): A circuit implementing U_H(-2π/ω).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        QuantumCircuit: A circuit implementing the spectrum estimation of the given Hamiltonian.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">state_register</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reg</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">qregs</span> <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;state&#39;</span><span class="p">)</span>
-    <span class="n">readout_register</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reg</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">qregs</span> <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;readout&#39;</span><span class="p">)</span>
-    
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Spectrum estimation&#39;</span><span class="p">)</span>
+
     <span class="c1"># Set the R register to an equal superposition</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">readout_register</span><span class="p">)</span>
 
     <span class="c1"># Apply controlled-U operations to the circuit</span>
-    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="n">readout_register</span><span class="p">:</span>
-        <span class="c1"># Create a gate from repeated execution of the Trotter step, and convert it to a controlled gate</span>
-        <span class="n">controlled_u</span> <span class="o">=</span> <span class="n">propagator</span><span class="p">(</span><span class="n">trotter_step</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">qubit</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">iq</span><span class="p">,</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">readout_register</span><span class="p">):</span>
+        <span class="c1"># Repeat the 2π evolution by 2^iq and convert it to a controlled gate</span>
+        <span class="n">controlled_u_gate</span> <span class="o">=</span> <span class="n">u_circuit</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">iq</span><span class="p">)</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="c1"># Append the controlled gate specifying the control and target qubits</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlled_u</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="p">([</span><span class="n">qubit</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_register</span><span class="p">[:]))</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlled_u_gate</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="p">([</span><span class="n">qubit</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_register</span><span class="p">[:]))</span>
+        
+    <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
 
     <span class="c1"># Inverse QFT</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">readout_register</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">readout_register</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">readout_register</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">j</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">readout_register</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">readout_register</span><span class="p">[</span><span class="n">iq</span><span class="p">],</span> <span class="n">readout_register</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">iq</span><span class="p">])</span>
 
     <span class="n">dphi</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">readout_register</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
@@ -722,44 +710,100 @@ H = \sum_{k} h_k \sigma_k
             <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">),</span> <span class="n">readout_register</span><span class="p">[</span><span class="n">jctrl</span><span class="p">],</span> <span class="n">readout_register</span><span class="p">[</span><span class="n">jtarg</span><span class="p">])</span>
 
         <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">readout_register</span><span class="p">[</span><span class="n">jtarg</span><span class="p">])</span>
+        
+    <span class="k">return</span> <span class="n">circuit</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>まずは、上で厳密解を求めた<span class="math notranslate nohighlight">\(n=2, g=0\)</span>のケースを調べます。状態レジスタの初期状態を</p>
-<div class="math notranslate nohighlight" id="equation-two-qubit-init">
-<span class="eqno">(21)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
-<p>とします。ここで<span class="math notranslate nohighlight">\(\ket{\phi_i}\)</span>は最初に求めた固有ベクトルの4つの厳密解です。</p>
-<p>今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を<span class="math notranslate nohighlight">\(\hbar \omega = 16J\)</span>として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が<span class="math notranslate nohighlight">\(2^{n_R} (6/16)\)</span>なので、<span class="math notranslate nohighlight">\(n_R = 1 + 3\)</span>とすればオーバーフローを回避できます。</p>
-<div class="cell tag_remove-output docutils container">
+<p>この問題では、上で厳密解を求めた<span class="math notranslate nohighlight">\(n=2, g=0\)</span>のケースを調べます。今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を<span class="math notranslate nohighlight">\(\hbar \omega = 16J\)</span>として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が<span class="math notranslate nohighlight">\(2^{n_R} (6/16)\)</span>なので、<span class="math notranslate nohighlight">\(n_R = 1 + 3\)</span>とすればオーバーフローを回避できます。</p>
+<p>次のセルでシミュレーションとスペクトル推定のパラメータを設定します。</p>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_state</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">n_readout</span> <span class="o">=</span> <span class="mi">4</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Physics model parameter</span>
 <span class="n">g</span> <span class="o">=</span> <span class="mf">0.</span>
-<span class="n">hbar_omega</span> <span class="o">=</span> <span class="mf">16.</span> <span class="c1"># 16J but we are setting J=1</span>
 
+<span class="c1">## Spectrum estimation parameters</span>
+<span class="c1"># Hamiltonian normalization</span>
+<span class="n">energy_norm</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">16.</span> <span class="c1"># J/(hbar*ω)</span>
+<span class="c1"># Number of steps per 2pi evolution</span>
+<span class="c1"># Tune this parameter to find the best balance of simulation accuracy versus circuit depth</span>
+<span class="n">num_steps</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="c1"># Register sizes</span>
+<span class="n">n_state</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">n_readout</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1">## Registers</span>
 <span class="n">state_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">)</span>
 <span class="n">readout_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n_readout</span><span class="p">,</span> <span class="s1">&#39;readout&#39;</span><span class="p">)</span>
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上で正しく関数をかけているか確認しておきましょう。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u_circuit</span> <span class="o">=</span> <span class="n">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+<span class="n">u_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se_circuit</span> <span class="o">=</span> <span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">u_circuit</span><span class="p">)</span>
+<span class="n">se_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>状態レジスタの初期状態を</p>
+<div class="math notranslate nohighlight" id="equation-two-qubit-init">
+<span class="eqno">(21)<a class="headerlink" href="#equation-two-qubit-init" title="Permalink to this equation">¶</a></span>\[\frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}\]</div>
+<p>とする関数を書きます。ここで<span class="math notranslate nohighlight">\(\ket{\phi_i}\)</span>は最初に求めた固有ベクトルの4つの厳密解です。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_initial_state</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">):</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">)</span>
 
-<span class="c1"># Set the initial state of the state vector to (1/2)|00&gt; - (1/sqrt(2))|01&gt; + (1/2)|11&gt;</span>
-<span class="c1">##################</span>
-<span class="c1">### EDIT BELOW ###</span>
-<span class="c1">##################</span>
+    <span class="c1"># Set the initial state of the state vector to (1/2)|00&gt; - (1/sqrt(2))|01&gt; + (1/2)|11&gt;</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT BELOW ###</span>
+    <span class="c1">##################</span>
 
-<span class="c1">#circuit.?</span>
+    <span class="c1">#circuit.?</span>
 
-<span class="c1">##################</span>
-<span class="c1">### EDIT ABOVE ###</span>
-<span class="c1">##################</span>
-
-<span class="n">trotter_step</span> <span class="o">=</span> <span class="n">make_trotter_step_heisenberg</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">hbar_omega</span><span class="o">=</span><span class="n">hbar_omega</span><span class="p">)</span>
-
-<span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">trotter_step</span><span class="p">)</span>
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT ABOVE ###</span>
+    <span class="c1">##################</span>
     
-<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">circuit</span>
 
-<span class="c1"># Run the circuit in qasm_simulator and plot the histogram</span>
+
+<span class="n">init_circuit</span> <span class="o">=</span> <span class="n">make_initial_state</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">)</span>
+<span class="n">init_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>最後に全てを組み合わせます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u_circuit</span> <span class="o">=</span> <span class="n">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+<span class="n">se_circuit</span> <span class="o">=</span> <span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">u_circuit</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">make_initial_state</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span><span class="n">se_circuit</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>シミュレータで実行してヒストグラムを得ます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the circuit in qasm_simulator and plot the histogram</span>
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
@@ -816,15 +860,15 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <p>まずは計算基底と<span class="math notranslate nohighlight">\(g\)</span>の値を引数に取り、終状態の確率分布を返す関数を定義します。シミュレータとして<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を用いるほうがより実用に近くなりますが、実行時間や統計誤差の問題から、デフォルトでは<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を使うことにします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">hbar_omega</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_qasm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">use_qasm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute and return the distribution P_l(k, h) as an ndarray.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        n_state (int): Size of the state register.</span>
 <span class="sd">        n_readout (int): Size of the readout register.</span>
 <span class="sd">        l (int): Index of the initial-state computational basis in the state register.</span>
+<span class="sd">        energy_norm (float): Hamiltonian normalization.</span>
 <span class="sd">        g (float): Parameter g of the Heisenberg model.</span>
-<span class="sd">        hbar_omega (None or float): Hamiltonian normalization.</span>
 <span class="sd">        use_qasm (bool): Use the qasm_simulator if True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -837,10 +881,11 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
     <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_state</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">l</span> <span class="o">&gt;&gt;</span> <span class="n">iq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">state_register</span><span class="p">[</span><span class="n">iq</span><span class="p">])</span>
+            
+    <span class="n">u_circuit</span> <span class="o">=</span> <span class="n">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+    <span class="n">se_circuit</span> <span class="o">=</span> <span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">u_circuit</span><span class="p">)</span>
 
-    <span class="c1"># Run the spectrum estimation</span>
-    <span class="n">trotter_step</span> <span class="o">=</span> <span class="n">make_trotter_step_heisenberg</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">hbar_omega</span><span class="o">=</span><span class="n">hbar_omega</span><span class="p">)</span>
-    <span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">trotter_step</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span><span class="n">se_circuit</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Extract the probability distribution as an array of shape (2 ** n_readout, 2 ** n_state)</span>
     <span class="k">if</span> <span class="n">use_qasm</span><span class="p">:</span>
@@ -887,7 +932,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_state</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">n_readout</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">hbar_omega</span> <span class="o">=</span> <span class="mf">24.</span>
+<span class="n">energy_norm</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">24.</span>
 
 <span class="n">g_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -900,7 +945,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
     <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_state</span><span class="p">):</span>
-        <span class="n">probs</span> <span class="o">=</span> <span class="n">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">hbar_omega</span><span class="o">=</span><span class="n">hbar_omega</span><span class="p">)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computed spectrum for g = </span><span class="si">{:.1f}</span><span class="s1"> l = </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
 
         <span class="c1">##################</span>
@@ -922,7 +967,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <p>得られた<span class="math notranslate nohighlight">\(P(k)\)</span>分布を、<span class="math notranslate nohighlight">\(k\)</span>をエネルギーに換算してプロットしてみましょう。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">hbar_omega</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">hbar_omega</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n_readout</span><span class="p">),</span> <span class="n">spectra</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">/</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n_readout</span><span class="p">),</span> <span class="n">spectra</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;E/J&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;P(E)&#39;</span><span class="p">)</span>
 </pre></div>
