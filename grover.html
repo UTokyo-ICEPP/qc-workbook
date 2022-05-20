@@ -857,6 +857,26 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </div>
 </div>
 </div>
+<p><strong>解答</strong></p>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">oracle</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+</pre></div>
+</div>
+</div>
 <p>次に、Diffuser用の回路を実装します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -890,6 +910,40 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/grover_19_0.png" src="_images/grover_19_0.png" />
+</div>
+</div>
+<p><strong>解答</strong></p>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">diffuser</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT BELOW ###</span>
+    <span class="c1">##################</span>
+
+    <span class="n">qc</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+
+    <span class="c1"># multi-controlled Zゲート</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+    
+    <span class="c1">##################</span>
+    <span class="c1">### EDIT ABOVE ###</span>
+    <span class="c1">##################</span>
+    
+    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="c1">#print(qc)</span>
+    <span class="n">U_s</span> <span class="o">=</span> <span class="n">qc</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
+    <span class="n">U_s</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_s&quot;</span>
+    <span class="k">return</span> <span class="n">U_s</span>    
+</pre></div>
 </div>
 </div>
 </div>

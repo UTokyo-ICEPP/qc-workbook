@@ -388,6 +388,31 @@ print(oracle)
 grover_circuit.append(oracle_gate, list(range(n)))
 ```
 
+**解答**
+
+````{toggle}
+
+```{code-block} python
+
+##################
+### EDIT BELOW ###
+##################
+
+oracle.x(1)
+oracle.x(4)
+oracle.h(n-1)
+oracle.mct(list(range(n-1)), n-1)
+oracle.h(n-1)
+oracle.x(1)
+oracle.x(4)
+
+##################
+### EDIT ABOVE ###
+##################
+```
+
+````
+
 次に、Diffuser用の回路を実装します。
 
 ```{code-cell} ipython3
@@ -425,6 +450,45 @@ grover_circuit.append(diffuser(n), list(range(n)))
 grover_circuit.measure_all()
 grover_circuit.decompose().draw('mpl')
 ```
+
+**解答**
+
+````{toggle}
+
+```{code-block} python
+def diffuser(n):
+    qc = QuantumCircuit(n)
+
+    qc.h(range(n))
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    qc.rz(2*np.pi, n-1)
+    qc.x(list(range(n)))
+
+    # multi-controlled Zゲート
+    qc.h(n-1)
+    qc.mct(list(range(n-1)), n-1)
+    qc.h(n-1)
+
+    qc.x(list(range(n)))
+    
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+    
+    qc.h(range(n))
+
+    #print(qc)
+    U_s = qc.to_gate()
+    U_s.name = "U_s"
+    return U_s    
+```
+
+````
+
 
 (imp_simulator)=
 ### シミュレータでの実験
