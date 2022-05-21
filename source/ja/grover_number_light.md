@@ -60,10 +60,95 @@ language_info:
 
 ## ヒント
 
-1. ボード上の数字を記録するレジスタを準備して、初期値45をセットします。
-2. 見つけたい答えは「どのビットを押すか」なので、6ビットの数字の場合は、6量子ビットの「全ての押し下げパターンの重ね合わせ」を持つレジスタを作ると良いでしょう。
-3. 各ビットの押し下げに対して、ボードのビット反転を行う操作を量子ゲートで実装することが考えられます。
-4. ボード上の数字が欲しい答え13の場合に位相反転するオラクルを考えてみてください。
+いろんなやり方があると思いますが、例えば３つの量子ビットレジスタ、１つの古典ビットレジスタを持つ回路を考えてみます。
+
+- ボード上の数字を記録するレジスタ = board
+- ボードの「押し下げ」を記録するレジスタ = flip
+- ボード上の数字が欲しい答えの時に位相が反転するレジスタ = oracle
+- 測定結果を保持する古典レジスタ = result
+
+考え方としては
+1. boardレジスタに初期値45をセットする。
+2. 6ビットの数字の場合、6量子ビットの「全ての押し下げパターンの重ね合わせ」をflipレジスタに作る。
+3. 各ビットの押し下げに対して、boardレジスタのビット反転を行う操作を量子ゲートで実装する。
+4. boardレジスタの数字が欲しい答えの場合に、oracleビットの位相を反転するオラクルを作る。
+です。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
+from qiskit import IBMQ, Aer, execute
+
+# 6量子ビットの探索問題を考える
+n = 6  # 量子ビット数
+
+# グローバー反復を繰り返す回数: pi/4*sqrt(2**6)に近い整数
+niter = 6
+
+# レジスタ
+board = QuantumRegister(n)   # ボードの「数字」を記録するレジスタ
+flip = QuantumRegister(n)   # ボードの「押し下げ」を記録するレジスタ
+oracle = QuantumRegister(1)   # ボード上の数字が欲しい答えの時に位相反転するレジスタ
+result = ClassicalRegister(n)   # 測定結果を保持する古典レジスタ
+```
+
+以下の回路の中身を書いてください。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+qc = QuantumCircuit(board, flip, oracle, result)
+
+##################
+### EDIT BELOW ###
+##################
+
+# qcの回路を書いてください
+
+##################
+### ABOVE BELOW ###
+##################
+```
+
+コードをシミュレータで実行して、答えを確認する。
+Final scoreとして、得られた答え（ビット列）のうち、頻度が高いものから10個を出力しています。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+# シミュレータで実行
+backend = Aer.get_backend('qasm_simulator')
+job = execute(qc, backend=backend, shots=8000, seed_simulator=12345)
+result = job.result()
+count = result.get_counts()
+
+score_sorted = sorted(count.items(), key=lambda x:x[1], reverse=True)
+final_score = score_sorted[0:10]
+
+print('Final score:')
+print(final_score)
+```
+
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
