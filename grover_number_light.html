@@ -430,12 +430,79 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="section" id="id3">
 <h2>ヒント<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>いろんなやり方があると思いますが、例えば３つの量子ビットレジスタ、１つの古典ビットレジスタを持つ回路を考えてみます。</p>
+<ul class="simple">
+<li><p>ボード上の数字を記録するレジスタ = board</p></li>
+<li><p>ボードの「押し下げ」を記録するレジスタ = flip</p></li>
+<li><p>ボード上の数字が欲しい答えの時に位相が反転するレジスタ = oracle</p></li>
+<li><p>測定結果を保持する古典レジスタ = result</p></li>
+</ul>
+<p>考え方としては</p>
 <ol class="simple">
-<li><p>ボード上の数字を記録するレジスタを準備して、初期値45をセットします。</p></li>
-<li><p>見つけたい答えは「どのビットを押すか」なので、6ビットの数字の場合は、6量子ビットの「全ての押し下げパターンの重ね合わせ」を持つレジスタを作ると良いでしょう。</p></li>
-<li><p>各ビットの押し下げに対して、ボードのビット反転を行う操作を量子ゲートで実装することが考えられます。</p></li>
-<li><p>ボード上の数字が欲しい答え13の場合に位相反転するオラクルを考えてみてください。</p></li>
+<li><p>boardレジスタに初期値45をセットする。</p></li>
+<li><p>6ビットの数字の場合、6量子ビットの「全ての押し下げパターンの重ね合わせ」をflipレジスタに作る。</p></li>
+<li><p>各ビットの押し下げに対して、boardレジスタのビット反転を行う操作を量子ゲートで実装する。</p></li>
+<li><p>boardレジスタの数字が欲しい答えの場合に、oracleビットの位相を反転するオラクルを作る。
+です。</p></li>
 </ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+
+<span class="c1"># 6量子ビットの探索問題を考える</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># 量子ビット数</span>
+
+<span class="c1"># グローバー反復を繰り返す回数: pi/4*sqrt(2**6)に近い整数</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="c1"># レジスタ</span>
+<span class="n">board</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c1"># ボードの「数字」を記録するレジスタ</span>
+<span class="n">flip</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c1"># ボードの「押し下げ」を記録するレジスタ</span>
+<span class="n">oracle</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># ボード上の数字が欲しい答えの時に位相反転するレジスタ</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c1"># 測定結果を保持する古典レジスタ</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>以下の回路の中身を書いてください。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">flip</span><span class="p">,</span> <span class="n">oracle</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1"># qcの回路を書いてください</span>
+
+<span class="c1">##################</span>
+<span class="c1">### ABOVE BELOW ###</span>
+<span class="c1">##################</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>コードをシミュレータで実行して、答えを確認する。
+Final scoreとして、得られた答え（ビット列）のうち、頻度が高いものから10個を出力しています。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータで実行</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">seed_simulator</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="n">score_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">final_score</span> <span class="o">=</span> <span class="n">score_sorted</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Final score:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final_score</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p><strong>提出するもの</strong></p>
 <ul class="simple">
 <li><p>この問題を解く量子回路</p></li>
