@@ -437,13 +437,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p>ボード上の数字が欲しい答えの時に位相が反転するレジスタ = oracle</p></li>
 <li><p>測定結果を保持する古典レジスタ = result</p></li>
 </ul>
-<p>考え方としては</p>
+<p>これらのレジスタを持つ回路を使って、以下のように考えてみてください。</p>
 <ol class="simple">
 <li><p>boardレジスタに初期値45をセットする。</p></li>
 <li><p>6ビットの数字の場合、6量子ビットの「全ての押し下げパターンの重ね合わせ」をflipレジスタに作る。</p></li>
 <li><p>各ビットの押し下げに対して、boardレジスタのビット反転を行う操作を量子ゲートで実装する。</p></li>
-<li><p>boardレジスタの数字が欲しい答えの場合に、oracleビットの位相を反転するオラクルを作る。
-です。</p></li>
+<li><p>boardレジスタの数字が欲しい答えの場合に、oracleビットの位相を反転するオラクルを作る。</p></li>
 </ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
