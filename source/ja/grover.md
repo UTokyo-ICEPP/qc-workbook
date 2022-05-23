@@ -356,17 +356,12 @@ pycharm:
     '
 tags: [remove-output]
 ---
-def initialize_s(qc, qubits):
-    """回路のqubitsにHゲートを適用"""
-    for q in qubits:
-        qc.h(q)
-    return qc
-
 Nsol = 45
 n = 6
+
 grover_circuit = QuantumCircuit(n)
 
-grover_circuit = initialize_s(grover_circuit, list(range(n)))
+grover_circuit.h(range(n))
 
 # オラクルを作成して、回路に実装
 oracle = QuantumCircuit(n)
@@ -401,7 +396,7 @@ grover_circuit.append(oracle_gate, list(range(n)))
 oracle.x(1)
 oracle.x(4)
 oracle.h(n-1)
-oracle.mct(list(range(n-1)), n-1)
+oracle.mcx(list(range(n-1)), n-1)
 oracle.h(n-1)
 oracle.x(1)
 oracle.x(4)
@@ -470,7 +465,7 @@ def diffuser(n):
 
     # multi-controlled Zゲート
     qc.h(n-1)
-    qc.mct(list(range(n-1)), n-1)
+    qc.mcx(list(range(n-1)), n-1)
     qc.h(n-1)
 
     qc.x(list(range(n)))
@@ -621,7 +616,7 @@ pycharm:
 Niter = 3
 
 grover_circuit_iterN = QuantumCircuit(n)
-grover_circuit_iterN = initialize_s(grover_circuit_iterN, list(range(n)))
+grover_circuit_iterN.h(range(n))
 for I in range(Niter):
     grover_circuit_iterN.append(oracle_gate, list(range(n)))
     grover_circuit_iterN.append(diffuser(n), list(range(n)))
@@ -661,7 +656,7 @@ y = []
 # 例えば10回繰り返す
 for Niter in range(1,11):
     grover_circuit_iterN = QuantumCircuit(n)
-    grover_circuit_iterN = initialize_s(grover_circuit_iterN, list(range(n)))
+    grover_circuit_iterN.h(range(n))
     for I in range(Niter):
         grover_circuit_iterN.append(oracle_gate, list(range(n)))
         grover_circuit_iterN.append(diffuser(n), list(range(n)))
@@ -716,7 +711,7 @@ oracle_2sol = QuantumCircuit(n)
 oracle_2sol.x(1)
 oracle_2sol.x(4)
 oracle_2sol.h(n-1)
-oracle_2sol.mct(list(range(n-1)), n-1)
+oracle_2sol.mcx(list(range(n-1)), n-1)
 oracle_2sol.h(n-1)
 oracle_2sol.x(1)
 oracle_2sol.x(4)
@@ -726,7 +721,7 @@ oracle_2sol.x(0)
 oracle_2sol.x(2)
 oracle_2sol.x(5)
 oracle_2sol.h(n-1)
-oracle_2sol.mct(list(range(n-1)), n-1)
+oracle_2sol.mcx(list(range(n-1)), n-1)
 oracle_2sol.h(n-1)
 oracle_2sol.x(0)
 oracle_2sol.x(2)
@@ -740,7 +735,7 @@ x = []
 y = []
 for Niter in range(1,11):
     grover_circuit_2sol_iterN = QuantumCircuit(n)
-    grover_circuit_2sol_iterN = initialize_s(grover_circuit_2sol_iterN, list(range(n)))
+    grover_circuit_2sol_iterN.h(range(n))
     for I in range(Niter):
         grover_circuit_2sol_iterN.append(oracle_2sol_gate, list(range(n)))
         grover_circuit_2sol_iterN.append(diffuser(n), list(range(n)))
