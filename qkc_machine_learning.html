@@ -521,17 +521,17 @@ const thebe_selector_output = ".output, .cell_output"
 \[
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 \]</div>
-<p>と定義した特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>を考えました。それを初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に適用することで、入力データから<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}\)</span>という量子状態を作りました。<strong>量子カーネル</strong>とは、この状態の内積<span class="math notranslate nohighlight">\(\langle\phi^\dagger(x_j)|\phi(x_i)\rangle\)</span>（の絶対値2乗）</p>
+<p>と定義した特徴量マップ<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>を考えました。それを初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に適用することで、入力データから<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}\)</span>という量子状態を作りました。<strong>量子カーネル</strong>とは、この状態の内積<span class="math notranslate nohighlight">\(\langle\phi(x_j)|\phi(x_i)\rangle\)</span>（の絶対値2乗）</p>
 <div class="math notranslate nohighlight">
 \[
-K(x_i,x_j):=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
+K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
 \]</div>
 <p>として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi(x_j)}\)</span>の「近さ」あるいは「重なり具合」を表していると解釈できます。</p>
 <div class="section" id="q-kernel-imp">
 <span id="id5"></span><h3><a class="toc-backref" href="#id53">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
-<p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi^\dagger(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
+<p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
 <a class="reference internal image-reference" href="_images/qke_circuit.png"><img alt="qke_circuit" class="align-center" src="_images/qke_circuit.png" style="width: 700px;" /></a>
-<p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\(\cal{O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
+<p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\({\cal O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
 </div>
 </div>
 <div class="section" id="svm">
