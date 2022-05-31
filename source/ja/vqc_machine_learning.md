@@ -559,7 +559,7 @@ feature_map = ZZFeatureMap(feature_dimension=feature_dim, reps=1, entanglement='
 変分量子回路$U(\boldsymbol{\theta})$は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして
 
 $$
-U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j1}^l)R_j^Z(\theta_{j2}^l)
+U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 $$
 
 を使います。上の例では$U(\boldsymbol{\theta})$を自分で組み立てましたが、Qiskitにはこの$U(\boldsymbol{\theta})$を実装するAPIがすでに準備されているので、ここではそれを使います。
