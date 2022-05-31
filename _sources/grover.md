@@ -381,6 +381,7 @@ oracle_gate.name = "U_w"
 print(oracle)
 
 grover_circuit.append(oracle_gate, list(range(n)))
+grover_circuit.barrier()
 ```
 
 **解答**
@@ -669,7 +670,7 @@ for Niter in range(1,11):
     #show_distribution(answer)
 
     x.append(Niter)
-    y.append(answer[format(Nsol,'06b')])
+    y.append(answer_sim_iterN_tr[format(Nsol,'b').zfill(n)])
 
 plt.clf()
 plt.scatter(x,y)

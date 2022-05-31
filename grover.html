@@ -848,6 +848,7 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="nb">print</span><span class="p">(</span><span class="n">oracle</span><span class="p">)</span>
 
 <span class="n">grover_circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oracle_gate</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">grover_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -902,9 +903,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="n">grover_circuit</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_19_0.png" src="_images/grover_19_0.png" />
 </div>
 </div>
 <p><strong>解答</strong></p>
@@ -1041,9 +1039,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_29_0.png" src="_images/grover_29_0.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1053,9 +1048,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_30_0.png" src="_images/grover_30_0.png" />
 </div>
 </div>
 <p>正しい答え<span class="math notranslate nohighlight">\(\ket{45}\)</span>をより高い確率で測定できていることが分かりますね。</p>
@@ -1081,7 +1073,7 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
     <span class="c1">#show_distribution(answer)</span>
 
     <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Niter</span><span class="p">)</span>
-    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer</span><span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">Nsol</span><span class="p">,</span><span class="s1">&#39;06b&#39;</span><span class="p">)])</span>
+    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer_sim_iterN_tr</span><span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">Nsol</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
@@ -1090,9 +1082,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_32_0.png" src="_images/grover_32_0.png" />
 </div>
 </div>
 <p>この図から、グローバー反復を5~6回程度繰り返すことで、正しい答えを最も高い確率で測定できることが分かりますね。計算で求めた検索に必要な反復回数と一致しているかどうか、確認してみてください。</p>
@@ -1160,24 +1149,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>               ┌───┐               ┌───┐     
-q_0: ───────■──┤ X ├────────────■──┤ X ├─────
-     ┌───┐  │  ├───┤            │  └───┘     
-q_1: ┤ X ├──■──┤ X ├────────────■────────────
-     └───┘  │  ├───┤            │  ┌───┐     
-q_2: ───────■──┤ X ├────────────■──┤ X ├─────
-            │  └───┘            │  └───┘     
-q_3: ───────■───────────────────■────────────
-     ┌───┐  │  ┌───┐            │            
-q_4: ┤ X ├──■──┤ X ├────────────■────────────
-     ├───┤┌─┴─┐├───┤┌───┐┌───┐┌─┴─┐┌───┐┌───┐
-q_5: ┤ H ├┤ X ├┤ H ├┤ X ├┤ H ├┤ X ├┤ H ├┤ X ├
-     └───┘└───┘└───┘└───┘└───┘└───┘└───┘└───┘
-</pre></div>
-</div>
-<img alt="_images/grover_36_1.png" src="_images/grover_36_1.png" />
 </div>
 </div>
 <p>複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？</p>

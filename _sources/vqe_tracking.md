@@ -242,7 +242,7 @@ def get_qubitops(*args): # 何を引数に取り、関数で何をするか全�
 
 このコードの部分を課題として提出してください。
 
-**ヒント3**：get_qubitopsは、パウリ$Z$演算子を使って実装した観測量$H$を返す関数です。Qiskitでパウリ$Z$演算子とそのテンソル積を実装するには、qiskit.quantum_info.Pauliクラス（[ここ](https://qiskit.org/documentation/stubs/qiskit.quantum_info.Pauli.html)を参照）とqiskit.aqua.operatorsライブラリ（[ここ](https://qiskit.org/documentation/apidoc/qiskit.aqua.operators.html)を参照）を使うのが便利です。セグメント間の相互作用の強さを表す$J_{ij}$は、2つのパウリ$Z$演算子のテンソル積に対する係数として導入する必要があります。それをqiskit.quantum_info.Pauliを使ってどのように書くでしょうか？$h_i$は単一パウリ$Z$演算子の係数になります。そして、最終的に測定する観測量$H$は、それらパウリ$Z$演算子の線形結合になりますね。
+**ヒント3**：get_qubitopsは、パウリ$Z$演算子を使って実装した観測量$H$を返す関数です。Qiskitでパウリ$Z$演算子とそのテンソル積を実装するには、qiskit.quantum_info.Pauliクラス（[ここ](https://qiskit.org/documentation/stubs/qiskit.quantum_info.Pauli.html)を参照）とqiskit.opflowライブラリ（[ここ](https://qiskit.org/documentation/apidoc/opflow.html)を参照）を使うのが便利です。セグメント間の相互作用の強さを表す$J_{ij}$は、2つのパウリ$Z$演算子のテンソル積に対する係数として導入する必要があります。それをqiskit.quantum_info.Pauliを使ってどのように書くでしょうか？$h_i$は単一パウリ$Z$演算子の係数になります。そして、最終的に測定する観測量$H$は、それらパウリ$Z$演算子の線形結合になりますね。
 
 +++
 
