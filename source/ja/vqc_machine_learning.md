@@ -199,7 +199,7 @@ y_train_noise = y_train + mag_noise * np.random.randn(num_x_train)
 
 ### 量子状態の生成<a id='func_state_preparation'></a>
 
-次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`PhysRevA.98.032309`に従い、回転ゲート$R_j^Y(\theta)=e^{i\theta Y_j/2}$と$R_j^Z(\theta)=e^{i\theta Z_j/2}$を使って
+次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`PhysRevA.98.032309`に従い、回転ゲート$R_j^Y(\theta)=e^{-i\theta Y_j/2}$と$R_j^Z(\theta)=e^{-i\theta Z_j/2}$を使って
 
 $$
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
