@@ -650,6 +650,7 @@ pycharm:
   name: '#%%
 
     '
+tags: []
 ---
 x = []
 y = []
@@ -662,15 +663,13 @@ for Niter in range(1,11):
         grover_circuit_iterN.append(oracle_gate, list(range(n)))
         grover_circuit_iterN.append(diffuser(n), list(range(n)))
     grover_circuit_iterN.measure_all()
-    #print(grover_circuit_iterN)
 
     grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
     results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
     answer = results.get_counts()
-    #show_distribution(answer)
 
     x.append(Niter)
-    y.append(answer_sim_iterN_tr[format(Nsol,'b').zfill(n)])
+    y.append(answer[format(Nsol,'b').zfill(n)])
 
 plt.clf()
 plt.scatter(x,y)

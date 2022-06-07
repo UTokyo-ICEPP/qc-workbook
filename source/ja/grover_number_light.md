@@ -7,7 +7,7 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.11.5
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.5
+  version: 3.8.10
 ---
 
 # 【課題】ビット反転ボードの操作を見つける
@@ -73,7 +73,6 @@ language_info:
 2. 6ビットの数字の場合、6量子ビットの「全ての押し下げパターンの重ね合わせ」をflipレジスタに作る。
 3. 各ビットの押し下げに対して、boardレジスタのビット反転を行う操作を量子ゲートで実装する。
 4. boardレジスタの数字が欲しい答えの場合に、oracleビットの位相を反転するオラクルを作る。
-
 
 ```{code-cell} ipython3
 ---
@@ -136,6 +135,7 @@ pycharm:
   name: '#%%
 
     '
+tags: [raises-exception, remove-output]
 ---
 # シミュレータで実行
 backend = Aer.get_backend('qasm_simulator')
@@ -149,7 +149,6 @@ final_score = score_sorted[0:10]
 print('Final score:')
 print(final_score)
 ```
-
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
