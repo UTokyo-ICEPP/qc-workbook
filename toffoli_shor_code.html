@@ -1,0 +1,1045 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToffoliゲートとShorコード &#8212; 量子コンピューティング・ワークブック</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="実習の準備" href="prerequisites.html" />
+    <link rel="prev" title="【課題】量子カーネルを使った新現象の分類" href="qkc_machine_learning.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/favicon.ico" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="welcome.html">
+   量子コンピューティング・ワークブックへようこそ！
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子コンピュータに触れる
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="chsh_inequality.html">
+   CHSH不等式の破れを確認する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nonlocal_correlations.html">
+   【課題】量子相関を調べる
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子回路を作る
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="circuit_from_scratch.html">
+   単純な量子回路をゼロから書く
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quantum_computation.html">
+   【課題】アダマールテスト
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子コンピュータでの並列計算
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="extreme_simd.html">
+   計算をする量子回路の実装
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dynamics_simulation.html">
+   物理系を表現する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="more_dynamics.html">
+   【課題】量子ダイナミクスシミュレーション・続
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="addition_on_ibmq.html">
+   【参考】足し算を実機で行う
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  ショアのアルゴリズム
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="shor.html">
+   素因数分解アルゴリズムを学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spectrum_estimation.html">
+   【課題】位相推定によるスペクトル分解
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  グローバーのアルゴリズム
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover.html">
+   データベース検索を行う
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="grover_number_light.html">
+   【課題】ビット反転ボードの操作を見つける
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  変分法と変分量子固有値ソルバー
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe.html">
+   変分法と変分量子固有値ソルバー法を学習する
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqe_tracking.html">
+   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  量子・古典ハイブリッド機械学習
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="vqc_machine_learning.html">
+   量子機械学習を使った新しい素粒子現象の探索
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="qkc_machine_learning.html">
+   【課題】量子カーネルを使った新現象の分類
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  演習
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   ToffoliゲートとShorコード
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  補足
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
+   実習の準備
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_intro.html">
+   予備知識：Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numerics.html">
+   予備知識：数値表現
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   参考文献
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        <a class="dropdown-buttons"
+            href="_sources/toffoli_shor_code.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/toffoli_shor_code.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Ftoffoli_shor_code.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/toffoli_shor_code.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   量子エラー訂正
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#toffoli">
+   Toffoliゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cp">
+   CPゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ccz">
+   CCZゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hadamard">
+   Hadamardゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   Toffoliゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   量子エラーとエラー訂正
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#x">
+     ビット反転（
+     <span class="math notranslate nohighlight">
+      \(X\)
+     </span>
+     ）エラー
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#z">
+     位相反転（
+     <span class="math notranslate nohighlight">
+      \(Z\)
+     </span>
+     ）エラー
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor">
+     Shorコード
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>ToffoliゲートとShorコード</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   量子エラー訂正
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#toffoli">
+   Toffoliゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cp">
+   CPゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ccz">
+   CCZゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hadamard">
+   Hadamardゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   Toffoliゲート
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   量子エラーとエラー訂正
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#x">
+     ビット反転（
+     <span class="math notranslate nohighlight">
+      \(X\)
+     </span>
+     ）エラー
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#z">
+     位相反転（
+     <span class="math notranslate nohighlight">
+      \(Z\)
+     </span>
+     ）エラー
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shor">
+     Shorコード
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="toffolishor">
+<h1>ToffoliゲートとShorコード<a class="headerlink" href="#toffolishor" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="id1">
+<p class="topic-title">目次</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#id2" id="id5">量子エラー訂正</a></p></li>
+<li><p><a class="reference internal" href="#toffoli" id="id6">Toffoliゲート</a></p></li>
+<li><p><a class="reference internal" href="#cp" id="id7">CPゲート</a></p></li>
+<li><p><a class="reference internal" href="#ccz" id="id8">CCZゲート</a></p></li>
+<li><p><a class="reference internal" href="#hadamard" id="id9">Hadamardゲート</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id10">Toffoliゲート</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id11">量子エラーとエラー訂正</a></p>
+<ul>
+<li><p><a class="reference internal" href="#x" id="id12">ビット反転（<span class="math notranslate nohighlight">\(X\)</span>）エラー</a></p></li>
+<li><p><a class="reference internal" href="#z" id="id13">位相反転（<span class="math notranslate nohighlight">\(Z\)</span>）エラー</a></p></li>
+<li><p><a class="reference internal" href="#shor" id="id14">Shorコード</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\braket}[2]{\langle #1 | #2 \rangle}\)</span></p>
+<p>量子プログラミング演習として、Toffoliゲートの基本ゲートでの分解を考え、それを使ってShorコードでエラー訂正をしてみましょう。</p>
+<div class="section" id="id2">
+<h2><a class="toc-backref" href="#id5">量子エラー訂正</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>IBMQをはじめ、私たちが現在利用できる量子コンピュータは NISQ (Noisy, intermediate-scale quantum) デバイスと呼ばれ、計算途中にエラーが起こるとそこから回復することができません。エラーが量子回路の実行時間やゲート数の増加とともに重なる様子は、すでに講義に出てきたさまざまな例で観察いただけたと思います。量子コンピュータがクラウド上で使えると言っても結局まともな計算はできない、という印象を持たれた方も多いかと思います。じっさい、NISQの最も現実的な使い道は、Shorの素因数分解アルゴリズムなどの「真の」量子計算ではなく、VQEなどの量子・古典ハイブリッド計算で、ゲート数が少なく、かつ多少間違えが起きても最終的な結果に大きく影響しないようなものだと考えられています。</p>
+<p>では、真の量子計算ができるようになる条件とは何でしょうか。エラーが起こらない量子コンピュータを作ること、という答えは当然考えられますが、これは原理的に不可能です。なぜなら、量子コンピュータにおけるエラーとはすなわち量子ビットに外部環境が影響を及ぼすことであり、<br />
+エラーが起こらない ＝ 量子ビットが完全に孤立した系にある<br />
+となるわけですが、一方で、<br />
+量子ビットをコンピュータとして使える ＝ 量子ビットを外部から操作できる ＝ 量子ビットは孤立していない<br />
+も言えるからです。</p>
+<p>次に考えられるのは、エラーの発生率を極力低くして、エラーが発生する前に全ての計算を終えること（NISQの延長）ですが、例えば2048ビットの整数の素因数分解をエラーなしで完遂するには、エラー率が<span class="math notranslate nohighlight">\(10^{-8}\)</span>よりもはるかに低くないといけません。現在のマシンのエラー率が<span class="math notranslate nohighlight">\(10^{-2}\)</span>から<span class="math notranslate nohighlight">\(10^{-3}\)</span>程度なので、これはあまり現実的なゴールではありません。また、そもそもエラーは確率的に起こるので、どんなに短い回路でもエラーが乗ることはありえます。</p>
+<p>実は、難しそうに見えて一番実現可能性があるのが、<strong>計算途中にエラーが起きたとき、それを検知して訂正すること</strong>です。回路の実行中にリアルタイムでエラー訂正が行えれば、訂正のための様々なコスト（追加の量子ビットやゲート）はあるものの、計算結果だけを見ればエラーのない理想的な量子コンピュータを使うのと同じものが得られます。そのような量子コンピュータは FTQC (Fault-tolerant quantum computers) と呼ばれ、NISQとは質的に異なるものとみなされています。</p>
+<p>エラーというのはノイズなどコントロールできない要因でランダムに発生するものなので、量子エラー訂正が可能であるということ自体が非自明で驚くべき事実です。その背景には量子力学の原理があり、どんなエラーも、量子ビットへの影響だけを見れば、有限の量子演算子の組み合わせがかかるのと等価であるということが示されています。したがって、それらの影響を検知し打ち消すような量子回路を組むことができれば、エラー訂正が実現されます。</p>
+<p>量子エラー訂正については古くから研究がなされており、すでに複数の方法が知られています。それでもまだFTQCが実現されていないのは、エラー訂正自体に多数の量子ビットが必要である上に、絶対的なエラー率が一定値以下でなければいけないからです。エラーが訂正できると言っても、訂正するための回路自体がエラーでデタラメになってしまうようでは元も子もないので、やはりある程度の安定性が必要なのです。しかし逆に、それぞれのエラー訂正プロトコルについて、求められるエラー率の上限値が存在することが知られています。つまり、エラー率がどこまでも低くなければいけないということはなく、一定値以下であればエラー訂正を繰り返して任意の長さの量子回路を実行できるということです。これをエラー率の「閾値定理」といい、エラーの種類が有限であるという事実と合わせて、エラー訂正というアプローチの強力な下支えになっています。</p>
+<p>一般にエラー訂正をするには、個々の量子ビットの状態を、複数のエンタングルした量子ビットの状態に「エンコード」します。エンコーディングの結果生じる、1量子ビット分の情報を保持する複数量子ビットのまとまりを<strong>論理量子ビット</strong>と呼び、論理量子ビットから元の（物理的）量子ビットの状態を復元することをデコーディングと呼びます。特定のエラーに対して耐性がある（エラーの補正を可能にする）論理量子ビットの組み方のことをエラー訂正コードと言います。論理量子ビットに対して論理ゲートや論理測定を考えることができるので、FTQCでの量子計算の最小単位は、何らかのエラー訂正コードで作られた論理量子ビットとなると考えられています。</p>
+<p>エラー訂正は奥の深い研究領域ですが、今回の演習では本格的な話はせず、比較的単純な「Shorコード」というエラー訂正コードの実装だけを考えます。Shorコードは素因数分解のアルゴリズムを発案したPeter Shorのもう一つの重要な発明で、最初に実現されるFTQCで採用されるプロトコルの有力候補ではありませんが、エラー訂正という手法を理解するのにとても役に立ちます。</p>
+</div>
+<div class="section" id="toffoli">
+<h2><a class="toc-backref" href="#id6">Toffoliゲート</a><a class="headerlink" href="#toffoli" title="Permalink to this headline">¶</a></h2>
+<p>Shorコードやそのベースとなるビット反転・位相反転コードのデコーディングで欠かせないのがToffoliゲート(CCX)です。</p>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<img alt="_images/toffoli_shor_code_3_0.png" src="_images/toffoli_shor_code_3_0.png" />
+</div>
+</div>
+<p>Toffoliゲートはエラー訂正だけでなく、多重制御ゲートの基本パーツとなるため、さまざまな場面で登場します。また理論的には、ToffoliゲートとHadamardゲートの組み合わせで全ての量子演算が実現できる（普遍ゲートセットとなる）ことから、Toffoliゲートは特別重要な存在です。</p>
+<p>一見単純そうに見えるToffoliゲートですが、超伝導量子回路などの実機で、基本ゲートが1量子ビットゲートと2量子ビットゲートのみからなる（IBMのケースでは<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(\sqrt{X}\)</span>, <span class="math notranslate nohighlight">\(R_z\)</span>, CX）場合、実装（基本ゲートへの分解）は非自明です。これから、Toffoliゲートの一つの分解方法をステップごとに導いてみましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは必要なモジュールをインポートする</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info.operators</span> <span class="kn">import</span> <span class="n">Operator</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Latex</span>
+
+<span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">show_state</span><span class="p">,</span> <span class="n">statevector_expr</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_circuit_op</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">global_phase</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compiles the LaTeX expression of the operation of the circuit on computational basis states.&quot;&quot;&quot;</span>
+    
+    <span class="n">op</span> <span class="o">=</span> <span class="n">Operator</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    
+    <span class="n">unitary</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="n">j</span> <span class="o">*</span> <span class="n">global_phase</span><span class="p">)</span>
+    
+    <span class="n">ket_template</span> <span class="o">=</span> <span class="sa">fr</span><span class="s1">&#39;|</span><span class="se">{{</span><span class="s1">:0</span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="si">}</span><span class="s1">b</span><span class="se">}}</span><span class="s1">\rangle&#39;</span>
+
+    <span class="n">exprs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unitary</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">exprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">fr</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ket_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">icol</span><span class="p">)</span><span class="si">}</span><span class="s1"> &amp; \rightarrow </span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">Latex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\begin</span><span class="si">{align}</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; </span><span class="se">\\</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exprs</span><span class="p">)</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; \end</span><span class="si">{align}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cp">
+<h2><a class="toc-backref" href="#id7">CPゲート</a><a class="headerlink" href="#cp" title="Permalink to this headline">¶</a></h2>
+<p>最初の問題は、制御<span class="math notranslate nohighlight">\(P\)</span>（<span class="math notranslate nohighlight">\(CP\)</span>）ゲートをCXと<span class="math notranslate nohighlight">\(R_z\)</span>から作ることです。おさらいをすると、CPゲートとは、2量子ビットゲートで、パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を取り、二つの量子ビットがともに<span class="math notranslate nohighlight">\(\ket{1}\)</span>であるような計算基底の位相を<span class="math notranslate nohighlight">\(\phi\)</span>前進させるゲートのことでした。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    CP(\phi) \ket{00} &amp; = \ket{00} \\
+    CP(\phi) \ket{01} &amp; = \ket{01} \\
+    CP(\phi) \ket{10} &amp; = \ket{10} \\
+    CP(\phi) \ket{11} &amp; = e^{i\phi} \ket{11}\end{split}\]</div>
+<p><strong>ヒント1</strong></p>
+<p>まず制御<span class="math notranslate nohighlight">\(R_z\)</span>（<span class="math notranslate nohighlight">\(CR_z\)</span>）ゲートをCXと<span class="math notranslate nohighlight">\(R_z\)</span>から作ることを考えてみましょう。<span class="math notranslate nohighlight">\(CR_z\)</span>の作用は、左を制御ビット、右を標的ビットとして</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    CR_z(\phi) \ket{00} &amp; = \ket{00} \\
+    CR_z(\phi) \ket{01} &amp; = \ket{01} \\
+    CR_z(\phi) \ket{10} &amp; = e^{-i\phi/2} \ket{10} \\
+    CR_z(\phi) \ket{11} &amp; = e^{i\phi/2} \ket{11}\end{split}\]</div>
+<p>です。<span class="math notranslate nohighlight">\(CR_z\)</span>が作れれば、制御ビットに<span class="math notranslate nohighlight">\(R_z\)</span>をかけることで、<span class="math notranslate nohighlight">\(\ket{00}, \ket{01}, \ket{10}\)</span>の位相を揃えることができ、<span class="math notranslate nohighlight">\(CP\)</span>ゲートに全体位相がかかった状態が実現できます。全体位相は無視していいので、それで<span class="math notranslate nohighlight">\(CP\)</span>ゲートの完成です。</p>
+<p><strong>ヒント2</strong></p>
+<p><span class="math notranslate nohighlight">\(R_z\)</span>を<span class="math notranslate nohighlight">\(X\)</span>で挟むと、<span class="math notranslate nohighlight">\(R_z\)</span>のパラメータの符号を反転させたのと同じ作用が得られます。</p>
+<a class="reference internal image-reference" href="_images/rz_x_rz_x.png"><img alt="rz_x_rz_x" class="align-center" src="_images/rz_x_rz_x.png" style="width: 400px;" /></a>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cp_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CP&#39;</span><span class="p">)</span>
+
+<span class="n">phi</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;$\phi$&#39;</span><span class="p">)</span>
+
+<span class="c1"># cp_circuit が CP(phi)を実装するようにゲートを加えてください。</span>
+<span class="c1"># phiは普通の変数のように使えます。</span>
+<span class="c1"># 例： cp_circuit.rz(phi, 1)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">cp_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># phiに具体的な値を入れて、CPが実装されていることを確認</span>
+<span class="n">phi_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span>
+<span class="n">show_circuit_op</span><span class="p">(</span><span class="n">cp_circuit</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="n">phi</span><span class="p">:</span> <span class="n">phi_value</span><span class="p">}),</span> <span class="n">global_phase</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">phi_value</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(CP\)</span>は<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトにもメソッド<code class="docutils literal notranslate"><span class="pre">cp</span></code>として備わっているので、以下では（回路図の見やすさを考慮して）標準メソッドを使うことにします。</p>
+</div>
+<div class="section" id="ccz">
+<h2><a class="toc-backref" href="#id8">CCZゲート</a><a class="headerlink" href="#ccz" title="Permalink to this headline">¶</a></h2>
+<p>次に、<span class="math notranslate nohighlight">\(CP\)</span>ゲートの特殊ケース（<span class="math notranslate nohighlight">\(\phi=\pi\)</span>）である制御<span class="math notranslate nohighlight">\(Z\)</span>（CZ）ゲートを二重制御に拡張したCCZゲートを、<span class="math notranslate nohighlight">\(CP\)</span>とCXを組み合わせて実装します。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    \text{CCZ} \ket{k} &amp; = \ket{k} \; \text{for}\; 000 \leq k \leq 110 \\
+    \text{CCZ} \ket{111} &amp; = -\ket{111}\end{split}\]</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ccz_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CCZ&#39;</span><span class="p">)</span>
+
+<span class="c1"># ccz_circuit が CCZを実装するようにゲートを加えてください。</span>
+
+<span class="n">ccz_circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">ccz_circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 上の二行で|111&gt;の符号が反転しますが、同時に|011&gt;と|101&gt;の符号も変わってしまうので、それを訂正する方法を考えてください。</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">ccz_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_circuit_op</span><span class="p">(</span><span class="n">ccz_circuit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="hadamard">
+<h2><a class="toc-backref" href="#id9">Hadamardゲート</a><a class="headerlink" href="#hadamard" title="Permalink to this headline">¶</a></h2>
+<p>次にHadamardゲートの<span class="math notranslate nohighlight">\(R_z\)</span>と<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>への分解を考えます。<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>の作用は</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    \sqrt{X} \ket{0} &amp; = \frac{1}{\sqrt{2}} \left[e^{\frac{\pi}{4}i} \ket{0} + e^{-\frac{\pi}{4}i} \ket{1}\right] \\
+    \sqrt{X} \ket{1} &amp; = \frac{1}{\sqrt{2}} \left[e^{-\frac{\pi}{4}i} \ket{0} + e^{\frac{\pi}{4}i} \ket{1}\right]\end{split}\]</div>
+<p>です。</p>
+<p><strong>ヒント</strong></p>
+<p><span class="math notranslate nohighlight">\(R_z(\phi)\ket{0}\)</span>や<span class="math notranslate nohighlight">\(R_z(\phi)\ket{1}\)</span>に<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>をかけるとどうなるか、また<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>をかけた後の状態に<span class="math notranslate nohighlight">\(R_z(\phi)\)</span>をかけたらどうなるか、計算してみましょう。今回も全体位相が生じます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+
+<span class="c1"># h_circuit が Hを実装するようにゲートを加えてください。</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">h_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_circuit_op</span><span class="p">(</span><span class="n">h_circuit</span><span class="p">,</span> <span class="n">global_phase</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span> <span class="o">/</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id10">Toffoliゲート</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(Z\)</span>ゲートを<span class="math notranslate nohighlight">\(H\)</span>ゲートで挟むと<span class="math notranslate nohighlight">\(X\)</span>ゲートと等価になることを思い出して、CCZと<span class="math notranslate nohighlight">\(H\)</span>からCCXを作ってください。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">toffoli_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Toffoli&#39;</span><span class="p">)</span>
+
+<span class="c1"># toffoli_circuit が Toffoliを実装するようにゲートを加えてください。</span>
+<span class="c1"># 量子ビット0が標的、1と2が制御とします。</span>
+<span class="c1"># Hadamardゲートには toffoli_circuit.h()を使って構いません。</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">toffoli_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_circuit_op</span><span class="p">(</span><span class="n">toffoli_circuit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id11">量子エラーとエラー訂正</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>冒頭で述べたように、量子エラーは有限個の量子演算子の作用として捉えることができます。特に、1量子ビットのエラーは、量子ビットに<span class="math notranslate nohighlight">\(X\)</span>、<span class="math notranslate nohighlight">\(Z\)</span>、<span class="math notranslate nohighlight">\(XZ\)</span>のどれかがかかることと等価です。<span class="math notranslate nohighlight">\(X\)</span>がかかるようなエラーをビット反転（bit flip）エラー、<span class="math notranslate nohighlight">\(Z\)</span>のケースを位相反転（phase flip）エラー、<span class="math notranslate nohighlight">\(XZ\)</span>のケースを複合（combined bit-phase flip）エラーと呼びます。</p>
+<div class="section" id="x">
+<h3><a class="toc-backref" href="#id12">ビット反転（<span class="math notranslate nohighlight">\(X\)</span>）エラー</a><a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h3>
+<p>Shorコードの元になるのはビット反転コードという、量子ビットを3つ使うエラー訂正コードです。ビット反転コードは、その名が示唆するようにビット反転エラーに対してのみ耐性を持ちます。論理量子ビットでの計算途中で3つの量子ビットのうちのどれかにビット反転エラーが一度だけ起きるとき、デコーディングの過程でエラーが補正されます。</p>
+<p>ビット反転コードのエンコーディングは</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    \ket{0_L} &amp; = \ket{000} \\
+    \ket{1_L} &amp; = \ket{111}\end{split}\]</div>
+<p>です。ここで<span class="math notranslate nohighlight">\(\ket{0_L}\)</span>と<span class="math notranslate nohighlight">\(\ket{1_L}\)</span>はそれぞれ「論理<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態」と「論理<span class="math notranslate nohighlight">\(\ket{1}\)</span>状態」を表します。</p>
+<p>以下では、適当な状態に初期化した量子ビットをビット反転コードでエンコードし、論理量子ビットに論理<span class="math notranslate nohighlight">\(Z\)</span>ゲートをかける過程でどれかひとつの（物理）量子ビットにビット反転エラーが起きるというシナリオを考えます。デコーディングの際にToffoliゲートを使うと、エラーが補正されます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bitflip_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># データ量子ビット（第0ビット）を適当な状態に初期化</span>
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># データビットの|0&gt;が|000&gt;に、|1&gt;が|111&gt;にエンコードされるように量子ビットをエンタングルさせてください</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># 論理ZゲートはZZZ</span>
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">z</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># 0から2のどれかひとつの量子ビットにX（ビット反転）がかかる</span>
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># デコーディング：状態が|000&gt;, |001&gt;, |010&gt;, |100&gt;のときデータビットが|0&gt;になり、</span>
+<span class="c1"># |111&gt;, |110&gt;, |101&gt;, |011&gt;のとき|1&gt;になるようにCXとToffoliを組んでください（Toffoliはすでに書き込んであります）</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="o">...</span>
+
+<span class="c1"># 0が標的、1と2が制御</span>
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">ccx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">bitflip_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_state</span><span class="p">(</span><span class="n">bitflip_circuit</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一であれば正しくデコーディングされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ref_circuit</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">ref_circuit</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">show_state</span><span class="p">(</span><span class="n">ref_circuit</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/toffoli_shor_code_25_0.png" src="_images/toffoli_shor_code_25_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="z">
+<h3><a class="toc-backref" href="#id13">位相反転（<span class="math notranslate nohighlight">\(Z\)</span>）エラー</a><a class="headerlink" href="#z" title="Permalink to this headline">¶</a></h3>
+<p>次に、位相反転に対してのみ耐性を持つ3量子ビットのエラー訂正コードを考えます。<span class="math notranslate nohighlight">\(Z\)</span>を<span class="math notranslate nohighlight">\(H\)</span>で挟むと<span class="math notranslate nohighlight">\(X\)</span>になることを思い出すと、ビット反転コードを転用できることがすぐにわかります。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phaseflip_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># エンコーディング</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># 位相反転コードの論理ZゲートはXXX</span>
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># ランダムに位相反転エラーが発生</span>
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># デコーディング</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="o">...</span>
+
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">ccx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">phaseflip_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_state</span><span class="p">(</span><span class="n">phaseflip_circuit</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="shor">
+<h3><a class="toc-backref" href="#id14">Shorコード</a><a class="headerlink" href="#shor" title="Permalink to this headline">¶</a></h3>
+<p>Shorコードは位相反転コードの物理量子ビットにビット反転コードの論理量子ビットを使って作ります。全部で9つの量子ビットを使い、全ての1量子ビットエラー（<span class="math notranslate nohighlight">\(X, Z, XZ\)</span>）に耐性を持ちます。</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shor_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># エンコーディング</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># Shorコードの論理ZゲートもXXXXXXXXX</span>
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="c1"># ランダムにビットと位相が反転</span>
+<span class="n">erroneous_qubit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;xz&#39;</span><span class="p">])</span>
+<span class="k">if</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">shor_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">erroneous_qubit</span><span class="p">)</span>
+<span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">shor_circuit</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="n">erroneous_qubit</span><span class="p">)</span>
+
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="c1"># デコーディング</span>
+<span class="c1">##################</span>
+<span class="c1">### EDIT BELOW ###</span>
+<span class="c1">##################</span>
+
+<span class="o">...</span>
+
+<span class="c1"># ビット反転補正のためのToffoli</span>
+<span class="k">for</span> <span class="n">itarg</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]:</span>
+    <span class="n">shor_circuit</span><span class="o">.</span><span class="n">ccx</span><span class="p">(</span><span class="n">itarg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">itarg</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">itarg</span><span class="p">)</span>
+    
+<span class="o">...</span>
+
+<span class="c1"># 位相反転補正のためのToffoli</span>
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">ccx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">##################</span>
+<span class="c1">### EDIT ABOVE ###</span>
+<span class="c1">##################</span>
+
+<span class="n">shor_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="s1">&#39;xz&#39;</span><span class="p">:</span>
+    <span class="n">global_phase</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">global_phase</span> <span class="o">=</span> <span class="mf">0.</span>
+
+<span class="n">show_state</span><span class="p">(</span><span class="n">shor_circuit</span><span class="p">,</span> <span class="n">global_phase</span><span class="o">=</span><span class="n">global_phase</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "UTokyo-ICEPP/qc-workbook",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="qkc_machine_learning.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">【課題】量子カーネルを使った新現象の分類</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="prerequisites.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">実習の準備</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By 東京大学素粒子物理国際研究センター<br/>
+    
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
