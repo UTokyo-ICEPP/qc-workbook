@@ -1,6 +1,6 @@
 """Utility functions for qc-workbook."""
 
-from typing import Callable, Optional
+from typing import Callable, Optional, Union, Tuple
 import collections
 import numpy as np
 

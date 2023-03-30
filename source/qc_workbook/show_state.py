@@ -89,6 +89,10 @@ def statevector_expr(
         # Run the circuit in statevector_simulator and obtain the final state statevector
         simulator = AerSimulator(method='statevector')
 
+        # Append an instruction to save the statevector of the final state of the circuit
+        circuit.save_statevector()
+
+        # Transpile and run the circuit
         circuit = transpile(statevector, backend=simulator)
         statevector = np.asarray(simulator.run(circuit).result().data()['statevector'])
 

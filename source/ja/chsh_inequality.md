@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # CHSH不等式の破れを確認する
@@ -251,7 +251,7 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 # まずは必要になるpythonモジュールをすべてインポートしておく
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit transpile
+from qiskit import QuantumCircuit, transpile
 from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
