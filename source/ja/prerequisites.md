@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -36,10 +36,12 @@ local: true
 
 ### IBMidを取得し、IBM Quantumにログインする
 
-IBM Q System Oneを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。[IBM Quantum](https://quantum-computing.ibm.com/)ウェブサイトからIDを取得し、サービスにログインしてください。
+IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
 
-(copy_token)=
-### IBM Quantum APIトークンを取得する
+(install_token)=
+### （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
+
+IBM Quantum Lab（IBM Quantumウェブサイト上のJupyter Lab）でプログラムを実行する場合、以下の手続きは不要です。
 
 ログインしたらホーム画面のYour API tokenという欄からトークンをコピーできます。
 ```{image} figs/ibmq_home.png
@@ -47,36 +49,39 @@ IBM Q System Oneを利用するには、IBMidというアカウントを作り�
 :name: My Account
 ```
 
-(install_token)=
-### Qiskitにトークンを登録する
-
-アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。
+アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。ローカルディスクに書き込める環境にある場合は、一度トークンを設定ファイルに保存することで、以降の認証を自動化できます。下のコードセルの`__paste_your_token_here__`のところにIBM Quantumからコピーしたトークンを貼り付け、実行してください。
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-from qiskit import IBMQ
+from qiskit_ibm_provider import IBMProvider
 
-IBMQ.enable_account('__paste_your_token_here__')
+IBMProvider.save_account('__paste_your_token_here__')
 ```
 
-上のように`enable_account`を利用する場合は、Pythonプログラムを実行するたびに（Jupyter notebookのカーネルを再起動するたびに）認証を行います。
+トークンを保存することで、プログラム中でのIBM Quantumへの認証（IBMProviderの取得）は
 
-ローカルディスクに書き込める環境にあれば、
 ```{code-block} python
-IBMQ.save_account('__paste_your_token_here__')
+from qiskit_ibm_provider import IBMProvider
+
+provider = IBMProvider()
 ```
-とすることでトークンが保存され、以降はPythonプログラムを実行するたびに行う手続きが
+
+のようになります。ちなみにIBM Quantum Labでは最初からトークンが保存されている状態なので、このコードで認証が行なえます。
+
+ローカルディスクに書き込める環境でない場合（このワークブックをインタラクティブに使っている場合など）は、Pythonプログラムを実行するたびに（Jupyterのカーネルを再起動するたびに）手動で認証を行う必要があります。
+
 ```{code-block} python
-IBMQ.load_account()
+from qiskit_ibm_provider import IBMProvider
+
+provider = IBMProvider(token='__paste_your_token_here__')
 ```
-に変わります。
 
 ## ワークブックの使い方
 
 ### インタラクティブHTML
 
-このワークブックの各ページにあるプログラムの書かれたセルは、そのまま[Jupyter Notebook](https://jupyter.org/)のようにブラウザ上で実行することができます。ページの右上の<i class="fas fa-rocket"></i>にカーソルを乗せ、現れるメニューから<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><i class="fas fa-play" style="margin-left: .4em;"></i> <span style="margin: 0 .4em 0 .4em;">Live Code</span></span>をクリックしてください。ページのタイトルの下にステータス表示が現れるので、<span style="color: green; font-family: monospace; font-weight: bold; font-size: 1em;">ready</span>と表示されるまで待ちます。
+このワークブックの各ページにあるプログラムの書かれたセルは、そのまま<a href="https://jupyter.org/" target="_blank">Jupyter Notebook</a>のようにブラウザ上で実行することができます。ページの右上の<i class="fas fa-rocket"></i>にカーソルを乗せ、現れるメニューから<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><i class="fas fa-play" style="margin-left: .4em;"></i> <span style="margin: 0 .4em 0 .4em;">Live Code</span></span>をクリックしてください。ページのタイトルの下にステータス表示が現れるので、<span style="color: green; font-family: monospace; font-weight: bold; font-size: 1em;">ready</span>と表示されるまで待ちます。
 
 ```{image} figs/toggle_interactive.jpg
 :height: 400px
@@ -94,16 +99,16 @@ IBMQ.load_account()
 
 - restartを押すまでページ全体が一つのプログラムになっているので、定義された変数などはセルをまたいで利用される。
 - しばらく何もしないでページを放置していると、実行サーバーとの接続が切れてしまう。その場合ページを再度読み込んで、改めてインタラクティブコンテンツを起動する必要がある。
-- コードは[mybinder.org](https://mybinder.org/)という外部サービス上で実行されるので、個人情報等センシティブな内容の送信は極力避ける。<br/>
+- コードは<a href="https://mybinder.org/" target="_blank">mybinder.org</a>という外部サービス上で実行されるので、個人情報等センシティブな内容の送信は極力避ける。<br/>
   （通信は暗号化されていて、mybinder.org中ではそれぞれのユーザーのプログラムは独立のコンテナ中で動くので、情報が外に筒抜けということではないはずですが、念の為。）<br/>
-  ただし上で出てきたように、IBM Quantum Experienceのサービストークンだけはどうしても送信する必要があります。
-  
+  ただし上で出てきたように、IBM Quantumのサービストークンだけはどうしても送信する必要があります。
+
 ### Jupyter Notebook
-  
-インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている[githubレポジトリ](https://github.com/UTokyo-ICEPP/qc-workbook)をクローンしてください。
+
+インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている<a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank">githubレポジトリ</a>をクローンしてください。
 
 ノートブックをローカルに実行するためには、Pythonバージョン3.8以上が必要です。また、`pip`を使って以下のパッケージをインストールする必要があります。
 
 ```{code-block}
-pip install qiskit matplotlib pylatexenc tabulate
+pip install qiskit qiskit-ibm-provider qiskit-ibm-runtime matplotlib pylatexenc tabulate
 ```

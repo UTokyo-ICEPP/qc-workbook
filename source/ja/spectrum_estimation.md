@@ -227,15 +227,15 @@ pycharm:
 ---
 def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     """Return a function that implements a single Trotter step for the Heisenberg model.
-    
+
     The Heisenberg model Hamiltonian is
     H = -J * sum_of_sigmas = hbar*ω * Θ
-    
+
     The returned circuit implements a negative time evolution
     U = exp(-i H*(-τ)/hbar)
     where τ = 2π / ω, which leads to
     U = exp(i 2π Θ).
-    
+
     Because we employ the Suzuki-Trotter decomposition, the actual circuit corresponds to
     U = [exp(i 2π/num_steps Θ)]^num_steps.
 
@@ -265,7 +265,7 @@ def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     circuit = circuit.repeat(num_steps)
     circuit.name = 'U'
 
@@ -291,7 +291,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
         state_register (QuantumRegister): State register.
         readout_register (QuantumRegister): Readout register.
         u_circuit (QuantumCircuit): A circuit implementing U_H(-2π/ω).
-        
+
     Returns:
         QuantumCircuit: A circuit implementing the spectrum estimation of the given Hamiltonian.
     """
@@ -307,7 +307,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
 
         # Append the controlled gate specifying the control and target qubits
         circuit.append(controlled_u_gate, qargs=([qubit] + state_register[:]))
-        
+
     circuit.barrier()
 
     # Inverse QFT
@@ -322,7 +322,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
             circuit.cp(-dphi * (2 ** power), readout_register[jctrl], readout_register[jtarg])
 
         circuit.h(readout_register[jtarg])
-        
+
     return circuit
 ```
 
@@ -390,7 +390,7 @@ def make_initial_state(state_register, readout_register):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     return circuit
 
 
@@ -515,7 +515,7 @@ $|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので
 ```{code-cell} ipython3
 def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=False):
     """Compute and return the distribution P_l(k, h) as an ndarray.
-    
+
     Args:
         n_state (int): Size of the state register.
         n_readout (int): Size of the readout register.
@@ -524,7 +524,7 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
         g (float): Parameter g of the Heisenberg model.
         use_qasm (bool): Use the qasm_simulator if True.
     """
-    
+
     # Define the circuit
     state_register = QuantumRegister(n_state, 'state')
     readout_register = QuantumRegister(n_readout, 'readout')
@@ -534,7 +534,7 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
     for iq in range(n_state):
         if ((l >> iq) & 1) == 1:
             circuit.x(state_register[iq])
-            
+
     u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
     se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
 
@@ -560,19 +560,19 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
             probs[readout, state] = count
 
         probs /= np.sum(probs)
-    
+
     else:
         sv_simulator = Aer.get_backend('statevector_simulator')
         circuit = transpile(circuit, backend=sv_simulator)
         job = sv_simulator.run(circuit)
         result = job.result()
         statevector = result.data()['statevector']
-        
+
         # Convert the state vector into a probability distribution by taking the norm-squared
         probs = np.square(np.abs(statevector)).reshape((2 ** n_readout, 2 ** n_state))
         # Clean up the numerical artifacts
         probs = np.where(probs > 1.e-6, probs, np.zeros_like(probs))
-    
+
     # probs[k, h] = P_l(k, h)
     return probs
 ```
@@ -597,7 +597,7 @@ def get_full_spectrum(g):
     """
 
     spectrum = np.zeros(2 ** n_readout, dtype=float)
-    
+
     for l in range(2 ** n_state):
         probs = get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g)
         print('Computed spectrum for g = {:.1f} l = {:d}'.format(g, l))
@@ -609,7 +609,7 @@ def get_full_spectrum(g):
         ##################
         ### EDIT ABOVE ###
         ##################
-        
+
     return spectrum
 
 # roll(spectrum, 2^{n_R-1}) => range of k is [-2^{n_R}/2, 2^{n_R}/2 - 1]

@@ -11,16 +11,16 @@ def operational_backend(
     qubits: Optional[int] = None,
     qv: Optional[int] = None
 ) -> Callable:
-    
+
     def backend_filter(backend):
         if not backend.status().operational:
             return False
-        
+
         config = backend.configuration()
-        
+
         if config.simulator:
             return False
-        
+
         if qubits is not None:
             if config.n_qubits != qubits:
                 return False
@@ -34,7 +34,7 @@ def operational_backend(
         else:
             if config.quantum_volume < min_qv:
                 return False
-        
+
         return True
 
     return backend_filter
@@ -43,7 +43,7 @@ def operational_backend(
 def find_best_chain(backend: Backend, length: int, return_error_prod: bool = False):
     """Find a chain of qubits with the smallest product of CNOT and measurement errors.
     """
-    
+
     # Put the couplings into a dict for convenience
     couplings = collections.defaultdict(list)
     for pair in backend.configuration().coupling_map:
@@ -52,7 +52,7 @@ def find_best_chain(backend: Backend, length: int, return_error_prod: bool = Fal
     # Recursive function to form a list of chains given a starting qubit
     def make_chains(qubit, chain=tuple()):
         chain += (qubit,)
-        
+
         if len(chain) == length:
             return [chain]
 
@@ -60,9 +60,9 @@ def find_best_chain(backend: Backend, length: int, return_error_prod: bool = Fal
         for neighbor in couplings[qubit]:
             if neighbor in chain:
                 continue
-                
+
             chains += make_chains(neighbor, chain)
-                
+
         return chains
 
     # Get all chains starting from all qubits
@@ -79,7 +79,7 @@ def find_best_chain(backend: Backend, length: int, return_error_prod: bool = Fal
     for chain in chains:
         log_gate_error = sum(np.log(prop.gate_error('cx', [q1, q2])) for q1, q2 in zip(chain[:-1], chain[1:]))
         log_readout_error = sum(np.log(prop.readout_error(q)) for q in chain)
-        
+
         if log_gate_error + log_readout_error < min_log_gate_error + min_log_readout_error:
             min_log_gate_error = log_gate_error
             min_log_readout_error = log_readout_error

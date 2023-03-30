@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -51,13 +51,11 @@ $$
 2^3\, \mathrm{(bytes / dof)} \times 2^{n+1}\, \mathrm{(dof)} = 2^{n+4}\, \mathrm{(bytes)}
 $$
 
-なので、$n=16$で1 MiB、$n=26$で1 GiB、$n=36$で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが$\mathcal{O}(1)$ TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに$n=127$のものが存在するので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。
+なので、$n=16$で1 MiB、$n=26$で1 GiB、$n=36$で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが$\mathcal{O}(1)$ TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに$n=127$のものが商用運用されているので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。
 
-しかし、逆に言うと、$n \sim 30$程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には[数多くの](https://quantiki.org/wiki/list-qc-simulators)シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。
+しかし、逆に言うと、$n \sim 30$程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a href="https://quantiki.org/wiki/list-qc-simulators" target="_blank">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。
 
-シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、`qasm_simulator`というQiskitに含まれるシミュレータを利用します。
-
-Qiskitのシミュレータには`Aer`というオブジェクトからアクセスします。`Aer`は実習で登場した`IBMQ`と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの`qasm_simulator`を取り出します。
+シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、`AerSimulator`というQiskitに含まれるシミュレータを利用します。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -66,23 +64,21 @@ Qiskitのシミュレータには`Aer`というオブジェクトからアクセ
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize, Bounds
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
 from qiskit.visualization import plot_histogram
 
 print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-# シミュレータをバックエンドとして使うときは、IBMQのプロバイダではなくAerのget_backend()を呼ぶ
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 print(simulator.name())
 ```
 
 実習の内容を再現してみましょう。
 
 ```{code-cell} ipython3
-:tags: []
-
 circuits = []
 
 circuit = QuantumCircuit(2, name='circuit_I')
@@ -117,8 +113,6 @@ circuits.append(circuit)
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 # シミュレータにはショット数の制限がないので、時間の許す限りいくらでも大きい値を使っていい
 shots = 10000
 
@@ -137,11 +131,11 @@ for idx, (circuit, ax) in enumerate(zip(circuits, axs.reshape(-1))):
     plot_histogram(counts, ax=ax)
     ax.set_title(circuit.name)
     ax.yaxis.grid(True)
-    
+
     C[idx] = counts.get('00', 0) + counts.get('11', 0) - counts.get('01', 0) - counts.get('10', 0)
-    
+
 C /= shots
-    
+
 S = C[0] - C[1] + C[2] + C[3]
 print('S =', S)
 ```
@@ -346,7 +340,7 @@ $$
 
 観測量$\sigma^{\theta}$を用いてCHSH不等式をより正確に表現すると、
 
-> 4つのパラメータ$\kappa, \lambda, \mu, \nu$を用いて  
+> 4つのパラメータ$\kappa, \lambda, \mu, \nu$を用いて
 > $S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\lambda}\sigma^{\kappa} \rangle - \langle \sigma^{\nu}\sigma^{\kappa} \rangle + \langle \sigma^{\lambda}\sigma^{\mu} \rangle + \langle \sigma^{\nu}\sigma^{\mu} \rangle$
 > という量を定義すると、エンタングルメントのない古典力学において$|S| \leq 2$である。
 
@@ -409,9 +403,9 @@ circuits = []
 for idx in np.ndindex(ntheta, nchi):
     theta = thetas[idx[0]]
     chi = chis[idx[1]]
-    
+
     circuit = QuantumCircuit(2, name=f'circuit_{idx[0]}_{idx[1]}')
-    
+
     # Create a circuit that forms a Bell state and then measures the two qubits
     # along theta and chi bases
 
@@ -430,7 +424,7 @@ for idx in np.ndindex(ntheta, nchi):
     circuits.append(circuit)
 
 # Execute all circuits in qasm_simulator and retrieve the results
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 shots = 10000
 circuits = transpile(circuits, backend=simulator)
 sim_job = simulator.run(circuits, shots=shots)
@@ -554,16 +548,16 @@ circuits_ghz = []
 for idx in np.ndindex(ntheta, nchi):
     theta = thetas[idx[0]]
     chi = chis[idx[1]]
-    
+
     circuit = QuantumCircuit(3, name=f'circuit_{idx[0]}_{idx[1]}')
-    
+
     # Create a circuit that forms a GHZ state and then measures the two qubits
     # along theta and chi bases
 
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #circuit.?
 
     ##################
@@ -585,7 +579,7 @@ result_ghz = sim_job_ghz.result()
 
 def counts_ignoring_qubit2(counts, bitstring):
     """Add the counts of cases where qubit C is 0 and 1"""
-    
+
     return counts.get(f'0{bitstring}', 0) + counts.get(f'1{bitstring}', 0)
 
 # Compute the C values for each (theta, chi)
@@ -593,11 +587,11 @@ c_values_ghz = np.zeros((ntheta, nchi), dtype=float)
 for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
     # This is the counts dict for the (theta, chi) pair
     counts = result_ghz.get_counts(icirc)
-    
+
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #c_values_ghz[idx] = ?
 
     ##################
@@ -623,7 +617,7 @@ max_abs_s = 0.
 for ikappa, ilambda, imu, inu in np.ndindex(ntheta, nchi, ntheta, nchi):
     abs_s = abs(c_values_ghz[ikappa, ilambda] - c_values_ghz[ikappa, inu] + c_values_ghz[imu, ilambda] + c_values_ghz[imu, inu])
     max_abs_s = max(abs_s, max_abs_s)
-    
+
 print(f'max |S| = {max_abs_s}')
 ```
 

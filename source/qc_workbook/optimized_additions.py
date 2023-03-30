@@ -12,7 +12,7 @@ def optimized_additions(
     """
 
     n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
-    
+
     reg1 = QuantumRegister(n1, 'r1')
     reg2 = QuantumRegister(n2, 'r2')
     reg3 = QuantumRegister(n3, 'r3')
@@ -25,7 +25,7 @@ def optimized_additions(
         circuit.rz(np.pi * 0.5, iq)
         circuit.sx(iq)
         circuit.rz(np.pi * 0.5, iq)
-    
+
     # Smallest unit of phi
     dphi = 2. * np.pi / (2 ** n3)
 
@@ -39,7 +39,7 @@ def optimized_additions(
         for logical_ictrl in reversed(range(nctrl)):
             # Actual control qubit number (moves as we swap the input and output qubits)
             ictrl = logical_ictrl + offset
-        
+
             # Loop over qubits in the output register
             for logical_itarg in range(n3):
                 # Actual target qubit number (always adjacent to the control)
@@ -51,7 +51,7 @@ def optimized_additions(
                     # -----+-----     --Rz(phi/2)--+-------------------+--
                     #      |       ~               |                   |    (up to a global phase)
                     # ---P(phi)--     --Rz(phi/2)--X--Rz(2pi - phi/2)--X--
-                    
+
                     halfphi = dphi * (2 ** (logical_ictrl + logical_itarg)) * 0.5
                     circuit.rz(halfphi, ictrl)
                     circuit.rz(halfphi, itarg)
@@ -74,12 +74,12 @@ def optimized_additions(
 
                 # Shift the control qubit
                 ictrl += 1
-                
+
         offset = 0
-                
+
     if barrier:
         circuit.barrier()
-        
+
     # Inverse Fourier transform on the output register to create a state
     #     1/sqrt(2^(n1+n2)) sum_{a} sum_{b} |a>|b>|a+b>
     # Using QFT with inherent swapping (does not require the swap at the front)
@@ -92,7 +92,7 @@ def optimized_additions(
         circuit.rz(np.pi * 0.5, ictrl)
         circuit.sx(ictrl)
         circuit.rz(np.pi * 0.5, ictrl)
-        
+
         if barrier:
             circuit.barrier()
 
@@ -109,11 +109,11 @@ def optimized_additions(
             circuit.rz(-2. * np.pi + halfphi, itarg)
             # Canceling out the adjacent cxs
             #circuit.cx(ictrl, itarg)
-            
+
             #circuit.cx(ictrl, itarg)
             circuit.cx(itarg, ictrl)
             circuit.cx(ictrl, itarg)
-            
+
             if barrier:
                 circuit.barrier()
 

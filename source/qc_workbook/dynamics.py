@@ -21,7 +21,7 @@ def make_heisenberg_circuits(n_spins, M, omegadt):
             circuit.cx(jspin, jspin + 1)
             circuit.rz(-omegadt, jspin + 1)
             circuit.cx(jspin, jspin + 1)
-            
+
             # XX YY
             circuit.h([jspin, jspin + 1])
             circuit.s([jspin, jspin + 1])
@@ -35,13 +35,13 @@ def make_heisenberg_circuits(n_spins, M, omegadt):
         # この時点での回路のコピーをリストに保存
         # measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す
         circuits.append(circuit.measure_all(inplace=False))
-        
+
     return circuits
 
 
 def bit_expectations_sv(time_points, statevectors):
     """Compute the bit expectation values at each time point from statevectors.
-    
+
     Args:
         time_points (np.ndarray(shape=(T,), dtype=float)): Time points.
         statevectors (np.ndarray(shape=(D, T), dtype=np.complex128)): State vector as a function of time.
@@ -64,10 +64,10 @@ def bit_expectations_sv(time_points, statevectors):
 
     # For each bit, expectation = sum_j [prob_j * bit_j]
     y = probs.T @ bits # shape (T, num_bits)
-        
+
     # Tile the time points to have one x array per spin
     x = np.tile(np.expand_dims(time_points, 1), (1, num_bits)) # shape (T, num_bits)
-    
+
     return x, y
 
 
@@ -91,7 +91,7 @@ def bit_expectations_counts(time_points, counts_list, num_bits):
 
     x = np.tile(np.expand_dims(time_points, axis=1), (1, num_bits)) # shape (T, num_bits)
     y = np.zeros_like(x)
-    
+
     for istep, counts in enumerate(counts_list):
         counts = counts_list[istep]
 
@@ -103,12 +103,12 @@ def bit_expectations_counts(time_points, counts_list, num_bits):
             bits = np.array(list(map(int, reversed(bitstring))), dtype=float)
             y[istep] += count * bits
             total += count
-        
+
         y[istep] /= total
 
     return x, y
 
-    
+
 def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_theory_curve=False, spin_component='z'):
     """Compute the expectation value of the Z(/X/Y) component of each spin in the Heisenberg model from the quantum
     measurement results.
@@ -121,7 +121,7 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
         add_theory_curve (bool): If True, compute the exact (non-Trotter) solution.
         spin_component (str): Spin component to plot. Values 'x', 'y', or 'z'. Only affects the theory curve.
     """
-    
+
     # Number of steps
     num_steps = len(counts_list)
 
@@ -135,11 +135,11 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
         paulis = list()
         for j in range(num_spins - 1):
             paulis.append(list('x' if k in (j, j + 1) else 'i' for k in range(num_spins)))
-            paulis.append(list('y' if k in (j, j + 1) else 'i' for k in range(num_spins)))            
+            paulis.append(list('y' if k in (j, j + 1) else 'i' for k in range(num_spins)))
             paulis.append(list('z' if k in (j, j + 1) else 'i' for k in range(num_spins)))
 
         hamiltonian = make_hamiltonian(paulis)
-        
+
         # Compute the statevector as a function of time from Hamiltonian diagonalization
         time_points, statevectors = diagonalized_evolution(-0.5 * hamiltonian, initial_state, omegadt * num_steps)
 
@@ -162,7 +162,7 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
         # Plot
         lines = ax.plot(x, y)
         colors = list(line.get_color() for line in lines)
-        
+
         dummy_line = mpl.lines.Line2D([0], [0])
         dummy_line.update_from(lines[0])
         dummy_line.set_color('black')
@@ -173,7 +173,7 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
 
     # Time points
     time_points = np.linspace(0., num_steps * omegadt, num_steps + 1, endpoint=True)
-    
+
     # Prepend the initial "counts" to the experiment results
     initial_probs = np.square(np.abs(initial_state))
     fmt = f'{{:0{num_spins}b}}'
@@ -191,10 +191,10 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
     if colors is not None:
         for marker, color in zip(markers, colors):
             marker.set_color(color)
-    
+
     legend_items += markers
     legend_labels += ['bit%d' % i for i in range(num_spins)]
     ax.legend(legend_items, legend_labels)
-    
+
     ax.set_xlabel(r'$\omega t$')
     ax.set_ylabel(r'$\langle S_z \rangle$')

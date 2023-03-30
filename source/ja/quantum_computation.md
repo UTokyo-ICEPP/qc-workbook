@@ -144,7 +144,7 @@ $U^{-1}_k$とその制御ゲート化は$k$の関数として定義しておき�
 ```{code-cell} ipython3
 def make_cukinv_gate(k):
     uk = QuantumCircuit(data_width, name=f'u_{k}')
-    
+
     # kの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）
     # unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している
     k_bits = np.unpackbits(np.asarray(k, dtype=np.uint8), bitorder='little')
@@ -154,10 +154,10 @@ def make_cukinv_gate(k):
 
     # 形式上逆回路を作るが、Xの逆操作はXなので、実は全く同一の回路
     ukinv = uk.inverse()
-    
+
     ukinv_gate = ukinv.to_gate()
     cukinv_gate = ukinv_gate.control(1)
-    
+
     return cukinv_gate
 ```
 
@@ -181,14 +181,14 @@ ks = np.arange(2 ** data_width)
 for k in ks:
     circuit_re = QuantumCircuit(reg_data, reg_test, creg_test)
     circuit_im = QuantumCircuit(reg_data, reg_test, creg_test)
-    
+
     ##################
     ### EDIT BELOW ###
     ##################
 
     # 制御ゲートをcircuitに組み込む例
     # circuit.append(cupsi_gate, qargs=([reg_test[0]] + reg_data[:]))
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -281,14 +281,14 @@ blackbox_circuit = QuantumCircuit(haystack_register, name='blackbox') # レジ�
 needle_bits = 1 - np.unpackbits(np.asarray(needle, dtype=np.uint8), bitorder='little')[:num_qubits]
 for idx in np.nonzero(needle_bits)[0]:
     blackbox_circuit.x(haystack_register[idx])
-    
+
 # レジスタの（0番から）最後から二番目のビットまでで制御し、最後のビットを標的にする
 blackbox_circuit.mcp(np.pi, haystack_register[:-1], haystack_register[-1])
 
 # 後片付け
 for idx in np.nonzero(needle_bits)[0]:
     blackbox_circuit.x(haystack_register[idx])
-        
+
 blackbox_circuit.draw('mpl')
 ```
 

@@ -3,14 +3,14 @@ import numpy as np
 
 def tensor_product(ops):
     """Recursively apply np.kron to construct a tensor product of the operators.
-    
+
     Args:
         ops (List): List of (2, 2) arrays.
 
     Returns:
         np.ndarray(shape=(2 ** nops, 2 ** nops), dtype=np.complex128): Tensor product of ops.
     """
-    
+
     prod = 1.
     for op in ops:
         prod = np.kron(op, prod)
@@ -31,7 +31,7 @@ def make_hamiltonian(paulis, coeffs=None):
         np.ndarray(shape=(2 ** n, 2 ** n), dtype=np.complex128): The numerical Hamiltonian matrix. The first qubit
         corresponds to the least significant digit.
     """
-    
+
     if len(paulis) == 0:
         return np.array([[0.]], dtype=np.complex128)
 
@@ -68,13 +68,13 @@ def make_hamiltonian(paulis, coeffs=None):
 
 def diagonalized_evolution(hamiltonian, initial_state, time, num_steps=100):
     """Diagonalize the given reduced Hamiltonian and evolve the initial state by exp(-i time*hamiltonian).
-    
+
     Args:
         hamiltonian (np.ndarray(shape=(D, D), dtype=np.complex128)): Hamiltonian matrix divided by hbar.
         initial_state (np.ndarray(shape=(D,), dtype=np.complex128)): Initial state vector.
         time (float): Evolution time.
         num_steps (int): Number of steps (T) to divide time into.
-        
+
     Returns:
         np.ndarray(shape=(T,), dtype=float): Time points.
         np.ndarray(shape=(D, T), dtype=np.complex128): State vector as a function of time.

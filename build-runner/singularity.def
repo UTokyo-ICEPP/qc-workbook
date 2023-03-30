@@ -1,0 +1,11 @@
+Bootstrap: docker-daemon
+From: yiiyama/jupyterbook-qiskit-packages:1.1.0
+
+%post
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y install wget
+
+    pip3 install --no-cache-dir jupyterlab jupytext
+
+%startscript
+    jupyter lab --no-browser --collaborative

@@ -5,7 +5,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 
 def make_grover_circuit(n_qubits):
-    
+
     grover_circuit = QuantumCircuit(n_qubits)
 
     grover_circuit.h(range(n_qubits))
@@ -29,7 +29,7 @@ def make_grover_circuit(n_qubits):
     ##################
     oracle_gate = oracle.to_gate()
     oracle_gate.name = "U_w"
-    
+
     def diffuser(n):
         qc = QuantumCircuit(n)
 
@@ -40,19 +40,19 @@ def make_grover_circuit(n_qubits):
         ##################
         qc.rz(2*np.pi, n-1)
         qc.x(list(range(n)))
-        
+
         # multi-controlled Zゲート
         qc.h(n-1)
         qc.mct(list(range(n-1)), n-1)
         qc.h(n-1)
-        
-        qc.x(list(range(n)))        
+
+        qc.x(list(range(n)))
         ##################
         ### EDIT ABOVE ###
         ##################
-    
+
         qc.h(range(n))
-        
+
         U_s = qc.to_gate()
         U_s.name = "U_s"
         return U_s

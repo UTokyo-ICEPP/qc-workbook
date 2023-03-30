@@ -124,7 +124,7 @@ j_indices = np.nonzero(j_bits)[0]
 # 最後にcircuit.x()
 for idx in j_indices:
     circuit.x(idx)
-    
+
 ## Alternative method
 #for i in range(num_qubits):
 #    if ((j >> i) & 1) == 1:
@@ -143,14 +143,14 @@ for itarg in range(num_qubits - 1, -1, -1):
         # 標的と制御ビットのインデックスに応じた角度で制御Pゲートをかける
         power = ictrl - itarg - 1 + num_qubits
         circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
-        
+
     # 回路図を見やすくするためにバリアを入れる
     circuit.barrier()
 
 # 最後にビットの順番を反転させる
 for i in range(num_qubits // 2):
     circuit.swap(i, num_qubits - 1 - i)
-    
+
 ## ここまでがQFT
 
 circuit.draw('mpl')
@@ -312,9 +312,9 @@ def setup_addition(circuit, reg1, reg2, reg3):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1 + reg3.size
             circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
+
         circuit.h(reg3[itarg])
-        
+
 print('Defined function setup_addition')
 ```
 
@@ -471,7 +471,7 @@ circuit.h(reg1)
 circuit.h(reg2)
 
 setup_addition(circuit, reg1, reg2, reg3)
-    
+
 expr = statevector_expr(circuit, register_sizes=(n1, n2, n3), amp_norm=(1. / np.sqrt(2 ** (n1 + n2)), r'\frac{1}{\sqrt{2^{n_1 + n_2}}}'))
 Math(expr)
 ```
@@ -564,7 +564,7 @@ provider_def = ('ibm-q', 'open', 'main')
 
 if provider_def == ('ibm-q', 'open', 'main'):
     from qiskit.test.mock import FakeGuadalupe
-    
+
     backend = FakeGuadalupe()
 
 else:
@@ -638,7 +638,7 @@ def plot_counts(counts, n1, n2, ax):
         x2 = int(key[-n1 - n2:-n1], 2) # next-to-last n2 digits
         x3 = int(key[:-n1 - n2], 2) # first n3 digits
         labels.append('{} + {} = {}'.format(x1, x2, x3))
-        
+
     x = np.linspace(0., len(labels), len(labels), endpoint=False)
 
     # 棒グラフをプロット

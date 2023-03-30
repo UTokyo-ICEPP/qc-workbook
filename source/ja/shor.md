@@ -214,7 +214,7 @@ def qft_dagger(qreg):
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #qc.?
 
     ##################
@@ -254,7 +254,7 @@ def qft_dagger(qreg):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1
             qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
-        
+
         qc.h(itarg)
 
     ##################
@@ -282,7 +282,7 @@ def qft_dagger(qreg):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1
             qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
-        
+
         qc.h(itarg)
 
     qc.name = "IQFT"
@@ -301,7 +301,7 @@ angle = np.pi / 2
 
 for x, ctrl in enumerate(qreg_meas):
     qc.cp(angle * (2 ** x), ctrl, qreg_aux[0])
-    
+
 qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
 qc.measure(qreg_meas, creg_meas)
 ```
@@ -690,7 +690,7 @@ def c_amod15(a, l):
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #if a == 2:
     #    ...
     #elif a == 4:
@@ -700,14 +700,14 @@ def c_amod15(a, l):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     # Uを2^l回繰り返す
     U_power = U.repeat(2 ** l)
 
     # U_powerをゲートに変換
     gate = U_power.to_gate()
     gate.name = f"{a}^{2 ** l} mod 15"
-    
+
     # gateを制御ゲートに変換
     c_gate = gate.control()
     return c_gate
@@ -785,7 +785,7 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -824,10 +824,10 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     if a in [7, 11, 13]:
         U.x([0, 1, 2, 3])
-        
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -862,10 +862,10 @@ def c_amod15(a, l):
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     if a in [7, 11, 13]:
         U.x([0, 1, 2, 3])
-        
+
     U_power = U.repeat(2 ** l)
 
     gate = U_power.to_gate()

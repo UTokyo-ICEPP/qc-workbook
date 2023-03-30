@@ -10,12 +10,12 @@ RUN apt-get -y update && \
 # superficially conflicting version requirements. Conflict occurs because
 # pip does not perform a full dependency resolution and can be resolved
 # by installing the specific versions of the packages in the first line.
-RUN pip3 install --no-cache-dir mdit-py-plugins==0.2.8 docutils==0.16 && \
-    pip3 install --no-cache-dir setuptools==61.3.1 && \
-    pip3 install --no-cache-dir qiskit==0.36.1 qiskit-optimization==0.3.2 qiskit-machine-learning==0.4.0 qiskit-experiments==0.3.0 qiskit-nature[pyscf]==0.3.2 && \
-    pip3 install --no-cache-dir matplotlib==3.5.1 pylatexenc==2.10 && \
-    pip3 install --no-cache-dir pandas==1.4.2 && \
-    pip3 install --no-cache-dir scikit-learn==1.0.2 && \
-    pip3 install --no-cache-dir jupyter-book==0.12.2 tabulate==0.8.9
+RUN pip3 install --no-cache-dir mdit-py-plugins==0.3.5 docutils==0.19 && \
+    pip3 install --no-cache-dir setuptools==67.6.1 && \
+    pip3 install --no-cache-dir qiskit==0.42.1 qiskit-ibm-runtime==0.9.1 qiskit-ibm-provider==0.4.0 qiskit-optimization==0.5.0 qiskit-machine-learning==0.6.0 qiskit-experiments==0.5.0 qiskit-nature==0.5.2 && \
+    pip3 install --no-cache-dir matplotlib==3.7.1 pylatexenc==2.10 && \
+    pip3 install --no-cache-dir pandas==1.5.3 && \
+    pip3 install --no-cache-dir scikit-learn==1.2.2 && \
+    pip3 install --no-cache-dir jupyter-book==0.15.1 tabulate==0.9.0
 
 # Tag as yiiyama/jupyterbook-qiskit-packages:__version__
