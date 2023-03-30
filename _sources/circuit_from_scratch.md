@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 単純な量子回路をゼロから書く
@@ -41,9 +41,7 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 ## 状態ベクトルシミュレータで量子状態を調べる
 
-第一回の課題で利用したQCシミュレータ`qasm_simulator`は、実機と同様に量子回路の測定結果をヒストグラムとして返してくれるものでした。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`statevector_simulator`（状態ベクトルシミュレータ）を利用します。状態ベクトルシミュレータは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
-
-シミュレータへのアクセスは`qasm_simulator`同様`Aer`からです。
+第一回の課題で利用したQCシミュレータ`AerSimulator`は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`AerSimulator`の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -77,13 +75,15 @@ circuit.draw('mpl')
 ```
 
 ```{caution}
-回路に測定操作(`measure_all()`)を加えてしまうと、`statevector_simulator`を利用して測定前の回路の量子状態を確認することができなくなります。
+回路に測定操作(`measure_all()`)を加えてしまうと、状態ベクトルシミュレータを利用して測定前の回路の量子状態を確認することができなくなります。
 ```
 
 状態ベクトルシミュレーションを実行する際も`transpile`とバックエンドの`run`関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので`get_counts`ではなく`result.data()['statevector']`を参照します。
 
 ```{code-cell} ipython3
 def get_statevector_array(circuit):
+    # 量子回路の終状態の状態ベクトルを保存するインストラクション
+    circuit.save_statevector()
     # 再び「おまじない」のtranspileをしてから、run()に渡す
     circuit = transpile(circuit, backend=simulator)
     job = simulator.run(circuit)

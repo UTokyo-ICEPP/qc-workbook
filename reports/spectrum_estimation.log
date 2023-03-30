@@ -17,16 +17,14 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# まずは全てインポート
+# まず必要なモジュールをインポートする
 import numpy as np
 import matplotlib.pyplot as plt
-from IPython.display import Math
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, Aer, transpile
-from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
-from qc_workbook.show_state import statevector_expr
-from qc_workbook.optimized_additions import optimized_additions
-from qc_workbook.utils import operational_backend, find_best_chain
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
+from qiskit.visualization import plot_histogram
+# ワークブック独自のモジュール
+from qc_workbook.hamiltonian import make_hamiltonian
+from qc_workbook.show_state import show_state
 
 print('notebook ready')
 ------------------
@@ -34,11 +32,10 @@ print('notebook ready')
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
 Input [0;32mIn [1][0m, in [0;36m<cell line: 8>[0;34m()[0m
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtools[39;00m[38;5;21;01m.[39;00m[38;5;21;01mmonitor[39;00m [38;5;28;01mimport[39;00m job_monitor
-[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mproviders[39;00m[38;5;21;01m.[39;00m[38;5;21;01mibmq[39;00m [38;5;28;01mimport[39;00m least_busy, IBMQAccountCredentialsNotFound
-[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mshow_state[39;00m [38;5;28;01mimport[39;00m statevector_expr
-[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimized_additions[39;00m [38;5;28;01mimport[39;00m optimized_additions
-[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m operational_backend, find_best_chain
+[1;32m      6[0m [38;5;66;03m# ワークブック独自のモジュール[39;00m
+[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mhamiltonian[39;00m [38;5;28;01mimport[39;00m make_hamiltonian
+[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mshow_state[39;00m [38;5;28;01mimport[39;00m show_state
+[1;32m     10[0m [38;5;28mprint[39m([38;5;124m'[39m[38;5;124mnotebook ready[39m[38;5;124m'[39m)
 
 File [0;32m/qc-workbook/source/ja/qc_workbook/show_state.py:6[0m, in [0;36m<module>[0;34m[0m
 [1;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m

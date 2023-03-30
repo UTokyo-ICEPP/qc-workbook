@@ -674,8 +674,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="math notranslate nohighlight">\(\newcommand{\braket}[2]{\langle #1 | #2 \rangle}\)</span></p>
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id21">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>第一回の課題で利用したQCシミュレータ<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は、実機と同様に量子回路の測定結果をヒストグラムとして返してくれるものでした。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>（状態ベクトルシミュレータ）を利用します。状態ベクトルシミュレータは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。</p>
-<p>シミュレータへのアクセスは<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>同様<code class="docutils literal notranslate"><span class="pre">Aer</span></code>からです。</p>
+<p>第一回の課題で利用したQCシミュレータ<code class="docutils literal notranslate"><span class="pre">AerSimulator</span></code>は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、<code class="docutils literal notranslate"><span class="pre">AerSimulator</span></code>の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
@@ -715,12 +714,14 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>回路に測定操作(<code class="docutils literal notranslate"><span class="pre">measure_all()</span></code>)を加えてしまうと、<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>を利用して測定前の回路の量子状態を確認することができなくなります。</p>
+<p>回路に測定操作(<code class="docutils literal notranslate"><span class="pre">measure_all()</span></code>)を加えてしまうと、状態ベクトルシミュレータを利用して測定前の回路の量子状態を確認することができなくなります。</p>
 </div>
 <p>状態ベクトルシミュレーションを実行する際も<code class="docutils literal notranslate"><span class="pre">transpile</span></code>とバックエンドの<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>ではなく<code class="docutils literal notranslate"><span class="pre">result.data()['statevector']</span></code>を参照します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_statevector_array</span><span class="p">(</span><span class="n">circuit</span><span class="p">):</span>
+    <span class="c1"># 量子回路の終状態の状態ベクトルを保存するインストラクション</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">save_statevector</span><span class="p">()</span>
     <span class="c1"># 再び「おまじない」のtranspileをしてから、run()に渡す</span>
     <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
