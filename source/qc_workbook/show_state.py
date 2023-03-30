@@ -86,6 +86,7 @@ def statevector_expr(
     ## If a QuantumCircuit is passed, extract the statevector
 
     if isinstance(statevector, QuantumCircuit):
+        circuit = statevector.copy()
         # Run the circuit in statevector_simulator and obtain the final state statevector
         simulator = AerSimulator(method='statevector')
 
@@ -93,7 +94,7 @@ def statevector_expr(
         circuit.save_statevector()
 
         # Transpile and run the circuit
-        circuit = transpile(statevector, backend=simulator)
+        circuit = transpile(circuit, backend=simulator)
         statevector = np.asarray(simulator.run(circuit).result().data()['statevector'])
 
     ## Setup

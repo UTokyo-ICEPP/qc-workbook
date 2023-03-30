@@ -82,6 +82,8 @@ circuit.draw('mpl')
 
 ```{code-cell} ipython3
 def get_statevector_array(circuit):
+    # 渡された回路のコピーを使う
+    circuit = circuit.copy()
     # 量子回路の終状態の状態ベクトルを保存するインストラクション
     circuit.save_statevector()
     # 再び「おまじない」のtranspileをしてから、run()に渡す
@@ -857,11 +859,11 @@ print(np.square(np.abs(np.sum(sv_psi.conjugate() * sv_phi))))
 それに対し上の回路を1000000回実行した時の$P_0 - P_1$は
 
 ```{code-cell} ipython3
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 shots = 1000000
 
-circuit = transpile(circuit, backend=qasm_simulator)
-counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+circuit = transpile(circuit, backend=simulator)
+counts = simulator.run(circuit, shots=shots).result().get_counts()
 
 print((counts['0'] - counts['1']) / shots)
 ```
@@ -969,8 +971,8 @@ $$
 ```{code-cell} ipython3
 shots = 1000000
 
-circuit = transpile(circuit, backend=qasm_simulator)
-counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+circuit = transpile(circuit, backend=simulator)
+counts = simulator.run(circuit, shots=shots).result().get_counts()
 
 print(counts['000'] / shots)
 ```
