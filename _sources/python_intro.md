@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -76,14 +76,14 @@ print(b)
 
 if b == 15:
     # bの値が15の時、インデントされている部分が実行される
-    print('b is True')
+    print('b is fifteen')
     print('This line is also executed')
-    
+
 else:
     # それ以外の場合、インデントされている部分が実行される
-    print('b is False')
+    print('b is some other value')
     print('This line is also not executed')
-    
+
 # インデンテーションが解消された＝if文を抜けた
 print('This line is always executed')
 ```
@@ -102,7 +102,7 @@ if b == 2:
 
     # 3回実行のループは抜けたが、if b == 2:のブロックの中
     print('b is 2 and I printed three times')
-    
+
 else:
     # それ以外の場合、インデントされている部分が実行される
     if a == 3:
@@ -664,7 +664,7 @@ print('Conditional expression on the length of my_empty_tuple:')
 if my_empty_tuple:
     # my_empty_tupleの長さが0でないケース
     print('my_empty_tuple is actually not empty')
-    
+
 # 条件文にはelseがなくてもいい
 ```
 
@@ -678,21 +678,21 @@ if my_empty_tuple:
 # リストの要素についてループ。インデントされている部分が要素数だけ繰り返し実行され、変数elementに各要素が代入される
 for element in my_list:
     print(f'another_function({element}, {element}) = {another_function(element, element)}')
-    
+
 # 0から5までの整数についてループ
 for index in range(6):
     print(f'another_function({index}) = {another_function(index)}')
-    
+
 # 配列の各要素が一定の長さの配列である場合、要素配列の要素を直接ループ変数に代入できる
 list_of_tuples = [('x', 10), ('y', 6)]
 for char_var, num_var in list_of_tuples:
     print(f'char_var = {char_var}, num_var = {num_var}')
-    
+
 # my_stringの長さが10以上になるまでループ
 my_string = ''
 while len(my_string) < 10: # 文字列の長さもlen()でわかる
     my_string += 'abc'
-    
+
 print(my_string)
 ```
 
@@ -724,7 +724,7 @@ class MoreFunctionalClass:
     # メソッドの一例
     def add_y_to_x(self):
         return self.attr_x + self._y
-    
+
 # MoreFunctionalClassのインスタンスを作り、変数mに代入する
 m = MoreFunctionalClass(2, 5)
 
@@ -773,10 +773,10 @@ x = 3
 try:
     # 文字列と整数を加えようとするとエラーになる
     print(s + x)
-    
+
 except TypeError: # TypeError型の例外が発生したら、以下のブロックを実行する
     print(f'Oops, {type(s)} and {type(x)} are not compatible')
-    
+
 except: # その他の型の例外が発生したら、以下のブロックを実行する
     print(f'This was unexpected: We got a {ex}')
 ```
@@ -797,7 +797,7 @@ if 'a' in d:
 else:
     print('d does not have an entry for "a"')
     a_value = None
-    
+
 # もっと効率的な実装
 try:
     a_value = d['a']
@@ -990,7 +990,7 @@ list1 + list2 # これではただリストが繋がるだけなので
 list3 = []
 for i1, i2 in zip(list1, list2):
     list3.append(i1 + i2)
-    
+
 print(list3)
 ```
 

@@ -434,7 +434,7 @@ def diffuser(n):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     qc.h(range(n))
 
     #print(qc)
@@ -470,17 +470,17 @@ def diffuser(n):
     qc.h(n-1)
 
     qc.x(list(range(n)))
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     qc.h(range(n))
 
     #print(qc)
     U_s = qc.to_gate()
     U_s.name = "U_s"
-    return U_s    
+    return U_s
 ```
 
 ````

@@ -884,7 +884,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
     <span class="c1"># この時点での回路のコピーをリストに保存</span>
     <span class="c1"># measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す</span>
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    
+
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">)</span><span class="si">}</span><span class="s1"> circuits created&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -909,7 +909,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 <span class="n">circuits_qasm</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
 <span class="n">sim_job</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits_qasm</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">sim_counts_list</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
-   
+
 <span class="n">plot_heisenberg_spins</span><span class="p">(</span><span class="n">sim_counts_list</span><span class="p">,</span> <span class="n">n_spins</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">omegadt</span><span class="p">,</span> <span class="n">add_theory_curve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -927,7 +927,7 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
     <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
 <span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
     <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
-    
+
 <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 
 <span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="n">n_spins</span><span class="p">,</span> <span class="n">min_qv</span><span class="o">=</span><span class="mi">32</span><span class="p">))</span>

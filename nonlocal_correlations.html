@@ -543,17 +543,17 @@ const thebe_selector_output = ".output, .cell_output"
 \[
 2^3\, \mathrm{(bytes / dof)} \times 2^{n+1}\, \mathrm{(dof)} = 2^{n+4}\, \mathrm{(bytes)}
 \]</div>
-<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに<span class="math notranslate nohighlight">\(n=127\)</span>のものが存在するので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。</p>
-<p>しかし、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a class="reference external" href="https://quantiki.org/wiki/list-qc-simulators">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
-<p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
-<p>Qiskitのシミュレータには<code class="docutils literal notranslate"><span class="pre">Aer</span></code>というオブジェクトからアクセスします。<code class="docutils literal notranslate"><span class="pre">Aer</span></code>は実習で登場した<code class="docutils literal notranslate"><span class="pre">IBMQ</span></code>と同様の構造をしており、複数のシミュレータをバックエンドとして管理しています。そのうちの<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>を取り出します。</p>
+<p>なので、<span class="math notranslate nohighlight">\(n=16\)</span>で1 MiB、<span class="math notranslate nohighlight">\(n=26\)</span>で1 GiB、<span class="math notranslate nohighlight">\(n=36\)</span>で1 TiBです。現在の計算機では、ハイエンドワークステーションでRAMが<span class="math notranslate nohighlight">\(\mathcal{O}(1)\)</span> TiB、スパコン「富岳」で5 PB (~2<sup>52</sup> bytes)なのに対し、QCではすでに<span class="math notranslate nohighlight">\(n=127\)</span>のものが商用運用されているので、既に古典計算機でまともにシミュレートできない機械が存在していることになります。</p>
+<p>しかし、逆に言うと、<span class="math notranslate nohighlight">\(n \sim 30\)</span>程度までの回路であれば、ある程度のスペックを持った計算機で厳密にシミュレートできるということが言えます。じっさい世の中には<a href="https://quantiki.org/wiki/list-qc-simulators" target="_blank">数多くの</a>シミュレータが存在します。Qiskitにも様々な高機能シミュレータが同梱されています。</p>
+<p>シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、<code class="docutils literal notranslate"><span class="pre">AerSimulator</span></code>というQiskitに含まれるシミュレータを利用します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Bounds</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
@@ -563,14 +563,8 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータをバックエンドとして使うときは、IBMQのプロバイダではなくAerのget_backend()を呼ぶ</span>
-<span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">simulator</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>qasm_simulator
 </pre></div>
 </div>
 </div>
@@ -633,21 +627,15 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    
+
     <span class="n">C</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;00&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    
+
 <span class="n">C</span> <span class="o">/=</span> <span class="n">shots</span>
-    
+
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;S =&#39;</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>S = 2.8446
-</pre></div>
-</div>
-<img alt="_images/nonlocal_correlations_6_1.png" src="_images/nonlocal_correlations_6_1.png" />
 </div>
 </div>
 <p>上のように、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は実機と同様に<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った<code class="docutils literal notranslate"><span class="pre">job_monitor()</span></code>関数を使用していません。また、シミュレータにはノイズがない<a class="footnote-reference brackets" href="#simulator-noise" id="id3">1</a>ので、<span class="math notranslate nohighlight">\(S\)</span>の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。</p>
@@ -656,9 +644,6 @@ const thebe_selector_output = ".output, .cell_output"
 <h2><a class="toc-backref" href="#id17">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>さて、おさらいをすると、上の<span class="math notranslate nohighlight">\(C^{\rmI, \rmII, \rmIII, \rmIV}\)</span>を計算する4つの回路は以下のようなものでした。</p>
 <div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<img alt="_images/nonlocal_correlations_9_0.png" src="_images/nonlocal_correlations_9_0.png" />
-</div>
 </div>
 <p>ベル状態を作るところまではすべての回路で共通で、その後それぞれ異なる角度の<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけています。実習では深く立ち入りませんでしたが、この<span class="math notranslate nohighlight">\(R_y\)</span>ゲートはベル状態を<span class="math notranslate nohighlight">\(\{\ket{0}, \ket{1}\}\)</span>とは異なる基底で測定するために置かれています。どういうことか、以下で説明します。</p>
 <p>ここまで「測定」とはレジスタの量子状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>からビット列<span class="math notranslate nohighlight">\(j\)</span>を確率<span class="math notranslate nohighlight">\(|c_j|^2\)</span>で得る行為である、と説明してきました。しかし、本来「測定」はもっと一般的な概念です。それを理解するために、まず、量子力学的には計算基底状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>は何ら特別な状態ではないということを理解しておきましょう。</p>
@@ -793,7 +778,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <p>がわかります。</p>
 <p>観測量<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>を用いてCHSH不等式をより正確に表現すると、</p>
 <blockquote>
-<div><p>4つのパラメータ<span class="math notranslate nohighlight">\(\kappa, \lambda, \mu, \nu\)</span>を用いて<br />
+<div><p>4つのパラメータ<span class="math notranslate nohighlight">\(\kappa, \lambda, \mu, \nu\)</span>を用いて
 <span class="math notranslate nohighlight">\(S(\kappa, \lambda, \mu, \nu) = \langle \sigma^{\lambda}\sigma^{\kappa} \rangle - \langle \sigma^{\nu}\sigma^{\kappa} \rangle + \langle \sigma^{\lambda}\sigma^{\mu} \rangle + \langle \sigma^{\nu}\sigma^{\mu} \rangle\)</span>
 という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である。</p>
 </div></blockquote>
@@ -841,9 +826,9 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
     <span class="n">chi</span> <span class="o">=</span> <span class="n">chis</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-    
+
     <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    
+
     <span class="c1"># Create a circuit that forms a Bell state and then measures the two qubits</span>
     <span class="c1"># along theta and chi bases</span>
 
@@ -862,7 +847,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
 <span class="c1"># Execute all circuits in qasm_simulator and retrieve the results</span>
-<span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
 <span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
 <span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
@@ -962,16 +947,16 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
     <span class="n">chi</span> <span class="o">=</span> <span class="n">chis</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-    
+
     <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;circuit_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    
+
     <span class="c1"># Create a circuit that forms a GHZ state and then measures the two qubits</span>
     <span class="c1"># along theta and chi bases</span>
 
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="c1">#circuit.?</span>
 
     <span class="c1">##################</span>
@@ -994,7 +979,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counts_ignoring_qubit2</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">bitstring</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add the counts of cases where qubit C is 0 and 1&quot;&quot;&quot;</span>
-    
+
     <span class="k">return</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;1</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Compute the C values for each (theta, chi)</span>
@@ -1002,11 +987,11 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <span class="k">for</span> <span class="n">icirc</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">)):</span>
     <span class="c1"># This is the counts dict for the (theta, chi) pair</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">result_ghz</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">icirc</span><span class="p">)</span>
-    
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="c1">#c_values_ghz[idx] = ?</span>
 
     <span class="c1">##################</span>
@@ -1032,7 +1017,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <span class="k">for</span> <span class="n">ikappa</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">,</span> <span class="n">imu</span><span class="p">,</span> <span class="n">inu</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">,</span> <span class="n">ntheta</span><span class="p">,</span> <span class="n">nchi</span><span class="p">):</span>
     <span class="n">abs_s</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">c_values_ghz</span><span class="p">[</span><span class="n">ikappa</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">]</span> <span class="o">-</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">ikappa</span><span class="p">,</span> <span class="n">inu</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">imu</span><span class="p">,</span> <span class="n">ilambda</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_values_ghz</span><span class="p">[</span><span class="n">imu</span><span class="p">,</span> <span class="n">inu</span><span class="p">])</span>
     <span class="n">max_abs_s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">abs_s</span><span class="p">,</span> <span class="n">max_abs_s</span><span class="p">)</span>
-    
+
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;max |S| = </span><span class="si">{</span><span class="n">max_abs_s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

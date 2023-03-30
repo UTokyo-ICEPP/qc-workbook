@@ -68,7 +68,7 @@ provider = IBMQ.get_provider(*provider_def)
 
 if provider_def == ('ibm-q', 'open', 'main'):
     from qiskit.test.mock import FakeGuadalupe
-    
+
     backend = FakeGuadalupe()
 
 else:
@@ -86,7 +86,7 @@ print(f'Using backend {backend.name()}')
 def setup_addition(circuit, reg1, reg2, reg3):
     """Set up an addition subroutine to a circuit with three registers
     """
-    
+
     # Equal superposition in register 3
     circuit.h(reg3)
 
@@ -113,7 +113,7 @@ def setup_addition(circuit, reg1, reg2, reg3):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1 + reg3.size
             circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
+
         circuit.h(reg3[itarg])
 
 def make_original_circuit(n1, n2):
@@ -127,13 +127,13 @@ def make_original_circuit(n1, n2):
 
     # QuantumCircuit can be instantiated from multiple registers
     circuit = QuantumCircuit(reg1, reg2, reg3)
-    
+
     # Set register 1 and 2 to equal superpositions
     circuit.h(reg1)
     circuit.h(reg2)
 
     setup_addition(circuit, reg1, reg2, reg3)
-    
+
     circuit.measure_all()
 
     return circuit
@@ -150,23 +150,23 @@ def display_nops(circuit):
     text = []
     for key in ['rz', 'x', 'sx', 'cx']:
         text.append(f'N({key})={nops.get(key, 0)}')
-        
+
     return ', '.join(text)
 
 # オリジナルと効率化した回路を作る関数
 def make_circuits(n1, n2, backend):
     print(f'Original circuit with n1, n2 = {n1}, {n2}')
     circuit_orig = make_original_circuit(n1, n2)
-    
+
     print('  Transpiling..')
     circuit_orig = transpile(circuit_orig, backend=backend, optimization_level=3)
-    
+
     print(f'  Done. Ops: {display_nops(circuit_orig)}')
     circuit_orig.name = f'original_{n1}_{n2}'
 
     print(f'Optimized circuit with n1, n2 = {n1}, {n2}')
     circuit_opt = optimized_additions(n1, n2)
-    
+
     n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
 
     print('  Transpiling..')
@@ -201,7 +201,7 @@ for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
 
 # バックエンドで定められた最大のショット数だけ各回路を実行
 shots = backend.configuration().max_shots
-    
+
 print(f'Submitting {len(circuits)} circuits to {backend.name()}, {shots} shots each')
 
 if backend.provider() is None:
@@ -211,9 +211,9 @@ if backend.provider() is None:
     for circuit in circuits:
         job = backend.run(circuit, shots=shots)
         counts_list.append(job.result().get_counts())
-        
+
     print('Job Status: job has successfully run')
-        
+
 else:
     job = backend.run(circuits, shots=shots)
 
@@ -240,7 +240,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 def count_correct_additions(counts, n1, n2):
     """Extract the addition equation from the counts dict key and tally up the correct ones."""
-    
+
     correct = 0
 
     for key, value in counts.items():
@@ -254,7 +254,7 @@ def count_correct_additions(counts, n1, n2):
 
     return correct
 
-    
+
 icirc = 0
 for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
     for ctype in ['Original', 'Optimized']:
@@ -347,14 +347,14 @@ for backend in [backend_qv8, backend_qv16, backend_qv32]:
     shots = backend.configuration().max_shots
     job = backend.run(circuits, shots=shots)
     jobs.append(job)
-    
+
 for job, qv in zip(jobs, [8, 16, 32]):
     print(f'QV {qv} job')
     job_monitor(job, interval=2)
 
 for job, qv in zip(jobs, [8, 16, 32]):
     counts_list = job.result().get_counts()
-    
+
     for counts, ctype in zip(counts_list, ['Original', 'Optimized']):
         n_correct = count_correct_additions(counts, n1, n2)
         shots = sum(counts.values())

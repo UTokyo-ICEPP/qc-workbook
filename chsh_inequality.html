@@ -596,11 +596,11 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="section" id="id3">
 <h2><a class="toc-backref" href="#id60">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式<span id="id4">[<a class="reference internal" href="#id26" title="John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. Phys. Rev. Lett., 23:880–884, Oct 1969. URL: https://link.aps.org/doi/10.1103/PhysRevLett.23.880, doi:10.1103/PhysRevLett.23.880.">CHSH69</a>, <a class="reference internal" href="#id21" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 2.6, pages 111-117. Cambridge University Press, 2000.">NC00</a>]</span>の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
-<p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum</a>を通じて<a class="reference external" href="https://www.ibm.com/quantum-computing/systems/">IBM Q System One</a>量子コンピュータを利用します。</p>
+<p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。</p>
 </div>
 <div class="section" id="qiskit">
 <h2><a class="toc-backref" href="#id61">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
-<p>IBM Q System OneのQCで量子計算を実行するには、IBMの提供する<a class="reference external" href="https://qiskit.org/">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
+<p>IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://qiskit.org/" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
 <ol class="simple">
 <li><p>使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る</p></li>
 <li><p>回路を実行して計算結果を得る。ここでは二通りのオプションがあり、</p>
@@ -612,7 +612,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p>計算結果を解析する。</p></li>
 </ol>
 <p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="nonlocal_correlations.html"><span class="doc">第一回の課題</span></a>を参照してください。</p>
-<p>Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a class="reference external" href="https://qiskit.org/documentation/">Qiskitのドキュメンテーション</a>をあたってみましょう。</p>
+<p>Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a href="https://qiskit.org/documentation/" target="_blank">Qiskitのドキュメンテーション</a>をあたってみましょう。</p>
 <div class="section" id="id5">
 <h3><a class="toc-backref" href="#id62">量子ビット、量子レジスタ</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。そして、量子ビットの集まりを量子レジスタと呼びます。</p>
@@ -763,10 +763,11 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは必要になるpythonモジュールをすべてインポートしておく</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
 <span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
 
@@ -785,11 +786,6 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This circuit has </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="si">}</span><span class="s1"> qubits and </span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s1"> operations&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This circuit has 2 qubits and 5 operations
 </pre></div>
 </div>
 </div>
@@ -872,11 +868,6 @@ C^1_0[U](\ket{1}_1\ket{1}_0) &amp; = \ket{1}_1U\ket{1}_0
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This circuit has 2 qubits and 6 operations
-</pre></div>
-</div>
-</div>
 </div>
 <p>やや複雑ですが、また計算を追ってみましょう。まず角度<span class="math notranslate nohighlight">\(\theta_1, \theta_2, \theta_3\)</span>は定義から以下の関係を満たします。</p>
 <div class="math notranslate nohighlight">
@@ -895,7 +886,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 = &amp; C^1_0[R_y(\theta_3 - \theta_2)]\left(\sqrt{\frac{3}{10}} \ket{0}_1 + \sqrt{\frac{7}{10}} \ket{1}_1\right) R_y(\theta_2)\ket{0}_0\\
 = &amp; \sqrt{\frac{3}{10}} \ket{0}_1 R_y(\theta_2)\ket{0}_0 + \sqrt{\frac{7}{10}} \ket{1}_1 R_y(\theta_3)\ket{0}_0 \\
 = &amp; \sqrt{\frac{3}{10}} \ket{0}_1 \left(\sqrt{\frac{1}{3}} \ket{0}_0 + \sqrt{\frac{2}{3}} \ket{1}_0\right) + \sqrt{\frac{7}{10}} \ket{1}_1 \left(\sqrt{\frac{3}{7}} \ket{0}_0 + \sqrt{\frac{4}{7}} \ket{1}_0\right) \\
-= &amp; \sqrt{\frac{1}{10}} \ket{00} + \sqrt{\frac{2}{10}} \ket{01} + \sqrt{\frac{3}{10}} \ket{10} + \sqrt{\frac{4}{10}} \ket{11} 
+= &amp; \sqrt{\frac{1}{10}} \ket{00} + \sqrt{\frac{2}{10}} \ket{01} + \sqrt{\frac{3}{10}} \ket{10} + \sqrt{\frac{4}{10}} \ket{11}
 \end{align}
 \end{split}\]</div>
 <p>最初の行で、ビット0と1にかかる<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをそれぞれ<span class="math notranslate nohighlight">\(R_{y0}, R_{y1}\)</span>と表しました。</p>
@@ -911,9 +902,6 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_15_0.png" src="_images/chsh_inequality_15_0.png" />
-</div>
 </div>
 <p>ここで<code class="docutils literal notranslate"><span class="pre">draw()</span></code>の引数<code class="docutils literal notranslate"><span class="pre">'mpl'</span></code>はmatplotlibライブラリを使ってカラーで描くことを指定しています。実行環境によっては対応していないこともあるので、その場合は引数なしの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>を使います。結果は<code class="docutils literal notranslate"><span class="pre">mpl</span></code>の場合に比べて見劣りしますが、内容は同じです。</p>
 <div class="cell docutils container">
@@ -922,14 +910,6 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌────────────┐┌──────────────┐    ░ ┌─┐   
-   q_0: ┤ Ry(1.9106) ├┤ Ry(-0.19649) ├─■──░─┤M├───
-        ├────────────┤└──────┬───────┘ │  ░ └╥┘┌─┐
-   q_1: ┤ Ry(1.9823) ├───────■─────────■──░──╫─┤M├
-        └────────────┘                    ░  ║ └╥┘
-meas: 2/═════════════════════════════════════╩══╩═
-                                             0  1 </pre></div></div>
 </div>
 <p>回路図は左から右に読んでいきます。水平の2本の実線が上からそれぞれ第0、第1量子ビットに対応し、その上にかぶさっている四角がゲート、最後にある矢印が下に伸びている箱が測定を表します。1ビットゲートから伸びている先端の丸い縦線は制御を表します。一番下の二重線は「古典レジスタ」（量子現象のない物理学を「古典物理学」と呼ぶので、量子でない通常のコンピュータにまつわる概念にはよく「古典 classical」という接頭辞をつけます）に対応し、測定結果の0/1が記録される部分です。</p>
 </div>
@@ -988,9 +968,6 @@ meas: 2/════════════════════════
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_20_0.png" src="_images/chsh_inequality_20_0.png" />
 </div>
 </div>
 <p>それぞれの回路で2ビットレジスタの基底<span class="math notranslate nohighlight">\(\ket{00}, \ket{01}, \ket{10}, \ket{11}\)</span>が現れる確率を計算してみましょう。</p>
@@ -1070,13 +1047,17 @@ C^{\rmIV} = 0
 </div>
 <div class="section" id="id16">
 <h2><a class="toc-backref" href="#id70">回路を実機で実行する</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
-<p>まずはIBMQに認証・接続します。自分のラップトップなどローカルの環境ですでに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">認証設定がされている</span></a>場合は<code class="docutils literal notranslate"><span class="pre">IBMQ.load_account()</span></code>で接続ができます。設定がない場合は<code class="docutils literal notranslate"><span class="pre">enable_account()</span></code>関数に<a class="reference internal" href="prerequisites.html#copy-token"><span class="std std-ref">トークン</span></a>を渡してIBMQに接続します。</p>
+<p>まずはIBMQに認証・接続します。IBM Quantum Experience (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">認証設定が保存されている</span></a>場合は<code class="docutils literal notranslate"><span class="pre">provider</span> <span class="pre">=</span> <span class="pre">IBMProvider()</span></code>で接続ができます。設定がない場合は<code class="docutils literal notranslate"><span class="pre">IBMProvider</span></code>のコンストラクタに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">トークン</span></a>を渡してIBMQに接続します。</p>
 <div class="cell tag_remove-output tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する</span>
+<span class="c1"># instance = &#39;hub-x/group-y/project-z&#39;</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
-    <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1084,10 +1065,7 @@ C^{\rmIV} = 0
 <p>認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IBMQプロバイダ（実機へのアクセスを管理するオブジェクト）</span>
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
-
-<span class="c1"># バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得する</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得する</span>
 <span class="c1"># operational_backendはこのワークブック用にqc_workbook.utilsで定義された関数</span>
 <span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
@@ -1139,7 +1117,7 @@ C^{\rmIV} = 0
     <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="c1"># データをリストに足す</span>
     <span class="n">counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
-    
+
 <span class="nb">print</span><span class="p">(</span><span class="n">counts_list</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1147,7 +1125,7 @@ C^{\rmIV} = 0
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って<code class="docutils literal notranslate"><span class="pre">retrieve_job</span></code>というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantum Experienceのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、</p>
+<p>ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って<code class="docutils literal notranslate"><span class="pre">retrieve_job</span></code>というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;__backend_you_used__&#39;</span><span class="p">)</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">retrieve_job</span><span class="p">(</span><span class="s1">&#39;__job_id__&#39;</span><span class="p">)</span>
 </pre></div>
@@ -1164,9 +1142,6 @@ C^{\rmIV} = 0
     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/chsh_inequality_33_0.png" src="_images/chsh_inequality_33_0.png" />
 </div>
 </div>
 <p><span class="math notranslate nohighlight">\(c^2/2 = (s + c)^2/4 = 0.427\)</span>, <span class="math notranslate nohighlight">\(s^2/2 = (s - c)^2 / 4 = 0.073\)</span>なので、得られた確率は当たらずとも遠からずというところでしょうか。</p>
@@ -1187,7 +1162,7 @@ C^{\rmIV} = 0
 
 <span class="c1"># 4つの要素を同時にshotsで規格化（リストではこういうことはできない）</span>
 <span class="n">C</span> <span class="o">/=</span> <span class="n">shots</span>
-    
+
 <span class="n">S</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;C:&#39;</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
@@ -1196,13 +1171,6 @@ C^{\rmIV} = 0
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Yes, we are using a quantum computer!&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Armonk, we have a problem.&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C: [ 0.61352539 -0.61523438  0.59814453  0.63549805]
-S = 2.46240234375
-Yes, we are using a quantum computer!
 </pre></div>
 </div>
 </div>

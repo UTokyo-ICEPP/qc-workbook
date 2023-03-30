@@ -106,7 +106,7 @@ for istep in range(M):
         circuit.h(j + 1)
         circuit.p(np.pi / 2., j)
         circuit.p(np.pi / 2., j + 1)
-        
+
     # Copy of the circuit up to this point
     snapshot = circuit.copy()
 
@@ -121,9 +121,9 @@ for istep in range(M):
     ### EDIT ABOVE ###
     ##################
 
-    snapshot.measure_all()        
+    snapshot.measure_all()
     circuits.append(snapshot)
-        
+
 qasm_simulator = Aer.get_backend('qasm_simulator')
 
 circuits = transpile(circuits, backend=qasm_simulator)
@@ -364,11 +364,11 @@ for istep in range(M):
     ##################
 
     #circuit.?
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     circuits.append(circuit.measure_all(inplace=False))
 
 # Run the circuits in the simulator

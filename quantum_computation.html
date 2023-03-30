@@ -549,7 +549,7 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_cukinv_gate</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
     <span class="n">uk</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">data_width</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;u_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    
+
     <span class="c1"># kの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）</span>
     <span class="c1"># unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している</span>
     <span class="n">k_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
@@ -559,10 +559,10 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
 
     <span class="c1"># 形式上逆回路を作るが、Xの逆操作はXなので、実は全く同一の回路</span>
     <span class="n">ukinv</span> <span class="o">=</span> <span class="n">uk</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
-    
+
     <span class="n">ukinv_gate</span> <span class="o">=</span> <span class="n">ukinv</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
     <span class="n">cukinv_gate</span> <span class="o">=</span> <span class="n">ukinv_gate</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    
+
     <span class="k">return</span> <span class="n">cukinv_gate</span>
 </pre></div>
 </div>
@@ -585,14 +585,14 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">:</span>
     <span class="n">circuit_re</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg_data</span><span class="p">,</span> <span class="n">reg_test</span><span class="p">,</span> <span class="n">creg_test</span><span class="p">)</span>
     <span class="n">circuit_im</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg_data</span><span class="p">,</span> <span class="n">reg_test</span><span class="p">,</span> <span class="n">creg_test</span><span class="p">)</span>
-    
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
 
     <span class="c1"># 制御ゲートをcircuitに組み込む例</span>
     <span class="c1"># circuit.append(cupsi_gate, qargs=([reg_test[0]] + reg_data[:]))</span>
-    
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
@@ -683,14 +683,14 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <span class="n">needle_bits</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">unpackbits</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">needle</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">bitorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)[:</span><span class="n">num_qubits</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">needle_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
     <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">haystack_register</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
-    
+
 <span class="c1"># レジスタの（0番から）最後から二番目のビットまでで制御し、最後のビットを標的にする</span>
 <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">mcp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">haystack_register</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">haystack_register</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="c1"># 後片付け</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">needle_bits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
     <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">haystack_register</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
-        
+
 <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

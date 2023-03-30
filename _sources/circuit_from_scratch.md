@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -52,7 +52,8 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Math
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, transpile
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
+from qiskit_aer import AerSimulator
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.show_state import statevector_expr
 
@@ -60,7 +61,7 @@ print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-simulator = Aer.get_backend('statevector_simulator')
+simulator = AerSimulator(method='statevector')
 print(simulator.name())
 ```
 
@@ -412,7 +413,7 @@ circuit = QuantumCircuit(num_qubits)
 ##################
 for i in range(num_qubits):
     circuit.h(i)
-    
+
 # circuit.?
 ##################
 ### EDIT ABOVE ###
@@ -657,7 +658,7 @@ circuit.x(output_register)
 for idx in range(3):
     # その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする
     circuit.cx(input_register[idx], output_register[idx])
-    
+
 circuit.draw('mpl')
 ```
 

@@ -490,7 +490,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">provider_def</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;main&#39;</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">qiskit.test.mock</span> <span class="kn">import</span> <span class="n">FakeGuadalupe</span>
-    
+
     <span class="n">backend</span> <span class="o">=</span> <span class="n">FakeGuadalupe</span><span class="p">()</span>
 
 <span class="k">else</span><span class="p">:</span>
@@ -508,7 +508,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up an addition subroutine to a circuit with three registers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Equal superposition in register 3</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">)</span>
 
@@ -535,7 +535,7 @@ const thebe_selector_output = ".output, .cell_output"
         <span class="k">for</span> <span class="n">ictrl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">itarg</span><span class="p">):</span>
             <span class="n">power</span> <span class="o">=</span> <span class="n">ictrl</span> <span class="o">-</span> <span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">reg3</span><span class="o">.</span><span class="n">size</span>
             <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">),</span> <span class="n">reg3</span><span class="p">[</span><span class="n">ictrl</span><span class="p">],</span> <span class="n">reg3</span><span class="p">[</span><span class="n">itarg</span><span class="p">])</span>
-        
+
         <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg3</span><span class="p">[</span><span class="n">itarg</span><span class="p">])</span>
 
 <span class="k">def</span> <span class="nf">make_original_circuit</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
@@ -549,13 +549,13 @@ const thebe_selector_output = ".output, .cell_output"
 
     <span class="c1"># QuantumCircuit can be instantiated from multiple registers</span>
     <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
-    
+
     <span class="c1"># Set register 1 and 2 to equal superpositions</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg1</span><span class="p">)</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">reg2</span><span class="p">)</span>
 
     <span class="n">setup_addition</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">reg1</span><span class="p">,</span> <span class="n">reg2</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)</span>
-    
+
     <span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">circuit</span>
@@ -572,23 +572,23 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">text</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;rz&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;sx&#39;</span><span class="p">,</span> <span class="s1">&#39;cx&#39;</span><span class="p">]:</span>
         <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;N(</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">)=</span><span class="si">{</span><span class="n">nops</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
+
     <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
 <span class="c1"># オリジナルと効率化した回路を作る関数</span>
 <span class="k">def</span> <span class="nf">make_circuits</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original circuit with n1, n2 = </span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">circuit_orig</span> <span class="o">=</span> <span class="n">make_original_circuit</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-    
+
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Transpiling..&#39;</span><span class="p">)</span>
     <span class="n">circuit_orig</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit_orig</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-    
+
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Done. Ops: </span><span class="si">{</span><span class="n">display_nops</span><span class="p">(</span><span class="n">circuit_orig</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">circuit_orig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;original_</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimized circuit with n1, n2 = </span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">circuit_opt</span> <span class="o">=</span> <span class="n">optimized_additions</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-    
+
     <span class="n">n3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Transpiling..&#39;</span><span class="p">)</span>
@@ -615,7 +615,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 <span class="c1"># バックエンドで定められた最大のショット数だけ各回路を実行</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">max_shots</span>
-    
+
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submitting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">)</span><span class="si">}</span><span class="s1"> circuits to </span><span class="si">{</span><span class="n">backend</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">shots</span><span class="si">}</span><span class="s1"> shots each&#39;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">provider</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -625,9 +625,9 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="k">for</span> <span class="n">circuit</span> <span class="ow">in</span> <span class="n">circuits</span><span class="p">:</span>
         <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
         <span class="n">counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">())</span>
-        
+
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Job Status: job has successfully run&#39;</span><span class="p">)</span>
-        
+
 <span class="k">else</span><span class="p">:</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 
@@ -645,7 +645,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_correct_additions</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract the addition equation from the counts dict key and tally up the correct ones.&quot;&quot;&quot;</span>
-    
+
     <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -659,7 +659,7 @@ const thebe_selector_output = ".output, .cell_output"
 
     <span class="k">return</span> <span class="n">correct</span>
 
-    
+
 <span class="n">icirc</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]:</span>
     <span class="k">for</span> <span class="n">ctype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="s1">&#39;Optimized&#39;</span><span class="p">]:</span>
@@ -736,14 +736,14 @@ QVにはゲートや測定のエラー率だけでなく、トランスパイラ
     <span class="n">shots</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">max_shots</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
     <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
-    
+
 <span class="k">for</span> <span class="n">job</span><span class="p">,</span> <span class="n">qv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;QV </span><span class="si">{</span><span class="n">qv</span><span class="si">}</span><span class="s1"> job&#39;</span><span class="p">)</span>
     <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">job</span><span class="p">,</span> <span class="n">qv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]):</span>
     <span class="n">counts_list</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
-    
+
     <span class="k">for</span> <span class="n">counts</span><span class="p">,</span> <span class="n">ctype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">counts_list</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="s1">&#39;Optimized&#39;</span><span class="p">]):</span>
         <span class="n">n_correct</span> <span class="o">=</span> <span class="n">count_correct_additions</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
         <span class="n">shots</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>

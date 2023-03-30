@@ -41,10 +41,10 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 IBMQをはじめ、私たちが現在利用できる量子コンピュータは NISQ (Noisy, intermediate-scale quantum) デバイスと呼ばれ、計算途中にエラーが起こるとそこから回復することができません。エラーが量子回路の実行時間やゲート数の増加とともに重なる様子は、すでに講義に出てきたさまざまな例で観察いただけたと思います。量子コンピュータがクラウド上で使えると言っても結局まともな計算はできない、という印象を持たれた方も多いかと思います。じっさい、NISQの最も現実的な使い道は、Shorの素因数分解アルゴリズムなどの「真の」量子計算ではなく、VQEなどの量子・古典ハイブリッド計算で、ゲート数が少なく、かつ多少間違えが起きても最終的な結果に大きく影響しないようなものだと考えられています。
 
-では、真の量子計算ができるようになる条件とは何でしょうか。エラーが起こらない量子コンピュータを作ること、という答えは当然考えられますが、これは原理的に不可能です。なぜなら、量子コンピュータにおけるエラーとはすなわち量子ビットに外部環境が影響を及ぼすことであり、  
-エラーが起こらない ＝ 量子ビットが完全に孤立した系にある  
-となるわけですが、一方で、  
-量子ビットをコンピュータとして使える ＝ 量子ビットを外部から操作できる ＝ 量子ビットは孤立していない  
+では、真の量子計算ができるようになる条件とは何でしょうか。エラーが起こらない量子コンピュータを作ること、という答えは当然考えられますが、これは原理的に不可能です。なぜなら、量子コンピュータにおけるエラーとはすなわち量子ビットに外部環境が影響を及ぼすことであり、
+エラーが起こらない ＝ 量子ビットが完全に孤立した系にある
+となるわけですが、一方で、
+量子ビットをコンピュータとして使える ＝ 量子ビットを外部から操作できる ＝ 量子ビットは孤立していない
 も言えるからです。
 
 次に考えられるのは、エラーの発生率を極力低くして、エラーが発生する前に全ての計算を終えること（NISQの延長）ですが、例えば2048ビットの整数の素因数分解をエラーなしで完遂するには、エラー率が$10^{-8}$よりもはるかに低くないといけません。現在のマシンのエラー率が$10^{-2}$から$10^{-3}$程度なので、これはあまり現実的なゴールではありません。また、そもそもエラーは確率的に起こるので、どんなに短い回路でもエラーが乗ることはありえます。
@@ -93,18 +93,18 @@ from qc_workbook.show_state import show_state, statevector_expr
 ```{code-cell} ipython3
 def show_circuit_op(circuit, global_phase=0.):
     """Compiles the LaTeX expression of the operation of the circuit on computational basis states."""
-    
+
     op = Operator(circuit)
-    
+
     unitary = op.data * np.exp(-1.j * global_phase)
-    
+
     ket_template = fr'|{{:0{circuit.num_qubits}b}}\rangle'
 
     exprs = list()
     for icol, col in enumerate(unitary.T):
         expr = statevector_expr(col, binary=True, state_label=None)
         exprs.append(fr'{ket_template.format(icol)} & \rightarrow {expr}')
-        
+
     return Latex(r'\begin{align} ' + r' \\ '.join(exprs) + r' \end{align}')
 ```
 
@@ -221,8 +221,8 @@ show_circuit_op(ccz_circuit)
 次にHadamardゲートの$R_z$と$\sqrt{X}$への分解を考えます。$\sqrt{X}$の作用は
 
 ```{math}
-    \sqrt{X} \ket{0} & = \frac{1}{\sqrt{2}} \left[e^{\frac{\pi}{4}i} \ket{0} + e^{-\frac{\pi}{4}i} \ket{1}\right] \\
-    \sqrt{X} \ket{1} & = \frac{1}{\sqrt{2}} \left[e^{-\frac{\pi}{4}i} \ket{0} + e^{\frac{\pi}{4}i} \ket{1}\right]
+    \sqrt{X} \ket{0} & = \frac{1}{\sqrt{2}} \left[e^{\frac{\pi}{4}i} \ket{0} + e^{-i\frac{\pi}{4}} \ket{1}\right] \\
+    \sqrt{X} \ket{1} & = \frac{1}{\sqrt{2}} \left[e^{-\frac{\pi}{4}i} \ket{0} + e^{i\frac{\pi}{4}} \ket{1}\right]
 ```
 
 です。
@@ -358,7 +358,7 @@ bitflip_circuit.draw('mpl')
 show_state(bitflip_circuit, binary=True);
 ```
 
-第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一であれば正しくデコーディングされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。
+第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一である＝第3量子ビットとのエンタングルメントが切れていれば、正しくデコードされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。
 
 ```{code-cell} ipython3
 ref_circuit = QuantumCircuit(1)
@@ -467,7 +467,7 @@ shor_circuit.barrier()
 # ビット反転補正のためのToffoli
 for itarg in [0, 3, 6]:
     shor_circuit.ccx(itarg + 1, itarg + 2, itarg)
-    
+
 ...
 
 # 位相反転補正のためのToffoli

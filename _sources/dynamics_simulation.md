@@ -502,7 +502,7 @@ for istep in range(M):
     # この時点での回路のコピーをリストに保存
     # measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す
     circuits.append(circuit.measure_all(inplace=False))
-    
+
 print(f'{len(circuits)} circuits created')
 ```
 
@@ -520,7 +520,7 @@ qasm_simulator = Aer.get_backend('qasm_simulator')
 circuits_qasm = transpile(circuits, backend=qasm_simulator)
 sim_job = qasm_simulator.run(circuits_qasm, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
-   
+
 plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
 ```
 
@@ -537,7 +537,7 @@ try:
     IBMQ.load_account()
 except IBMQAccountCredentialsNotFound:
     IBMQ.enable_account('__paste_your_token_here__')
-    
+
 provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
 
 backend_list = provider.backends(filters=operational_backend(min_qubits=n_spins, min_qv=32))

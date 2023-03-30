@@ -779,7 +779,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="c1">#qc.?</span>
 
     <span class="c1">##################</span>
@@ -820,7 +820,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
         <span class="k">for</span> <span class="n">ictrl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">itarg</span><span class="p">):</span>
             <span class="n">power</span> <span class="o">=</span> <span class="n">ictrl</span> <span class="o">-</span> <span class="n">itarg</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="n">qc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">),</span> <span class="n">ictrl</span><span class="p">,</span> <span class="n">itarg</span><span class="p">)</span>
-        
+
         <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">itarg</span><span class="p">)</span>
 
     <span class="c1">##################</span>
@@ -1168,7 +1168,7 @@ f(x) &amp; = a^x \bmod N \\
     <span class="c1">##################</span>
     <span class="c1">### EDIT BELOW ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="c1">#if a == 2:</span>
     <span class="c1">#    ...</span>
     <span class="c1">#elif a == 4:</span>
@@ -1178,14 +1178,14 @@ f(x) &amp; = a^x \bmod N \\
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="c1"># Uを2^l回繰り返す</span>
     <span class="n">U_power</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">l</span><span class="p">)</span>
 
     <span class="c1"># U_powerをゲートに変換</span>
     <span class="n">gate</span> <span class="o">=</span> <span class="n">U_power</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
     <span class="n">gate</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">^</span><span class="si">{</span><span class="mi">2</span> <span class="o">**</span> <span class="n">l</span><span class="si">}</span><span class="s2"> mod 15&quot;</span>
-    
+
     <span class="c1"># gateを制御ゲートに変換</span>
     <span class="n">c_gate</span> <span class="o">=</span> <span class="n">gate</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">c_gate</span>
@@ -1266,7 +1266,7 @@ f(x) &amp; = a^x \bmod N \\
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
@@ -1299,10 +1299,10 @@ f(x) &amp; = a^x \bmod N \\
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        
+
     <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">]:</span>
         <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-        
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
@@ -1397,10 +1397,10 @@ f(x) &amp; = a^x \bmod N \\
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Register Output    Phase
 ------------------------
-  0        0/256 = 0.000
-128      128/256 = 0.500
-192      192/256 = 0.750
  64       64/256 = 0.250
+128      128/256 = 0.500
+  0        0/256 = 0.000
+192      192/256 = 0.750
 </pre></div>
 </div>
 </div>
@@ -1425,10 +1425,10 @@ f(x) &amp; = a^x \bmod N \\
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Phase   Fraction   Guess for r
 -------------------------------------
-     0.000       0/ 1             1
-     0.500       1/ 2             2
-     0.750       3/ 4             4
      0.250       1/ 4             4
+     0.500       1/ 2             2
+     0.000       0/ 1             1
+     0.750       3/ 4             4
 </pre></div>
 </div>
 </div>

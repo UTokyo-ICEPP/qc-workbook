@@ -633,15 +633,15 @@ H = \sum_{k} h_k \sigma_k
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a function that implements a single Trotter step for the Heisenberg model.</span>
-<span class="sd">    </span>
+
 <span class="sd">    The Heisenberg model Hamiltonian is</span>
 <span class="sd">    H = -J * sum_of_sigmas = hbar*ω * Θ</span>
-<span class="sd">    </span>
+
 <span class="sd">    The returned circuit implements a negative time evolution</span>
 <span class="sd">    U = exp(-i H*(-τ)/hbar)</span>
 <span class="sd">    where τ = 2π / ω, which leads to</span>
 <span class="sd">    U = exp(i 2π Θ).</span>
-<span class="sd">    </span>
+
 <span class="sd">    Because we employ the Suzuki-Trotter decomposition, the actual circuit corresponds to</span>
 <span class="sd">    U = [exp(i 2π/num_steps Θ)]^num_steps.</span>
 
@@ -671,7 +671,7 @@ H = \sum_{k} h_k \sigma_k
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_steps</span><span class="p">)</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;U&#39;</span>
 
@@ -691,7 +691,7 @@ H = \sum_{k} h_k \sigma_k
 <span class="sd">        state_register (QuantumRegister): State register.</span>
 <span class="sd">        readout_register (QuantumRegister): Readout register.</span>
 <span class="sd">        u_circuit (QuantumCircuit): A circuit implementing U_H(-2π/ω).</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        QuantumCircuit: A circuit implementing the spectrum estimation of the given Hamiltonian.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -707,7 +707,7 @@ H = \sum_{k} h_k \sigma_k
 
         <span class="c1"># Append the controlled gate specifying the control and target qubits</span>
         <span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlled_u_gate</span><span class="p">,</span> <span class="n">qargs</span><span class="o">=</span><span class="p">([</span><span class="n">qubit</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_register</span><span class="p">[:]))</span>
-        
+
     <span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
 
     <span class="c1"># Inverse QFT</span>
@@ -722,7 +722,7 @@ H = \sum_{k} h_k \sigma_k
             <span class="n">circuit</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">dphi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">power</span><span class="p">),</span> <span class="n">readout_register</span><span class="p">[</span><span class="n">jctrl</span><span class="p">],</span> <span class="n">readout_register</span><span class="p">[</span><span class="n">jtarg</span><span class="p">])</span>
 
         <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">readout_register</span><span class="p">[</span><span class="n">jtarg</span><span class="p">])</span>
-        
+
     <span class="k">return</span> <span class="n">circuit</span>
 </pre></div>
 </div>
@@ -788,7 +788,7 @@ H = \sum_{k} h_k \sigma_k
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="k">return</span> <span class="n">circuit</span>
 
 
@@ -874,7 +874,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">use_qasm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute and return the distribution P_l(k, h) as an ndarray.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        n_state (int): Size of the state register.</span>
 <span class="sd">        n_readout (int): Size of the readout register.</span>
@@ -883,7 +883,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <span class="sd">        g (float): Parameter g of the Heisenberg model.</span>
 <span class="sd">        use_qasm (bool): Use the qasm_simulator if True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Define the circuit</span>
     <span class="n">state_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">)</span>
     <span class="n">readout_register</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">n_readout</span><span class="p">,</span> <span class="s1">&#39;readout&#39;</span><span class="p">)</span>
@@ -893,7 +893,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
     <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_state</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">l</span> <span class="o">&gt;&gt;</span> <span class="n">iq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">state_register</span><span class="p">[</span><span class="n">iq</span><span class="p">])</span>
-            
+
     <span class="n">u_circuit</span> <span class="o">=</span> <span class="n">trotter_twopi_heisenberg</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
     <span class="n">se_circuit</span> <span class="o">=</span> <span class="n">spectrum_estimation</span><span class="p">(</span><span class="n">state_register</span><span class="p">,</span> <span class="n">readout_register</span><span class="p">,</span> <span class="n">u_circuit</span><span class="p">)</span>
 
@@ -919,19 +919,19 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
             <span class="n">probs</span><span class="p">[</span><span class="n">readout</span><span class="p">,</span> <span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
 
         <span class="n">probs</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
-    
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sv_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
         <span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">sv_simulator</span><span class="p">)</span>
         <span class="n">job</span> <span class="o">=</span> <span class="n">sv_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
         <span class="n">statevector</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">]</span>
-        
+
         <span class="c1"># Convert the state vector into a probability distribution by taking the norm-squared</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">statevector</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_readout</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n_state</span><span class="p">))</span>
         <span class="c1"># Clean up the numerical artifacts</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">probs</span> <span class="o">&gt;</span> <span class="mf">1.e-6</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span>
-    
+
     <span class="c1"># probs[k, h] = P_l(k, h)</span>
     <span class="k">return</span> <span class="n">probs</span>
 </pre></div>
@@ -955,7 +955,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    
+
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_state</span><span class="p">):</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="n">get_spectrum_for_comp_basis</span><span class="p">(</span><span class="n">n_state</span><span class="p">,</span> <span class="n">n_readout</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">energy_norm</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computed spectrum for g = </span><span class="si">{:.1f}</span><span class="s1"> l = </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
@@ -967,7 +967,7 @@ P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
         <span class="c1">##################</span>
         <span class="c1">### EDIT ABOVE ###</span>
         <span class="c1">##################</span>
-        
+
     <span class="k">return</span> <span class="n">spectrum</span>
 
 <span class="c1"># roll(spectrum, 2^{n_R-1}) =&gt; range of k is [-2^{n_R}/2, 2^{n_R}/2 - 1]</span>

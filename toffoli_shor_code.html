@@ -553,10 +553,10 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="section" id="id2">
 <h2><a class="toc-backref" href="#id5">量子エラー訂正</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>IBMQをはじめ、私たちが現在利用できる量子コンピュータは NISQ (Noisy, intermediate-scale quantum) デバイスと呼ばれ、計算途中にエラーが起こるとそこから回復することができません。エラーが量子回路の実行時間やゲート数の増加とともに重なる様子は、すでに講義に出てきたさまざまな例で観察いただけたと思います。量子コンピュータがクラウド上で使えると言っても結局まともな計算はできない、という印象を持たれた方も多いかと思います。じっさい、NISQの最も現実的な使い道は、Shorの素因数分解アルゴリズムなどの「真の」量子計算ではなく、VQEなどの量子・古典ハイブリッド計算で、ゲート数が少なく、かつ多少間違えが起きても最終的な結果に大きく影響しないようなものだと考えられています。</p>
-<p>では、真の量子計算ができるようになる条件とは何でしょうか。エラーが起こらない量子コンピュータを作ること、という答えは当然考えられますが、これは原理的に不可能です。なぜなら、量子コンピュータにおけるエラーとはすなわち量子ビットに外部環境が影響を及ぼすことであり、<br />
-エラーが起こらない ＝ 量子ビットが完全に孤立した系にある<br />
-となるわけですが、一方で、<br />
-量子ビットをコンピュータとして使える ＝ 量子ビットを外部から操作できる ＝ 量子ビットは孤立していない<br />
+<p>では、真の量子計算ができるようになる条件とは何でしょうか。エラーが起こらない量子コンピュータを作ること、という答えは当然考えられますが、これは原理的に不可能です。なぜなら、量子コンピュータにおけるエラーとはすなわち量子ビットに外部環境が影響を及ぼすことであり、
+エラーが起こらない ＝ 量子ビットが完全に孤立した系にある
+となるわけですが、一方で、
+量子ビットをコンピュータとして使える ＝ 量子ビットを外部から操作できる ＝ 量子ビットは孤立していない
 も言えるからです。</p>
 <p>次に考えられるのは、エラーの発生率を極力低くして、エラーが発生する前に全ての計算を終えること（NISQの延長）ですが、例えば2048ビットの整数の素因数分解をエラーなしで完遂するには、エラー率が<span class="math notranslate nohighlight">\(10^{-8}\)</span>よりもはるかに低くないといけません。現在のマシンのエラー率が<span class="math notranslate nohighlight">\(10^{-2}\)</span>から<span class="math notranslate nohighlight">\(10^{-3}\)</span>程度なので、これはあまり現実的なゴールではありません。また、そもそもエラーは確率的に起こるので、どんなに短い回路でもエラーが乗ることはありえます。</p>
 <p>実は、難しそうに見えて一番実現可能性があるのが、<strong>計算途中にエラーが起きたとき、それを検知して訂正すること</strong>です。回路の実行中にリアルタイムでエラー訂正が行えれば、訂正のための様々なコスト（追加の量子ビットやゲート）はあるものの、計算結果だけを見ればエラーのない理想的な量子コンピュータを使うのと同じものが得られます。そのような量子コンピュータは FTQC (Fault-tolerant quantum computers) と呼ばれ、NISQとは質的に異なるものとみなされています。</p>
@@ -593,18 +593,18 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_circuit_op</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">global_phase</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compiles the LaTeX expression of the operation of the circuit on computational basis states.&quot;&quot;&quot;</span>
-    
+
     <span class="n">op</span> <span class="o">=</span> <span class="n">Operator</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
-    
+
     <span class="n">unitary</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="n">j</span> <span class="o">*</span> <span class="n">global_phase</span><span class="p">)</span>
-    
+
     <span class="n">ket_template</span> <span class="o">=</span> <span class="sa">fr</span><span class="s1">&#39;|</span><span class="se">{{</span><span class="s1">:0</span><span class="si">{</span><span class="n">circuit</span><span class="o">.</span><span class="n">num_qubits</span><span class="si">}</span><span class="s1">b</span><span class="se">}}</span><span class="s1">\rangle&#39;</span>
 
     <span class="n">exprs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unitary</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
         <span class="n">expr</span> <span class="o">=</span> <span class="n">statevector_expr</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="n">exprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">fr</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ket_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">icol</span><span class="p">)</span><span class="si">}</span><span class="s1"> &amp; \rightarrow </span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
+
     <span class="k">return</span> <span class="n">Latex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\begin</span><span class="si">{align}</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; </span><span class="se">\\</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exprs</span><span class="p">)</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; \end</span><span class="si">{align}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -706,8 +706,8 @@ const thebe_selector_output = ".output, .cell_output"
 <h2><a class="toc-backref" href="#id9">Hadamardゲート</a><a class="headerlink" href="#hadamard" title="Permalink to this headline">¶</a></h2>
 <p>次にHadamardゲートの<span class="math notranslate nohighlight">\(R_z\)</span>と<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>への分解を考えます。<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>の作用は</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}    \sqrt{X} \ket{0} &amp; = \frac{1}{\sqrt{2}} \left[e^{\frac{\pi}{4}i} \ket{0} + e^{-\frac{\pi}{4}i} \ket{1}\right] \\
-    \sqrt{X} \ket{1} &amp; = \frac{1}{\sqrt{2}} \left[e^{-\frac{\pi}{4}i} \ket{0} + e^{\frac{\pi}{4}i} \ket{1}\right]\end{split}\]</div>
+\[\begin{split}    \sqrt{X} \ket{0} &amp; = \frac{1}{\sqrt{2}} \left[e^{\frac{\pi}{4}i} \ket{0} + e^{-i\frac{\pi}{4}} \ket{1}\right] \\
+    \sqrt{X} \ket{1} &amp; = \frac{1}{\sqrt{2}} \left[e^{-\frac{\pi}{4}i} \ket{0} + e^{i\frac{\pi}{4}} \ket{1}\right]\end{split}\]</div>
 <p>です。</p>
 <p><strong>ヒント</strong></p>
 <p><span class="math notranslate nohighlight">\(R_z(\phi)\ket{0}\)</span>や<span class="math notranslate nohighlight">\(R_z(\phi)\ket{1}\)</span>に<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>をかけるとどうなるか、また<span class="math notranslate nohighlight">\(\sqrt{X}\)</span>をかけた後の状態に<span class="math notranslate nohighlight">\(R_z(\phi)\)</span>をかけたらどうなるか、計算してみましょう。今回も全体位相が生じます。</p>
@@ -836,7 +836,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<p>第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一であれば正しくデコーディングされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。</p>
+<p>第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一である＝第3量子ビットとのエンタングルメントが切れていれば、正しくデコードされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -951,7 +951,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="c1"># ビット反転補正のためのToffoli</span>
 <span class="k">for</span> <span class="n">itarg</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]:</span>
     <span class="n">shor_circuit</span><span class="o">.</span><span class="n">ccx</span><span class="p">(</span><span class="n">itarg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">itarg</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">itarg</span><span class="p">)</span>
-    
+
 <span class="o">...</span>
 
 <span class="c1"># 位相反転補正のためのToffoli</span>

@@ -682,7 +682,8 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Math</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">statevector_expr</span>
 
@@ -693,13 +694,8 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;statevector&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">simulator</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>statevector_simulator
 </pre></div>
 </div>
 </div>
@@ -715,9 +711,6 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_6_0.png" src="_images/circuit_from_scratch_6_0.png" />
 </div>
 </div>
 <div class="admonition caution">
@@ -744,12 +737,6 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;numpy.ndarray&#39;&gt; complex128
-[ 0.27059805+0.j  0.65328148+0.j -0.65328148+0.j  0.27059805+0.j]
-</pre></div>
-</div>
-</div>
 </div>
 <p>状態ベクトルは<code class="docutils literal notranslate"><span class="pre">np.asarray()</span></code>でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。</p>
 <p>状態ベクトルデータから数式の文字列を作る<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py"><code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。</p>
@@ -761,10 +748,6 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">Math</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \text{final} \rangle = 0.271 |0\rangle + 0.653 |1\rangle - 0.653 |2\rangle + 0.271 |3\rangle\]</div>
 </div>
 </div>
 <p>前回より、<a class="reference internal" href="chsh_inequality.html#equation-eqn-circuit1">(1)</a>は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})\)</span>（<span class="math notranslate nohighlight">\(s:=\sin(\pi/8)=0.271\sqrt{2}\)</span>, <span class="math notranslate nohighlight">\(c:=\cos(\pi/8)=0.653\sqrt{2}\)</span>）という状態を作るもののはずでした。実際に計算された終状態の状態ベクトルが一致しています。</p>
@@ -1028,7 +1011,7 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 <span class="c1">##################</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">):</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    
+
 <span class="c1"># circuit.?</span>
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
@@ -1161,9 +1144,6 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_36_0.png" src="_images/circuit_from_scratch_36_0.png" />
-</div>
 </div>
 <p>測定オペレーションが入っているので、この回路をstatevector simulatorに渡すと、シミュレーションを実行するごとにレジスタ1の状態がランダムに決定されます。次のセルを複数回実行して、上の回路が狙い通り動いていることを確認してみましょう。</p>
 <p>入力と出力のレジスタの値が別々に表示されるよう、<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>の<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>という引数を利用して、5ビットの回路を4ビットと1ビットに分けて解釈するよう指定します。</p>
@@ -1190,10 +1170,6 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \text{final} \rangle =  - 0.383 |0:10\rangle + 0.924 |1:10\rangle\]</div>
-</div>
 </div>
 </div>
 <div class="section" id="id16">
@@ -1218,9 +1194,6 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_40_0.png" src="_images/circuit_from_scratch_40_0.png" />
-</div>
 </div>
 <p>今度は全ての分岐が重ね合わさった量子状態が実現しています。</p>
 <div class="cell docutils container">
@@ -1229,10 +1202,6 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 <span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39; </span><span class="se">\\</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\begin{split}\displaystyle | \text{final} \rangle = 0.250 |0:0\rangle + 0.245 |0:1\rangle + 0.231 |0:2\rangle + 0.208 |0:3\rangle + 0.177 |0:4\rangle + 0.139 |0:5\rangle \\  + 0.096 |0:6\rangle + 0.049 |0:7\rangle - 0.049 |0:9\rangle - 0.096 |0:10\rangle - 0.139 |0:11\rangle - 0.177 |0:12\rangle \\  - 0.208 |0:13\rangle - 0.231 |0:14\rangle - 0.245 |0:15\rangle + 0.049 |1:1\rangle + 0.096 |1:2\rangle + 0.139 |1:3\rangle \\  + 0.177 |1:4\rangle + 0.208 |1:5\rangle + 0.231 |1:6\rangle + 0.245 |1:7\rangle + 0.250 |1:8\rangle + 0.245 |1:9\rangle \\  + 0.231 |1:10\rangle + 0.208 |1:11\rangle + 0.177 |1:12\rangle + 0.139 |1:13\rangle + 0.096 |1:14\rangle + 0.049 |1:15\rangle\end{split}\]</div>
 </div>
 </div>
 </div>
@@ -1270,13 +1239,10 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="c1"># その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする</span>
     <span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">input_register</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">output_register</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
-    
+
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_44_0.png" src="_images/circuit_from_scratch_44_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1284,10 +1250,6 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \text{final} \rangle =  |9:6\rangle\]</div>
 </div>
 </div>
 <p>入力レジスタの状態を色々変えて、状態ベクトルの変化を見てみましょう。</p>
@@ -1395,21 +1357,12 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7ff9c2645740&gt;
-</pre></div>
-</div>
-<img alt="_images/circuit_from_scratch_48_1.png" src="_images/circuit_from_scratch_48_1.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_49_0.png" src="_images/circuit_from_scratch_49_0.png" />
 </div>
 </div>
 <p>式<a class="reference internal" href="#equation-swap-test">(8)</a>を導いてみましょう。</p>
@@ -1454,20 +1407,12 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \psi \rangle = 0.939e^{1.92 \cdot \pi i} |0\rangle + 0.343e^{0.08 \cdot \pi i} |7\rangle\]</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\phi&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \phi \rangle = 0.378 |0\rangle + 0.109i |1\rangle + 0.659 |2\rangle - 0.191i |3\rangle + 0.160 |4\rangle - 0.259i |5\rangle + 0.279 |6\rangle + 0.451i |7\rangle\]</div>
 </div>
 </div>
 <p>で、<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|^2\)</span>は</p>
@@ -1476,11 +1421,6 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sv_psi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">psi_circuit</span><span class="p">)</span>
 <span class="n">sv_phi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv_psi</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="o">*</span> <span class="n">sv_phi</span><span class="p">))))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20287760299395322
 </pre></div>
 </div>
 </div>
@@ -1495,11 +1435,6 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 <span class="n">counts</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">((</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20143
 </pre></div>
 </div>
 </div>
@@ -1527,9 +1462,6 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_59_0.png" src="_images/circuit_from_scratch_59_0.png" />
 </div>
 </div>
 <p>ポイントは<code class="docutils literal notranslate"><span class="pre">psi_circuit.inverse()</span></code>で得られる<code class="docutils literal notranslate"><span class="pre">psi_circuit</span></code>の逆回路です。逆回路とは、ゲートの順番を反転させ、全てのゲートをその逆操作で置き換えたものです。<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を作る回路を<span class="math notranslate nohighlight">\(U_{\psi}\)</span>と表すと、逆回路は<span class="math notranslate nohighlight">\(U_{\psi}^{-1}\)</span>もしくは<span class="math notranslate nohighlight">\(U_{\psi}^{\dagger}\)</span>と書かれ、</p>
@@ -1593,11 +1525,6 @@ P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2 = |\braket{\psi}{\phi}|^2
 <span class="n">counts</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;000&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shots</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.203293
 </pre></div>
 </div>
 </div>
@@ -1674,9 +1601,6 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/circuit_from_scratch_67_0.png" src="_images/circuit_from_scratch_67_0.png" />
-</div>
 </div>
 <p>入力ビットの状態は</p>
 <div class="cell docutils container">
@@ -1685,10 +1609,6 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \text{in} \rangle = 0.939 |0\rangle + 0.343e^{0.57 \cdot \pi i} |1\rangle\]</div>
-</div>
 </div>
 <p>回路の終状態は</p>
 <div class="cell docutils container">
@@ -1696,10 +1616,6 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle | \text{final} \rangle = 0.939 |0:1:1\rangle + 0.343e^{0.57 \cdot \pi i} |1:1:1\rangle\]</div>
 </div>
 </div>
 <p>上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが<span class="math notranslate nohighlight">\(\ket{\text{in}}\)</span>と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。</p>

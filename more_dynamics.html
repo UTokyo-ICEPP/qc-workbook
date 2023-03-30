@@ -595,7 +595,7 @@ const thebe_selector_output = ".output, .cell_output"
         <span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
         <span class="n">circuit</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        
+
     <span class="c1"># Copy of the circuit up to this point</span>
     <span class="n">snapshot</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
@@ -610,9 +610,9 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
 
-    <span class="n">snapshot</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>        
+    <span class="n">snapshot</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snapshot</span><span class="p">)</span>
-        
+
 <span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
 
 <span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">qasm_simulator</span><span class="p">)</span>
@@ -797,11 +797,11 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
     <span class="c1">##################</span>
 
     <span class="c1">#circuit.?</span>
-    
+
     <span class="c1">##################</span>
     <span class="c1">### EDIT ABOVE ###</span>
     <span class="c1">##################</span>
-    
+
     <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">measure_all</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
 <span class="c1"># Run the circuits in the simulator</span>

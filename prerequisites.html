@@ -387,13 +387,8 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibm-quantum-api">
-     IBM Quantum APIトークンを取得する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qiskit">
-     Qiskitにトークンを登録する
+    <a class="reference internal nav-link" href="#ibm-quantum-apiqiskit">
+     （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
     </a>
    </li>
   </ul>
@@ -446,13 +441,8 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibm-quantum-api">
-     IBM Quantum APIトークンを取得する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qiskit">
-     Qiskitにトークンを登録する
+    <a class="reference internal nav-link" href="#ibm-quantum-apiqiskit">
+     （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
     </a>
    </li>
   </ul>
@@ -491,14 +481,13 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p><a class="reference internal" href="#ibm-quantum" id="id4">IBM Quantum</a></p>
 <ul>
 <li><p><a class="reference internal" href="#ibmidibm-quantum" id="id5">IBMidを取得し、IBM Quantumにログインする</a></p></li>
-<li><p><a class="reference internal" href="#ibm-quantum-api" id="id6">IBM Quantum APIトークンを取得する</a></p></li>
-<li><p><a class="reference internal" href="#qiskit" id="id7">Qiskitにトークンを登録する</a></p></li>
+<li><p><a class="reference internal" href="#ibm-quantum-apiqiskit" id="id6">（ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id3" id="id8">ワークブックの使い方</a></p>
+<li><p><a class="reference internal" href="#id3" id="id7">ワークブックの使い方</a></p>
 <ul>
-<li><p><a class="reference internal" href="#html" id="id9">インタラクティブHTML</a></p></li>
-<li><p><a class="reference internal" href="#jupyter-notebook" id="id10">Jupyter Notebook</a></p></li>
+<li><p><a class="reference internal" href="#html" id="id8">インタラクティブHTML</a></p></li>
+<li><p><a class="reference internal" href="#jupyter-notebook" id="id9">Jupyter Notebook</a></p></li>
 </ul>
 </li>
 </ul>
@@ -507,42 +496,43 @@ const thebe_selector_output = ".output, .cell_output"
 <h2><a class="toc-backref" href="#id4">IBM Quantum</a><a class="headerlink" href="#ibm-quantum" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="ibmidibm-quantum">
 <h3><a class="toc-backref" href="#id5">IBMidを取得し、IBM Quantumにログインする</a><a class="headerlink" href="#ibmidibm-quantum" title="Permalink to this headline">¶</a></h3>
-<p>IBM Q System Oneを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a class="reference external" href="https://quantum-computing.ibm.com/">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。</p>
+<p>IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。</p>
 </div>
-<div class="section" id="ibm-quantum-api">
-<span id="copy-token"></span><h3><a class="toc-backref" href="#id6">IBM Quantum APIトークンを取得する</a><a class="headerlink" href="#ibm-quantum-api" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ibm-quantum-apiqiskit">
+<span id="install-token"></span><h3><a class="toc-backref" href="#id6">（ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する</a><a class="headerlink" href="#ibm-quantum-apiqiskit" title="Permalink to this headline">¶</a></h3>
+<p>IBM Quantum Lab（IBM Quantumウェブサイト上のJupyter Lab）でプログラムを実行する場合、以下の手続きは不要です。</p>
 <p>ログインしたらホーム画面のYour API tokenという欄からトークンをコピーできます。</p>
 <a class="reference internal image-reference" href="_images/ibmq_home.png" id="my-account"><img alt="_images/ibmq_home.png" id="my-account" src="_images/ibmq_home.png" style="height: 400px;" /></a>
-</div>
-<div class="section" id="qiskit">
-<span id="install-token"></span><h3><a class="toc-backref" href="#id7">Qiskitにトークンを登録する</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h3>
-<p>アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。</p>
+<p>アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。ローカルディスクに書き込める環境にある場合は、一度トークンを設定ファイルに保存することで、以降の認証を自動化できます。下のコードセルの<code class="docutils literal notranslate"><span class="pre">__paste_your_token_here__</span></code>のところにIBM Quantumからコピーしたトークンを貼り付け、実行してください。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
 
-<span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<span class="n">IBMProvider</span><span class="o">.</span><span class="n">save_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>上のように<code class="docutils literal notranslate"><span class="pre">enable_account</span></code>を利用する場合は、Pythonプログラムを実行するたびに（Jupyter notebookのカーネルを再起動するたびに）認証を行います。</p>
-<p>ローカルディスクに書き込める環境にあれば、</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">save_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<p>トークンを保存することで、プログラム中でのIBM Quantumへの認証（IBMProviderの取得）は</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
+
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>とすることでトークンが保存され、以降はPythonプログラムを実行するたびに行う手続きが</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
+<p>のようになります。ちなみにIBM Quantum Labでは最初からトークンが保存されている状態なので、このコードで認証が行なえます。</p>
+<p>ローカルディスクに書き込める環境でない場合（このワークブックをインタラクティブに使っている場合など）は、Pythonプログラムを実行するたびに（Jupyterのカーネルを再起動するたびに）手動で認証を行う必要があります。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
+
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>に変わります。</p>
 </div>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id8">ワークブックの使い方</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">ワークブックの使い方</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="html">
-<h3><a class="toc-backref" href="#id9">インタラクティブHTML</a><a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
-<p>このワークブックの各ページにあるプログラムの書かれたセルは、そのまま<a class="reference external" href="https://jupyter.org/">Jupyter Notebook</a>のようにブラウザ上で実行することができます。ページの右上の<i class="fas fa-rocket"></i>にカーソルを乗せ、現れるメニューから<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><i class="fas fa-play" style="margin-left: .4em;"></i> <span style="margin: 0 .4em 0 .4em;">Live Code</span></span>をクリックしてください。ページのタイトルの下にステータス表示が現れるので、<span style="color: green; font-family: monospace; font-weight: bold; font-size: 1em;">ready</span>と表示されるまで待ちます。</p>
+<h3><a class="toc-backref" href="#id8">インタラクティブHTML</a><a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
+<p>このワークブックの各ページにあるプログラムの書かれたセルは、そのまま<a href="https://jupyter.org/" target="_blank">Jupyter Notebook</a>のようにブラウザ上で実行することができます。ページの右上の<i class="fas fa-rocket"></i>にカーソルを乗せ、現れるメニューから<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><i class="fas fa-play" style="margin-left: .4em;"></i> <span style="margin: 0 .4em 0 .4em;">Live Code</span></span>をクリックしてください。ページのタイトルの下にステータス表示が現れるので、<span style="color: green; font-family: monospace; font-weight: bold; font-size: 1em;">ready</span>と表示されるまで待ちます。</p>
 <a class="reference internal image-reference" href="_images/toggle_interactive.jpg" id="turn-interactive-contents-on"><img alt="_images/toggle_interactive.jpg" id="turn-interactive-contents-on" src="_images/toggle_interactive.jpg" style="height: 400px;" /></a>
 <p>ページがインタラクティブになると、コード・セルに<span style="background-color:#dddddd; font-family:'Roboto', sans-serif; margin:0 1em 0 1em;">run</span>および<span style="background-color:#dddddd; font-family:'Roboto', sans-serif; margin:0 1em 0 1em;">restart</span>というボタンが現れ、直下にセルの出力が表示されるようになります。</p>
 <a class="reference internal image-reference" href="_images/interactive_cell.jpg" id="interactive-code-cell"><img alt="_images/interactive_cell.jpg" id="interactive-code-cell" src="_images/interactive_cell.jpg" style="height: 200px;" /></a>
@@ -550,16 +540,16 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="simple">
 <li><p>restartを押すまでページ全体が一つのプログラムになっているので、定義された変数などはセルをまたいで利用される。</p></li>
 <li><p>しばらく何もしないでページを放置していると、実行サーバーとの接続が切れてしまう。その場合ページを再度読み込んで、改めてインタラクティブコンテンツを起動する必要がある。</p></li>
-<li><p>コードは<a class="reference external" href="https://mybinder.org/">mybinder.org</a>という外部サービス上で実行されるので、個人情報等センシティブな内容の送信は極力避ける。<br/>
+<li><p>コードは<a href="https://mybinder.org/" target="_blank">mybinder.org</a>という外部サービス上で実行されるので、個人情報等センシティブな内容の送信は極力避ける。<br/>
 （通信は暗号化されていて、mybinder.org中ではそれぞれのユーザーのプログラムは独立のコンテナ中で動くので、情報が外に筒抜けということではないはずですが、念の為。）<br/>
-ただし上で出てきたように、IBM Quantum Experienceのサービストークンだけはどうしても送信する必要があります。</p></li>
+ただし上で出てきたように、IBM Quantumのサービストークンだけはどうしても送信する必要があります。</p></li>
 </ul>
 </div>
 <div class="section" id="jupyter-notebook">
-<h3><a class="toc-backref" href="#id10">Jupyter Notebook</a><a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h3>
-<p>インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook">githubレポジトリ</a>をクローンしてください。</p>
+<h3><a class="toc-backref" href="#id9">Jupyter Notebook</a><a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h3>
+<p>インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている<a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank">githubレポジトリ</a>をクローンしてください。</p>
 <p>ノートブックをローカルに実行するためには、Pythonバージョン3.8以上が必要です。また、<code class="docutils literal notranslate"><span class="pre">pip</span></code>を使って以下のパッケージをインストールする必要があります。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">qiskit</span> <span class="n">matplotlib</span> <span class="n">pylatexenc</span> <span class="n">tabulate</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">qiskit</span> <span class="n">qiskit</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">provider</span> <span class="n">qiskit</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">runtime</span> <span class="n">matplotlib</span> <span class="n">pylatexenc</span> <span class="n">tabulate</span>
 </pre></div>
 </div>
 </div>
