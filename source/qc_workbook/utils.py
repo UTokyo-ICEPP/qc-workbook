@@ -3,14 +3,34 @@
 from typing import Callable, Optional
 import collections
 import numpy as np
-from qiskit.providers.backend import BackendV1 as Backend
 
 def operational_backend(
     min_qubits: int = 0,
     min_qv: int = 0,
     qubits: Optional[int] = None,
     qv: Optional[int] = None
-) -> Callable:
+) -> Callable[['Backend'], bool]:
+    """Returns a filter function that flags operational backends.
+
+    The returned function can be passed to provider.backends(). Operational backends are those
+    that satisfy all of the following criteria:
+
+    - Not a simulator
+    - `backend.status().operational` is True
+    - If `qubits` is set, the number of qubits matches the value exactly. If not and if `min_qubits` is set,
+      the number of qubits is greater than or equal to the given value.
+    - If `qv` is is set, quantum volume matches the value exactly. If not and if `min_qv` is set,
+      quantum volume is greater than or equal to the given value.
+
+    Args:
+        min_qubits: Minimum number of qubits.
+        min_qv: Minimum value of quantum volume.
+        qubits: Exact number of qubits.
+        qv: Exact value of quantum volume.
+
+    Returns:
+        A function that takes a Backend object and returns True if the backend is operational.
+    """
 
     def backend_filter(backend):
         if not backend.status().operational:
@@ -40,8 +60,21 @@ def operational_backend(
     return backend_filter
 
 
-def find_best_chain(backend: Backend, length: int, return_error_prod: bool = False):
+def find_best_chain(
+    backend: 'Backend',
+    length: int,
+    return_error_prod: bool = False
+) -> Union[Tuple[int], Tuple[Tuple[int, float, float]]]:
     """Find a chain of qubits with the smallest product of CNOT and measurement errors.
+
+    Args:
+        backend: IBMQ backend.
+        length: Length of the chain.
+        return_error_prod: If True, returns log(prod(gate error)) and log(prod(readout error)) along with the qubit IDs.
+
+    Returns:
+        Qubit IDs (int) of the best chain, or a tuple containing the tuple of qubit IDs, log(prod(gate error)),
+        and log(prod(readout error)).
     """
 
     # Put the couplings into a dict for convenience

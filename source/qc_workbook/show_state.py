@@ -2,7 +2,8 @@ from typing import Tuple, List, Union, Optional
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from qiskit import Aer, transpile, QuantumCircuit
+from qiskit import transpile, QuantumCircuit
+from qiskit_aer import AerSimulator
 
 def show_state(
     statevector: Union[QuantumCircuit, np.ndarray],
@@ -86,7 +87,7 @@ def statevector_expr(
 
     if isinstance(statevector, QuantumCircuit):
         # Run the circuit in statevector_simulator and obtain the final state statevector
-        simulator = Aer.get_backend('statevector_simulator')
+        simulator = AerSimulator(method='statevector')
 
         circuit = transpile(statevector, backend=simulator)
         statevector = np.asarray(simulator.run(circuit).result().data()['statevector'])
