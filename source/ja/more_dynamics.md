@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】量子ダイナミクスシミュレーション・続
@@ -55,7 +55,8 @@ $\newcommand{\minusket}{\ket{-}}$
 # 必要なモジュールを先にインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts
 from qc_workbook.hamiltonian import make_hamiltonian, diagonalized_evolution
@@ -124,10 +125,10 @@ for istep in range(M):
     snapshot.measure_all()
     circuits.append(snapshot)
 
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-circuits = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits, shots=shots)
+circuits = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
 
 # Initial state as a statevector
@@ -372,10 +373,10 @@ for istep in range(M):
     circuits.append(circuit.measure_all(inplace=False))
 
 # Run the circuits in the simulator
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-circuits = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits, shots=shots)
+circuits = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
 
 ## Numerical solution through diagonalization
@@ -430,11 +431,3 @@ plt.plot(time_points, number_density(bit_exp), 'o')
 **提出するもの**
 
 - 完成した回路のコードとシミュレーション結果によるプロット
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

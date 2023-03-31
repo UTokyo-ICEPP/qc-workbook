@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 物理系を表現する
@@ -444,13 +444,13 @@ circuit.draw('mpl')
 [^sgate]: $P(\pi/2)$ゲートは$S$ゲートとも呼ばれます。$P(-\pi/2)$は$S^{\dagger}$です。
 
 ```{code-cell} ipython3
-:tags: []
-
 # まずは全てインポート
 import numpy as np
-from qiskit import QuantumCircuit, Aer, IBMQ, transpile
+from qiskit import QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
 from qc_workbook.utils import operational_backend
@@ -515,10 +515,10 @@ initial_state[0:2] = np.sqrt(0.5)
 
 shots = 100000
 
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-circuits_qasm = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits_qasm, shots=shots)
+circuits_sim = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits_sim, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
 
 plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
@@ -533,12 +533,13 @@ plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theo
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-try:
-    IBMQ.load_account()
-except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
+# よりアクセス権の広いプロバイダを使える場合は、下を書き換える
+instance = 'ibm-q/open/main'
 
-provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+try:
+    provider = IBMProvider(instance=instance)
+except IBMQAccountCredentialsNotFound:
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 
 backend_list = provider.backends(filters=operational_backend(min_qubits=n_spins, min_qv=32))
 backend = least_busy(backend_list)
@@ -562,10 +563,4 @@ counts_list = job.result().get_counts()
 :tags: [raises-exception, remove-output]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
-```
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
 ```
