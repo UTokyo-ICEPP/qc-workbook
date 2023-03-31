@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【参考】足し算を実機で行う
@@ -38,9 +38,10 @@ language_info:
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit import QuantumRegister, QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 from qiskit_experiments.library import CorrelatedReadoutError
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
@@ -53,20 +54,18 @@ print('notebook ready')
 ```{code-cell} ipython3
 :tags: [remove-output, raises-exception]
 
-provider_def = ('ibm-q', 'open', 'main')
+instance = 'ibm-q/open/main'
 
 try:
-    IBMQ.load_account()
+    provider = IBMProvider(instance=instance)
 except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
-
-provider = IBMQ.get_provider(*provider_def)
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-if provider_def == ('ibm-q', 'open', 'main'):
+if instance == 'ibm-q/open/main':
     from qiskit.test.mock import FakeGuadalupe
 
     backend = FakeGuadalupe()
@@ -81,8 +80,6 @@ print(f'Using backend {backend.name()}')
 実習と全く同じ`setup_addition`関数と、次のセルで効率化前の回路を返す`make_original_circuit`関数を定義します。
 
 ```{code-cell} ipython3
-:tags: []
-
 def setup_addition(circuit, reg1, reg2, reg3):
     """Set up an addition subroutine to a circuit with three registers
     """
@@ -142,8 +139,6 @@ def make_original_circuit(n1, n2):
 (4, 4)から(1, 1)までそれぞれオリジナルと効率化した回路の二通りを作り、全てリストにまとめてバックエンドに送ります。
 
 ```{code-cell} ipython3
-:tags: []
-
 # count_ops()の結果をテキストにする関数
 def display_nops(circuit):
     nops = circuit.count_ops()
@@ -432,10 +427,4 @@ mitigated_counts = dict((key, value * shots) for key, value in mitigated_probs.i
 n_correct = count_correct_additions(mitigated_counts, n1, n2)
 r_correct = n_correct / shots
 print(f'QV 32 optimized circuit with error mitigation ({n1}, {n2}): {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
-```
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
 ```

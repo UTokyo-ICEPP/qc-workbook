@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】位相推定によるスペクトル分解
@@ -70,8 +70,9 @@ $$
 # まず必要なモジュールをインポートする
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
 from qiskit.visualization import plot_histogram
+from qiskit_aer import AerSimulator
 # ワークブック独自のモジュール
 from qc_workbook.hamiltonian import make_hamiltonian
 from qc_workbook.show_state import show_state
@@ -431,10 +432,10 @@ pycharm:
     '
 tags: [remove-output]
 ---
-# Run the circuit in qasm_simulator and plot the histogram
-qasm_simulator = Aer.get_backend('qasm_simulator')
-circuit = transpile(circuit, backend=qasm_simulator)
-job = qasm_simulator.run(circuit, shots=10000)
+# Run the circuit in simulator and plot the histogram
+simulator = AerSimulator()
+circuit = transpile(circuit, backend=simulator)
+job = simulator.run(circuit, shots=10000)
 result = job.result()
 counts = result.get_counts(circuit)
 plot_histogram(counts)
@@ -508,21 +509,28 @@ $|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので
 
 このようなプロットを$n=4$で$g$の値を0から0.5まで0.1刻みに変えながら作ってみましょう。
 
-まずは計算基底と$g$の値を引数に取り、終状態の確率分布を返す関数を定義します。シミュレータとして`qasm_simulator`を用いるほうがより実用に近くなりますが、実行時間や統計誤差の問題から、デフォルトでは`statevector_simulator`を使うことにします。
+まずは計算基底と$g$の値を引数に取り、終状態の確率分布を返す関数を定義します。通常のショットベースのシミュレータでは統計誤差の影響が乗るので、デフォルトでは状態ベクトルシミュレーションを使うことにします。
 
 [^unitarity]: これは$\{\ket{l}\}$と$\{\ket{\phi_m}\}$がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。
 
 ```{code-cell} ipython3
-def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=False):
+def get_spectrum_for_comp_basis(
+    n_state: int,
+    n_readout: int,
+    l: int,
+    energy_norm: float,
+    g: float,
+    shots: int = 0
+) -> np.ndarray:
     """Compute and return the distribution P_l(k, h) as an ndarray.
 
     Args:
-        n_state (int): Size of the state register.
-        n_readout (int): Size of the readout register.
-        l (int): Index of the initial-state computational basis in the state register.
-        energy_norm (float): Hamiltonian normalization.
-        g (float): Parameter g of the Heisenberg model.
-        use_qasm (bool): Use the qasm_simulator if True.
+        n_state: Size of the state register.
+        n_readout: Size of the readout register.
+        l: Index of the initial-state computational basis in the state register.
+        energy_norm: Hamiltonian normalization.
+        g: Parameter g of the Heisenberg model.
+        shots: Number of shots. If <= 0, statevector simulation will be used.
     """
 
     # Define the circuit
@@ -541,13 +549,27 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
     circuit.compose(se_circuit, inplace=True)
 
     # Extract the probability distribution as an array of shape (2 ** n_readout, 2 ** n_state)
-    if use_qasm:
+    if shots <= 0:
+        circuit.save_statevector()
+
+        simulator = AerSimulator(method='statevector')
+        circuit = transpile(circuit, backend=simulator)
+        job = simulator.run(circuit)
+        result = job.result()
+        statevector = result.data()['statevector']
+
+        # Convert the state vector into a probability distribution by taking the norm-squared
+        probs = np.square(np.abs(statevector)).reshape((2 ** n_readout, 2 ** n_state))
+        # Clean up the numerical artifacts
+        probs = np.where(probs > 1.e-6, probs, np.zeros_like(probs))
+
+    else:
         circuit.measure_all()
 
-        # Run the circuit in qasm_simulator and plot the histogram
-        qasm_simulator = Aer.get_backend('qasm_simulator')
-        circuit = transpile(circuit, backend=qasm_simulator)
-        job = qasm_simulator.run(circuit, shots=10000)
+        # Run the circuit in simulator and plot the histogram
+        simulator = AerSimulator()
+        circuit = transpile(circuit, backend=simulator)
+        job = simulator.run(circuit, shots=shots)
         result = job.result()
         counts = result.get_counts(circuit)
 
@@ -560,18 +582,6 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
             probs[readout, state] = count
 
         probs /= np.sum(probs)
-
-    else:
-        sv_simulator = Aer.get_backend('statevector_simulator')
-        circuit = transpile(circuit, backend=sv_simulator)
-        job = sv_simulator.run(circuit)
-        result = job.result()
-        statevector = result.data()['statevector']
-
-        # Convert the state vector into a probability distribution by taking the norm-squared
-        probs = np.square(np.abs(statevector)).reshape((2 ** n_readout, 2 ** n_state))
-        # Clean up the numerical artifacts
-        probs = np.where(probs > 1.e-6, probs, np.zeros_like(probs))
 
     # probs[k, h] = P_l(k, h)
     return probs
@@ -670,11 +680,3 @@ $$
 $$
 
 が成り立つことがわかります。ここで$\delta_{mn}$はクロネッカーの$\delta$記号で、$m=n$のとき1、それ以外では0の値を持つ因子です。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

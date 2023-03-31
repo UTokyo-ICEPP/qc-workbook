@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -471,11 +476,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id18">
-   参考文献
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -589,11 +589,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id18">
-   参考文献
-  </a>
- </li>
 </ul>
 
                         </nav>
@@ -605,52 +600,51 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>データベース検索を行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>ここでは、<strong>グローバーのアルゴリズム</strong><span id="id2">[<a class="reference internal" href="#id37" title="Lov K Grover. A fast quantum mechanical algorithm for database search. 1996. arXiv:quant-ph/9605043.">Gro96</a>, <a class="reference internal" href="#id25" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 6, pages 249-276. Cambridge University Press, 2000.">NC00</a>]</span>の紹介と、そのアルゴリズムを使用して構造化されていないデータベースを検索する問題を考えます。アルゴリズムを説明した後に、Qiskitを使用してグローバーのアルゴリズムを実装します。</p>
+<p>ここでは、<strong>グローバーのアルゴリズム</strong><span id="id2">[<a class="reference internal" href="bibliography.html#id20" title="Lov K Grover. A fast quantum mechanical algorithm for database search. 1996. arXiv:quant-ph/9605043.">Gro96</a>, <a class="reference internal" href="bibliography.html#id8" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 6, pages 249-276. Cambridge University Press, 2000.">NC00d</a>]</span>の紹介と、そのアルゴリズムを使用して構造化されていないデータベースを検索する問題を考えます。アルゴリズムを説明した後に、Qiskitを使用してグローバーのアルゴリズムを実装します。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id4" id="id59">はじめに</a></p></li>
-<li><p><a class="reference internal" href="#database" id="id60">非構造化データの検索</a></p></li>
-<li><p><a class="reference internal" href="#grover" id="id61">グローバーのアルゴリズム</a></p>
+<li><p><a class="reference internal" href="#id4" id="id18">はじめに</a></p></li>
+<li><p><a class="reference internal" href="#database" id="id19">非構造化データの検索</a></p></li>
+<li><p><a class="reference internal" href="#grover" id="id20">グローバーのアルゴリズム</a></p>
 <ul>
-<li><p><a class="reference internal" href="#grover-phaseoracle" id="id62">位相オラクルの導入</a></p></li>
-<li><p><a class="reference internal" href="#grover-circuit" id="id63">量子回路の構成</a></p></li>
-<li><p><a class="reference internal" href="#grover-superposition" id="id64">重ね合わせ状態の生成</a></p></li>
-<li><p><a class="reference internal" href="#grover-geometry" id="id65">幾何学的な表現</a></p></li>
-<li><p><a class="reference internal" href="#grover-oracle" id="id66">オラクルの適用</a></p></li>
-<li><p><a class="reference internal" href="#diffuser" id="id67">Diffuserの適用</a></p></li>
-<li><p><a class="reference internal" href="#grover-amp" id="id68">振幅増幅を可視化する</a></p></li>
-<li><p><a class="reference internal" href="#grover-multidata" id="id69">複数データの検索</a></p></li>
+<li><p><a class="reference internal" href="#grover-phaseoracle" id="id21">位相オラクルの導入</a></p></li>
+<li><p><a class="reference internal" href="#grover-circuit" id="id22">量子回路の構成</a></p></li>
+<li><p><a class="reference internal" href="#grover-superposition" id="id23">重ね合わせ状態の生成</a></p></li>
+<li><p><a class="reference internal" href="#grover-geometry" id="id24">幾何学的な表現</a></p></li>
+<li><p><a class="reference internal" href="#grover-oracle" id="id25">オラクルの適用</a></p></li>
+<li><p><a class="reference internal" href="#diffuser" id="id26">Diffuserの適用</a></p></li>
+<li><p><a class="reference internal" href="#grover-amp" id="id27">振幅増幅を可視化する</a></p></li>
+<li><p><a class="reference internal" href="#grover-multidata" id="id28">複数データの検索</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#n-2-6" id="id70">アルゴリズムの実装（<span class="math notranslate nohighlight">\(N=2^6\)</span>の場合）</a></p>
+<li><p><a class="reference internal" href="#n-2-6" id="id29">アルゴリズムの実装（<span class="math notranslate nohighlight">\(N=2^6\)</span>の場合）</a></p>
 <ul>
-<li><p><a class="reference internal" href="#qiskit" id="id71">Qiskitでの実装</a></p></li>
-<li><p><a class="reference internal" href="#imp-simulator" id="id72">シミュレータでの実験</a></p></li>
-<li><p><a class="reference internal" href="#imp-qc" id="id73">量子コンピュータでの実験</a></p></li>
-<li><p><a class="reference internal" href="#imp-simulator-amp" id="id74">振幅増幅を確認する</a></p></li>
-<li><p><a class="reference internal" href="#imp-simulator-multi" id="id75">複数解の探索の場合</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id30">Qiskitでの実装</a></p></li>
+<li><p><a class="reference internal" href="#imp-simulator" id="id31">シミュレータでの実験</a></p></li>
+<li><p><a class="reference internal" href="#imp-qc" id="id32">量子コンピュータでの実験</a></p></li>
+<li><p><a class="reference internal" href="#imp-simulator-amp" id="id33">振幅増幅を確認する</a></p></li>
+<li><p><a class="reference internal" href="#imp-simulator-multi" id="id34">複数解の探索の場合</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id18" id="id76">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle #1 |}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\braket}[2]{\langle #1 | #2 \rangle}\)</span></p>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id59">はじめに</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">はじめに</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>量子コンピュータが古典コンピュータの計算能力を優位に上回る性能を発揮するためには、量子計算の特徴をうまく活用するアルゴリズムを考える必要があります。そのような量子アルゴリズムの一つとして知られているのが、グローバーのアルゴリズムです。このアルゴリズムは<strong>構造化されていないデータベースの検索</strong>に適しており、古典計算より少ない計算量で答えを得られることが証明されています。このアルゴリズムは<strong>振幅増幅</strong>と呼ばれる手法をベースにしており、量子アルゴリズムのサブルーチンとしても幅広く活用されています。</p>
 </div>
 <div class="section" id="database">
-<span id="id5"></span><h2><a class="toc-backref" href="#id60">非構造化データの検索</a><a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id19">非構造化データの検索</a><a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
 <p><span class="math notranslate nohighlight">\(N\)</span>個の要素からなるリストがあり、その中の一つの要素<span class="math notranslate nohighlight">\(w\)</span>を見つけたいとします。求める要素<span class="math notranslate nohighlight">\(w\)</span>を見つけるためには、古典計算では最悪の場合<span class="math notranslate nohighlight">\(N\)</span>回、平均では<span class="math notranslate nohighlight">\(N/2\)</span>回リストを調べる必要があります。グローバーのアルゴリズムでは、おおよそ<span class="math notranslate nohighlight">\(\sqrt{N}\)</span>回の検索で<span class="math notranslate nohighlight">\(w\)</span>を見つけることができることが知られています。つまり、<strong>古典計算に対して二次の高速化が可能</strong>というわけです。</p>
 </div>
 <div class="section" id="grover">
-<span id="id6"></span><h2><a class="toc-backref" href="#id61">グローバーのアルゴリズム</a><a class="headerlink" href="#grover" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id20">グローバーのアルゴリズム</a><a class="headerlink" href="#grover" title="Permalink to this headline">¶</a></h2>
 <p>ここでは<span class="math notranslate nohighlight">\(n\)</span>個の量子ビットを考え、その量子ビットが表現できる可能性のある全ての計算基底でリストが構成されているものとします。つまり<span class="math notranslate nohighlight">\(N=2^n\)</span>として、リストは<span class="math notranslate nohighlight">\(\ket{00\cdots00}\)</span>, <span class="math notranslate nohighlight">\(\ket{00\cdots01}\)</span>, <span class="math notranslate nohighlight">\(\ket{00\cdots10}\)</span>, <span class="math notranslate nohighlight">\(\cdots\)</span>, <span class="math notranslate nohighlight">\(\ket{11\cdots11}\)</span>までの<span class="math notranslate nohighlight">\(N\)</span>個の要素（10進数表記だと<span class="math notranslate nohighlight">\(\ket{0}\)</span>, <span class="math notranslate nohighlight">\(\ket{1}\)</span>, <span class="math notranslate nohighlight">\(\cdots\)</span>, <span class="math notranslate nohighlight">\(\ket{N-1}\)</span>）を含んでいます。</p>
 <div class="section" id="grover-phaseoracle">
-<span id="id7"></span><h3><a class="toc-backref" href="#id62">位相オラクルの導入</a><a class="headerlink" href="#grover-phaseoracle" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3><a class="toc-backref" href="#id21">位相オラクルの導入</a><a class="headerlink" href="#grover-phaseoracle" title="Permalink to this headline">¶</a></h3>
 <p>グローバーのアルゴリズムで重要になるのは、特定の状態の位相を変える位相オラクルです。まず、<span class="math notranslate nohighlight">\(U\ket{x}=(-1)^{f(x)}\ket{x}\)</span>で与えられる位相オラクルを考えます。つまりある状態<span class="math notranslate nohighlight">\(\ket{x}\)</span>に作用すると、その状態の位相をある関数<span class="math notranslate nohighlight">\(f(x)\)</span>に応じて<span class="math notranslate nohighlight">\(-1^{f(x)}\)</span>だけシフトさせるような演算です。ここで<span class="math notranslate nohighlight">\(f(x)\)</span>として</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -688,7 +682,7 @@ U_0:\begin{aligned}
 <p>を得ることができます。この時、<span class="math notranslate nohighlight">\(U_0\)</span>は<span class="math notranslate nohighlight">\(U_0=2\ket{0}\bra{ 0}^{\otimes n}-I\)</span>になります。</p>
 </div>
 <div class="section" id="grover-circuit">
-<span id="id8"></span><h3><a class="toc-backref" href="#id63">量子回路の構成</a><a class="headerlink" href="#grover-circuit" title="Permalink to this headline">¶</a></h3>
+<span id="id8"></span><h3><a class="toc-backref" href="#id22">量子回路の構成</a><a class="headerlink" href="#grover-circuit" title="Permalink to this headline">¶</a></h3>
 <p>グローバーアルゴリズムを実装する量子回路の構造は、下図のようになっています。<span class="math notranslate nohighlight">\(n\)</span>量子ビットの回路を<span class="math notranslate nohighlight">\(\ket{0}\)</span>の初期状態から出発し、Hadamard演算を適用して重ね合わせ状態を作ります。その後、<span class="math notranslate nohighlight">\(G\)</span>と書かれている演算を繰り返し適用します。</p>
 <a class="reference internal image-reference" href="_images/grover.png"><img alt="grover" class="align-center" src="_images/grover.png" style="width: 600px;" /></a>
 <p><span class="math notranslate nohighlight">\(G\)</span>は「<strong>グローバーの反復</strong>」とも呼ばれるユニタリー演算で、以下のような4つのステップから構成されています。</p>
@@ -699,7 +693,7 @@ U_0:\begin{aligned}
 <p>を細かく見ていきます。</p>
 </div>
 <div class="section" id="grover-superposition">
-<span id="id9"></span><h3><a class="toc-backref" href="#id64">重ね合わせ状態の生成</a><a class="headerlink" href="#grover-superposition" title="Permalink to this headline">¶</a></h3>
+<span id="id9"></span><h3><a class="toc-backref" href="#id23">重ね合わせ状態の生成</a><a class="headerlink" href="#grover-superposition" title="Permalink to this headline">¶</a></h3>
 <p>まず、<span class="math notranslate nohighlight">\(n\)</span>量子ビット回路の初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>にHadamard演算を適用し、一様に重ね合わされた状態を生成します。</p>
 <div class="math notranslate nohighlight">
 \[
@@ -708,7 +702,7 @@ U_0:\begin{aligned}
 <p>この状態を<span class="math notranslate nohighlight">\(\ket{s}\)</span>とします。</p>
 </div>
 <div class="section" id="grover-geometry">
-<span id="id10"></span><h3><a class="toc-backref" href="#id65">幾何学的な表現</a><a class="headerlink" href="#grover-geometry" title="Permalink to this headline">¶</a></h3>
+<span id="id10"></span><h3><a class="toc-backref" href="#id24">幾何学的な表現</a><a class="headerlink" href="#grover-geometry" title="Permalink to this headline">¶</a></h3>
 <p>この<span class="math notranslate nohighlight">\(\ket{s}\)</span>の状態を幾何学的に表現してみましょう。まず、重ね合わせ状態<span class="math notranslate nohighlight">\(\ket{s}\)</span>と求める状態<span class="math notranslate nohighlight">\(\ket{w}\)</span>が張る2次元平面を考えます。<span class="math notranslate nohighlight">\(\ket{w}\)</span>に直交する状態<span class="math notranslate nohighlight">\(\ket{w^{\perp}}\)</span>は<span class="math notranslate nohighlight">\(\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}\)</span>と表現できるため、この平面上では<span class="math notranslate nohighlight">\(\ket{w}\)</span>に直交する軸に相当します。簡易的に、この平面では<span class="math notranslate nohighlight">\(\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}\)</span>と<span class="math notranslate nohighlight">\(\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}\)</span>と書くことにします。</p>
 <p>まとめると、この2次元平面では<span class="math notranslate nohighlight">\(\ket{s}\)</span>は(<span class="math notranslate nohighlight">\(\ket{w^{\perp}}\)</span>, <span class="math notranslate nohighlight">\(\ket{w}\)</span>)という二つのベクトルの線形和として書くことができます。</p>
 <div class="math notranslate nohighlight">
@@ -728,12 +722,12 @@ U_0:\begin{aligned}
 <a class="reference internal image-reference" href="_images/grover_rot1.png"><img alt="grover_rot1" class="align-center" src="_images/grover_rot1.png" style="width: 300px;" /></a>
 </div>
 <div class="section" id="grover-oracle">
-<span id="id11"></span><h3><a class="toc-backref" href="#id66">オラクルの適用</a><a class="headerlink" href="#grover-oracle" title="Permalink to this headline">¶</a></h3>
+<span id="id11"></span><h3><a class="toc-backref" href="#id25">オラクルの適用</a><a class="headerlink" href="#grover-oracle" title="Permalink to this headline">¶</a></h3>
 <p>次に、<span class="math notranslate nohighlight">\(\ket{s}\)</span>にオラクル<span class="math notranslate nohighlight">\(U_w\)</span>を適用します。このオラクルは、この平面上では<span class="math notranslate nohighlight">\(U_w=I-2\ket{w}\bra{ w}=\begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}\)</span>と表現することが可能です。つまり、<span class="math notranslate nohighlight">\(U_w\)</span>は<span class="math notranslate nohighlight">\(\ket{w^{\perp}}\)</span>軸に関して<span class="math notranslate nohighlight">\(\ket{s}\)</span>を折り返す操作（下図）に対応しており、この操作で<span class="math notranslate nohighlight">\(\ket{w}\)</span>の位相が反転します。</p>
 <a class="reference internal image-reference" href="_images/grover_rot2.png"><img alt="grover_rot2" class="align-center" src="_images/grover_rot2.png" style="width: 300px;" /></a>
 </div>
 <div class="section" id="diffuser">
-<span id="grover-diffuser"></span><h3><a class="toc-backref" href="#id67">Diffuserの適用</a><a class="headerlink" href="#diffuser" title="Permalink to this headline">¶</a></h3>
+<span id="grover-diffuser"></span><h3><a class="toc-backref" href="#id26">Diffuserの適用</a><a class="headerlink" href="#diffuser" title="Permalink to this headline">¶</a></h3>
 <p>次は<span class="math notranslate nohighlight">\(H^{\otimes n}U_0H^{\otimes n}\)</span>の適用で、この演算はDiffuserと呼ばれます。<span class="math notranslate nohighlight">\(U_0=2\ket{0}\bra{0}^{\otimes n}-I\)</span>なので、<span class="math notranslate nohighlight">\(U_s \equiv H^{\otimes n}U_0H^{\otimes n}\)</span>と定義すると</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -775,7 +769,7 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <p>となります。<span class="math notranslate nohighlight">\(\langle a \rangle\equiv\frac{\sum_i a_i}{N}\)</span>は振幅の平均です。この式が意味するところは、ある状態<span class="math notranslate nohighlight">\(\ket{k}\)</span>の振幅<span class="math notranslate nohighlight">\(a_k\)</span>が、平均に対する摂動の形<span class="math notranslate nohighlight">\(a_k=\langle a \rangle-\Delta\)</span>で表現できると考えると理解しやすくなります。つまり、Diffuserを適用した後の振幅が<span class="math notranslate nohighlight">\(2\langle a \rangle-a_k=\langle a \rangle+\Delta\)</span>になることから、Diffuserは平均<span class="math notranslate nohighlight">\(\langle a \rangle\)</span>に関して振幅を反転する操作を表していると考えることができるわけです。</p>
 </div>
 <div class="section" id="grover-amp">
-<span id="id12"></span><h3><a class="toc-backref" href="#id68">振幅増幅を可視化する</a><a class="headerlink" href="#grover-amp" title="Permalink to this headline">¶</a></h3>
+<span id="id12"></span><h3><a class="toc-backref" href="#id27">振幅増幅を可視化する</a><a class="headerlink" href="#grover-amp" title="Permalink to this headline">¶</a></h3>
 <p>グローバーアルゴリズムで振幅がどのように増幅されるのか、実際目で見てみることにします。</p>
 <p>まず最初のHadamard変換で、全ての計算基底が等しい振幅を持つ重ね合わせ状態を生成します（下図の1）。横軸は<span class="math notranslate nohighlight">\(N\)</span>個の計算基底、縦軸は各基底の振幅の大きさを表しており、全ての基底が<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{N}}\)</span>の大きさの振幅を持っています（振幅の平均を赤破線で表示）。</p>
 <p>次にオラクル<span class="math notranslate nohighlight">\(U_w\)</span>を適用すると、<span class="math notranslate nohighlight">\(\ket{w}\)</span>の位相が反転し、振幅が<span class="math notranslate nohighlight">\(-\frac{1}{\sqrt{N}}\)</span>になります（下図の2）。この状態での振幅の平均は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{N}}(1-\frac2N)\)</span>になり、(1)の状態より低くなります。</p>
@@ -783,7 +777,7 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <a class="reference internal image-reference" href="_images/grover_amp.png"><img alt="grover_amp" class="align-center" src="_images/grover_amp.png" style="width: 800px;" /></a>
 </div>
 <div class="section" id="grover-multidata">
-<span id="id13"></span><h3><a class="toc-backref" href="#id69">複数データの検索</a><a class="headerlink" href="#grover-multidata" title="Permalink to this headline">¶</a></h3>
+<span id="id13"></span><h3><a class="toc-backref" href="#id28">複数データの検索</a><a class="headerlink" href="#grover-multidata" title="Permalink to this headline">¶</a></h3>
 <p>今までは検索するデータが一つだけの場合を考えてきましたが、このセクションの最後に複数のデータを検索する場合を考察してみましょう。例えば、<span class="math notranslate nohighlight">\(N=2^n\)</span>個のデータから<span class="math notranslate nohighlight">\(M\)</span>個のデータ<span class="math notranslate nohighlight">\(\{w_i\}\;(i=0,1,\cdots,M-1)\)</span>を探すケースです。これまでと同様に、求める状態<span class="math notranslate nohighlight">\(\ket{w}\)</span>とそれに直行する状態<span class="math notranslate nohighlight">\(\ket{w^{\perp}}\)</span></p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -804,11 +798,11 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </div>
 </div>
 <div class="section" id="n-2-6">
-<span id="imp"></span><h2><a class="toc-backref" href="#id70">アルゴリズムの実装（<span class="math notranslate nohighlight">\(N=2^6\)</span>の場合）</a><a class="headerlink" href="#n-2-6" title="Permalink to this headline">¶</a></h2>
+<span id="imp"></span><h2><a class="toc-backref" href="#id29">アルゴリズムの実装（<span class="math notranslate nohighlight">\(N=2^6\)</span>の場合）</a><a class="headerlink" href="#n-2-6" title="Permalink to this headline">¶</a></h2>
 <p>ではここから、実際にグローバーアルゴリズムを実装してデータベースの検索問題に取り掛かってみましょう。</p>
 <p>ここで考える問題は、<span class="math notranslate nohighlight">\(N=2^6\)</span>個の要素を持つリスト（<span class="math notranslate nohighlight">\(=[0,1,2,\cdots,63]\)</span>）から、一つの答え”45”を見つけるグローバーアルゴリズムの実装です（もちろんこの数はなんでも良いので、後で自由に変更して遊んでみてください）。つまり6量子ビットの量子回路を使って、<span class="math notranslate nohighlight">\(\ket{45}=\ket{101101}\)</span>を探す問題です。</p>
 <div class="section" id="qiskit">
-<span id="imp-qiskit"></span><h3><a class="toc-backref" href="#id71">Qiskitでの実装</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h3>
+<span id="imp-qiskit"></span><h3><a class="toc-backref" href="#id30">Qiskitでの実装</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h3>
 <p>まず必要な環境をセットアップします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -817,11 +811,13 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># Qiskit関連のパッケージをインポート</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">transpile</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Statevector</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span><span class="p">,</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider.accounts</span> <span class="kn">import</span> <span class="n">AccountNotFoundError</span>
 
 <span class="c1"># ワークブック独自のモジュール</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
@@ -916,9 +912,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_19_0.png" src="_images/grover_19_0.png" />
-</div>
 </div>
 <p><strong>解答</strong></p>
 <div class="toggle docutils container">
@@ -956,11 +949,11 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </div>
 </div>
 <div class="section" id="imp-simulator">
-<span id="id14"></span><h3><a class="toc-backref" href="#id72">シミュレータでの実験</a><a class="headerlink" href="#imp-simulator" title="Permalink to this headline">¶</a></h3>
+<span id="id14"></span><h3><a class="toc-backref" href="#id31">シミュレータでの実験</a><a class="headerlink" href="#imp-simulator" title="Permalink to this headline">¶</a></h3>
 <p>回路の実装ができたら、シミュレータで実行して結果をプロットしてみます。結果が分かりやすくなるように、測定したビット列を整数にしてからプロットするようにしてみます。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">grover_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">grover_circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 <span class="n">answer</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
@@ -993,17 +986,17 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <p>しかし、上での議論からも分かるように、<span class="math notranslate nohighlight">\(N=2^6\)</span>の探索では、一回のグローバー反復では正しくない答えも無視できない確率で現れてきます。グローバーの反復を複数回繰り返すことで、正しい答えがより高い確率で得られることをこの後見ていきます。</p>
 </div>
 <div class="section" id="imp-qc">
-<span id="id15"></span><h3><a class="toc-backref" href="#id73">量子コンピュータでの実験</a><a class="headerlink" href="#imp-qc" title="Permalink to this headline">¶</a></h3>
+<span id="id15"></span><h3><a class="toc-backref" href="#id32">量子コンピュータでの実験</a><a class="headerlink" href="#imp-qc" title="Permalink to this headline">¶</a></h3>
 <p>反復を繰り返す前に、まずは一回のグローバー反復を量子コンピュータで実行してみましょう。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 量子コンピュータで実行する場合</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
-<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
-    <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="s1">&#39;ibm-q/open/main&#39;</span>
 
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
 
 <span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
 <span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
@@ -1036,7 +1029,7 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <p>シミュレータに比べると結果は非常に悪いですね。。。残念ながら、今の量子コンピュータをそのまま使うとこういう結果になってしまいます。しかし、<a class="reference internal" href="addition_on_ibmq.html#measurement-error-mitigation"><span class="std std-ref">エラー緩和</span></a>等のテクニックを使うことである程度改善することはできます。</p>
 </div>
 <div class="section" id="imp-simulator-amp">
-<span id="id16"></span><h3><a class="toc-backref" href="#id74">振幅増幅を確認する</a><a class="headerlink" href="#imp-simulator-amp" title="Permalink to this headline">¶</a></h3>
+<span id="id16"></span><h3><a class="toc-backref" href="#id33">振幅増幅を確認する</a><a class="headerlink" href="#imp-simulator-amp" title="Permalink to this headline">¶</a></h3>
 <p>では次に、グローバーのアルゴリズムを繰り返し使うことで、振幅が増幅していく様子をシミュレータを使って見てみましょう。</p>
 <p>例として、上で作ったグローバー反復を3回実行する量子回路を作って実行してみます。</p>
 <div class="cell docutils container">
@@ -1054,9 +1047,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_29_0.png" src="_images/grover_29_0.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1066,9 +1056,6 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 <span class="n">show_distribution</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_30_0.png" src="_images/grover_30_0.png" />
 </div>
 </div>
 <p>正しい答え<span class="math notranslate nohighlight">\(\ket{45}\)</span>をより高い確率で測定できていることが分かりますね。</p>
@@ -1102,15 +1089,12 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/grover_32_0.png" src="_images/grover_32_0.png" />
-</div>
 </div>
 <p>この図から、グローバー反復を5~6回程度繰り返すことで、正しい答えを最も高い確率で測定できることが分かりますね。計算で求めた検索に必要な反復回数と一致しているかどうか、確認してみてください。</p>
 <p>問題：解が一つの場合で、探索リストのサイズを<span class="math notranslate nohighlight">\(N=2^4\)</span>から<span class="math notranslate nohighlight">\(N=2^{10}\)</span>まで変えた時に、測定で求めた最適な反復回数が<span class="math notranslate nohighlight">\(N\)</span>とどういう関係になっているのか調べてください。</p>
 </div>
 <div class="section" id="imp-simulator-multi">
-<span id="id17"></span><h3><a class="toc-backref" href="#id75">複数解の探索の場合</a><a class="headerlink" href="#imp-simulator-multi" title="Permalink to this headline">¶</a></h3>
+<span id="id17"></span><h3><a class="toc-backref" href="#id34">複数解の探索の場合</a><a class="headerlink" href="#imp-simulator-multi" title="Permalink to this headline">¶</a></h3>
 <p>では次に、複数の解を探索する問題に進んでみましょう。2つの整数<span class="math notranslate nohighlight">\(x_1\)</span>と<span class="math notranslate nohighlight">\(x_2\)</span>を見つける問題へ量子回路を拡張して、求める解を観測した回数と反復した回数との相関関係を図にしてみます。</p>
 <p>例えば、<span class="math notranslate nohighlight">\(x_1=45\)</span>と<span class="math notranslate nohighlight">\(x_2=26\)</span>の場合は</p>
 <div class="cell docutils container">
@@ -1172,39 +1156,8 @@ G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>               ┌───┐               ┌───┐     
-q_0: ───────■──┤ X ├────────────■──┤ X ├─────
-     ┌───┐  │  ├───┤            │  └───┘     
-q_1: ┤ X ├──■──┤ X ├────────────■────────────
-     └───┘  │  ├───┤            │  ┌───┐     
-q_2: ───────■──┤ X ├────────────■──┤ X ├─────
-            │  └───┘            │  └───┘     
-q_3: ───────■───────────────────■────────────
-     ┌───┐  │  ┌───┐            │            
-q_4: ┤ X ├──■──┤ X ├────────────■────────────
-     ├───┤┌─┴─┐├───┤┌───┐┌───┐┌─┴─┐┌───┐┌───┐
-q_5: ┤ H ├┤ X ├┤ H ├┤ X ├┤ H ├┤ X ├┤ H ├┤ X ├
-     └───┘└───┘└───┘└───┘└───┘└───┘└───┘└───┘
-</pre></div>
-</div>
-<img alt="_images/grover_36_1.png" src="_images/grover_36_1.png" />
-</div>
 </div>
 <p>複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？</p>
-</div>
-</div>
-<div class="section" id="id18">
-<h2><a class="toc-backref" href="#id76">参考文献</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
-<div class="docutils container" id="id19">
-<dl class="citation">
-<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id2">Gro96</a></span></dt>
-<dd><p>Lov K Grover. A fast quantum mechanical algorithm for database search. 1996. <a class="reference external" href="https://arxiv.org/abs/quant-ph/9605043">arXiv:quant-ph/9605043</a>.</p>
-</dd>
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id2">NC00</a></span></dt>
-<dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 6, pages 249–276. Cambridge University Press, 2000.</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>

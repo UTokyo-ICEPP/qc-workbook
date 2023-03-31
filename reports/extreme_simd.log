@@ -21,9 +21,11 @@ nbclient.exceptions.CellExecutionError: An error occurred while executing the fo
 import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Math
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, Aer, transpile
+from qiskit import QuantumRegister, QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 from qc_workbook.show_state import statevector_expr
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
@@ -33,29 +35,12 @@ print('notebook ready')
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Input [0;32mIn [1][0m, in [0;36m<cell line: 8>[0;34m()[0m
+Input [0;32mIn [1][0m, in [0;36m<cell line: 7>[0;34m()[0m
+[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumRegister, QuantumCircuit, transpile
 [1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtools[39;00m[38;5;21;01m.[39;00m[38;5;21;01mmonitor[39;00m [38;5;28;01mimport[39;00m job_monitor
-[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mproviders[39;00m[38;5;21;01m.[39;00m[38;5;21;01mibmq[39;00m [38;5;28;01mimport[39;00m least_busy, IBMQAccountCredentialsNotFound
-[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mshow_state[39;00m [38;5;28;01mimport[39;00m statevector_expr
-[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimized_additions[39;00m [38;5;28;01mimport[39;00m optimized_additions
-[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m operational_backend, find_best_chain
-
-File [0;32m/qc-workbook/source/ja/qc_workbook/show_state.py:6[0m, in [0;36m<module>[0;34m[0m
-[1;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m transpile, QuantumCircuit
-[0;32m----> 6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
-[1;32m      8[0m [38;5;28;01mdef[39;00m [38;5;21mshow_state[39m(
-[1;32m      9[0m     statevector: Union[QuantumCircuit, np[38;5;241m.[39mndarray],
-[1;32m     10[0m     amp_norm: Optional[Tuple[[38;5;28mfloat[39m, [38;5;28mstr[39m]] [38;5;241m=[39m [38;5;28;01mNone[39;00m,
-[0;32m   (...)[0m
-[1;32m     17[0m     ax: Optional[mpl[38;5;241m.[39maxes[38;5;241m.[39mAxes] [38;5;241m=[39m [38;5;28;01mNone[39;00m
-[1;32m     18[0m ) [38;5;241m-[39m[38;5;241m>[39m Union[[38;5;28;01mNone[39;00m, mpl[38;5;241m.[39mfigure[38;5;241m.[39mFigure]:
-[1;32m     19[0m     [38;5;124;03m"""Show the quantum state of the circuit as text in a matplotlib Figure.[39;00m
-[1;32m     20[0m 
-[1;32m     21[0m [38;5;124;03m    Args:[39;00m
-[0;32m   (...)[0m
-[1;32m     33[0m [38;5;124;03m        The newly created figure object if ax is None.[39;00m
-[1;32m     34[0m [38;5;124;03m    """[39;00m
+[0;32m----> 7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
+[1;32m      8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_ibm_provider[39;00m [38;5;28;01mimport[39;00m IBMProvider, least_busy
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_ibm_provider[39;00m[38;5;21;01m.[39;00m[38;5;21;01maccounts[39;00m [38;5;28;01mimport[39;00m AccountNotFoundError
 
 [0;31mModuleNotFoundError[0m: No module named 'qiskit_aer'
 ModuleNotFoundError: No module named 'qiskit_aer'

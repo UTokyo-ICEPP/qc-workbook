@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】ビット反転ボードの操作を見つける
@@ -84,9 +84,19 @@ pycharm:
     '
 ---
 # Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
-from qiskit import IBMQ, Aer, execute
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit_aer import AerSimulator
+```
 
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
 # 6量子ビットの探索問題を考える
 n = 6  # 量子ビット数
 
@@ -138,8 +148,9 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # シミュレータで実行
-backend = Aer.get_backend('qasm_simulator')
-job = execute(qc, backend=backend, shots=8000, seed_simulator=12345)
+backend = AerSimulator()
+qc_tr = transpile(qc, backend=backend)
+job = backend.run(qc_tr, shots=8000)
 result = job.result()
 count = result.get_counts()
 

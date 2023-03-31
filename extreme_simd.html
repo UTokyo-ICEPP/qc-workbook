@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -420,11 +425,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id15">
-   参考文献
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -487,11 +487,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id15">
-   参考文献
-  </a>
- </li>
 </ul>
 
                         </nav>
@@ -507,23 +502,22 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id56">量子計算の特徴</a></p></li>
-<li><p><a class="reference internal" href="#simd" id="id57">巨大SIMDマシンとしての量子コンピュータ</a></p></li>
-<li><p><a class="reference internal" href="#qft" id="id58">量子フーリエ変換</a></p></li>
-<li><p><a class="reference internal" href="#fourier-addition" id="id59">量子フーリエ変換による足し算</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id60">足し算の並列化</a></p></li>
-<li><p><a class="reference internal" href="#id11" id="id61">シミュレータでの実行</a></p>
+<li><p><a class="reference internal" href="#id3" id="id15">量子計算の特徴</a></p></li>
+<li><p><a class="reference internal" href="#simd" id="id16">巨大SIMDマシンとしての量子コンピュータ</a></p></li>
+<li><p><a class="reference internal" href="#qft" id="id17">量子フーリエ変換</a></p></li>
+<li><p><a class="reference internal" href="#fourier-addition" id="id18">量子フーリエ変換による足し算</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id19">足し算の並列化</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id20">シミュレータでの実行</a></p>
 <ul>
-<li><p><a class="reference internal" href="#transpilation" id="id62">トランスパイルと物理的回路</a></p></li>
-<li><p><a class="reference internal" href="#id14" id="id63">回路の比較</a></p></li>
+<li><p><a class="reference internal" href="#transpilation" id="id21">トランスパイルと物理的回路</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id22">回路の比較</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id15" id="id64">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span></p>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id56">量子計算の特徴</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">量子計算の特徴</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>量子計算をするとはどういうことかを一概に決めることはできませんし、それ自体がまだ世界中で盛んに研究されているトピックです。ただ、現在知られている量子コンピュータの実用法に共通する大まかな特徴を挙げるならば、以下の2点になります。</p>
 <ul class="simple">
 <li><p><strong>並列性を利用する</strong>：Equal superposition状態で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットがあるとき、比較的簡単な操作で<span class="math notranslate nohighlight">\(2^n\)</span>個の計算基底が顕に登場する状態が作れます。また、この状態には全ての量子ビットが関与するため、どのビットに対するゲート操作も全ての計算基底に影響を及ぼします。つまり、各ゲート操作が常に<span class="math notranslate nohighlight">\(2^n\)</span>重の並列演算となります。</p></li>
@@ -532,15 +526,15 @@ const thebe_selector_output = ".output, .cell_output"
 <p>この2つの要素のうち、特に干渉を上手に使ったアルゴリズムを見出すのが難しいため、量子コンピュータの応用可能性にまだ未知数な部分が大きい、というのが現状です。</p>
 </div>
 <div class="section" id="simd">
-<h2><a class="toc-backref" href="#id57">巨大SIMDマシンとしての量子コンピュータ</a><a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">巨大SIMDマシンとしての量子コンピュータ</a><a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h2>
 <p>SIMD (single instruction multiple data)とは並列計算パラダイムの一つで、プロセッサの命令（instruction）が多数のデータに同時に適用されるケースを指します。私達の身の回りの（古典）コンピュータのプロセッサにもSIMD用のインストラクションセットが搭載されており、例えば（2021年11月現在）最先端の商用CPUでは、16個の単精度浮動小数点数に対し同時に四則演算や平方根の計算を行えます。</p>
 <p>量子コンピュータでは、すべてのゲートがすべての計算基底に作用します。ゲート操作を命令、各計算基底の振幅をデータとして解釈すれば、これは常に<span class="math notranslate nohighlight">\(2^n\)</span>個のデータに命令を与えながら計算をしていることにあたります。量子コンピュータは巨大SIMDマシンとも考えられるのです。</p>
 <p>ただし、すでに触れられたことですが、巨大並列計算ができたとしても、そのデータをすべて引き出すことはできません<a class="footnote-reference brackets" href="#and-you-dont-want-to" id="id4">1</a>ので、古典計算機のSIMDとはいろいろな意味で単純に比較できるものではありません。</p>
 <p>とはいえ、並列計算を行っているんだということを実感できると、量子コンピュータの使い道のイメージも湧きやすくなると思われますので、今回の実習では量子計算の並列性が顕著に現れるような例を見ていきましょう。</p>
 </div>
 <div class="section" id="qft">
-<span id="id5"></span><h2><a class="toc-backref" href="#id58">量子フーリエ変換</a><a class="headerlink" href="#qft" title="Permalink to this headline">¶</a></h2>
-<p>量子計算で並列性と振幅の干渉を巧みに利用した顕著な例として、量子フーリエ変換（Quantum Fourier transform, QFT）というサブルーチン（アルゴリズムの部品）があります。QFTは<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています<span id="id6">[<a class="reference internal" href="#id19" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5, pages 216-247. Cambridge University Press, 2000.">NC00</a>]</span>。現在知られている中で最も重要な量子サブルーチンと言っても過言ではないでしょう。</p>
+<span id="id5"></span><h2><a class="toc-backref" href="#id17">量子フーリエ変換</a><a class="headerlink" href="#qft" title="Permalink to this headline">¶</a></h2>
+<p>量子計算で並列性と振幅の干渉を巧みに利用した顕著な例として、量子フーリエ変換（Quantum Fourier transform, QFT）というサブルーチン（アルゴリズムの部品）があります。QFTは<a class="reference internal" href="shor.html"><span class="doc">Shorの素因数分解</span></a>を含め多くのアルゴリズムに応用されています<span id="id6">[<a class="reference internal" href="bibliography.html#id5" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5, pages 216-247. Cambridge University Press, 2000.">NC00a</a>]</span>。現在知られている中で最も重要な量子サブルーチンと言っても過言ではないでしょう。</p>
 <p>QFTとは、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタの状態<span class="math notranslate nohighlight">\(\ket{j} \, (j \in \{0,1,\dots,2^n-1\})\)</span>を以下のように変換する操作です。</p>
 <div class="math notranslate nohighlight">
 \[
@@ -555,7 +549,7 @@ U_{\mathrm{QFT}} \ket{\psi} &amp; = \frac{1}{\sqrt{2^n}} \sum_{j=0}^{2^n-1} c_j 
 \end{split}
 \end{split}\]</div>
 <p>となり、振幅<span class="math notranslate nohighlight">\(\{c_j\}_j\)</span>の離散フーリエ変換が引き起こされることがわかります。</p>
-<p>古典計算機で<span class="math notranslate nohighlight">\(2^n\)</span>個のサンプルの離散フーリエ変換を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装<span id="id7">[<a class="reference internal" href="#id24" title="L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In Proceedings 41st Annual Symposium on Foundations of Computer Science, volume, 515-525. 2000. doi:10.1109/SFCS.2000.892139.">HalesHallgren00</a>]</span>で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。</p>
+<p>古典計算機で<span class="math notranslate nohighlight">\(2^n\)</span>個のサンプルの離散フーリエ変換を計算するには<span class="math notranslate nohighlight">\(\mathcal{O}(n2^n)\)</span>回の演算が必要であることが知られています。一方、QFTは最も効率的な実装<span id="id7">[<a class="reference internal" href="bibliography.html#id10" title="L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In Proceedings 41st Annual Symposium on Foundations of Computer Science, volume, 515-525. 2000. doi:10.1109/SFCS.2000.892139.">HalesHallgren00</a>]</span>で<span class="math notranslate nohighlight">\(\mathcal{O}(n \log n)\)</span>個のゲートしか利用しません（下の実装では<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>）。つまり、QCは古典計算機に比べて指数関数的に早くフーリエ変換を実行できます。</p>
 <p>例として<span class="math notranslate nohighlight">\(n=6\)</span>の時のQFT回路を載せておきます。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -563,9 +557,11 @@ U_{\mathrm{QFT}} \ket{\psi} &amp; = \frac{1}{\sqrt{2^n}} \sum_{j=0}^{2^n-1} c_j 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Math</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">IBMQ</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span><span class="p">,</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider.accounts</span> <span class="kn">import</span> <span class="n">AccountNotFoundError</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">statevector_expr</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.optimized_additions</span> <span class="kn">import</span> <span class="n">optimized_additions</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span><span class="p">,</span> <span class="n">find_best_chain</span>
@@ -723,9 +719,9 @@ c_{\tk} = \exp \left(\frac{2 \pi i}{2^n} \sum_{m=0}^{n-1} 2^m j_m \sum_{l=0}^{n-
 </div>
 </div>
 <div class="section" id="fourier-addition">
-<span id="id8"></span><h2><a class="toc-backref" href="#id59">量子フーリエ変換による足し算</a><a class="headerlink" href="#fourier-addition" title="Permalink to this headline">¶</a></h2>
+<span id="id8"></span><h2><a class="toc-backref" href="#id18">量子フーリエ変換による足し算</a><a class="headerlink" href="#fourier-addition" title="Permalink to this headline">¶</a></h2>
 <p>これまで量子「計算機」の話をしていながら、単純であるはずの四則演算のやりかたについて触れていませんでした。理由は、実は量子コンピュータでは四則演算がそんなに単純でないから、です。</p>
-<p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです<span id="id9">[<a class="reference internal" href="#id25" title="Thomas G Draper. Addition on a quantum computer. 2000. arXiv:quant-ph/0008033.">Dra00</a>]</span>。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
+<p>足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです<span id="id9">[<a class="reference internal" href="bibliography.html#id11" title="Thomas G Draper. Addition on a quantum computer. 2000. arXiv:quant-ph/0008033.">Dra00</a>]</span>。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。</p>
 <p>このサブルーチンは自然数<span class="math notranslate nohighlight">\(a\)</span>と<span class="math notranslate nohighlight">\(b\)</span>が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。</p>
 <div class="math notranslate nohighlight">
 \[
@@ -884,7 +880,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>が実現しました。</p>
 </div>
 <div class="section" id="id10">
-<h2><a class="toc-backref" href="#id60">足し算の並列化</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id19">足し算の並列化</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <p>上では小学一年生ができる足し算を一回行うために13個の量子ビットと67個のゲートを利用しました。しかし、出来上がった回路は入力の値（9と13）によらず、4ビットで表現できる2つの整数すべてに対して成り立ちます（一般に2つの<span class="math notranslate nohighlight">\(n\)</span>ビット数の和は<span class="math notranslate nohighlight">\(n+1\)</span>ビットに収まるので、レジスタ3の大きさにも不足はありません）。さらに、量子演算は線形（つまり演算<span class="math notranslate nohighlight">\(U\)</span>について<span class="math notranslate nohighlight">\(U(\sum_{k} c_k \ket{k}) = \sum_{k} c_k U\ket{k}\)</span>）なので、初期状態としてレジスタ1と2がどんな計算基底の重ね合わせにあっても、それぞれの組み合わせに対してレジスタ3の状態が和を表してくれます。特に、初期状態がequal superpositionであれば、この回路は</p>
 <div class="math notranslate nohighlight">
 \[
@@ -919,7 +915,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>もちろん、上で書いたようにここには重要な但し書きがあって、実機でこの計算をして測定から答えを得ようとすると、毎回の測定でどの組み合わせが得られるかをコントロールできないので、これはあまり実用的とは言えない回路です。強いて言えば毎日ランダムに12桁＋12桁の正しい足し算を教えてくれる「日めくり足し算カレンダー」にくらいは使えます。<span class="math notranslate nohighlight">\(10^{23}\)</span>年程度使い続けられます。</p>
 </div>
 <div class="section" id="id11">
-<h2><a class="toc-backref" href="#id61">シミュレータでの実行</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id20">シミュレータでの実行</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p>上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。<a class="reference internal" href="addition_on_ibmq.html"><span class="doc">【参考】足し算を実機で行う</span></a>では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py">専用に効率化した等価回路</a>を代わりに使用します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -945,7 +941,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </div>
 <p>効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。</p>
 <div class="section" id="transpilation">
-<span id="id12"></span><h3><a class="toc-backref" href="#id62">トランスパイルと物理的回路</a><a class="headerlink" href="#transpilation" title="Permalink to this headline">¶</a></h3>
+<span id="id12"></span><h3><a class="toc-backref" href="#id21">トランスパイルと物理的回路</a><a class="headerlink" href="#transpilation" title="Permalink to this headline">¶</a></h3>
 <p>これまで何度も登場しましたが、量子回路オブジェクトを実機やシミュレータの<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドに渡す前に、必ず<code class="docutils literal notranslate"><span class="pre">transpile</span></code>という関数を呼んでいました。この関数はトランスパイルという変換を回路に施します。実機においてトランスパイルとは、様々な複合ゲートからなる論理的な回路から、実機のハードウェアに実装されている「基本ゲート」のみで書かれる物理的な回路を作ることを言います<a class="footnote-reference brackets" href="#physical" id="id13">2</a>。</p>
 <p>基本ゲートとは何でしょうか。実は、<a class="reference internal" href="chsh_inequality.html#common-gates"><span class="std std-ref">第一回</span></a>や<a class="reference internal" href="circuit_from_scratch.html#other-gates"><span class="std std-ref">第二回の前半</span></a>で様々なゲートを紹介しましたが、量子コンピュータの物理的実体（超伝導振動子など）で実際に行える量子操作にはごく少数の種類しかありません。例えば、IBMのマシンでは<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(\sqrt{X}\)</span>, <span class="math notranslate nohighlight">\(R_{z}\)</span>, CNOTの4通りです。しかし、この4つの組み合わせで全てのゲートを作ることができます。そのようなゲートの集合を基本ゲートと呼んでいます。</p>
 <p>足し算回路の愚直な実装と効率化した実装の比較に話を戻すと、上で比べていたのはあくまで複合ゲートを使った論理的な回路でした。論理的な回路はどのようにでも書ける（極端に言えば回路全体を一つの「足し算ゲート」と呼んでしまうこともできる）ので、回路のゲート数の比較はトランスパイル後でなければ意味がありません。</p>
@@ -960,7 +956,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <li><p>物理的回路の最適化</p></li>
 </ul>
 <p>実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲート（IBMQではCNOT）が実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば以前運用されていたibmq_16_melbourneというマシンは以下のようなトポロジーを持っていました。</p>
-<a class="reference internal image-reference" href="_images/melbourne_topology.png" id="ibmq-16-melbourne"><img alt="_images/melbourne_topology.png" id="ibmq-16-melbourne" src="_images/melbourne_topology.png" style="height: 200px;" /></a>
+<a class="reference internal image-reference" href="_images/melbourne_topology.png"><img alt="_images/melbourne_topology.png" src="_images/melbourne_topology.png" style="height: 200px;" /></a>
 <p>図中、数字のついた丸が量子ビットを表し、線が量子ビット同士の繋がりを表します。</p>
 <p>このように実機ごとにトポロジーが違うことなどが理由で、<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数には回路オブジェクトだけでなくバックエンドを引数として渡す必要があります。</p>
 <p>直接接続のない量子ビット間で制御ゲートを実行する場合、SWAPを使って2つの量子ビットが隣り合うように状態を遷移させていく必要があります。例えば上のibmq_16_melbourneでビット2と6の間のCNOTが必要なら、（いくつか方法がありますが）2↔3, 3↔4, 4↔5とSWAPを繰り返して、5と6の間でCNOTを行い、ビットの並びを元に戻す必要があれば再度5↔4, 4↔3, 3↔2とSWAPをすることになります。</p>
@@ -968,27 +964,25 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>しかし、実は任意の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。</p>
 </div>
 <div class="section" id="id14">
-<h3><a class="toc-backref" href="#id63">回路の比較</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">回路の比較</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>上を踏まえて、改めて2つの足し算回路を比較してみましょう。</p>
 <p>これまで<code class="docutils literal notranslate"><span class="pre">transpile</span></code>関数を回路とバックエンド以外の引数を渡さずに実行してきましたが、実はこの関数の実行時に様々なオプションを使ってトランスパイルの設定を細かくコントロールすることができます。今回の効率化した回路は一列に並んだ量子ビット列上でSWAPを一切使わずに実装できるようになっているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。バックエンド上のどの量子ビット列を使うかは、<code class="docutils literal notranslate"><span class="pre">find_best_chain</span></code>という関数で自動的に決めます。</p>
 <p>本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、<code class="docutils literal notranslate"><span class="pre">'ibm-q/open/main'</span></code>プロバイダを使っている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># よりアクセス権の広いプロバイダを使える場合は、下を書き換える</span>
-<span class="n">provider_def</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="s1">&#39;ibm-q/open/main&#39;</span>
 
-<span class="k">if</span> <span class="n">provider_def</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;ibm-q&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;main&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="n">instance</span> <span class="o">==</span> <span class="s1">&#39;ibm-q/open/main&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">qiskit.test.mock</span> <span class="kn">import</span> <span class="n">FakeGuadalupe</span>
 
     <span class="n">backend</span> <span class="o">=</span> <span class="n">FakeGuadalupe</span><span class="p">()</span>
 
 <span class="k">else</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
-        <span class="n">IBMQ</span><span class="o">.</span><span class="n">enable_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
-
-    <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="o">*</span><span class="n">provider_def</span><span class="p">)</span>
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">AccountNotFoundError</span><span class="p">:</span>
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
 
     <span class="n">backend_list</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">operational_backend</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="mi">13</span><span class="p">))</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backend_list</span><span class="p">)</span>
@@ -1029,12 +1023,12 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <p>それでは、トランスパイルした回路を実行してみます。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qasm_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 
-<span class="n">job_original</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">job_original</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_original_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">counts_original</span> <span class="o">=</span> <span class="n">job_original</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
-<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">qasm_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">job_optimized</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_optimized_tr</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">counts_optimized</span> <span class="o">=</span> <span class="n">job_optimized</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">plot_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
@@ -1078,23 +1072,6 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 </div>
 </div>
 <p>両方の回路とも、正しい足し算の式がランダムに出現していることを確認してください。</p>
-</div>
-</div>
-<div class="section" id="id15">
-<h2><a class="toc-backref" href="#id64">参考文献</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
-<div class="docutils container" id="id16">
-<dl class="citation">
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id9">Dra00</a></span></dt>
-<dd><p>Thomas G Draper. Addition on a quantum computer. 2000. <a class="reference external" href="https://arxiv.org/abs/quant-ph/0008033">arXiv:quant-ph/0008033</a>.</p>
-</dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id6">NC00</a></span></dt>
-<dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 5, pages 216–247. Cambridge University Press, 2000.</p>
-</dd>
-<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id7">HalesHallgren00</a></span></dt>
-<dd><p>L. Hales and S. Hallgren. An improved quantum fourier transform algorithm and applications. In <em>Proceedings 41st Annual Symposium on Foundations of Computer Science</em>, volume, 515–525. 2000. <a class="reference external" href="https://doi.org/10.1109/SFCS.2000.892139">doi:10.1109/SFCS.2000.892139</a>.</p>
-</dd>
-</dl>
-</div>
 <dl class="footnote brackets">
 <dt class="label" id="and-you-dont-want-to"><span class="brackets"><a class="fn-backref" href="#id4">1</a></span></dt>
 <dd><p>そもそも、例えば65量子ビットの計算機からすべてのデータを保存しようと思うと、各振幅を128（古典）ビットの浮動小数点複素数で表現したとすれば512EiB (エクサバイト)のストレージが必要です。これはだいたい現在インターネットを行き来する情報二ヶ月分に相当するので、保存するファシリティを作るにはそれなりの投資が必要です。</p>
@@ -1103,6 +1080,7 @@ k = \sum_{m=0}^{n_3-1} 2^m k_m
 <dd><p>「物理的」な回路もまだ実は論理的な存在であり、本当にハードウェアが理解するインストラクションに変換するには、さらに基本ゲートを特定のマイクロ波パルス列に直す必要があります。</p>
 </dd>
 </dl>
+</div>
 </div>
 </div>
 

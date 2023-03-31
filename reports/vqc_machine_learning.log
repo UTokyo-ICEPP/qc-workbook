@@ -17,27 +17,30 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# まず必要なモジュールをインポートする
+# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit.visualization import plot_histogram
-from qiskit_aer import AerSimulator
-# ワークブック独自のモジュール
-from qc_workbook.hamiltonian import make_hamiltonian
-from qc_workbook.show_state import show_state
+import pandas as pd
 
-print('notebook ready')
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit.circuit.library import TwoLocal, ZFeatureMap, ZZFeatureMap
+from qiskit.utils import QuantumInstance
+from qiskit_machine_learning.algorithms.classifiers import VQC
+#from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
+from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_aer import AerSimulator
+from IPython.display import clear_output
+from sklearn.preprocessing import MinMaxScaler
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Input [0;32mIn [1][0m, in [0;36m<cell line: 6>[0;34m()[0m
-[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvisualization[39;00m [38;5;28;01mimport[39;00m plot_histogram
-[0;32m----> 6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
-[1;32m      7[0m [38;5;66;03m# ワークブック独自のモジュール[39;00m
-[1;32m      8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mhamiltonian[39;00m [38;5;28;01mimport[39;00m make_hamiltonian
+Input [0;32mIn [1][0m, in [0;36m<cell line: 12>[0;34m()[0m
+[1;32m     10[0m [38;5;66;03m#from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name[39;00m
+[1;32m     11[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01malgorithms[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimizers[39;00m [38;5;28;01mimport[39;00m SPSA, COBYLA
+[0;32m---> 12[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
+[1;32m     13[0m [38;5;28;01mfrom[39;00m [38;5;21;01mIPython[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdisplay[39;00m [38;5;28;01mimport[39;00m clear_output
+[1;32m     14[0m [38;5;28;01mfrom[39;00m [38;5;21;01msklearn[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpreprocessing[39;00m [38;5;28;01mimport[39;00m MinMaxScaler
 
 [0;31mModuleNotFoundError[0m: No module named 'qiskit_aer'
 ModuleNotFoundError: No module named 'qiskit_aer'

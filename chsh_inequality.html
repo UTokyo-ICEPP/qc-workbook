@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -447,11 +452,6 @@ const thebe_selector_output = ".output, .cell_output"
    量子測定結果の解析
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id18">
-   参考文献
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -541,11 +541,6 @@ const thebe_selector_output = ".output, .cell_output"
    量子測定結果の解析
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id18">
-   参考文献
-  </a>
- </li>
 </ul>
 
                         </nav>
@@ -561,26 +556,25 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="contents local topic" id="id1">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id2" id="id59">本当に量子コンピュータなのか？</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id60">CHSH不等式</a></p></li>
-<li><p><a class="reference internal" href="#qiskit" id="id61">Qiskitの基本構造</a></p>
+<li><p><a class="reference internal" href="#id2" id="id18">本当に量子コンピュータなのか？</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id19">CHSH不等式</a></p></li>
+<li><p><a class="reference internal" href="#qiskit" id="id20">Qiskitの基本構造</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id5" id="id62">量子ビット、量子レジスタ</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id63">ゲート、回路、測定</a></p></li>
-<li><p><a class="reference internal" href="#id10" id="id64">量子計算結果の解析</a></p></li>
-<li><p><a class="reference internal" href="#common-gates" id="id65">よく使うゲート</a></p>
+<li><p><a class="reference internal" href="#id5" id="id21">量子ビット、量子レジスタ</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id22">ゲート、回路、測定</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id23">量子計算結果の解析</a></p></li>
+<li><p><a class="reference internal" href="#common-gates" id="id24">よく使うゲート</a></p>
 <ul>
-<li><p><a class="reference internal" href="#id12" id="id66">1量子ビットの操作</a></p></li>
-<li><p><a class="reference internal" href="#id13" id="id67">2量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id25">1量子ビットの操作</a></p></li>
+<li><p><a class="reference internal" href="#id13" id="id26">2量子ビットの操作</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id14" id="id68">回路図の描き方と読み方</a></p></li>
+<li><p><a class="reference internal" href="#id14" id="id27">回路図の描き方と読み方</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id15" id="id69">CHSH不等式を計算する回路を書く</a></p></li>
-<li><p><a class="reference internal" href="#id16" id="id70">回路を実機で実行する</a></p></li>
-<li><p><a class="reference internal" href="#id17" id="id71">量子測定結果の解析</a></p></li>
-<li><p><a class="reference internal" href="#id18" id="id72">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id15" id="id28">CHSH不等式を計算する回路を書く</a></p></li>
+<li><p><a class="reference internal" href="#id16" id="id29">回路を実機で実行する</a></p></li>
+<li><p><a class="reference internal" href="#id17" id="id30">量子測定結果の解析</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
@@ -589,17 +583,17 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="math notranslate nohighlight">\(\newcommand{\rmIII}{\mathrm{III}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\rmIV}{\mathrm{IV}}\)</span></p>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id59">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">本当に量子コンピュータなのか？</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>このワークブックの主旨が量子コンピュータ（QC）を使おう、ということですが、QCなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソースとして使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQCなのでしょうか。どうしたらそれが調べられるでしょうか。</p>
 <p>QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。</p>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id60">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式<span id="id4">[<a class="reference internal" href="#id26" title="John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. Phys. Rev. Lett., 23:880–884, Oct 1969. URL: https://link.aps.org/doi/10.1103/PhysRevLett.23.880, doi:10.1103/PhysRevLett.23.880.">CHSH69</a>, <a class="reference internal" href="#id21" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 2.6, pages 111-117. Cambridge University Press, 2000.">NC00</a>]</span>の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
+<h2><a class="toc-backref" href="#id19">CHSH不等式</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>量子力学的状態が実際に存在するかどうかを確かめる実験として、2022年のノーベル物理学賞でも取り上げられたCHSH不等式<span id="id4">[<a class="reference internal" href="bibliography.html#id9" title="John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. Phys. Rev. Lett., 23:880–884, Oct 1969. URL: https://link.aps.org/doi/10.1103/PhysRevLett.23.880, doi:10.1103/PhysRevLett.23.880.">CHSH69</a>]</span>の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。</p>
 <p>通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。</p>
 </div>
 <div class="section" id="qiskit">
-<h2><a class="toc-backref" href="#id61">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id20">Qiskitの基本構造</a><a class="headerlink" href="#qiskit" title="Permalink to this headline">¶</a></h2>
 <p>IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://qiskit.org/" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は</p>
 <ol class="simple">
 <li><p>使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る</p></li>
@@ -614,7 +608,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p>です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては<a class="reference internal" href="nonlocal_correlations.html"><span class="doc">第一回の課題</span></a>を参照してください。</p>
 <p>Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a href="https://qiskit.org/documentation/" target="_blank">Qiskitのドキュメンテーション</a>をあたってみましょう。</p>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id62">量子ビット、量子レジスタ</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">量子ビット、量子レジスタ</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><strong>量子ビット</strong>（qubit=キュビット）とは量子コンピュータの基本構成要素のことで、量子情報の入れ物の最小単位です。そして、量子ビットの集まりを量子レジスタと呼びます。</p>
 <p>量子レジスタは量子コンピュータ中で常に一つの「状態」にあります。量子レジスタの状態を物理学の習わしに従ってしばしば「ケット」という<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>のような記号で表します<a class="footnote-reference brackets" href="#mixed-state" id="id6">1</a>。量子力学に不慣れな方はこの記法で怯んでしまうかもしれませんが、ケット自体はただの記号なのであまり気にしないでください。別に「枠」なしで<span class="math notranslate nohighlight">\(\psi\)</span>と書いても、絵文字を使って🔱と書いても、何でも構いません。</p>
 <p>重要なのは各量子ビットに対して2つの<strong>基底状態</strong>が定義できることで、量子計算の習わしではそれらを<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>で表し、「計算基底」とも呼びます<a class="footnote-reference brackets" href="#basis" id="id7">2</a>。そして、量子ビットの任意の状態は、2つの複素数<span class="math notranslate nohighlight">\(\alpha, \beta\)</span>を使って</p>
@@ -668,7 +662,7 @@ e^{-i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>のように量子ビット数（この場合4）と名前（<code class="docutils literal notranslate"><span class="pre">'myregister'</span></code>）を指定して初期化します。初期状態では、量子ビットはすべて<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態にあります。レジスタオブジェクトはこのままではあまり使い道がなく、基本的には次に紹介する量子回路の一部として利用します。</p>
 </div>
 <div class="section" id="id9">
-<h3><a class="toc-backref" href="#id63">ゲート、回路、測定</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">ゲート、回路、測定</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>量子計算とは、端的に言えば、量子レジスタに特定の状態を生成し、その振幅を利用することと言えます。</p>
 <p>とは言っても、いきなり「えいや」と好きな量子状態を作れるわけではなく、パターンの決まった単純操作（<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>を入れ替える、ブロッホ球表現での位相角度<span class="math notranslate nohighlight">\(\phi\)</span>を増減させる、など）を順番に組み合わせて複雑な状態を作っていきます。この単純操作のオペレーションのことを一般に量子<strong>ゲート</strong>といい、ゲートの種類や順番を指定したプログラムに相当するものを量子<strong>回路</strong>と呼びます。</p>
 <p>Qiskitでは、量子回路を<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトで表します。</p>
@@ -691,16 +685,16 @@ e^{-i\phi/2}\cos\frac{\theta}{2}\ket{0} + e^{i\phi/2}\sin\frac{\theta}{2}\ket{1}
 <p>ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を繰り返し実行して測定すると、毎回ランダムにビット列が決まります。ただし、このランダムさには法則があって、<strong>特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗</strong>となっています。つまり、<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>があるとき、測定でビット列<span class="math notranslate nohighlight">\(k\)</span>が得られる確率は<span class="math notranslate nohighlight">\(|c_k|^2\)</span>です。根本的には、この確率の分布<span class="math notranslate nohighlight">\(|c_0|^2, |c_1|^2, \dots, |c_{2^n-1}|^2\)</span>こそが量子計算の結果です。</p>
 </div>
 <div class="section" id="id10">
-<h3><a class="toc-backref" href="#id64">量子計算結果の解析</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">量子計算結果の解析</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>回路の実行と測定を何度も繰り返して、それぞれのビット列が現れる頻度を記録すれば、だんだん<span class="math notranslate nohighlight">\(|c_j|^2\)</span>の値がわかっていきます。例えば、2量子ビットの回路を1000回実行・測定して、ビット列00、01、10、11がそれぞれ246回、300回、103回、351回得られたとすれば、統計誤差を考慮して<span class="math notranslate nohighlight">\(|c_0|^2=0.24 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_1|^2=0.30 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_2|^2=0.11 \pm 0.01\)</span>、<span class="math notranslate nohighlight">\(|c_3|^2=0.35 \pm 0.01\)</span>という具合です。しかし、わかるのは<span class="math notranslate nohighlight">\(c_j\)</span>の絶対値だけで、複素位相については知る術なしです。どうもすっきりしませんが、これが量子コンピュータから情報を得る方法です。</p>
 <p>逆に、指数関数的な内部の情報量をうまく使って計算を行いつつ、測定という限定的な方法でも答えが読み出せるように工夫するのが、量子アルゴリズム設計の真髄ということになります。例えば理想的には、何か計算の答えが整数<span class="math notranslate nohighlight">\(k\)</span>であり、それを計算する回路の終状態が単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>となるようであれば、一度の測定で答えがわかる（上でいった特殊な場合に相当）わけです。単純に<span class="math notranslate nohighlight">\(\ket{k}\)</span>でなくても、重ね合わせ<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>において<span class="math notranslate nohighlight">\(|c_k| \gg |c_{j \neq k}|\)</span>を実現できれば、数回の測定で答えが高確率でわかります。<a class="reference internal" href="shor.html"><span class="doc">素因数分解アルゴリズムを学習する</span></a>で紹介する位相推定アルゴリズムはその好例です。</p>
 <p>一度の測定で答えがわかるケースを除いて、基本的には多数回の試行から確率分布を推定することになるので、量子回路を量子コンピュータの実機やシミュレータに送って実行させる時には必ず繰り返し数（「ショット数」と呼びます）を指定します。ショット数<span class="math notranslate nohighlight">\(S\)</span>でビット列<span class="math notranslate nohighlight">\(k\)</span>が<span class="math notranslate nohighlight">\(n_k\)</span>回得られた時、<span class="math notranslate nohighlight">\(|c_k|^2\)</span>の推定値は<span class="math notranslate nohighlight">\(z_k = n_k/S\)</span>、その統計誤差は（<span class="math notranslate nohighlight">\(S, n_k, S-n_k\)</span>が全て十分大きい場合）<span class="math notranslate nohighlight">\(\sqrt{z_k (1-z_k) / S}\)</span>で与えられます。</p>
 </div>
 <div class="section" id="common-gates">
-<span id="id11"></span><h3><a class="toc-backref" href="#id65">よく使うゲート</a><a class="headerlink" href="#common-gates" title="Permalink to this headline">¶</a></h3>
+<span id="id11"></span><h3><a class="toc-backref" href="#id24">よく使うゲート</a><a class="headerlink" href="#common-gates" title="Permalink to this headline">¶</a></h3>
 <p>IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、<span class="math notranslate nohighlight">\(n\)</span>量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明されています。</p>
 <div class="section" id="id12">
-<h4><a class="toc-backref" href="#id66">1量子ビットの操作</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id25">1量子ビットの操作</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
 <p>1量子ビットの操作でよく使われるゲートには、以下のようなものがあります。（表中コードの<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>は量子ビットの番号）</p>
 <table class="table">
 <colgroup>
@@ -805,7 +799,7 @@ X R_y\left(\frac{\pi}{2}\right) H \ket{0} &amp; = X R_y\left(\frac{\pi}{2}\right
 <p>なので、結局<span class="math notranslate nohighlight">\(\ket{0}\)</span>状態に戻る操作でした。</p>
 </div>
 <div class="section" id="id13">
-<h4><a class="toc-backref" href="#id67">2量子ビットの操作</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id26">2量子ビットの操作</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>2量子ビットの操作は、量子ビットの超電導素子での実装の都合上、全て「制御ゲート」（controlled gates）という方式で行われます。この方式では、2つのビットのうち片方を制御（control）、もう片方を標的（target）として、制御ビットが1の時だけ標的ビットに何らかの操作がかかります。</p>
 <p>例として、任意の1ビットゲート<span class="math notranslate nohighlight">\(U\)</span>を制御ゲート化した<span class="math notranslate nohighlight">\(C^i_j[U]\)</span>を考えます。ここで<span class="math notranslate nohighlight">\(i\)</span>が制御、<span class="math notranslate nohighlight">\(j\)</span>が標的ビットとします。ケットの添字でビットの番号を表して（reminder: 並べて書くときは右から順に番号を振ります）</p>
 <div class="math notranslate nohighlight">
@@ -894,7 +888,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 </div>
 <div class="section" id="id14">
-<h3><a class="toc-backref" href="#id68">回路図の描き方と読み方</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id27">回路図の描き方と読み方</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>量子回路を可視化する方法として、「回路図」の標準的な描き方が決まっています。Qiskitでは<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトの<code class="docutils literal notranslate"><span class="pre">draw()</span></code>というメソッドを使って自動描画できます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -915,7 +909,7 @@ R_y(\theta_3 - \theta_2)R_y(\theta_2)\ket{0} &amp; = R_y(\theta_3)\ket{0} = \sqr
 </div>
 </div>
 <div class="section" id="id15">
-<h2><a class="toc-backref" href="#id69">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id28">CHSH不等式を計算する回路を書く</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <p>それではいよいよ本題に入りましょう。CHSH不等式を「ベル状態」<span class="math notranslate nohighlight">\(1/\sqrt{2}(\ket{00} + \ket{11})\)</span>で検証します。ベル状態は「どちらの量子ビットについても<span class="math notranslate nohighlight">\(\ket{0}\)</span>でも<span class="math notranslate nohighlight">\(\ket{1}\)</span>でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、<strong>二つの量子ビットはエンタングルしている</strong>といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。</p>
 <p>ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。詳しい説明は<a class="reference internal" href="nonlocal_correlations.html"><span class="doc">課題</span></a>に譲りますが、CHSH不等式の検証用の観測量を作るために、4つの回路I, II, III, IVを使います。回路IとIIIでは量子ビット1に対し測定の直前に<span class="math notranslate nohighlight">\(R_y(-\pi/4)\)</span>、IIとIVでは同様に<span class="math notranslate nohighlight">\(R_y(-3\pi/4)\)</span>を作用させます。また回路IIIとIVでは量子ビット0に<span class="math notranslate nohighlight">\(R_y(-\pi/2)\)</span>を同じく測定の直前に作用させます。4つの回路を一度にIBMQに送るので、<code class="docutils literal notranslate"><span class="pre">circuits</span></code>というリストに回路を足していきます。</p>
 <div class="cell docutils container">
@@ -1046,7 +1040,7 @@ C^{\rmIV} = 0
 <p>それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から<span class="math notranslate nohighlight">\(S\)</span>の値を計算して確認してみましょう。</p>
 </div>
 <div class="section" id="id16">
-<h2><a class="toc-backref" href="#id70">回路を実機で実行する</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id29">回路を実機で実行する</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <p>まずはIBMQに認証・接続します。IBM Quantum Experience (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">認証設定が保存されている</span></a>場合は<code class="docutils literal notranslate"><span class="pre">provider</span> <span class="pre">=</span> <span class="pre">IBMProvider()</span></code>で接続ができます。設定がない場合は<code class="docutils literal notranslate"><span class="pre">IBMProvider</span></code>のコンストラクタに<a class="reference internal" href="prerequisites.html#install-token"><span class="std std-ref">トークン</span></a>を渡してIBMQに接続します。</p>
 <div class="cell tag_remove-output tag_raises-exception docutils container">
 <div class="cell_input docutils container">
@@ -1102,7 +1096,7 @@ C^{\rmIV} = 0
 <p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように<code class="docutils literal notranslate"><span class="pre">job_monitor</span></code>を使います。</p>
 </div>
 <div class="section" id="id17">
-<h2><a class="toc-backref" href="#id71">量子測定結果の解析</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id30">量子測定結果の解析</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>ジョブオブジェクトの<code class="docutils literal notranslate"><span class="pre">result()</span></code>というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの<code class="docutils literal notranslate"><span class="pre">get_counts</span></code>というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -1176,19 +1170,6 @@ C^{\rmIV} = 0
 </div>
 </div>
 <p>無事、<span class="math notranslate nohighlight">\(S\)</span>が2を超えました。</p>
-</div>
-<div class="section" id="id18">
-<h2><a class="toc-backref" href="#id72">参考文献</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
-<div class="docutils container" id="id19">
-<dl class="citation">
-<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id4">CHSH69</a></span></dt>
-<dd><p>John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. <em>Phys. Rev. Lett.</em>, 23:880–884, Oct 1969. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.23.880">https://link.aps.org/doi/10.1103/PhysRevLett.23.880</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.23.880">doi:10.1103/PhysRevLett.23.880</a>.</p>
-</dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id4">NC00</a></span></dt>
-<dd><p>Michael A Nielsen and Isaac L Chuang. <em>Quantum Computation and Quantum Information</em>, chapter 2.6, pages 111–117. Cambridge University Press, 2000.</p>
-</dd>
-</dl>
-</div>
 <dl class="footnote brackets">
 <dt class="label" id="mixed-state"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
 <dd><p>正確には、状態がケットで表せるのはこのレジスタが他のレジスタとエンタングルしていないときに限られますが、ここでは詳細を割愛します。</p>

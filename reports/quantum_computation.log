@@ -17,27 +17,24 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# まず必要なモジュールをインポートする
+# まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit.visualization import plot_histogram
 from qiskit_aer import AerSimulator
-# ワークブック独自のモジュール
-from qc_workbook.hamiltonian import make_hamiltonian
-from qc_workbook.show_state import show_state
+from qiskit.visualization import plot_histogram
 
 print('notebook ready')
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Input [0;32mIn [1][0m, in [0;36m<cell line: 6>[0;34m()[0m
+Input [0;32mIn [1][0m, in [0;36m<cell line: 5>[0;34m()[0m
+[1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
 [1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvisualization[39;00m [38;5;28;01mimport[39;00m plot_histogram
-[0;32m----> 6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
-[1;32m      7[0m [38;5;66;03m# ワークブック独自のモジュール[39;00m
-[1;32m      8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mhamiltonian[39;00m [38;5;28;01mimport[39;00m make_hamiltonian
+[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
+[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvisualization[39;00m [38;5;28;01mimport[39;00m plot_histogram
+[1;32m      8[0m [38;5;28mprint[39m([38;5;124m'[39m[38;5;124mnotebook ready[39m[38;5;124m'[39m)
 
 [0;31mModuleNotFoundError[0m: No module named 'qiskit_aer'
 ModuleNotFoundError: No module named 'qiskit_aer'

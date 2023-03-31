@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -419,11 +424,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
-   参考文献
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -485,11 +485,6 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
-   参考文献
-  </a>
- </li>
 </ul>
 
                         </nav>
@@ -501,33 +496,32 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1>【課題】量子カーネルを使った新現象の分類<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>これまで、量子・古典ハイブリッドアルゴリズムの一つである<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">量子回路学習</span></a>の手法を使って、素粒子物理での新粒子探索が可能かを見てきました。ここでは、<strong>量子機械学習</strong>の別の手法として、<strong>量子カーネル</strong>を用いた分類を考えてみます。特に、量子カーネルを活用した<strong>サポートベクターマシン</strong>の手法<span id="id2">[<a class="reference internal" href="vqc_machine_learning.html#id35" title="Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. Nature, 567(7747):209–212, 2019. URL: https://doi.org/10.1038/s41586-019-0980-2, doi:10.1038/s41586-019-0980-2.">HavlivcekCorcolesT+19</a>]</span>を使って、同じ新粒子探索の問題に取り組みます。</p>
+<p>これまで、量子・古典ハイブリッドアルゴリズムの一つである<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">量子回路学習</span></a>の手法を使って、素粒子物理での新粒子探索が可能かを見てきました。ここでは、<strong>量子機械学習</strong>の別の手法として、<strong>量子カーネル</strong>を用いた分類を考えてみます。特に、量子カーネルを活用した<strong>サポートベクターマシン</strong>の手法<span id="id2">[<a class="reference internal" href="bibliography.html#id25" title="Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. Nature, 567(7747):209–212, 2019. URL: https://doi.org/10.1038/s41586-019-0980-2, doi:10.1038/s41586-019-0980-2.">HavlivcekCorcolesT+19</a>]</span>を使って、同じ新粒子探索の問題に取り組みます。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#q-kernel" id="id52">量子カーネル</a></p>
+<li><p><a class="reference internal" href="#q-kernel" id="id11">量子カーネル</a></p>
 <ul>
-<li><p><a class="reference internal" href="#q-kernel-imp" id="id53">量子カーネルの評価</a></p></li>
+<li><p><a class="reference internal" href="#q-kernel-imp" id="id12">量子カーネルの評価</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#svm" id="id54">サポートベクターマシン</a></p>
+<li><p><a class="reference internal" href="#svm" id="id13">サポートベクターマシン</a></p>
 <ul>
-<li><p><a class="reference internal" href="#qsvm" id="id55">量子サポートベクターマシン</a></p></li>
+<li><p><a class="reference internal" href="#qsvm" id="id14">量子サポートベクターマシン</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#qsvm-imp" id="id56">素粒子探索への応用</a></p>
+<li><p><a class="reference internal" href="#qsvm-imp" id="id15">素粒子探索への応用</a></p>
 <ul>
-<li><p><a class="reference internal" href="#problem1" id="id57">問題1</a></p></li>
-<li><p><a class="reference internal" href="#problem2" id="id58">問題2</a></p></li>
+<li><p><a class="reference internal" href="#problem1" id="id16">問題1</a></p></li>
+<li><p><a class="reference internal" href="#problem2" id="id17">問題2</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#id11" id="id59">参考文献</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}\)</span></p>
 <div class="section" id="q-kernel">
-<span id="id4"></span><h2><a class="toc-backref" href="#id52">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id11">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
 <p>変分量子回路を使った量子回路学習では、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -540,14 +534,14 @@ K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text
 \]</div>
 <p>として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi(x_j)}\)</span>の「近さ」あるいは「重なり具合」を表していると解釈できます。</p>
 <div class="section" id="q-kernel-imp">
-<span id="id5"></span><h3><a class="toc-backref" href="#id53">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
+<span id="id5"></span><h3><a class="toc-backref" href="#id12">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
 <p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
 <a class="reference internal image-reference" href="_images/qke_circuit.png"><img alt="qke_circuit" class="align-center" src="_images/qke_circuit.png" style="width: 700px;" /></a>
 <p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\({\cal O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
 </div>
 </div>
 <div class="section" id="svm">
-<span id="id6"></span><h2><a class="toc-backref" href="#id54">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id13">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h2>
 <p>上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、データ分類を行なってみます。</p>
 <p>まず、線形サポートベクターマシンとはどういうものかを見ていきます。2クラス分類を考えるとして、<span class="math notranslate nohighlight">\(+1\)</span>と<span class="math notranslate nohighlight">\(-1\)</span>を持つクラス<span class="math notranslate nohighlight">\(C=\{+1,-1\}\)</span>とします。学習データを<span class="math notranslate nohighlight">\(\{(\boldsymbol{x}_i,y_i)\}\:(i=1,\ldots,N)\)</span>とすると、<span class="math notranslate nohighlight">\(y_i\in\{+1,-1\}\)</span>です。<span class="math notranslate nohighlight">\(i\)</span>は各データを表すインデックス、<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span>は<span class="math notranslate nohighlight">\(d\)</span>次元の実数変数<span class="math notranslate nohighlight">\(\boldsymbol{x}_i\in\mathbb{R}^d\)</span>としておきます。</p>
 <p>サポートベクターによる線形分離とは、ある空間にデータ点の集合が分布しているとして、それを超平面（Hyperplane）で二つの領域に分離するという問題です。超平面とは、<span class="math notranslate nohighlight">\(\boldsymbol{w}\in\mathbb{R}^d\)</span>をデータと同じ次元数の実数ベクトルとして、<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x}+b=0\)</span>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>のことを超平面と読んでいます。<span class="math notranslate nohighlight">\(b\)</span>はバイアス、<span class="math notranslate nohighlight">\(\circ\)</span>は内積を表していて、<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>は超平面に直交するベクトルと考えることができます。データの線形分離は、</p>
@@ -557,7 +551,7 @@ y_i(\boldsymbol{w}\circ\boldsymbol{x}_i+b)\geq1,\:\:\:\forall i=1,\ldots,N
 \]</div>
 <p>を満たす<span class="math notranslate nohighlight">\((\boldsymbol{w},b)\)</span>を見つけることができれば、<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>のマージン（超平面からデータ点までの距離）を持って分離できることが知られています。このような超平面が見つかれば、新しいテストデータ<span class="math notranslate nohighlight">\(\boldsymbol{x'}\in\mathbb{R}^d\)</span>に対して<span class="math notranslate nohighlight">\(\boldsymbol{w}\circ\boldsymbol{x'}+b\)</span>の符号（超平面で分離される領域のどちらにデータが分布しているか）を見ることで、分離ができるという仕組みです。</p>
 <div class="section" id="qsvm">
-<span id="id7"></span><h3><a class="toc-backref" href="#id55">量子サポートベクターマシン</a><a class="headerlink" href="#qsvm" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3><a class="toc-backref" href="#id14">量子サポートベクターマシン</a><a class="headerlink" href="#qsvm" title="Permalink to this headline">¶</a></h3>
 <p>量子サポートベクターマシンは、ヒルベルト空間にエンコードされた特徴量空間で、このデータ分離を行います。上の式では、マージンが<span class="math notranslate nohighlight">\(2/||\boldsymbol{w}||\)</span>なので、<span class="math notranslate nohighlight">\(||\boldsymbol{w}||\)</span>を最小化することでマージンが大きな超平面を探すことが考えられます。特徴量空間での超平面探索では、非線形変換が可能な特徴量マップが関わってくるため、少し違う形ですが同等なものとして以下の距離に相当する量<span class="math notranslate nohighlight">\(L\)</span></p>
 <div class="math notranslate nohighlight">
 \[
@@ -572,7 +566,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="qsvm-imp">
-<span id="id8"></span><h2><a class="toc-backref" href="#id56">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
+<span id="id8"></span><h2><a class="toc-backref" href="#id15">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
 <p>それでは、<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">ここ</span></a>で考えた素粒子現象の探索問題に、量子サポートベクターマシンを応用してみましょう。</p>
 <p>データセットの準備は同じです。</p>
 <div class="cell docutils container">
@@ -589,18 +583,13 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 
 <span class="c1"># Qiskit imports</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">ParameterVector</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">PauliFeatureMap</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">NLocal</span><span class="p">,</span> <span class="n">RealAmplitudes</span><span class="p">,</span> <span class="n">EfficientSU2</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">HGate</span><span class="p">,</span> <span class="n">RXGate</span><span class="p">,</span> <span class="n">RYGate</span><span class="p">,</span> <span class="n">RZGate</span><span class="p">,</span> <span class="n">CXGate</span><span class="p">,</span> <span class="n">CRXGate</span><span class="p">,</span> <span class="n">CRZGate</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="kn">from</span> <span class="nn">qiskit_machine_learning.kernels</span> <span class="kn">import</span> <span class="n">QuantumKernel</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.8/dist-packages/dateutil/zoneinfo/__init__.py:26: UserWarning: I/O error(2): No such file or directory
-  warnings.warn(&quot;I/O error({0}): {1}&quot;.format(e.errno, e.strerror))
 </pre></div>
 </div>
 </div>
@@ -662,7 +651,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="problem1">
-<span id="id9"></span><h3><a class="toc-backref" href="#id57">問題1</a><a class="headerlink" href="#problem1" title="Permalink to this headline">¶</a></h3>
+<span id="id9"></span><h3><a class="toc-backref" href="#id16">問題1</a><a class="headerlink" href="#problem1" title="Permalink to this headline">¶</a></h3>
 <p>各自特徴量マップを選び、実装してください。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -681,7 +670,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </div>
 </div>
 <div class="section" id="problem2">
-<span id="id10"></span><h3><a class="toc-backref" href="#id58">問題2</a><a class="headerlink" href="#problem2" title="Permalink to this headline">¶</a></h3>
+<span id="id10"></span><h3><a class="toc-backref" href="#id17">問題2</a><a class="headerlink" href="#problem2" title="Permalink to this headline">¶</a></h3>
 <p>最初の二つのデータ<span class="math notranslate nohighlight">\(x_0=\)</span>norm_train_data[0]と<span class="math notranslate nohighlight">\(x_1=\)</span>norm_train_data[1]に対するカーネル行列要素を計算するための量子回路を作ってください。このページの下にQuantumKernelクラスを使った例がありますが、ここでは上で決めた特徴量マップに合うように自分で量子回路を書いてください。その回路に<span class="math notranslate nohighlight">\(x_0\)</span>と<span class="math notranslate nohighlight">\(x_1\)</span>を入力として与えた回路をqc_circuitとして作るという問題です。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -701,7 +690,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 <p>作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率を計算してください。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">qc_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">seed_transpiler</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc_circuit</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span> <span class="n">seed_simulator</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
 
@@ -714,7 +703,7 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 <p>Qiskitには特徴量マップから量子カーネルを作ってくれるAPI（QuantumKernelクラス）が準備されていて、それを使えば課題2は実は簡単に実行できます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_kernel</span> <span class="o">=</span> <span class="n">QuantumKernel</span><span class="p">(</span><span class="n">feature_map</span><span class="o">=</span><span class="n">feature_map</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_kernel</span> <span class="o">=</span> <span class="n">QuantumKernel</span><span class="p">(</span><span class="n">feature_map</span><span class="o">=</span><span class="n">feature_map</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="n">AerSimulator</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;statevector&#39;</span><span class="p">))</span>
 
 <span class="n">qc_circuit</span> <span class="o">=</span> <span class="n">q_kernel</span><span class="o">.</span><span class="n">construct_circuit</span><span class="p">(</span><span class="n">norm_train_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">norm_train_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">qc_circuit</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
@@ -764,16 +753,6 @@ L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\
 </ul>
 </li>
 </ul>
-</div>
-</div>
-<div class="section" id="id11">
-<h2><a class="toc-backref" href="#id59">参考文献</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<div class="docutils container" id="id12">
-<dl class="citation">
-<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id2">HavlivcekCorcolesT+19</a></span></dt>
-<dd><p>Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. <em>Nature</em>, 567(7747):209–212, 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-019-0980-2">https://doi.org/10.1038/s41586-019-0980-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-019-0980-2">doi:10.1038/s41586-019-0980-2</a>.</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>実習の準備 &#8212; 量子コンピューティング・ワークブック</title>
+    <title>参考文献 &#8212; 量子コンピューティング・ワークブック</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -54,8 +54,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="予備知識：Python" href="python_intro.html" />
-    <link rel="prev" title="ToffoliゲートとShorコード" href="toffoli_shor_code.html" />
+    <link rel="next" title="文献一覧" href="bibliography.html" />
+    <link rel="prev" title="予備知識：数値表現" href="numerics.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -246,8 +246,8 @@ const thebe_selector_output = ".output, .cell_output"
  </span>
 </p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prerequisites.html">
    実習の準備
   </a>
  </li>
@@ -261,8 +261,8 @@ const thebe_selector_output = ".output, .cell_output"
    予備知識：数値表現
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    参考文献
   </a>
  </li>
@@ -310,12 +310,9 @@ const thebe_selector_output = ".output, .cell_output"
 
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/prerequisites.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
+        
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/prerequisites.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/references.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -335,7 +332,7 @@ const thebe_selector_output = ".output, .cell_output"
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fprerequisites.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Freferences.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -351,26 +348,6 @@ const thebe_selector_output = ".output, .cell_output"
 
             <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/prerequisites.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
-    </div>
-</div>
-
         </div>
 
         <!-- Table of contents -->
@@ -382,35 +359,43 @@ const thebe_selector_output = ".output, .cell_output"
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ibm-quantum">
-   IBM Quantum
+  <a class="reference internal nav-link" href="#id2">
+   教科書
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibmidibm-quantum">
-     IBMidを取得し、IBM Quantumにログインする
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibm-quantum-apiqiskit">
-     （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
-   ワークブックの使い方
+  <a class="reference internal nav-link" href="#id6">
+   オンライン教材
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   関連論文など
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#html">
-     インタラクティブHTML
+    <a class="reference internal nav-link" href="#id8">
+     量子力学
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jupyter-notebook">
-     Jupyter Notebook
+    <a class="reference internal nav-link" href="#id10">
+     量子計算
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     量子ダイナミクスシミュレーション
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id17">
+     化学計算
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id18">
+     量子機械学習
     </a>
    </li>
   </ul>
@@ -425,7 +410,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>実習の準備</h1>
+                <h1>参考文献</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -436,35 +421,43 @@ const thebe_selector_output = ".output, .cell_output"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ibm-quantum">
-   IBM Quantum
+  <a class="reference internal nav-link" href="#id2">
+   教科書
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibmidibm-quantum">
-     IBMidを取得し、IBM Quantumにログインする
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ibm-quantum-apiqiskit">
-     （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
-   ワークブックの使い方
+  <a class="reference internal nav-link" href="#id6">
+   オンライン教材
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   関連論文など
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#html">
-     インタラクティブHTML
+    <a class="reference internal nav-link" href="#id8">
+     量子力学
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jupyter-notebook">
-     Jupyter Notebook
+    <a class="reference internal nav-link" href="#id10">
+     量子計算
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     量子ダイナミクスシミュレーション
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id17">
+     化学計算
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id18">
+     量子機械学習
     </a>
    </li>
   </ul>
@@ -479,84 +472,51 @@ const thebe_selector_output = ".output, .cell_output"
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>実習の準備<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="id2">
-<p class="topic-title">目次</p>
+<h1>参考文献<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>教科書<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="#ibm-quantum" id="id4">IBM Quantum</a></p>
-<ul>
-<li><p><a class="reference internal" href="#ibmidibm-quantum" id="id5">IBMidを取得し、IBM Quantumにログインする</a></p></li>
-<li><p><a class="reference internal" href="#ibm-quantum-apiqiskit" id="id6">（ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#id3" id="id7">ワークブックの使い方</a></p>
-<ul>
-<li><p><a class="reference internal" href="#html" id="id8">インタラクティブHTML</a></p></li>
-<li><p><a class="reference internal" href="#jupyter-notebook" id="id9">Jupyter Notebook</a></p></li>
-</ul>
-</li>
+<li><p>Nielsen and Chuang <span id="id3">[<a class="reference internal" href="bibliography.html#id3" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information. Cambridge University Press, 2000.">NC00e</a>]</span></p></li>
+<li><p>日本語でのクラウド量子計算実用書 <span id="id4">[<a class="reference internal" href="bibliography.html#id27" title="中山 茂. クラウド量子計算入門―ＩＢＭの量子シミュレーションと量子コンピュータ. カットシステム, 9 2016. ISBN 978-4877834081.">16</a>]</span></p></li>
+<li><p>量子計算入門書 <span id="id5">[<a class="reference internal" href="bibliography.html#id28" title="Robert S Sutor. Dancing with Qubits. Packt Publishing, 11 2019. ISBN 978-1838827366.">Sut19</a>]</span></p></li>
 </ul>
 </div>
-<div class="section" id="ibm-quantum">
-<h2><a class="toc-backref" href="#id4">IBM Quantum</a><a class="headerlink" href="#ibm-quantum" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="ibmidibm-quantum">
-<h3><a class="toc-backref" href="#id5">IBMidを取得し、IBM Quantumにログインする</a><a class="headerlink" href="#ibmidibm-quantum" title="Permalink to this headline">¶</a></h3>
-<p>IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。</p>
-</div>
-<div class="section" id="ibm-quantum-apiqiskit">
-<span id="install-token"></span><h3><a class="toc-backref" href="#id6">（ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する</a><a class="headerlink" href="#ibm-quantum-apiqiskit" title="Permalink to this headline">¶</a></h3>
-<p>IBM Quantum Lab（IBM Quantumウェブサイト上のJupyter Lab）でプログラムを実行する場合、以下の手続きは不要です。</p>
-<p>ログインしたらホーム画面のYour API tokenという欄からトークンをコピーできます。</p>
-<a class="reference internal image-reference" href="_images/ibmq_home.png" id="my-account"><img alt="_images/ibmq_home.png" id="my-account" src="_images/ibmq_home.png" style="height: 400px;" /></a>
-<p>アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。ローカルディスクに書き込める環境にある場合は、一度トークンを設定ファイルに保存することで、以降の認証を自動化できます。下のコードセルの<code class="docutils literal notranslate"><span class="pre">__paste_your_token_here__</span></code>のところにIBM Quantumからコピーしたトークンを貼り付け、実行してください。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
-
-<span class="n">IBMProvider</span><span class="o">.</span><span class="n">save_account</span><span class="p">(</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>トークンを保存することで、プログラム中でのIBM Quantumへの認証（IBMProviderの取得）は</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
-
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>のようになります。ちなみにIBM Quantum Labでは最初からトークンが保存されている状態なので、このコードで認証が行なえます。</p>
-<p>ローカルディスクに書き込める環境でない場合（このワークブックをインタラクティブに使っている場合など）は、Pythonプログラムを実行するたびに（Jupyterのカーネルを再起動するたびに）手動で認証を行う必要があります。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
-
-<span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="id3">
-<h2><a class="toc-backref" href="#id7">ワークブックの使い方</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="html">
-<h3><a class="toc-backref" href="#id8">インタラクティブHTML</a><a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
-<p>このワークブックの各ページにあるプログラムの書かれたセルは、そのまま<a href="https://jupyter.org/" target="_blank">Jupyter Notebook</a>のようにブラウザ上で実行することができます。ページの右上の<i class="fas fa-rocket"></i>にカーソルを乗せ、現れるメニューから<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><i class="fas fa-play" style="margin-left: .4em;"></i> <span style="margin: 0 .4em 0 .4em;">Live Code</span></span>をクリックしてください。ページのタイトルの下にステータス表示が現れるので、<span style="color: green; font-family: monospace; font-weight: bold; font-size: 1em;">ready</span>と表示されるまで待ちます。</p>
-<a class="reference internal image-reference" href="_images/toggle_interactive.jpg" id="turn-interactive-contents-on"><img alt="_images/toggle_interactive.jpg" id="turn-interactive-contents-on" src="_images/toggle_interactive.jpg" style="height: 400px;" /></a>
-<p>ページがインタラクティブになると、コード・セルに<span style="background-color:#dddddd; font-family:'Roboto', sans-serif; margin:0 1em 0 1em;">run</span>および<span style="background-color:#dddddd; font-family:'Roboto', sans-serif; margin:0 1em 0 1em;">restart</span>というボタンが現れ、直下にセルの出力が表示されるようになります。</p>
-<a class="reference internal image-reference" href="_images/interactive_cell.jpg" id="interactive-code-cell"><img alt="_images/interactive_cell.jpg" id="interactive-code-cell" src="_images/interactive_cell.jpg" style="height: 200px;" /></a>
-<p>この状態になったら、入力セルの内容を自由に書き換えて、runボタンをクリックして（もしくはShift + Enterで）Pythonコードを実行することができます。このときいくつか注意すべき点があります。</p>
+<div class="section" id="id6">
+<h2>オンライン教材<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>restartを押すまでページ全体が一つのプログラムになっているので、定義された変数などはセルをまたいで利用される。</p></li>
-<li><p>しばらく何もしないでページを放置していると、実行サーバーとの接続が切れてしまう。その場合ページを再度読み込んで、改めてインタラクティブコンテンツを起動する必要がある。</p></li>
-<li><p>コードは<a href="https://mybinder.org/" target="_blank">mybinder.org</a>という外部サービス上で実行されるので、個人情報等センシティブな内容の送信は極力避ける。<br/>
-（通信は暗号化されていて、mybinder.org中ではそれぞれのユーザーのプログラムは独立のコンテナ中で動くので、情報が外に筒抜けということではないはずですが、念の為。）<br/>
-ただし上で出てきたように、IBM Quantumのサービストークンだけはどうしても送信する必要があります。</p></li>
+<li><p><a class="reference external" href="https://qiskit.org/textbook/preface.html">Qiskit textbook</a></p></li>
+<li><p><a class="reference external" href="https://dojo.qulacs.org/ja/latest/">Quantum Native Dojo</a></p></li>
+<li><p><a class="reference external" href="https://pennylane.ai/qml/">PennyLane</a></p></li>
 </ul>
 </div>
-<div class="section" id="jupyter-notebook">
-<h3><a class="toc-backref" href="#id9">Jupyter Notebook</a><a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h3>
-<p>インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている<a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank">githubレポジトリ</a>をクローンしてください。</p>
-<p>ノートブックをローカルに実行するためには、Pythonバージョン3.8以上が必要です。また、<code class="docutils literal notranslate"><span class="pre">pip</span></code>を使って以下のパッケージをインストールする必要があります。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">qiskit</span> <span class="n">qiskit</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">provider</span> <span class="n">qiskit</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">runtime</span> <span class="n">matplotlib</span> <span class="n">pylatexenc</span> <span class="n">tabulate</span>
-</pre></div>
+<div class="section" id="id7">
+<h2>関連論文など<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>量子力学<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CHSH不等式 <span id="id9">[<a class="reference internal" href="bibliography.html#id9" title="John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment to test local hidden-variable theories. Phys. Rev. Lett., 23:880–884, Oct 1969. URL: https://link.aps.org/doi/10.1103/PhysRevLett.23.880, doi:10.1103/PhysRevLett.23.880.">CHSH69</a>]</span></p></li>
+</ul>
 </div>
+<div class="section" id="id10">
+<h3>量子計算<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>実用的入門 <span id="id11">[<a class="reference internal" href="bibliography.html#id29" title="Abhijith J., Adetokunbo Adedoyin, John Ambrosiano, Petr Anisimov, Andreas Bärtschi, William Casper, Gopinath Chennupati, Carleton Coffrin, Hristo Djidjev, David Gunter, Satish Karra, Nathan Lemons, Shizeng Lin, Alexander Malyzhenkov, David Mascarenas, Susan Mniszewski, Balu Nadiga, Daniel O'Malley, Diane Oyen, Scott Pakin, Lakshman Prasad, Randy Roberts, Phillip Romero, Nandakishore Santhi, Nikolai Sinitsyn, Pieter J. Swart, James G. Wendelberger, Boram Yoon, Richard Zamora, Wei Zhu, Stephan Eidenbenz, Patrick J. Coles, Marc Vuffray, and Andrey Y. Lokhov. Quantum algorithm implementations for beginners. 2020. arXiv:1804.03719.">JAA+20</a>]</span></p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h3>量子ダイナミクスシミュレーション<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Feynmanの講演 <span id="id13">[<a class="reference internal" href="bibliography.html#id30" title="Richard P. Feynman. Simulating physics with computers. International Journal of Theoretical Physics, 21(6):467–488, 1982. doi:10.1007/BF02650179.">Fey82</a>]</span></p></li>
+<li><p>量子シミュレーション概要 <span id="id14">[<a class="reference internal" href="bibliography.html#id31" title="Iulia Buluta and Franco Nori. Quantum simulators. Science, 326:108–111, 10 2009. doi:10.1126/science.1177838.">BN09</a>]</span></p></li>
+<li><p>イオントラップによる量子シミュレーション <span id="id15">[<a class="reference internal" href="bibliography.html#id32" title="B. P. Lanyon, C. Hempel, D. Nigg, M. Müller, R. Gerritsma, F. Zähringer, P. Schindler, J. T. Barreiro, M. Rambach, G. Kirchmair, M. Hennrich, P. Zoller, R. Blatt, and C. F. Roos. Universal digital quantum simulation with trapped ions. Science, 334:57–61, 10 2011. doi:10.1126/science.1208001.">LHN+11</a>]</span></p></li>
+<li><p>超伝導量子コンピュータによるフェルミオン系のシミュレーション <span id="id16">[<a class="reference internal" href="bibliography.html#id33" title="R. Barends, L. Lamata, and J. et al. Kelly. Digital quantum simulation of fermionic models with a superconducting circuit. Nature Communications, 6:7654, 7 2015. doi:10.1038/ncomms8654.">BLK15</a>]</span></p></li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h3>化学計算<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id18">
+<h3>量子機械学習<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
@@ -586,17 +546,17 @@ const thebe_selector_output = ".output, .cell_output"
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="toffoli_shor_code.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="numerics.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">ToffoliゲートとShorコード</p>
+            <p class="prev-next-title">予備知識：数値表現</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="python_intro.html" title="next page">
+    <a class='right-next' id="next-link" href="bibliography.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">予備知識：Python</p>
+        <p class="prev-next-title">文献一覧</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

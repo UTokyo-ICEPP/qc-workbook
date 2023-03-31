@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】アダマールテスト
@@ -39,7 +39,8 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
 from qiskit.visualization import plot_histogram
 
 print('notebook ready')
@@ -200,7 +201,7 @@ for k in ks:
     circuits_im.append(circuit_im)
 
 # シミュレータで回路を実行
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 shots = 10000
 
 circuits_re = transpile(circuits_re, backend=simulator)
@@ -228,14 +229,18 @@ plt.xlabel('k')
 plt.legend();
 ```
 
-得られた結果と`statevector_simulator`で計算される状態ベクトルとを比較してみましょう。
+得られた結果と状態ベクトルシミュレータで計算される状態ベクトルとを比較してみましょう。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-sv_simulator = Aer.get_backend('statevector_simulator')
+sv_simulator = AerSimulator(method='statevector')
 
-circuit = transpile(upsi, backend=sv_simulator)
+# save_statevectorをくっつけるので元の回路をコピーする
+circuit = upsi.copy()
+circuit.save_statevector()
+
+circuit = transpile(circuit, backend=sv_simulator)
 statevector_truth = np.asarray(sv_simulator.run(circuit).result().data()['statevector'])
 
 plt.plot(ks, statevector_truth.real, label='Re($c_k$) truth')
@@ -344,7 +349,7 @@ haystack_needle.draw('mpl')
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 haystack_needle = transpile(haystack_needle, backend=simulator)
 sim_job = simulator.run(haystack_needle, shots=10000)
 sim_result = sim_job.result()
@@ -357,11 +362,3 @@ plot_histogram(sim_result.get_counts(), figsize=(16, 4))
 - 問題2で、ヒストグラムから`needle`を見つける方法の記述
 - `haystack`レジスタが一般の$n$ビットであるとき、この方法で`needle`を探すことの問題点（実行時間の観点から）に関する考察
 - おまけ（評価対象外）：`haystack_needle`回路を適当な実機でも実行してみる。エラーによってシミュレーションと結果が大幅に異なると予想されるが、なぜ一見単純な回路が大きく撹乱されてしまうのか？を考えてみる
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

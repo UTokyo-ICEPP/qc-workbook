@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -587,12 +592,13 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">Aer</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span>
 <span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">NumPyMinimumEigensolver</span><span class="p">,</span> <span class="n">NumPyEigensolver</span>
 <span class="c1">#from qiskit_optimization.applications.ising.common import sample_most_likely</span>
 <span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
 <span class="kn">from</span> <span class="nn">qiskit.utils</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 </pre></div>
 </div>
 </div>
@@ -650,12 +656,6 @@ const thebe_selector_output = ".output, .cell_output"
 
 <span class="n">b_ij</span> <span class="o">=</span> <span class="n">b_ij</span><span class="p">[:</span><span class="n">nvar</span><span class="p">,:</span><span class="n">nvar</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# of segments =&quot;</span><span class="p">,</span><span class="n">nvar</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Q size = 46
-# of segments = 10
 </pre></div>
 </div>
 </div>
@@ -758,7 +758,7 @@ H(h,J,s) = \sum_{i=1}^Nh_is_i + \sum_{i=1}^N\sum_{j=1\:(i&lt;j)}^NJ_{ij}s_is_j
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VQEの実行</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">seed_simulator</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">qubitOp</span><span class="p">,</span> <span class="n">two</span><span class="p">,</span> <span class="n">spsa</span><span class="p">)</span>
 <span class="c1">#vqe = VQE(qubitOp, two, cobyla)</span>

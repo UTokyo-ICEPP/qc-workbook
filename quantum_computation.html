@@ -264,8 +264,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
+  <a class="reference internal" href="references.html">
    参考文献
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   文献一覧
   </a>
  </li>
 </ul>
@@ -388,11 +393,6 @@ const thebe_selector_output = ".output, .cell_output"
    問題2: 符号が反転している基底を見つける
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
-   参考文献
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -423,11 +423,6 @@ const thebe_selector_output = ".output, .cell_output"
    問題2: 符号が反転している基底を見つける
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
-   参考文献
-  </a>
- </li>
 </ul>
 
                         </nav>
@@ -442,9 +437,8 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id46">問題1: アダマールテストで状態ベクトルを同定する</a></p></li>
-<li><p><a class="reference internal" href="#id4" id="id47">問題2: 符号が反転している基底を見つける</a></p></li>
-<li><p><a class="reference internal" href="#id5" id="id48">参考文献</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id5">問題1: アダマールテストで状態ベクトルを同定する</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id6">問題2: 符号が反転している基底を見つける</a></p></li>
 </ul>
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
@@ -454,7 +448,8 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># まずは全てインポート</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
@@ -463,7 +458,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id46">問題1: アダマールテストで状態ベクトルを同定する</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">問題1: アダマールテストで状態ベクトルを同定する</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>実習で登場したSWAPテストは、実はアダマールテストという、より一般的な量子回路の構造の一例でした。アダマールテスト回路は以下のような形をしています。</p>
 <a class="reference internal image-reference" href="_images/hadamard_test.png"><img alt="hadamard_test" class="align-center" src="_images/hadamard_test.png" style="width: 300px;" /></a>
 <p>図中、ゲート<span class="math notranslate nohighlight">\(G\)</span>は<span class="math notranslate nohighlight">\(H\)</span>または<span class="math notranslate nohighlight">\(R_x(\pi/2)\)</span>、<span class="math notranslate nohighlight">\(U\)</span>はdataレジスタにかかる任意の回路です。</p>
@@ -604,7 +599,7 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
     <span class="n">circuits_im</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit_im</span><span class="p">)</span>
 
 <span class="c1"># シミュレータで回路を実行</span>
-<span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">shots</span> <span class="o">=</span> <span class="mi">10000</span>
 
 <span class="n">circuits_re</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits_re</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
@@ -635,12 +630,16 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
 </div>
 </div>
 </div>
-<p>得られた結果と<code class="docutils literal notranslate"><span class="pre">statevector_simulator</span></code>で計算される状態ベクトルとを比較してみましょう。</p>
+<p>得られた結果と状態ベクトルシミュレータで計算される状態ベクトルとを比較してみましょう。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sv_simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;statevector_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sv_simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;statevector&#39;</span><span class="p">)</span>
 
-<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">upsi</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">sv_simulator</span><span class="p">)</span>
+<span class="c1"># save_statevectorをくっつけるので元の回路をコピーする</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">upsi</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">save_statevector</span><span class="p">()</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">sv_simulator</span><span class="p">)</span>
 <span class="n">statevector_truth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sv_simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">()[</span><span class="s1">&#39;statevector&#39;</span><span class="p">])</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">statevector_truth</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Re($c_k$) truth&#39;</span><span class="p">)</span>
@@ -655,7 +654,7 @@ P_0 - P_1 = \mathrm{Im}\braket{\psi}{U \psi}
 </div>
 </div>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id47">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">問題2: 符号が反転している基底を見つける</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>実習で出てきたequal superposition状態</p>
 <div class="math notranslate nohighlight">
 \[
@@ -694,9 +693,6 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <span class="n">blackbox_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/quantum_computation_14_0.png" src="_images/quantum_computation_14_0.png" />
 </div>
 </div>
 <p>ここまでは<a class="reference internal" href="circuit_from_scratch.html"><span class="doc">単純な量子回路をゼロから書く</span></a>の問題5と同じです。</p>
@@ -750,7 +746,7 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <p>回路が完成したら、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>で実行し、ヒストグラムをプロットしてください。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;qasm_simulator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
 <span class="n">haystack_needle</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">haystack_needle</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
 <span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">haystack_needle</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
@@ -767,9 +763,6 @@ H^{\otimes n} \ket{0} = \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k}
 <li><p>おまけ（評価対象外）：<code class="docutils literal notranslate"><span class="pre">haystack_needle</span></code>回路を適当な実機でも実行してみる。エラーによってシミュレーションと結果が大幅に異なると予想されるが、なぜ一見単純な回路が大きく撹乱されてしまうのか？を考えてみる</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h2><a class="toc-backref" href="#id48">参考文献</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="id6"></span></div>
 </div>
 
     <script type="text/x-thebe-config">

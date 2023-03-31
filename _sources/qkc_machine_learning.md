@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -139,11 +139,12 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 # Qiskit imports
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, transpile
 from qiskit.circuit import QuantumCircuit, Parameter, ParameterVector
 from qiskit.circuit.library import PauliFeatureMap, ZFeatureMap, ZZFeatureMap
 from qiskit.circuit.library import TwoLocal, NLocal, RealAmplitudes, EfficientSU2
 from qiskit.circuit.library import HGate, RXGate, RYGate, RZGate, CXGate, CRXGate, CRZGate
+from qiskit_aer import AerSimulator
 from qiskit_machine_learning.kernels import QuantumKernel
 ```
 
@@ -276,7 +277,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-backend = Aer.get_backend('qasm_simulator')
+backend = AerSimulator()
 qc_circuit = transpile(qc_circuit, backend=backend, seed_transpiler=random_seed)
 job = backend.run(qc_circuit, shots=8192, seed_simulator=random_seed)
 
@@ -298,7 +299,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-q_kernel = QuantumKernel(feature_map=feature_map, quantum_instance=Aer.get_backend('statevector_simulator'))
+q_kernel = QuantumKernel(feature_map=feature_map, quantum_instance=AerSimulator(method='statevector'))
 
 qc_circuit = q_kernel.construct_circuit(norm_train_data[0], norm_train_data[1])
 qc_circuit.decompose().decompose().draw('mpl')
@@ -361,23 +362,3 @@ print(f'Precomputed kernel: Classification Test score:  {test_score*100}%')
 - この{doc}`ワークブック <vqc_machine_learning>`にある変分量子回路を使った量子機械学習との比較
    - 二つの方法を同じ条件（特徴量の変数、データサンプルのサイズ、特徴量マップ）で比較した時に、分類性能に対して何か系統的な違いは見えるでしょうか。特徴量やサンプルサイズを変えて比較するなどして、その振る舞いを自分なりに考察してみてください。
    - 一方が他方に比べて系統的に分類性能が悪くなっている場合、どうすれば悪い方を改善できるでしょうか。サンプルサイズが小さい時には、どちらの方法でも過学習（テストデータでの分類性能が訓練データでの分類性能より悪くなる）の傾向が見えていると思います。過学習をできるだけ抑えながら、分類性能を改善する方法がないか、考察してみてください。
-
-+++ {"pycharm": {"name": "#%% md\n"}}
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```
-
-```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-
-```
