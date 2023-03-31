@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 varInspector:
   cols:
     lenName: 16
@@ -148,12 +148,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, Aer, transpile
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
 from qiskit.circuit.library import TwoLocal, ZFeatureMap, ZZFeatureMap
 from qiskit.utils import QuantumInstance
 from qiskit_machine_learning.algorithms.classifiers import VQC
 #from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
 from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_aer import AerSimulator
 from IPython.display import clear_output
 from sklearn.preprocessing import MinMaxScaler
 ```
@@ -330,7 +331,7 @@ pycharm:
 
     '
 ---
-backend = Aer.get_backend("qasm_simulator")
+backend = AerSimulator()
 NUM_SHOTS = 8192
 
 def objective_function(params):
@@ -593,14 +594,18 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # シミュレータで実行する場合
-backend = Aer.get_backend('qasm_simulator')
+backend = AerSimulator()
 
 # 量子コンピュータで実行する場合
-#from qiskit import IBMQ
-#IBMQ.enable_account('__your_token__')
-#provider0 = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-#backend_name = 'ibmq_santiago'
-#backend = provider0.get_backend(backend_name)
+# instance = 'ibm-q/open/main'
+
+# try:
+#     provider = IBMProvider(instance=instance)
+# except IBMQAccountCredentialsNotFound:
+#     provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+#
+# backend_name = 'ibm_washington'
+# backend = provider.get_backend(backend_name)
 
 optimizer = COBYLA(maxiter=niter, disp=True)
 
@@ -696,11 +701,3 @@ print(f'--- Classification Test score:  {test_score} ---')
 この結果を見てどう思うでしょうか？機械学習を知っている方であれば、この結果はあまり良いようには見えませんね。。訓練用のデータでは学習ができている、つまり信号とバックグラウンドの選別ができていますが、テスト用のサンプルでは選別性能が悪くなっています。これは「過学習」を起こしている場合に見られる典型的な症状で、訓練データのサイズに対して学習パラメータの数が多すぎるときによく起こります。
 
 試しに、データサンプルの事象数を50や100に増やして実行し、結果を調べてみてください（処理時間は事象数に比例して長くなるので要注意）。
-
-+++ {"pycharm": {"name": "#%% md\n"}}
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # ToffoliゲートとShorコード
@@ -107,8 +107,6 @@ def show_circuit_op(circuit, global_phase=0.):
 
     return Latex(r'\begin{align} ' + r' \\ '.join(exprs) + r' \end{align}')
 ```
-
-+++ {"tags": []}
 
 ## CPゲート
 
@@ -489,8 +487,4 @@ else:
     global_phase = 0.
 
 show_state(shor_circuit, global_phase=global_phase, binary=True);
-```
-
-```{code-cell} ipython3
-
 ```

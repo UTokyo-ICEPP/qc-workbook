@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
@@ -95,12 +95,13 @@ pycharm:
 import numpy as np
 import matplotlib.pyplot as plt
 
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, Aer
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
 from qiskit.circuit.library import TwoLocal
 from qiskit.algorithms import VQE, NumPyMinimumEigensolver, NumPyEigensolver
 #from qiskit_optimization.applications.ising.common import sample_most_likely
 from qiskit.algorithms.optimizers import SPSA, COBYLA
 from qiskit.utils import QuantumInstance
+from qiskit_aer import AerSimulator
 ```
 
 (ML_challenge)=
@@ -322,7 +323,7 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # VQEの実行
-backend = Aer.get_backend('qasm_simulator')
+backend = AerSimulator()
 quantum_instance = QuantumInstance(backend=backend, shots=1024, seed_simulator=seed)
 vqe = VQE(qubitOp, two, spsa)
 #vqe = VQE(qubitOp, two, cobyla)

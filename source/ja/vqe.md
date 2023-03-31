@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 変分法と変分量子固有値ソルバー法を学習する
@@ -41,7 +41,7 @@ $\newcommand{\bra}[1]{\langle #1 |}$
 $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 
-+++ {"tags": []}
++++
 
 ## はじめに
 行列で表現されるある物理系に対して、その最も小さい固有値を見つけるという操作は、多くのアプリケーションで必要となる重要な技術です。例えば化学の計算では、分子を特徴づけるエルミート行列の最小固有値はそのシステムの最もエネルギーの低い状態（基底状態）のエネルギーになります。最小固有値を見つけるには「**量子位相推定**」と呼ばれる手法（この{doc}`課題 <spectrum_estimation>`を参照）を使うことができますが、この手法を使って実用的な問題を解こうとすると、そのために必要な量子回路はNISQコンピュータでは実現できないほど長くなることが知られています。そのために、短い量子回路を利用して分子の基底状態エネルギーを推定する手法として、**変分量子固有値ソルバー法**（*Variational Quantum Eigensolver*, VQE）が提案されました {cite}`vqe`。
@@ -152,8 +152,9 @@ pycharm:
 # Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, Aer, transpile
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
 from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_aer import AerSimulator
 ```
 
 ```{code-cell} ipython3
@@ -195,7 +196,7 @@ get_var_form(np.random.rand(npar)).draw('mpl')
 変分フォームのパラメータのリストを入力とし、パラメータに対応したコストを計算する目的関数を定義します。アルゴリズムを実行するバックエンドとして、**QASMシミュレータ**を使用します。
 
 ```{code-cell} ipython3
-backend = Aer.get_backend("qasm_simulator")
+backend = AerSimulator()
 NUM_SHOTS = 10000  # 測定する回数
 
 # 出力されるビット列の確率分布を計算
@@ -529,11 +530,3 @@ print(f'  VQE(GD)    = {result_vqe_gd.optimal_value}')
 COBYLAを使ってVQEで求めた答えは、厳密解(=-1.0)に近くなっていると思います。勾配計算を使ったVQEも多くの場合正しい答えに近い答えを返しますが、パラメータの初期値によってかなり悪い結果を返してしまう場合があります。
 
 Ansatzの回路構成を変えたり、観測量を変えてみるなどして色々試してみてください。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```
