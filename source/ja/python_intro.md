@@ -1,5 +1,6 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
@@ -81,7 +82,7 @@ if b == 15:
 
 else:
     # それ以外の場合、インデントされている部分が実行される
-    print('b is some other value')
+    print('b is some other number')
     print('This line is also not executed')
 
 # インデンテーションが解消された＝if文を抜けた
@@ -331,7 +332,7 @@ x = 3
 print(s + x)
 ```
 
-文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります
+文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -340,7 +341,7 @@ print(s + x)
 print(s + str(x))
 ```
 
-ただ、この方法で変数の文字列表現をたくさん作ると、コードが冗長になりやすい問題があります。
+ただ、この方法で変数の文字列表現をたくさん作ると、下のようにコードが冗長になりやすい問題があります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -1149,8 +1150,4 @@ display(fig)
 from IPython.display import Math
 
 Math(r'\frac{e^{2 \pi i j k}}{\sqrt{2}}')
-```
-
-```{code-cell} ipython3
-
 ```
