@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 予備知識：Python
@@ -1071,6 +1071,7 @@ Matplotlibのモジュール名は`matplotlib`ですが、また慣習的に`mpl
 ```{code-cell} ipython3
 :tags: [remove-output]
 
+%matplotlib inline
 import matplotlib.pyplot as plt
 ```
 
@@ -1114,3 +1115,42 @@ plt.legend()
 ```
 
 `plt.plot`や`plt.scatter`を複数実行すると、同じAxesにグラフが重なってプロットされます。実行の際に`label='some text'`という引数を足し、`plt.legend()`を呼ぶと、凡例が表示されます。また`plt.xlabel()`や`plt.ylabel()`でX, Y軸にタイトルをつけたり、`plt.title()`でプロット全体にタイトルをつけたりできます。
+
++++
+
+### Jupyter
+
+Pythonはもともとコマンドラインからスクリプト・プログラムとして実行したり、プロンプトを通じて一行ずつ動かしたりするようにできていますが、近年では（今このノートブックを表示・実行している）JupyterやVisual Studioなどの実行環境を通じてインタラクティブかつグラフィカルにプログラミングができるようになりました。
+
+中でもJupyterはIPythonというライブラリと深く関係しており、ブラウザ上で快適にPythonを動かす様々なツールを提供しています。その中から、ここではこのワークブックで登場する数式や画像を表示させるための関数だけを紹介します。
+
+```{code-cell} ipython3
+# デモのためわざと図の自動描画機能をオフにする
+%matplotlib
+from IPython.display import display
+
+# subplots()に何も引数を渡さないと、Axes一つのFigureができる
+fig, ax = plt.subplots()
+
+# スキャッタープロットを描く
+xdata = np.array([1., 3.3, 2.5])
+ydata = np.array([9.6, 7.4, 5.5])
+ax.scatter(xdata, ydata, label='points')
+ax.legend();
+```
+
+```{code-cell} ipython3
+# 自動描画されない図はdisplay()で表示できる
+display(fig)
+```
+
+```{code-cell} ipython3
+# LaTeXで書いた数式をタイプセットする
+from IPython.display import Math
+
+Math(r'\frac{e^{2 \pi i j k}}{\sqrt{2}}')
+```
+
+```{code-cell} ipython3
+
+```
