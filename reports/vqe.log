@@ -17,21 +17,25 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit.circuit import Parameter, ParameterVector
+from qiskit.primitives import BackendEstimator
+from qiskit.quantum_info import Operator, SparsePauliOp
 from qiskit.algorithms.optimizers import SPSA, COBYLA
 from qiskit_aer import AerSimulator
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Input [0;32mIn [1][0m, in [0;36m<cell line: 6>[0;34m()[0m
-[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01malgorithms[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimizers[39;00m [38;5;28;01mimport[39;00m SPSA, COBYLA
-[0;32m----> 6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
+[0;31mImportError[0m                               Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 5>[0;34m()[0m
+[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcircuit[39;00m [38;5;28;01mimport[39;00m Parameter, ParameterVector
+[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mprimitives[39;00m [38;5;28;01mimport[39;00m BackendEstimator
+[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mquantum_info[39;00m [38;5;28;01mimport[39;00m Operator, SparsePauliOp
+[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01malgorithms[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimizers[39;00m [38;5;28;01mimport[39;00m SPSA, COBYLA
 
-[0;31mModuleNotFoundError[0m: No module named 'qiskit_aer'
-ModuleNotFoundError: No module named 'qiskit_aer'
+[0;31mImportError[0m: cannot import name 'BackendEstimator' from 'qiskit.primitives' (/usr/local/lib/python3.8/dist-packages/qiskit/primitives/__init__.py)
+ImportError: cannot import name 'BackendEstimator' from 'qiskit.primitives' (/usr/local/lib/python3.8/dist-packages/qiskit/primitives/__init__.py)
 

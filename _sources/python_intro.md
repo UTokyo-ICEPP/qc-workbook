@@ -1,5 +1,6 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
@@ -81,7 +82,7 @@ if b == 15:
 
 else:
     # それ以外の場合、インデントされている部分が実行される
-    print('b is some other value')
+    print('b is some other number')
     print('This line is also not executed')
 
 # インデンテーションが解消された＝if文を抜けた
@@ -331,7 +332,7 @@ x = 3
 print(s + x)
 ```
 
-文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります
+文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -340,7 +341,7 @@ print(s + x)
 print(s + str(x))
 ```
 
-ただ、この方法で変数の文字列表現をたくさん作ると、コードが冗長になりやすい問題があります。
+ただ、この方法で変数の文字列表現をたくさん作ると、下のようにコードが冗長になりやすい問題があります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -895,6 +896,19 @@ for key, value in d.items():
 d.get('that', 39) # 39 (default value)
 ```
 
+リスト、タプル、辞書などを生成するときに時々使う構文を紹介します。
+
+```{code-cell} ipython3
+# list comprehension: 一行の中でforループを回す
+list(f'a{i}' for i in range(3)) # ['a0', 'a1', 'a2']
+
+# dictは（キー, 値）のタプルの配列からも生成できる
+dict((f'v{i}', i) for i in range(3)) # {'v0': 0, 'v1': 1, 'v2': 2}
+
+# dictのタプル配列からの生成とzipの組み合わせ
+dict(zip(['a', 'b', 'c'], [3, 4, 5])) # {'a': 3, 'b': 4, 'c': 5}
+```
+
 ### NumPy
 
 Pythonで数値計算をする際に今や欠かせない存在になっているのが、NumPy（「なむぱい」もしくは「なむぴー」）ライブラリです。NumPyは基本的には数値の（多次元）配列に対して効率的に数値計算をすることを目的に書かれていますが、サポートされている計算オペレーションの多様さも支持を広げる要因になっています。
@@ -1149,8 +1163,4 @@ display(fig)
 from IPython.display import Math
 
 Math(r'\frac{e^{2 \pi i j k}}{\sqrt{2}}')
-```
-
-```{code-cell} ipython3
-
 ```
