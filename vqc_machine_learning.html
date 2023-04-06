@@ -737,20 +737,21 @@ w'=w-\epsilon\Delta_w L(\mathbf{w})
 <p>この順に量子回路学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
 
-<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">ParameterVector</span>
 <span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">ZFeatureMap</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
-<span class="kn">from</span> <span class="nn">qiskit.utils</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
+<span class="kn">from</span> <span class="nn">qiskit.primitives</span> <span class="kn">import</span> <span class="n">Estimator</span><span class="p">,</span> <span class="n">Sampler</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">SparsePauliOp</span>
 <span class="kn">from</span> <span class="nn">qiskit_machine_learning.algorithms.classifiers</span> <span class="kn">import</span> <span class="n">VQC</span>
 <span class="c1">#from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name</span>
 <span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
-<span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_runtime</span> <span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Sampler</span> <span class="k">as</span> <span class="n">RuntimeSampler</span>
 </pre></div>
 </div>
 </div>
@@ -761,29 +762,34 @@ w'=w-\epsilon\Delta_w L(\mathbf{w})
 <p>ある入力<span class="math notranslate nohighlight">\(\{x_i\}\)</span>と、既知の関数<span class="math notranslate nohighlight">\(f\)</span>による出力<span class="math notranslate nohighlight">\(y_i=f(x_i)\)</span>が学習データとして与えられた時に、そのデータから関数<span class="math notranslate nohighlight">\(f\)</span>を近似的に求める問題を考えてみます。例として、<span class="math notranslate nohighlight">\(f(x)=x^3\)</span>としてみます。</p>
 <div class="section" id="a-id-func-data-a">
 <h3><a class="toc-backref" href="#id15">学習データの準備<a id='func_data'></a></a><a class="headerlink" href="#a-id-func-data-a" title="Permalink to this headline">¶</a></h3>
-<p>まず、学習データを準備します。<span class="math notranslate nohighlight">\(x_{\text{min}}\)</span>と<span class="math notranslate nohighlight">\(x_{\text{max}}\)</span>の範囲でデータを<code class="docutils literal notranslate"><span class="pre">num_x_train</span></code>個ランダムに取った後、正規分布に従うノイズを追加しておきます。<code class="docutils literal notranslate"><span class="pre">nqubit</span></code>が量子ビット数、<code class="docutils literal notranslate"><span class="pre">c_depth</span></code>が変分フォーム回路の深さ（後述）を表します。</p>
+<p>まず、学習データを準備します。<span class="math notranslate nohighlight">\(x_{\text{min}}\)</span>と<span class="math notranslate nohighlight">\(x_{\text{max}}\)</span>の範囲でデータを<code class="docutils literal notranslate"><span class="pre">num_x_train</span></code>個ランダムに取った後、正規分布に従うノイズを追加しておきます。<code class="docutils literal notranslate"><span class="pre">nqubit</span></code>が量子ビット数、<code class="docutils literal notranslate"><span class="pre">nlayer</span></code>が変分フォームのレイヤー数（後述）を表します。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
 
-<span class="c1"># Qubit数、回路の深さ、訓練サンプル数の定義など</span>
+<span class="c1"># Qubit数、変分フォームのレイヤー数、訓練サンプル数の定義など</span>
 <span class="n">nqubit</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">c_depth</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="p">;</span> <span class="n">x_max</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">num_x_train</span> <span class="o">=</span> <span class="mi">30</span>
-
-<span class="c1"># パラメータ数の設定</span>
-<span class="n">num_vars</span> <span class="o">=</span> <span class="n">nqubit</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">c_depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_vars</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">nlayer</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">num_x_train</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">num_x_validation</span> <span class="o">=</span> <span class="mi">20</span>
 
 <span class="c1"># 関数の定義</span>
-<span class="n">func_to_learn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
-<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_x_train</span><span class="p">)</span>
+<span class="n">func_to_learn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span>
+
+<span class="c1"># 学習用データセットの生成</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_x_train</span><span class="p">)</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">func_to_learn</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
 
 <span class="c1"># 関数に正規分布ノイズを付加</span>
 <span class="n">mag_noise</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="n">y_train_noise</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">+</span> <span class="n">mag_noise</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_x_train</span><span class="p">)</span>
+<span class="n">y_train_noise</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">mag_noise</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_x_train</span><span class="p">)</span>
+
+<span class="c1"># 検証用データセットの生成</span>
+<span class="n">x_validation</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_x_validation</span><span class="p">)</span>
+<span class="n">y_validation</span> <span class="o">=</span> <span class="n">func_to_learn</span><span class="p">(</span><span class="n">x_validation</span><span class="p">)</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">mag_noise</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_x_validation</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -791,7 +797,7 @@ w'=w-\epsilon\Delta_w L(\mathbf{w})
 </div>
 <div class="section" id="a-id-func-state-preparation-a">
 <h3><a class="toc-backref" href="#id16">量子状態の生成<a id='func_state_preparation'></a></a><a class="headerlink" href="#a-id-func-state-preparation-a" title="Permalink to this headline">¶</a></h3>
-<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献<span id="id5">[]</span>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{-i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{-i\theta Z_j/2}\)</span>を使って</p>
+<p>次に、入力<span class="math notranslate nohighlight">\(x_i\)</span>を初期状態<span class="math notranslate nohighlight">\(\ket{0}^{\otimes n}\)</span>に埋め込むための回路<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>（特徴量マップ）を作成します。まず参考文献<span id="id5">[<a class="reference internal" href="bibliography.html#id24" title="K. Mitarai, M. Negoro, M. Kitagawa, and K. Fujii. Quantum circuit learning. Phys. Rev. A, 98:032309, Sep 2018. URL: https://link.aps.org/doi/10.1103/PhysRevA.98.032309, doi:10.1103/PhysRevA.98.032309.">MNKF18</a>]</span>に従い、回転ゲート<span class="math notranslate nohighlight">\(R_j^Y(\theta)=e^{-i\theta Y_j/2}\)</span>と<span class="math notranslate nohighlight">\(R_j^Z(\theta)=e^{-i\theta Z_j/2}\)</span>を使って</p>
 <div class="math notranslate nohighlight">
 \[
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
@@ -799,21 +805,16 @@ U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 <p>と定義します。この<span class="math notranslate nohighlight">\(U_{\text{in}}(x_i)\)</span>をゼロの標準状態に適用することで、入力<span class="math notranslate nohighlight">\(x_i\)</span>は<span class="math notranslate nohighlight">\(\ket{\psi_{\text{in}}(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}\)</span>という量子状態に変換されることになります。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">U_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">):</span>
-    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">)</span>
-    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u_in</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;U_in&#39;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 
-    <span class="n">angle_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">angle_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+    <span class="c1"># parameter.arcsin()はparameterに値vが代入された時にarcsin(v)になるパラメータ表現</span>
+    <span class="n">u_in</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+    <span class="c1"># arccosも同様</span>
+    <span class="n">u_in</span><span class="o">.</span><span class="n">rz</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">arccos</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">angle_y</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">angle_z</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-
-    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_in&quot;</span>
-    <span class="k">return</span> <span class="n">U</span>
-
-<span class="n">U_in</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="n">u_in</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -849,27 +850,43 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <p>という形式の変分量子回路を用いることになります。つまり、変分量子回路は全体で<span class="math notranslate nohighlight">\(3n(d+1)\)</span>個のパラメータを含んでいます。<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>の初期値ですが、<span class="math notranslate nohighlight">\([0, 2\pi]\)</span>の範囲でランダムに設定するものとします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">)</span>
-    <span class="c1">#cr = ClassicalRegister(nqubit)</span>
-    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u_out</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;U_out&#39;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c_depth</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">U</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">nqubit</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-            <span class="n">U</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">nqubit</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">d</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U_out&quot;</span>
-    <span class="k">return</span> <span class="n">U</span>
+<span class="c1"># 長さ0のパラメータ配列</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">ParameterVector</span><span class="p">(</span><span class="s1">&#39;θ&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-<span class="n">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="c1"># thetaに一つ要素を追加して最後のパラメータを返す関数</span>
+<span class="k">def</span> <span class="nf">new_theta</span><span class="p">():</span>
+    <span class="n">theta</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">theta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+    <span class="n">u_out</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+    <span class="n">u_out</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+    <span class="n">u_out</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">il</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlayer</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">u_out</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">iq</span><span class="p">,</span> <span class="p">(</span><span class="n">iq</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">nqubit</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">u_out</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">u_out</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqubit</span><span class="p">):</span>
+        <span class="n">u_out</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">new_theta</span><span class="p">(),</span> <span class="n">iq</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="si">}</span><span class="s1"> parameters&#39;</span><span class="p">)</span>
+
+<span class="n">theta_vals</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+<span class="n">u_out</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_vals</span><span class="p">)))</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -881,75 +898,111 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <p>モデルの出力（予測値）として、状態<span class="math notranslate nohighlight">\(\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}\)</span>の元で最初の量子ビットを<span class="math notranslate nohighlight">\(Z\)</span>基底で測定した時の期待値を使うことにします。つまり<span class="math notranslate nohighlight">\(y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}\)</span>です。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
 
-    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
-    <span class="n">cr</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
-    <span class="n">circ</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">cr</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span><span class="n">u_out</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">u_in</span> <span class="o">=</span> <span class="n">U_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">)</span><span class="o">.</span><span class="n">to_instruction</span><span class="p">()</span>
-    <span class="n">u_out</span> <span class="o">=</span> <span class="n">U_out</span><span class="p">(</span><span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">to_instruction</span><span class="p">()</span>
+<span class="n">bind_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_vals</span><span class="p">))</span>
+<span class="n">bind_params</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="n">circ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="n">qr</span><span class="p">)</span>
-    <span class="n">circ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_out</span><span class="p">,</span> <span class="n">qr</span><span class="p">)</span>
-    <span class="n">circ</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">circ</span>
-
-<span class="n">pred_circ</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">bind_params</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
-<span class="n">NUM_SHOTS</span> <span class="o">=</span> <span class="mi">8192</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">Estimator</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="n">cost_total</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)):</span>
-        <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-        <span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
-        <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
-        <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train_noise</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">exp_2Z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">cost_total</span> <span class="o">+=</span> <span class="n">cost</span>
+<span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="n">param_vals</span><span class="p">):</span>
+    <span class="n">circuits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">x_val</span> <span class="ow">in</span> <span class="n">x_train</span><span class="p">:</span>
+        <span class="c1"># xだけ数値が代入された変分回路</span>
+        <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="n">x</span><span class="p">:</span> <span class="n">x_val</span><span class="p">}))</span>
 
-    <span class="k">return</span> <span class="n">cost_total</span>
+    <span class="c1"># 観測量はIIZ（右端が第0量子ビット）</span>
+    <span class="n">observable</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">(</span><span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">nqubit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+    <span class="c1"># shotsは関数の外で定義</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="p">[</span><span class="n">observable</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">),</span> <span class="p">[</span><span class="n">param_vals</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">),</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+
+    <span class="n">expvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_train_noise</span> <span class="o">-</span> <span class="n">expvals</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">callback_function</span><span class="p">(</span><span class="n">param_vals</span><span class="p">):</span>
+    <span class="c1"># lossesは関数の外で定義</span>
+    <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective_function</span><span class="p">(</span><span class="n">param_vals</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;COBYLA iteration </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span><span class="si">}</span><span class="s1">: cost=</span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>ここで0と1の測定結果（固有値+1と-1）に2を掛けているのは、<span class="math notranslate nohighlight">\(Z\)</span>基底での測定結果の範囲を広げるためです。コスト関数<span class="math notranslate nohighlight">\(L\)</span>として、モデルの予測値と真の値<span class="math notranslate nohighlight">\(y_i\)</span>の平均2乗誤差の総和を使っています。</p>
+<p>コスト関数<span class="math notranslate nohighlight">\(L\)</span>として、モデルの予測値<span class="math notranslate nohighlight">\(y(x_i, \theta)\)</span>と真の値<span class="math notranslate nohighlight">\(y_i\)</span>の平均2乗誤差の総和を使っています。</p>
 <p>では、最後にこの回路を実行して、結果を見てみましょう。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># COBYLAの最大ステップ数</span>
+<span class="n">maxiter</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="c1"># COBYLAの収束条件（小さいほどよい近似を目指す）</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="c1"># バックエンドでのショット数</span>
+<span class="n">shots</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback_function</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">ret</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">num_vars</span><span class="o">=</span><span class="n">num_vars</span><span class="p">,</span> <span class="n">objective_function</span><span class="o">=</span><span class="n">objective_function</span><span class="p">,</span> <span class="n">initial_point</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">initial_params</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+<span class="n">losses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">min_result</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">objective_function</span><span class="p">,</span> <span class="n">initial_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data/qc_machine_learning_xcube.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">min_result</span><span class="p">,</span> <span class="n">losses</span><span class="p">),</span> <span class="n">out</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
 </div>
+<p>コスト値の推移をプロットします。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 最適化したパラメータをプリントアウト</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ret[0] =&#39;</span><span class="p">,</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>最適パラメータ値でのモデルの出力値をx_minからx_maxまで均一にとった100点で確認します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
-<span class="n">x_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">:</span>
-    <span class="n">qc</span> <span class="o">=</span> <span class="n">pred_circ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nqubit</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">NUM_SHOTS</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
-    <span class="n">exp_2Z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">NUM_SHOTS</span>
-    <span class="n">y_pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_2Z</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">x_val</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">:</span>
+    <span class="n">circuits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="n">x</span><span class="p">:</span> <span class="n">x_val</span><span class="p">}))</span>
+
+<span class="n">observable</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">(</span><span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">nqubit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+<span class="n">job</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="p">[</span><span class="n">observable</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">),</span> <span class="p">[</span><span class="n">min_result</span><span class="o">.</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">circuits</span><span class="p">),</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
 <span class="c1"># 結果を図示する</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train_noise</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Data (w/ Noise)&#39;</span><span class="p">)</span>
@@ -979,50 +1032,46 @@ U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{r
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ファイルから変数を読み出す</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/SUSY_1K.csv&quot;</span><span class="p">,</span>
-                 <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span><span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span><span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span><span class="s1">&#39;M_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;MT2&#39;</span><span class="p">,</span><span class="s1">&#39;S_R&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">,</span><span class="s1">&#39;dPhi_r_b&#39;</span><span class="p">,</span><span class="s1">&#39;cos_theta_r1&#39;</span><span class="p">))</span>
+                 <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;isSignal&#39;</span><span class="p">,</span> <span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span> <span class="s1">&#39;lep1_phi&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;lep2_phi&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_phi&#39;</span><span class="p">,</span> <span class="s1">&#39;MET_rel&#39;</span><span class="p">,</span> <span class="s1">&#39;axial_MET&#39;</span><span class="p">,</span> <span class="s1">&#39;M_R&#39;</span><span class="p">,</span> <span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;MT2&#39;</span><span class="p">,</span> <span class="s1">&#39;S_R&#39;</span><span class="p">,</span> <span class="s1">&#39;M_Delta_R&#39;</span><span class="p">,</span> <span class="s1">&#39;dPhi_r_b&#39;</span><span class="p">,</span> <span class="s1">&#39;cos_theta_r1&#39;</span><span class="p">))</span>
 
 <span class="c1"># 学習に使う変数の数</span>
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># dimension of each data point</span>
 
 <span class="c1"># 3, 5, 7変数の場合に使う変数のセット</span>
 <span class="k">if</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">]</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">]</span>
 <span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span> <span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span> <span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
 <span class="k">elif</span> <span class="n">feature_dim</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
-    <span class="n">SelectedFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span><span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span><span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span><span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span><span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lep1_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep1_eta&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_pt&#39;</span><span class="p">,</span> <span class="s1">&#39;lep2_eta&#39;</span><span class="p">,</span> <span class="s1">&#39;miss_ene&#39;</span><span class="p">,</span> <span class="s1">&#39;M_TR_2&#39;</span><span class="p">,</span> <span class="s1">&#39;M_Delta_R&#39;</span><span class="p">]</span>
 
-<span class="c1"># 学習に使う事象数: trainingは訓練用サンプル、testingはテスト用サンプル</span>
+<span class="c1"># 学習に使う事象数: trainは訓練用サンプル、testはテスト用サンプル</span>
 <span class="n">train_size</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">test_size</span> <span class="o">=</span> <span class="mi">20</span>
 
-<span class="c1"># オプティマイザーをCallする回数の上限</span>
-<span class="n">niter</span> <span class="o">=</span> <span class="mi">300</span>
-<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">10598</span>
-
-<span class="n">df_sig</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
-<span class="n">df_bkg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">SelectedFeatures</span><span class="p">]</span>
+<span class="n">df_sig</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">]</span>
+<span class="n">df_bkg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isSignal</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">]</span>
 
 <span class="c1"># サンプルの生成</span>
 <span class="n">df_sig_train</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">train_size</span><span class="p">]</span>
 <span class="n">df_bkg_train</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="n">train_size</span><span class="p">]</span>
-<span class="n">df_sig_test</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span><span class="o">+</span><span class="n">test_size</span><span class="p">]</span>
-<span class="n">df_bkg_test</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span><span class="o">+</span><span class="n">test_size</span><span class="p">]</span>
-<span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_train</span><span class="p">,</span><span class="n">df_bkg_train</span><span class="p">])</span>
-<span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_test</span><span class="p">,</span><span class="n">df_bkg_test</span><span class="p">])</span>
-<span class="c1">#print(&#39;train_data =&#39;,training_data)</span>
-<span class="c1">#print(&#39;test_data =&#39;,test_data)</span>
-<span class="n">train_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">train_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">train_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)])</span>
-<span class="n">test_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">test_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">test_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)])</span>
+<span class="n">df_sig_test</span> <span class="o">=</span> <span class="n">df_sig</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span> <span class="o">+</span> <span class="n">test_size</span><span class="p">]</span>
+<span class="n">df_bkg_test</span> <span class="o">=</span> <span class="n">df_bkg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_size</span><span class="p">:</span><span class="n">train_size</span> <span class="o">+</span> <span class="n">test_size</span><span class="p">]</span>
+<span class="c1"># 最初のtrain_size事象がSUSY粒子を含む信号事象、残りのtrain_size事象がSUSY粒子を含まない背景事象</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_train</span><span class="p">,</span> <span class="n">df_bkg_train</span><span class="p">])</span>
+<span class="c1"># 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">df_sig_test</span><span class="p">,</span> <span class="n">df_bkg_test</span><span class="p">])</span>
 
-<span class="n">train_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">train_size</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">train_size</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
-    <span class="n">train_label_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">train_label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">test_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">test_size</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_size</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
-    <span class="n">test_label_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">test_label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># one-hotベクトル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）</span>
+<span class="n">train_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">train_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">train_label_one_hot</span><span class="p">[:</span><span class="n">train_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">train_label_one_hot</span><span class="p">[</span><span class="n">train_size</span><span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">test_label_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">test_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">test_label_one_hot</span><span class="p">[:</span><span class="n">test_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">test_label_one_hot</span><span class="p">[</span><span class="n">test_size</span><span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="c1">#datapoints, class_to_label = split_dataset_to_data_and_labels(test_input)</span>
 <span class="c1">#datapoints_tr, class_to_label_tr = split_dataset_to_data_and_labels(training_input)</span>
@@ -1063,6 +1112,7 @@ U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#feature_map = ZFeatureMap(feature_dimension=feature_dim, reps=1)</span>
 <span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZZFeatureMap</span><span class="p">(</span><span class="n">feature_dimension</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entanglement</span><span class="o">=</span><span class="s1">&#39;circular&#39;</span><span class="p">)</span>
+<span class="n">feature_map</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1078,7 +1128,7 @@ U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 <p>を使います。上の例では<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を自分で組み立てましたが、Qiskitにはこの<span class="math notranslate nohighlight">\(U(\boldsymbol{\theta})\)</span>を実装するAPIがすでに準備されているので、ここではそれを使います。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ansatz</span> <span class="o">=</span> <span class="n">TwoLocal</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">rotation_blocks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ry&#39;</span><span class="p">,</span><span class="s1">&#39;rz&#39;</span><span class="p">],</span> <span class="n">entanglement_blocks</span><span class="o">=</span><span class="s1">&#39;cz&#39;</span><span class="p">,</span> <span class="n">entanglement</span><span class="o">=</span><span class="s1">&#39;circular&#39;</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ansatz</span> <span class="o">=</span> <span class="n">TwoLocal</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">rotation_blocks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ry&#39;</span><span class="p">,</span> <span class="s1">&#39;rz&#39;</span><span class="p">],</span> <span class="n">entanglement_blocks</span><span class="o">=</span><span class="s1">&#39;cz&#39;</span><span class="p">,</span> <span class="n">entanglement</span><span class="o">=</span><span class="s1">&#39;circular&#39;</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="c1">#ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=[&#39;ry&#39;], entanglement_blocks=&#39;cz&#39;, entanglement=&#39;circular&#39;, reps=3)</span>
 <span class="n">ansatz</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
@@ -1088,30 +1138,30 @@ U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 </div>
 <div class="section" id="a-id-susy-measurement-a">
 <h3><a class="toc-backref" href="#id26">測定とモデル出力<a id='susy_measurement'></a></a><a class="headerlink" href="#a-id-susy-measurement-a" title="Permalink to this headline">¶</a></h3>
-<p>測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのAPIを用いるので、プログラムはかなり簡略化されています。</p>
-<div class="cell tag_raises-exception tag_remove-output docutils container">
+<p>測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのVQCというクラスを用いるので、プログラムはかなり簡略化されています。</p>
+<p>VQCクラスでは、特徴量マップと変分フォームを結合させ、入力特徴量とパラメータ値を代入し、測定を行い、目的関数を計算し、パラメータのアップデートを行う、という一連の操作を内部で行なってしまいます。測定を行うのに使用するのはSamplerというクラスで、これはEstimatorと同様の働きをしますが、後者が観測量の期待値を計算するのに対し、前者はすべての量子ビットをZ基底で測定した結果のビット列の確率分布を出力します。VQCではこの分布を利用して分類を行います。今回は2クラス分類なので、入力の各事象に対して、q0の測定値が0である確率が、それが信号事象である確率（モデルの予測）に対応します。</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># シミュレータで実行する場合</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 上のEstimatorと同じく、バックエンドを使わずシミュレーションを簡略化したSampler</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">Sampler</span><span class="p">()</span>
 
-<span class="c1"># 量子コンピュータで実行する場合</span>
+<span class="c1"># 実機で実行する場合</span>
 <span class="c1"># instance = &#39;ibm-q/open/main&#39;</span>
 
 <span class="c1"># try:</span>
-<span class="c1">#     provider = IBMProvider(instance=instance)</span>
-<span class="c1"># except IBMQAccountCredentialsNotFound:</span>
-<span class="c1">#     provider = IBMProvider(token=&#39;__paste_your_token_here__&#39;, instance=instance)</span>
-<span class="c1">#</span>
+<span class="c1">#     service = QiskitRuntimeService(channel=&#39;ibm_quantum&#39;, instance=instance)</span>
+<span class="c1"># except IBMAccountCredentialsNotFound:</span>
+<span class="c1">#     service = QiskitRuntimeService(channel=&#39;ibm_quantum&#39;, token=&#39;__paste_your_token_here__&#39;,</span>
+<span class="c1">#                                    instance=instance)</span>
+
 <span class="c1"># backend_name = &#39;ibm_washington&#39;</span>
-<span class="c1"># backend = provider.get_backend(backend_name)</span>
+<span class="c1"># session = Session(service=service, backend=backend_name)</span>
 
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="n">niter</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># sampler = RuntimeSampler(session=session)</span>
 
-<span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
-                                   <span class="n">shots</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
-                                   <span class="n">seed_simulator</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
-                                   <span class="n">seed_transpiler</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
-                                   <span class="n">skip_qobj_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">maxiter</span> <span class="o">=</span> <span class="mi">300</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">objective_func_vals</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="c1"># Draw the value of objective function every time when the fit() method is called</span>
@@ -1131,8 +1181,8 @@ U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
           <span class="n">ansatz</span><span class="o">=</span><span class="n">ansatz</span><span class="p">,</span>
           <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;cross_entropy&quot;</span><span class="p">,</span>
           <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
-          <span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">,</span>
-          <span class="n">callback</span><span class="o">=</span><span class="n">callback_graph</span><span class="p">)</span>
+          <span class="n">callback</span><span class="o">=</span><span class="n">callback_graph</span><span class="p">,</span>
+          <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1142,6 +1192,9 @@ U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vqc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">norm_train_data</span><span class="p">,</span> <span class="n">train_label_one_hot</span><span class="p">)</span>
+
+<span class="c1"># 実機で実行している（RuntimeSamplerを使っている）場合</span>
+<span class="c1"># session.close()</span>
 </pre></div>
 </div>
 </div>

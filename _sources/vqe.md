@@ -163,15 +163,15 @@ pycharm:
 ---
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit import QuantumCircuit, transpile
 from qiskit.circuit import Parameter, ParameterVector
 from qiskit.primitives import BackendEstimator
-from qiskit.quantum_info import Operator, SparsePauliOp
+from qiskit.quantum_info import Statevector, Operator, SparsePauliOp
 from qiskit.algorithms.optimizers import SPSA, COBYLA
 from qiskit_aer import AerSimulator
 ```
 
-最初に、ターゲットとなる量子状態ベクトルをランダムに生成する関数と、状態ベクトルから$X, Y, Z$の期待値を計算する関数を定義します。
+最初に、ターゲットとなる量子状態ベクトルをランダムに生成する関数と、状態ベクトルから$X, Y, Z$の期待値を計算する関数を定義します。状態ベクトルはQiskitのStatevectorというクラスで表現し、パウリ演算子にはSparsePauliOpを使用します。
 
 ```{code-cell} ipython3
 ---
@@ -187,31 +187,17 @@ rng = np.random.default_rng(999999)
 # 与えられた量子ビット数（nq）に応じたランダムな状態ベクトルを作る関数
 def random_statevector(nq):
     # 2^nqの複素数をランダムに生成
-    target_statevector = rng.random(2 ** nq) + 1.j * rng.random(2 ** nq)
+    data = rng.random(2 ** nq) + 1.j * rng.random(2 ** nq)
     # 正規化
-    target_statevector /= np.sqrt(np.sum(np.square(np.abs(target_statevector))))
+    data /= np.sqrt(np.sum(np.square(np.abs(data))))
 
-    return target_statevector
-
-# 与えられた状態ベクトルにおけるパウリ演算子（X, Y, Z）の期待値を計算する関数
-# opは"X"や"XZZ"など
-def pauli_expval(statevector, op):
-    full_op = np.array(1., dtype=complex)
-    for qubit_op in op:
-        if qubit_op.upper() == 'I':
-            full_op = np.kron(full_op, np.eye(2, dtype=complex))
-        elif qubit_op.upper() == 'X':
-            full_op = np.kron(full_op, np.array([[0., 1.], [1., 0.]], dtype=complex))
-        elif qubit_op.upper() == 'Y':
-            full_op = np.kron(full_op, np.array([[0., -1.j], [1.j, 0.]]))
-        elif qubit_op.upper() == 'Z':
-            full_op = np.kron(full_op, np.array([[1., 0.], [0., -1.]], dtype=complex))
-
-    return (statevector.conjugate() @ full_op @ statevector).real
+    return Statevector(data)
 
 # 例：U(π/3, π/6, 0)|0>
-statevector = np.array([np.cos(np.pi / 6.), np.exp(1.j * np.pi / 6.) * np.sin(np.pi / 6.)])
-print(pauli_expval(statevector, 'X'), pauli_expval(statevector, 'Y'), pauli_expval(statevector, 'Z'))
+statevector = Statevector(np.array([np.cos(np.pi / 6.), np.exp(1.j * np.pi / 6.) * np.sin(np.pi / 6.)]))
+for pauli in ['X', 'Y', 'Z']:
+    op = SparsePauliOp(pauli)
+    print(f'<{pauli}> = {statevector.expectation_value(op).real}')
 ```
 
 次に、変分フォーム回路を定義します。このとき、$U$ゲートの回転角として、具体的な数値を設定せず、QiskitのParameterというオブジェクトを利用します。Parameterはあとから数値を代入できる名前のついた箱として使えます。
@@ -241,20 +227,22 @@ ansatz_1q.bind_parameters({theta: np.pi / 3., phi: np.pi / 6.}).draw('mpl')
 変分フォーム回路が作る状態における$X, Y, Z$の期待値を測定するための回路を定義します。
 
 ```{code-cell} ipython3
+circuits = dict()
+
 # <X>を測るにはHゲートで基底を変換する
-x_circuit = ansatz_1q.copy()
-x_circuit.h(0)
-x_circuit.measure_all()
+circuits['X'] = ansatz_1q.copy()
+circuits['X'].h(0)
+circuits['X'].measure_all()
 
 # <Y>を測るにはSdg, Hゲートで基底を変換する
-y_circuit = ansatz_1q.copy()
-y_circuit.sdg(0)
-y_circuit.h(0)
-y_circuit.measure_all()
+circuits['Y'] = ansatz_1q.copy()
+circuits['Y'].sdg(0)
+circuits['Y'].h(0)
+circuits['Y'].measure_all()
 
 # <Z>はそのままの回路で測れる
-z_circuit = ansatz_1q.copy()
-z_circuit.measure_all()
+circuits['Z'] = ansatz_1q.copy()
+circuits['Z'].measure_all()
 ```
 
 それぞれの回路を通常通りバックエンドの`run()`メソッドで実行し、結果から期待値を計算する関数を定義します。
@@ -275,7 +263,8 @@ def circuit_expval(circuit, param_vals):
 # 例：U(π/3, π/6, 0)|0>
 shots = 10000
 param_vals = [np.pi / 3., np.pi / 6.]
-print(circuit_expval(x_circuit, param_vals), circuit_expval(y_circuit, param_vals), circuit_expval(z_circuit, param_vals))
+for pauli in ['X', 'Y', 'Z']:
+    print(f'<{pauli}> = {circuit_expval(circuits[pauli], param_vals)}')
 ```
 
 最小化する目的関数を定義します。
@@ -283,10 +272,11 @@ print(circuit_expval(x_circuit, param_vals), circuit_expval(y_circuit, param_val
 ```{code-cell} ipython3
 def objective_function(param_vals):
     loss = 0.
-    for op, circuit in [('X', x_circuit), ('Y', y_circuit), ('Z', z_circuit)]:
+    for pauli in ['X', 'Y', 'Z']:
         # target_state_1qは関数の外で定義する
-        target = pauli_expval(target_state_1q, op)
-        current = circuit_expval(circuit, param_vals)
+        op = SparsePauliOp(pauli)
+        target = target_state_1q.expectation_value(op).real
+        current = circuit_expval(circuits[pauli], param_vals)
         loss += (target - current) ** 2
 
     return loss
@@ -307,10 +297,10 @@ def fidelity(ansatz, param_vals, target_state):
     param_binding = dict(zip(parameters, param_vals))
     opt_ansatz = ansatz.bind_parameters(param_binding)
 
-    # QuantumCircuitからOperatorオブジェクトを作ると、AerSimulatorを利用しなくても状態ベクトルを得られる
-    circuit_state = Operator(opt_ansatz).data[:, 0]
+    # Statevectorは回路からも生成可能（回路を|0>に対して適用した終状態になる）
+    circuit_state = Statevector(opt_ansatz)
 
-    return np.square(np.abs(target_state.conjugate() @ circuit_state))
+    return np.square(np.abs(target_state.inner(circuit_state)))
 ```
 
 最後にCOBYLAオプティマイザーのインスタンスを作成し、アルゴリズムを実行します。
@@ -403,14 +393,15 @@ result.values
 Estimatorを使った目的関数を定義します。
 
 ```{code-cell} ipython3
+observables_1q = [SparsePauliOp('X'), SparsePauliOp('Y'), SparsePauliOp('Z')]
+
 def objective_function_estimator(param_vals):
-    target = list(pauli_expval(target_state_1q, op) for op in ['X', 'Y', 'Z'])
+    target = np.array(list(target_state_1q.expectation_value(op).real for op in observables_1q))
 
-    observables = [SparsePauliOp('X'), SparsePauliOp('Y'), SparsePauliOp('Z')]
-    job = estimator.run([ansatz_1q] * 3, observables, [param_vals] * 3, shots=shots)
-    current = job.result().values
+    job = estimator.run([ansatz_1q] * len(observables_1q), observables_1q, [param_vals] * len(observables_1q), shots=shots)
+    current = np.array(job.result().values)
 
-    return np.sum(np.square(np.array(target) - np.array(current)))
+    return np.sum(np.square(target - current))
 
 def callback_function_estimator(param_vals):
     # lossesは関数の外で定義する
@@ -492,18 +483,18 @@ ansatz_2q.u(params[2], params[3], 0., 1)
 ```
 
 ```{code-cell} ipython3
-ops_1q = ['I', 'X', 'Y', 'Z']
-ops = list(f'{op1}{op2}' for op1 in ops_1q for op2 in ops_1q if (op1, op2) != ('I', 'I'))
+paulis_1q = ['I', 'X', 'Y', 'Z']
+paulis_2q = list(f'{op1}{op2}' for op1 in paulis_1q for op2 in paulis_1q if (op1, op2) != ('I', 'I'))
+observables_2q = list(SparsePauliOp(pauli) for pauli in paulis_2q)
 
 def objective_function_2q(param_vals):
     # target_state_2qは関数の外で定義
-    target = list(pauli_expval(target_state_2q, op) for op in ops)
+    target = np.array(list(target_state_2q.expectation_value(op).real for op in observables_2q))
 
-    observables = list(SparsePauliOp(op) for op in ops)
-    job = estimator.run([ansatz_2q] * len(ops), observables, [param_vals] * len(ops), shots=shots)
-    current = job.result().values
+    job = estimator.run([ansatz_2q] * len(observables_2q), observables_2q, [param_vals] * len(observables_2q), shots=shots)
+    current = np.array(job.result().values)
 
-    return np.sum(np.square(np.array(target) - np.array(current)))
+    return np.sum(np.square(target - current))
 
 def callback_function_2q(param_vals):
     # lossesは関数の外で定義する
@@ -702,20 +693,23 @@ from qiskit.algorithms.gradients import ParamShiftEstimatorGradient
 
 num_qubits = 3   # 量子ビット数
 num_layers = 2  # レイヤー数
-num_params = num_qubits * 2 * num_layers   # パラメータ数
 
 ansatz = QuantumCircuit(num_qubits)
 
-param_list = ParameterVector('param_list', num_params)
-iparam = 0
+# 長さ0のパラメータ配列
+theta = ParameterVector('θ')
+
+# 配列に要素を一つ足して、新しく足されたパラメータを返す
+def new_theta():
+    theta.resize(len(theta) + 1)
+    return theta[-1]
+
 for _ in range(num_layers):
     for iq in range(num_qubits):
-        ansatz.ry(param_list[iparam], iq)
-        iparam += 1
+        ansatz.ry(new_theta(), iq)
 
     for iq in range(num_qubits):
-        ansatz.rz(param_list[iparam], iq)
-        iparam += 1
+        ansatz.rz(new_theta(), iq)
 
     #for iq in range(num_qubits - 1):
     #    ansatz.cx(iq, iq + 1)
@@ -728,7 +722,7 @@ ansatz.draw('mpl')
 obs = SparsePauliOp('ZXY')
 
 # パラメータの初期値
-init = rng.uniform(0., 2. * np.pi, size=num_params)
+init = rng.uniform(0., 2. * np.pi, size=len(theta))
 
 # Estimatorを使って観測量の勾配を計算するオブジェクト
 grad = ParamShiftEstimatorGradient(estimator)
