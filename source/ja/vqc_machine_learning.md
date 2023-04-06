@@ -143,20 +143,21 @@ pycharm:
 
     '
 ---
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import clear_output
+from sklearn.preprocessing import MinMaxScaler
 
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit import QuantumCircuit
+from qiskit.circuit import Parameter, ParameterVector
 from qiskit.circuit.library import TwoLocal, ZFeatureMap, ZZFeatureMap
-from qiskit.utils import QuantumInstance
+from qiskit.primitives import Estimator, Sampler
+from qiskit.quantum_info import SparsePauliOp
 from qiskit_machine_learning.algorithms.classifiers import VQC
 #from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
 from qiskit.algorithms.optimizers import SPSA, COBYLA
-from qiskit_aer import AerSimulator
-from IPython.display import clear_output
-from sklearn.preprocessing import MinMaxScaler
+from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
 ```
 
 ## 初歩的な例<a id='example'></a>
@@ -165,7 +166,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 ### 学習データの準備<a id='func_data'></a>
 
-まず、学習データを準備します。$x_{\text{min}}$と$x_{\text{max}}$の範囲でデータを`num_x_train`個ランダムに取った後、正規分布に従うノイズを追加しておきます。`nqubit`が量子ビット数、`c_depth`が変分フォーム回路の深さ（後述）を表します。
+まず、学習データを準備します。$x_{\text{min}}$と$x_{\text{max}}$の範囲でデータを`num_x_train`個ランダムに取った後、正規分布に従うノイズを追加しておきます。`nqubit`が量子ビット数、`nlayer`が変分フォームのレイヤー数（後述）を表します。
 
 ```{code-cell} ipython3
 ---
@@ -177,30 +178,35 @@ pycharm:
     '
 ---
 random_seed = 0
-np.random.seed(random_seed)
+rng = np.random.default_rng(random_seed)
 
-# Qubit数、回路の深さ、訓練サンプル数の定義など
+# Qubit数、変分フォームのレイヤー数、訓練サンプル数の定義など
 nqubit = 3
-c_depth = 5
-x_min = -1.; x_max = 1.; num_x_train = 30
-
-# パラメータ数の設定
-num_vars = nqubit*3*(c_depth+1)
-params = np.random.rand(num_vars)*2*np.pi
+nlayer = 5
+x_min = -1.
+x_max = 1.
+num_x_train = 30
+num_x_validation = 20
 
 # 関数の定義
-func_to_learn = lambda x: x**3
-x_train = x_min + (x_max - x_min) * np.random.rand(num_x_train)
+func_to_learn = lambda x: x ** 3
+
+# 学習用データセットの生成
+x_train = rng.uniform(x_min, x_max, size=num_x_train)
 y_train = func_to_learn(x_train)
 
 # 関数に正規分布ノイズを付加
 mag_noise = 0.05
-y_train_noise = y_train + mag_noise * np.random.randn(num_x_train)
+y_train_noise = y_train + rng.normal(0., mag_noise, size=num_x_train)
+
+# 検証用データセットの生成
+x_validation = rng.uniform(x_min, x_max, size=num_x_validation)
+y_validation = func_to_learn(x_validation) + rng.normal(0., mag_noise, size=num_x_validation)
 ```
 
 ### 量子状態の生成<a id='func_state_preparation'></a>
 
-次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`PhysRevA.98.032309`に従い、回転ゲート$R_j^Y(\theta)=e^{-i\theta Y_j/2}$と$R_j^Z(\theta)=e^{-i\theta Z_j/2}$を使って
+次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`quantum_circuit_learning`に従い、回転ゲート$R_j^Y(\theta)=e^{-i\theta Y_j/2}$と$R_j^Z(\theta)=e^{-i\theta Z_j/2}$を使って
 
 $$
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
@@ -217,21 +223,16 @@ pycharm:
 
     '
 ---
-def U_in(x, nqubit):
-    qr = QuantumRegister(nqubit)
-    U = QuantumCircuit(qr)
+u_in = QuantumCircuit(nqubit, name='U_in')
+x = Parameter('x')
 
-    angle_y = np.arcsin(x)
-    angle_z = np.arccos(x**2)
+for iq in range(nqubit):
+    # parameter.arcsin()はparameterに値vが代入された時にarcsin(v)になるパラメータ表現
+    u_in.ry(x.arcsin(), iq)
+    # arccosも同様
+    u_in.rz((x * x).arccos(), iq)
 
-    for i in range(nqubit):
-        U.ry(angle_y, i)
-        U.rz(angle_z, i)
-
-    U.name = "U_in"
-    return U
-
-U_in(x_train[0], nqubit).draw('mpl')
+u_in.bind_parameters({x: x_train[0]}).draw('mpl')
 ```
 
 ### 変分フォームを使った状態変換<a id='func_variational_form'></a>
@@ -270,27 +271,43 @@ pycharm:
 
     '
 ---
-def U_out(nqubit, params):
-    qr = QuantumRegister(nqubit)
-    #cr = ClassicalRegister(nqubit)
-    U = QuantumCircuit(qr)
+u_out = QuantumCircuit(nqubit, name='U_out')
 
-    for i in range(nqubit):
-        U.ry(params[i], i)
-        U.rz(params[nqubit+i], i)
-        U.ry(params[nqubit*2+i], i)
-    for d in range(c_depth):
-        for j in range(nqubit-1):
-            U.cz(j, j+1)
-        U.cz(nqubit-1, 0)
-        for i in range(nqubit):
-            U.ry(params[nqubit*(3*d+3)+i], i)
-            U.rz(params[nqubit*(3*d+4)+i], i)
-            U.ry(params[nqubit*(3*d+5)+i], i)
-    U.name = "U_out"
-    return U
+# 長さ0のパラメータ配列
+theta = ParameterVector('θ', 0)
 
-U_out(nqubit, params).draw('mpl')
+# thetaに一つ要素を追加して最後のパラメータを返す関数
+def new_theta():
+    theta.resize(len(theta) + 1)
+    return theta[-1]
+
+for iq in range(nqubit):
+    u_out.ry(new_theta(), iq)
+
+for iq in range(nqubit):
+    u_out.rz(new_theta(), iq)
+
+for iq in range(nqubit):
+    u_out.ry(new_theta(), iq)
+
+for il in range(nlayer):
+    for iq in range(nqubit):
+        u_out.cz(iq, (iq + 1) % nqubit)
+
+    for iq in range(nqubit):
+        u_out.ry(new_theta(), iq)
+
+    for iq in range(nqubit):
+        u_out.rz(new_theta(), iq)
+
+    for iq in range(nqubit):
+        u_out.ry(new_theta(), iq)
+
+print(f'{len(theta)} parameters')
+
+theta_vals = rng.uniform(0., 2. * np.pi, size=len(theta))
+
+u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
 ```
 
 ### 測定とモデル出力<a id='func_measurement'></a>
@@ -306,22 +323,15 @@ pycharm:
 
     '
 ---
-def pred_circ(x, nqubit, params):
+model = QuantumCircuit(nqubit, name='model')
 
-    qr = QuantumRegister(nqubit, name='q')
-    cr = ClassicalRegister(1, name='c')
-    circ = QuantumCircuit(qr, cr)
+model.compose(u_in, inplace=True)
+model.compose(u_out, inplace=True)
 
-    u_in = U_in(x, nqubit).to_instruction()
-    u_out = U_out(nqubit, params).to_instruction()
+bind_params = dict(zip(theta, theta_vals))
+bind_params[x] = x_train[0]
 
-    circ.append(u_in, qr)
-    circ.append(u_out, qr)
-    circ.measure(0, 0)
-
-    return circ
-
-pred_circ(x_train[0], nqubit, params).decompose().draw('mpl')
+model.bind_parameters(bind_params).draw('mpl')
 ```
 
 ```{code-cell} ipython3
@@ -331,26 +341,55 @@ pycharm:
 
     '
 ---
-backend = AerSimulator()
-NUM_SHOTS = 8192
+# 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
+estimator = Estimator()
 
-def objective_function(params):
-    cost_total = 0
-    for i in range(len(x_train)):
-        qc = pred_circ(x_train[i], nqubit, params)
-        qc = transpile(qc, backend=backend)
-        result = backend.run(qc, shots=NUM_SHOTS).result()
-        counts = result.get_counts(qc)
-        exp_2Z = (2*counts['0']-2*counts['1'])/NUM_SHOTS
-        cost = (y_train_noise[i] - exp_2Z)**2
-        cost_total += cost
+def objective_function(param_vals):
+    circuits = list()
+    for x_val in x_train:
+        # xだけ数値が代入された変分回路
+        circuits.append(model.bind_parameters({x: x_val}))
 
-    return cost_total
+    # 観測量はIIZ（右端が第0量子ビット）
+    observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
+
+    # shotsは関数の外で定義
+    job = estimator.run(circuits, [observable] * len(circuits), [param_vals] * len(circuits), shots=shots)
+
+    expvals = np.array(job.result().values)
+
+    return np.sum(np.square(y_train_noise - expvals))
+
+def callback_function(param_vals):
+    # lossesは関数の外で定義
+    losses.append(objective_function(param_vals))
+
+    if len(losses) % 10 == 0:
+        print(f'COBYLA iteration {len(losses)}: cost={losses[-1]}')
 ```
 
-ここで0と1の測定結果（固有値+1と-1）に2を掛けているのは、$Z$基底での測定結果の範囲を広げるためです。コスト関数$L$として、モデルの予測値と真の値$y_i$の平均2乗誤差の総和を使っています。
+コスト関数$L$として、モデルの予測値$y(x_i, \theta)$と真の値$y_i$の平均2乗誤差の総和を使っています。
 
 では、最後にこの回路を実行して、結果を見てみましょう。
+
+```{code-cell} ipython3
+---
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+---
+# COBYLAの最大ステップ数
+maxiter = 50
+# COBYLAの収束条件（小さいほどよい近似を目指す）
+tol = 0.05
+# バックエンドでのショット数
+shots = 1000
+
+optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
+```
 
 ```{code-cell} ipython3
 :tags: [remove-input]
@@ -358,7 +397,7 @@ def objective_function(params):
 # テキスト作成用のセル - わざと次のセルでエラーを起こさせる
 import os
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
-    del num_vars
+    del estimator
 ```
 
 ```{code-cell} ipython3
@@ -371,22 +410,39 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-optimizer = COBYLA(maxiter=50, tol=0.05)
-ret = optimizer.optimize(num_vars=num_vars, objective_function=objective_function, initial_point=params)
+initial_params = rng.uniform(0., 2. * np.pi, size=len(theta))
+
+losses = list()
+min_result = optimizer.minimize(objective_function, initial_params)
+```
+
+```{code-cell} ipython3
+import pickle
+with open('data/qc_machine_learning_xcube.pkl', 'wb') as out:
+    pickle.dump((min_result, losses), out)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-input]
 
 # テキスト作成用のセルなので無視してよい
-try:
-    ret[0]
-except:
+
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
     import pickle
 
     with open('data/qc_machine_learning_xcube.pkl', 'rb') as source:
-        ret = pickle.load(source)
+        min_result, losses = pickle.load(source)
 ```
+
+コスト値の推移をプロットします。
+
+```{code-cell} ipython3
+plt.plot(losses)
+```
+
++++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}}
+
+最適パラメータ値でのモデルの出力値をx_minからx_maxまで均一にとった100点で確認します。
 
 ```{code-cell} ipython3
 ---
@@ -397,18 +453,17 @@ pycharm:
 
     '
 ---
-# 最適化したパラメータをプリントアウト
-print('ret[0] =',ret[0])
+x_list = np.linspace(x_min, x_max, 100)
 
-x_list = np.arange(x_min, x_max, 0.02)
-y_pred = []
-for x in x_list:
-    qc = pred_circ(x, nqubit, ret[0])
-    qc = transpile(qc, backend=backend)
-    result = backend.run(qc, shots=NUM_SHOTS).result()
-    counts = result.get_counts(qc)
-    exp_2Z = (2*counts['0']-2*counts['1'])/NUM_SHOTS
-    y_pred.append(exp_2Z)
+circuits = list()
+for x_val in x_list:
+    circuits.append(model.bind_parameters({x: x_val}))
+
+observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
+
+job = estimator.run(circuits, [observable] * len(circuits), [min_result.x] * len(circuits), shots=shots)
+
+y_pred = np.array(job.result().values)
 
 # 結果を図示する
 plt.plot(x_train, y_train_noise, "o", label='Training Data (w/ Noise)')
@@ -457,50 +512,46 @@ pycharm:
 ---
 # ファイルから変数を読み出す
 df = pd.read_csv("data/SUSY_1K.csv",
-                 names=('isSignal','lep1_pt','lep1_eta','lep1_phi','lep2_pt','lep2_eta',
-                        'lep2_phi','miss_ene','miss_phi','MET_rel','axial_MET','M_R','M_TR_2',
-                        'R','MT2','S_R','M_Delta_R','dPhi_r_b','cos_theta_r1'))
+                 names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
+                        'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
+                        'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
 
 # 学習に使う変数の数
 feature_dim = 3  # dimension of each data point
 
 # 3, 5, 7変数の場合に使う変数のセット
 if feature_dim == 3:
-    SelectedFeatures = ['lep1_pt', 'lep2_pt', 'miss_ene']
+    selected_features = ['lep1_pt', 'lep2_pt', 'miss_ene']
 elif feature_dim == 5:
-    SelectedFeatures = ['lep1_pt','lep2_pt','miss_ene','M_TR_2','M_Delta_R']
+    selected_features = ['lep1_pt', 'lep2_pt', 'miss_ene', 'M_TR_2', 'M_Delta_R']
 elif feature_dim == 7:
-    SelectedFeatures = ['lep1_pt','lep1_eta','lep2_pt','lep2_eta','miss_ene','M_TR_2','M_Delta_R']
+    selected_features = ['lep1_pt', 'lep1_eta', 'lep2_pt', 'lep2_eta', 'miss_ene', 'M_TR_2', 'M_Delta_R']
 
-# 学習に使う事象数: trainingは訓練用サンプル、testingはテスト用サンプル
+# 学習に使う事象数: trainは訓練用サンプル、testはテスト用サンプル
 train_size = 20
 test_size = 20
 
-# オプティマイザーをCallする回数の上限
-niter = 300
-random_seed = 10598
-
-df_sig = df.loc[df.isSignal==1, SelectedFeatures]
-df_bkg = df.loc[df.isSignal==0, SelectedFeatures]
+df_sig = df.loc[df.isSignal==1, selected_features]
+df_bkg = df.loc[df.isSignal==0, selected_features]
 
 # サンプルの生成
 df_sig_train = df_sig.values[:train_size]
 df_bkg_train = df_bkg.values[:train_size]
-df_sig_test = df_sig.values[train_size:train_size+test_size]
-df_bkg_test = df_bkg.values[train_size:train_size+test_size]
-train_data = np.concatenate([df_sig_train,df_bkg_train])
-test_data = np.concatenate([df_sig_test,df_bkg_test])
-#print('train_data =',training_data)
-#print('test_data =',test_data)
-train_label = np.concatenate([np.ones((train_size),dtype=int),np.zeros((train_size),dtype=int)])
-test_label = np.concatenate([np.ones((test_size),dtype=int),np.zeros((test_size),dtype=int)])
+df_sig_test = df_sig.values[train_size:train_size + test_size]
+df_bkg_test = df_bkg.values[train_size:train_size + test_size]
+# 最初のtrain_size事象がSUSY粒子を含む信号事象、残りのtrain_size事象がSUSY粒子を含まない背景事象
+train_data = np.concatenate([df_sig_train, df_bkg_train])
+# 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象
+test_data = np.concatenate([df_sig_test, df_bkg_test])
 
-train_label_one_hot = np.zeros((train_size*2, 2))
-for i in range(train_size*2):
-    train_label_one_hot[i, train_label[i]] = 1
-test_label_one_hot = np.zeros((test_size*2, 2))
-for i in range(test_size*2):
-    test_label_one_hot[i, test_label[i]] = 1
+# one-hotベクトル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）
+train_label_one_hot = np.zeros((train_size * 2, 2))
+train_label_one_hot[:train_size, 0] = 1
+train_label_one_hot[train_size:, 1] = 1
+
+test_label_one_hot = np.zeros((test_size * 2, 2))
+test_label_one_hot[:test_size, 0] = 1
+test_label_one_hot[test_size:, 1] = 1
 
 #datapoints, class_to_label = split_dataset_to_data_and_labels(test_input)
 #datapoints_tr, class_to_label_tr = split_dataset_to_data_and_labels(training_input)
@@ -553,6 +604,7 @@ pycharm:
 ---
 #feature_map = ZFeatureMap(feature_dimension=feature_dim, reps=1)
 feature_map = ZZFeatureMap(feature_dimension=feature_dim, reps=1, entanglement='circular')
+feature_map.decompose().draw('mpl')
 ```
 
 ### 変分フォームを使った状態変換<a id='susy_variational_form'></a>
@@ -574,14 +626,16 @@ pycharm:
 
     '
 ---
-ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry','rz'], entanglement_blocks='cz', entanglement='circular', reps=3)
+ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry', 'rz'], entanglement_blocks='cz', entanglement='circular', reps=3)
 #ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry'], entanglement_blocks='cz', entanglement='circular', reps=3)
 ansatz.decompose().draw('mpl')
 ```
 
 ### 測定とモデル出力<a id='susy_measurement'></a>
 
-測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのAPIを用いるので、プログラムはかなり簡略化されています。
+測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのVQCというクラスを用いるので、プログラムはかなり簡略化されています。
+
+VQCクラスでは、特徴量マップと変分フォームを結合させ、入力特徴量とパラメータ値を代入し、測定を行い、目的関数を計算し、パラメータのアップデートを行う、という一連の操作を内部で行なってしまいます。測定を行うのに使用するのはSamplerというクラスで、これはEstimatorと同様の働きをしますが、後者が観測量の期待値を計算するのに対し、前者はすべての量子ビットをZ基底で測定した結果のビット列の確率分布を出力します。VQCではこの分布を利用して分類を行います。今回は2クラス分類なので、入力の各事象に対して、q0の測定値が0である確率が、それが信号事象である確率（モデルの予測）に対応します。
 
 ```{code-cell} ipython3
 ---
@@ -591,29 +645,28 @@ pycharm:
   name: '#%%
 
     '
-tags: [raises-exception, remove-output]
+tags: [remove-output]
 ---
-# シミュレータで実行する場合
-backend = AerSimulator()
+# 上のEstimatorと同じく、バックエンドを使わずシミュレーションを簡略化したSampler
+sampler = Sampler()
 
-# 量子コンピュータで実行する場合
+# 実機で実行する場合
 # instance = 'ibm-q/open/main'
 
 # try:
-#     provider = IBMProvider(instance=instance)
-# except IBMQAccountCredentialsNotFound:
-#     provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
-#
+#     service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+# except IBMAccountCredentialsNotFound:
+#     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__',
+#                                    instance=instance)
+
 # backend_name = 'ibm_washington'
-# backend = provider.get_backend(backend_name)
+# session = Session(service=service, backend=backend_name)
 
-optimizer = COBYLA(maxiter=niter, disp=True)
+# sampler = RuntimeSampler(session=session)
 
-quantum_instance = QuantumInstance(backend=backend,
-                                   shots=4096,
-                                   seed_simulator=random_seed,
-                                   seed_transpiler=random_seed,
-                                   skip_qobj_validation=True)
+maxiter = 300
+
+optimizer = COBYLA(maxiter=maxiter, disp=True)
 
 objective_func_vals = []
 # Draw the value of objective function every time when the fit() method is called
@@ -633,8 +686,8 @@ vqc = VQC(num_qubits=feature_dim,
           ansatz=ansatz,
           loss="cross_entropy",
           optimizer=optimizer,
-          quantum_instance=quantum_instance,
-          callback=callback_graph)
+          callback=callback_graph,
+          sampler=sampler)
 ```
 
 ```{code-cell} ipython3
@@ -656,14 +709,15 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 vqc.fit(norm_train_data, train_label_one_hot)
+
+# 実機で実行している（RuntimeSamplerを使っている）場合
+# session.close()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-input]
 
 # テキスト作成用のセルなので無視してよい
-import pickle
-
 with open('data/vqc_machine_learning_susycost.pkl', 'rb') as source:
     fig = pickle.load(source)
 
@@ -672,12 +726,12 @@ with open('data/vqc_machine_learning_susyresult.pkl', 'rb') as source:
 
 print('''   Return from subroutine COBYLA because the MAXFUN limit has been reached.
 
-NFVALS =  300   F = 2.905943E+01    MAXCV = 0.000000E+00
-X = 3.203437E-01   6.027761E-02   2.181586E+00   5.954138E-01   1.228722E+00
-   4.306505E-01   3.107309E-02   1.239565E+00   1.676084E+00   4.498719E-01
-   3.813252E-01   9.527179E-01   1.487247E+00   1.099720E+00   9.211734E-01
-  -4.528583E-02   1.636395E+00   1.527914E+00   7.354293E-01   4.912828E-01
-   1.316776E+00   9.289197E-01   1.257069E-01   3.727158E-01''')
+   NFVALS =  300   F = 7.527796E-01    MAXCV = 0.000000E+00
+   X = 2.769828E+00   2.690659E+00   2.209438E+00  -6.544334E-01   1.791658E+00
+       5.891710E-01  -4.081896E-02   5.725357E-01   1.662590E+00  -5.402978E-01
+       2.029238E+00   1.562530E-01   1.229339E+00   1.596802E+00   2.692169E-01
+      -5.828812E-01   1.891610E+00   7.527701E-01  -6.604400E-01   1.587293E+00
+       1.194641E+00   1.505717E-01''')
 ```
 
 ```{code-cell} ipython3
