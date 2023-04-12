@@ -44,7 +44,7 @@ varInspector:
 
 +++
 
-この実習では、**量子・古典ハイブリッドアルゴリズム**の応用である**量子機械学習**の基本的な実装を学んだのち、その活用例として、**素粒子実験での新粒子探索**への応用を考えます。ここで学ぶ量子機械学習の手法は、変分量子アルゴリズムの応用として提案された、**量子回路学習**と呼ばれる学習手法{cite}`PhysRevA.98.032309`です。
+この実習では、**量子・古典ハイブリッドアルゴリズム**の応用である**量子機械学習**の基本的な実装を学んだのち、その活用例として、**素粒子実験での新粒子探索**への応用を考えます。ここで学ぶ量子機械学習の手法は、変分量子アルゴリズムの応用として提案された、**量子回路学習**と呼ばれる学習手法{cite}`quantum_circuit_learning`です。
 
 ```{contents} 目次
 ---
@@ -158,6 +158,7 @@ from qiskit_machine_learning.algorithms.classifiers import VQC
 #from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
 from qiskit.algorithms.optimizers import SPSA, COBYLA
 from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 ```
 
 ## 初歩的な例<a id='example'></a>
@@ -344,9 +345,10 @@ pycharm:
 # 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
 estimator = Estimator()
 
-def objective_function(param_vals):
+# 与えられたパラメータの値とxの値に対してyの値を計算する
+def yvals(param_vals, x_vals=x_train):
     circuits = list()
-    for x_val in x_train:
+    for x_val in x_vals:
         # xだけ数値が代入された変分回路
         circuits.append(model.bind_parameters({x: x_val}))
 
@@ -356,9 +358,10 @@ def objective_function(param_vals):
     # shotsは関数の外で定義
     job = estimator.run(circuits, [observable] * len(circuits), [param_vals] * len(circuits), shots=shots)
 
-    expvals = np.array(job.result().values)
+    return np.array(job.result().values)
 
-    return np.sum(np.square(y_train_noise - expvals))
+def objective_function(param_vals):
+    return np.sum(np.square(y_train_noise - yvals(param_vals)))
 
 def callback_function(param_vals):
     # lossesは関数の外で定義
@@ -397,7 +400,7 @@ optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 # テキスト作成用のセル - わざと次のセルでエラーを起こさせる
 import os
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
-    del estimator
+    del objective_function
 ```
 
 ```{code-cell} ipython3
@@ -414,12 +417,6 @@ initial_params = rng.uniform(0., 2. * np.pi, size=len(theta))
 
 losses = list()
 min_result = optimizer.minimize(objective_function, initial_params)
-```
-
-```{code-cell} ipython3
-import pickle
-with open('data/qc_machine_learning_xcube.pkl', 'wb') as out:
-    pickle.dump((min_result, losses), out)
 ```
 
 ```{code-cell} ipython3
@@ -455,15 +452,7 @@ pycharm:
 ---
 x_list = np.linspace(x_min, x_max, 100)
 
-circuits = list()
-for x_val in x_list:
-    circuits.append(model.bind_parameters({x: x_val}))
-
-observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
-
-job = estimator.run(circuits, [observable] * len(circuits), [min_result.x] * len(circuits), shots=shots)
-
-y_pred = np.array(job.result().values)
+y_pred = yvals(min_result.x, x_vals=x_list)
 
 # 結果を図示する
 plt.plot(x_train, y_train_noise, "o", label='Training Data (w/ Noise)')
@@ -655,7 +644,7 @@ sampler = Sampler()
 
 # try:
 #     service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-# except IBMAccountCredentialsNotFound:
+# except AccountNotFoundError:
 #     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__',
 #                                    instance=instance)
 
@@ -678,7 +667,7 @@ def callback_graph(weights, obj_func_eval):
     plt.title("Objective function value against iteration")
     plt.xlabel("Iteration")
     plt.ylabel("Objective function value")
-    plt.plot(range(len(objective_func_vals)), objective_func_vals)
+    plt.plot(objective_func_vals)
     plt.show()
 
 vqc = VQC(num_qubits=feature_dim,
@@ -695,7 +684,7 @@ vqc = VQC(num_qubits=feature_dim,
 
 # テキスト作成用のセル - わざと次のセルでエラーを起こさせる
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
-    vqc._callback = lambda: 'hi'
+    del objective_func_vals
 ```
 
 ```{code-cell} ipython3
