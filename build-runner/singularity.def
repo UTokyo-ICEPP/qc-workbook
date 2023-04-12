@@ -7,13 +7,11 @@ From: yiiyama/jupyterbook-qiskit-packages:1.1.1
 
     pip3 install --no-cache-dir jupyterlab jupytext
 
-    git clone https://github.com/derlin/hepqpr-qallse hepqpr-qallse
-    cp -r hepqpr-qallse/src/hepqpr /usr/local/lib/python3.10/dist-packages/
-
     pip3 install dwave-qbsolv
 
     git clone https://github.com/LAL/trackml-library.git
     pip3 install ./trackml-library
+    rm -rf trackml-library
 
 %startscript
     jupyter lab --no-browser
