@@ -1,25 +1,26 @@
 ---
-jupytext:
-  notebook_metadata_filter: all
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.14.5
-kernelspec:
-  display_name: Python 3 (ipykernel)
-  language: python
-  name: python3
-language_info:
-  codemirror_mode:
-    name: ipython
-    version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
-  pygments_lexer: ipython3
-  version: 3.10.6
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.14.5
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.10.6
 ---
 
 # 【課題】量子相関を調べる
@@ -39,7 +40,6 @@ local: true
 ---
 ```
 
-+++
 
 ## QCシミュレータの使い方
 
@@ -57,9 +57,7 @@ $$
 
 シミュレーションはローカル（手元のPythonを動かしているコンピュータ）で実行できるので、ジョブを投げて結果を待つ時間が省けます。この課題ではたくさんの細かい量子計算をするので、実機を使わず、`AerSimulator`というQiskitに含まれるシミュレータを利用します。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
@@ -71,14 +69,14 @@ from qiskit.visualization import plot_histogram
 print('notebook ready')
 ```
 
-```{code-cell} ipython3
+```python
 simulator = AerSimulator()
 print(simulator.name())
 ```
 
 実習の内容を再現してみましょう。
 
-```{code-cell} ipython3
+```python
 circuits = []
 
 circuit = QuantumCircuit(2, name='circuit_I')
@@ -112,7 +110,7 @@ circuit.measure_all()
 circuits.append(circuit)
 ```
 
-```{code-cell} ipython3
+```python
 # シミュレータにはショット数の制限がないので、時間の許す限りいくらでも大きい値を使っていい
 shots = 10000
 
@@ -144,15 +142,12 @@ print('S =', S)
 
 [^simulator_noise]: 標準設定において。実機の振る舞いに従うよう、あえてノイズを加えるような設定も存在します。
 
-+++
 
 ## 測定基底の変換
 
 さて、おさらいをすると、上の$C^{\rmI, \rmII, \rmIII, \rmIV}$を計算する4つの回路は以下のようなものでした。
 
-```{code-cell} ipython3
-:tags: [remove-input]
-
+```python tags=["remove-input"]
 fig, axs = plt.subplots(2, 2, figsize=[12., 6.])
 for circuit, ax in zip(circuits, axs.reshape(-1)):
     circuit.draw('mpl', ax=ax)
@@ -208,7 +203,6 @@ $$
 
 このように、測定を行いたい基底（ここでは$\ket{\theta_{+}}, \ket{\theta_{-}}$）を$\ket{0}, \ket{1}$から得るための変換ゲート（$R_y(\theta)$）の逆変換を測定したい状態にかけることで、計算基底での測定で求める結果を得ることができます。
 
-+++
 
 ## 観測量の期待値とその計算法
 
@@ -255,7 +249,6 @@ $$
 
 です[^pauli_decomposition]。3の測定の際には、上のセクションで説明した測定基底の変換を利用します。
 
-+++
 
 ## CHSH不等式の解釈
 
@@ -352,7 +345,6 @@ $$
 [^pauli_decomposition]: ただし、{doc}`dynamics_simulation`で議論するように、実際には量子ビット数が大きくなると演算子の対角化自体が困難になるので、まず観測量の演算子を「パウリ積」の和に分解し、個々のパウリ積の固有ベクトルを基底とした測定をします。
 [^specifying_eigenvectors]: 量子ビットの一般の状態は実パラメータ2つで決まるので、$\sigma^{\theta, \phi}$などと書いたほうがより明示的ですが、ここでの議論では結局1パラメータしか使わないので、「何か一般の（次元を指定しない）パラメータ」として$\theta$と置いています。
 
-+++
 
 ## 問題：ベル状態について調べる
 
@@ -386,9 +378,7 @@ $$
 
 上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットにそれぞれ適当な$R_y$ゲートをかけ、期待値$C$を$R_y$ゲートのパラメータの組み合わせについて二次元プロットに起こしてみます。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # Consider 20 points each for theta and phi (400 points total)
 ntheta = 20
 nchi = 20
@@ -431,9 +421,7 @@ sim_job = simulator.run(circuits, shots=shots)
 result = sim_job.result()
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # Compute the C values for each (theta, chi)
 c_values = np.zeros((ntheta, nchi), dtype=float)
 for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
@@ -465,7 +453,6 @@ plt.scatter([3. * np.pi / 4.], [0.], c='white', marker='+');
 
 プロット上に、合わせて$|S| = 2\sqrt{2}$となる時の$\theta, \chi$の値の組み合わせを表示してあります（$\langle \sigma^{\chi} \sigma^{\theta} \rangle$を足す点は赤、引く点は白）
 
-+++
 
 ### ベル状態の何がすごいのか？
 
@@ -522,7 +509,6 @@ $$
 
 様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では$|S| \leq 2$」という命題の意味です。
 
-+++
 
 ### 実験2
 
@@ -538,9 +524,7 @@ $$
 
 [^implicit_measurement]: 実はただ量子ビットを放置するだけでも、測定をして結果を見ないのと同じ効果をもたらすことができます。これをthe principle of implicit measurementと呼びます。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # Construct a circuit for each (theta, chi) pair
 circuits_ghz = []
 # np.ndindex returns an iterator over a multi-dimensional array
@@ -574,9 +558,7 @@ sim_job_ghz = simulator.run(circuits_ghz, shots=shots)
 result_ghz = sim_job_ghz.result()
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 def counts_ignoring_qubit2(counts, bitstring):
     """Add the counts of cases where qubit C is 0 and 1"""
 
@@ -608,9 +590,7 @@ plt.colorbar(label='C');
 
 ベル状態と明らかに違う挙動をしているのがわかります。原始的な方法ですが、計算した`c_values_ghz`から総当たりで$|S|$の最大値を計算してみましょう。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 max_abs_s = 0.
 
 # Use ndindex to iterate over all index combinations
@@ -625,11 +605,11 @@ print(f'max |S| = {max_abs_s}')
 
 余談ですが、この実験は量子力学における測定という行為の一つのモデルとして考えることもできます。測定装置もその装置の出力を読み取る我々も究極的には量子力学的存在なので、測定とは対象系と測定装置の間にエンタングルメントを生じさせることに他なりません。そのエンタングルメントの結果、対象系（この実験では量子ビットAB）では量子力学的な重ね合わせ状態（ベル状態）が壊れ、混合状態が生じるというわけです。
 
-+++ {"tags": ["raises-exception", "remove-output"]}
-
+<!-- #region tags=["raises-exception", "remove-output"] -->
 **提出するもの**
 
 - 完成した回路のコード（EDIT BELOW / EDIT ABOVEの間を埋める）とシミュレーション結果によるプロット
 - 実験2で、「確率1/2で$\ket{00}$、確率1/2で$\ket{11}$」という状態が作られたメカニズムの考察
 - おまけ（評価対象外）：実験2で、量子ビットCをどのような基底で測定しても、その結果を無視する限りにおいて$C$の値は変わらないということの証明
 - おまけ（評価対象外）：実験2で、量子ビットCをある基底で測定し、その結果が0であった時のみを考慮すると、ABにベル状態を回復することができる。そのような基底の同定と、できれば実験2のように量子回路を組んで実験1と同じプロットが得られることの確認
+<!-- #endregion -->

@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 実習の準備
@@ -36,7 +36,7 @@ local: true
 
 ### IBMidを取得し、IBM Quantumにログインする
 
-IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
+IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
 
 (install_token)=
 ### （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
