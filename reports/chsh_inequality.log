@@ -21,10 +21,11 @@ nbclient.exceptions.CellExecutionError: An error occurred while executing the fo
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit.providers.ibmq import least_busy
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
 from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.utils import operational_backend
 
@@ -37,8 +38,8 @@ Input [0;32mIn [1][0m, in [0;36m<cell line: 8>[0;34m()[0m
 [1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtools[39;00m[38;5;21;01m.[39;00m[38;5;21;01mmonitor[39;00m [38;5;28;01mimport[39;00m job_monitor
 [1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvisualization[39;00m [38;5;28;01mimport[39;00m plot_histogram
 [0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_ibm_provider[39;00m [38;5;28;01mimport[39;00m IBMProvider
-[1;32m      9[0m [38;5;66;03m# qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）[39;00m
-[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqc_workbook[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m operational_backend
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_ibm_provider[39;00m[38;5;21;01m.[39;00m[38;5;21;01maccounts[39;00m [38;5;28;01mimport[39;00m AccountNotFoundError
+[1;32m     10[0m [38;5;66;03m# qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）[39;00m
 
 [0;31mModuleNotFoundError[0m: No module named 'qiskit_ibm_provider'
 ModuleNotFoundError: No module named 'qiskit_ibm_provider'

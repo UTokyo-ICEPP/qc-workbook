@@ -17,26 +17,31 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Tested with python 3.7.9, qiskit 0.23.5, numpy 1.20.1、hepqpr-qallse 0.1.0
+import pprint
 import numpy as np
+import h5py
 import matplotlib.pyplot as plt
 
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
+from qiskit import QuantumCircuit
 from qiskit.circuit.library import TwoLocal
-from qiskit.algorithms import VQE, NumPyMinimumEigensolver, NumPyEigensolver
-#from qiskit_optimization.applications.ising.common import sample_most_likely
+from qiskit.primitives import BackendEstimator
+from qiskit.algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
 from qiskit.algorithms.optimizers import SPSA, COBYLA
-from qiskit.utils import QuantumInstance
+from qiskit.algorithms.gradients import ParamShiftEstimatorGradient
+from qiskit.quantum_info import SparsePauliOp, Statevector
+from qiskit_optimization.applications import OptimizationApplication
 from qiskit_aer import AerSimulator
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Input [0;32mIn [1][0m, in [0;36m<cell line: 11>[0;34m()[0m
-[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01malgorithms[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimizers[39;00m [38;5;28;01mimport[39;00m SPSA, COBYLA
-[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m QuantumInstance
-[0;32m---> 11[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit_aer[39;00m [38;5;28;01mimport[39;00m AerSimulator
+Input [0;32mIn [1][0m, in [0;36m<cell line: 3>[0;34m()[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01mpprint[39;00m
+[1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 3[0m [38;5;28;01mimport[39;00m [38;5;21;01mh5py[39;00m
+[1;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
+[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mqiskit[39;00m [38;5;28;01mimport[39;00m QuantumCircuit
 
-[0;31mModuleNotFoundError[0m: No module named 'qiskit_aer'
-ModuleNotFoundError: No module named 'qiskit_aer'
+[0;31mModuleNotFoundError[0m: No module named 'h5py'
+ModuleNotFoundError: No module named 'h5py'
 

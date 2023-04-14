@@ -94,13 +94,13 @@ $$
 |\alpha|^2 + |\beta|^2 = 1
 $$
 
-という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり
+という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり、任意の実数$\theta$に対して
 
 $$
 \alpha \ket{0} + \beta \ket{1} \sim e^{i\theta} (\alpha \ket{0} + \beta \ket{1})
 $$
 
-（ここで $\sim$ は「同じ量子状態を表す」という意味）という制約があります。
+（ここで $\sim$ は「同じ量子状態を表す」という意味）である、という制約があります。
 
 複素数1つは実数2つで書けるので、$\alpha$と$\beta$をあわせて実数4つ分の情報が入っているようですが、2つの拘束条件があるため、実際の自由度は 4-2=2 個です。自由度の数をあらわにして量子ビットの状態を記述するときは、
 
@@ -252,10 +252,11 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit.providers.ibmq import least_busy
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
 from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.utils import operational_backend
 
@@ -552,7 +553,7 @@ instance = None
 
 try:
     provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
+except AccountNotFoundError:
     provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 ```
 
@@ -593,9 +594,9 @@ job_monitor(job, interval=2)
 
 IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。
 
-バックエンドごとのキューの長さは[IBM Quantumのバックエンド一覧ページ](https://quantum-computing.ibm.com/services?services=systems)から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
+バックエンドごとのキューの長さは<a href="https://quantum-computing.ibm.com/services?services=systems" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
 
-また、自分の投じたジョブのステータスは[ジョブ一覧ページ](https://quantum-computing.ibm.com/jobs)から確認できます。
+また、自分の投じたジョブのステータスは<a href="https://quantum-computing.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。
 
 Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように`job_monitor`を使います。
 
@@ -641,7 +642,7 @@ except NameError:
 ```
 
 ````{tip}
-ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って`retrieve_job`というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、
+ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って`retrieve_job`というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（cgr3kaemln50ss91pj10のような）をコピーし、
 
 ```{code-block} python
 backend = provider.get_backend('__backend_you_used__')

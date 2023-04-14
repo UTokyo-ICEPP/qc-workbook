@@ -622,12 +622,12 @@ const thebe_selector_output = ".output, .cell_output"
 \[
 |\alpha|^2 + |\beta|^2 = 1
 \]</div>
-<p>という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり</p>
+<p>という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり、任意の実数<span class="math notranslate nohighlight">\(\theta\)</span>に対して</p>
 <div class="math notranslate nohighlight">
 \[
 \alpha \ket{0} + \beta \ket{1} \sim e^{i\theta} (\alpha \ket{0} + \beta \ket{1})
 \]</div>
-<p>（ここで <span class="math notranslate nohighlight">\(\sim\)</span> は「同じ量子状態を表す」という意味）という制約があります。</p>
+<p>（ここで <span class="math notranslate nohighlight">\(\sim\)</span> は「同じ量子状態を表す」という意味）である、という制約があります。</p>
 <p>複素数1つは実数2つで書けるので、<span class="math notranslate nohighlight">\(\alpha\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>をあわせて実数4つ分の情報が入っているようですが、2つの拘束条件があるため、実際の自由度は 4-2=2 個です。自由度の数をあらわにして量子ビットの状態を記述するときは、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -758,10 +758,11 @@ R_{z}(\phi)\ket{1} = e^{i\phi/2}\ket{1}\end{split}\]</div>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
-<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span><span class="p">,</span> <span class="n">IBMQAccountCredentialsNotFound</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
 <span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 <span class="kn">from</span> <span class="nn">qiskit_ibm_provider</span> <span class="kn">import</span> <span class="n">IBMProvider</span>
+<span class="kn">from</span> <span class="nn">qiskit_ibm_provider.accounts</span> <span class="kn">import</span> <span class="n">AccountNotFoundError</span>
 <span class="c1"># qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.utils</span> <span class="kn">import</span> <span class="n">operational_backend</span>
 
@@ -1050,7 +1051,7 @@ C^{\rmIV} = 0
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">IBMQAccountCredentialsNotFound</span><span class="p">:</span>
+<span class="k">except</span> <span class="n">AccountNotFoundError</span><span class="p">:</span>
     <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMProvider</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;__paste_your_token_here__&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1091,8 +1092,8 @@ C^{\rmIV} = 0
 </div>
 <p>これで回路がバックエンドに送られ、キューに入りました。ジョブの実行結果は<code class="docutils literal notranslate"><span class="pre">run</span></code>メソッドの返り値であるジョブオブジェクトから参照します。</p>
 <p>IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。</p>
-<p>バックエンドごとのキューの長さは<a class="reference external" href="https://quantum-computing.ibm.com/services?services=systems">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。</p>
-<p>また、自分の投じたジョブのステータスは<a class="reference external" href="https://quantum-computing.ibm.com/jobs">ジョブ一覧ページ</a>から確認できます。</p>
+<p>バックエンドごとのキューの長さは<a href="https://quantum-computing.ibm.com/services?services=systems" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。</p>
+<p>また、自分の投じたジョブのステータスは<a href="https://quantum-computing.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。</p>
 <p>Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように<code class="docutils literal notranslate"><span class="pre">job_monitor</span></code>を使います。</p>
 </div>
 <div class="section" id="id17">
@@ -1119,7 +1120,7 @@ C^{\rmIV} = 0
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って<code class="docutils literal notranslate"><span class="pre">retrieve_job</span></code>というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、</p>
+<p>ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って<code class="docutils literal notranslate"><span class="pre">retrieve_job</span></code>というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（cgr3kaemln50ss91pj10のような）をコピーし、</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;__backend_you_used__&#39;</span><span class="p">)</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">retrieve_job</span><span class="p">(</span><span class="s1">&#39;__job_id__&#39;</span><span class="p">)</span>
 </pre></div>
