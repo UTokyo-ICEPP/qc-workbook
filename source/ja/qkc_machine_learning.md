@@ -106,7 +106,7 @@ S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=
 y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)
 ```
 
-で与えられます。このとき、学習データを最も「強く」2分割するようなモデルが、未知データについて最も精度の高い予言をできると仮定します。「強く」2分割するというのは、超平面とすべての学習データ点との距離$1/\lVert \mathbf{w} \rVert$が大きいことに相当します。線形分離が可能な学習データについて式{eq}`linear_separation`を満たす$(\mathbf{w}, b)$は一意ではありませんが、その中で$\lVert \mathbf{w} \rVert$が最も小さくなるものが、最適なモデルということになります。
+（$\mathrm{sgn}(z)$は$z \in \mathbb{R}$の符号）で与えられます。このとき、学習データを最も「強く」2分割するようなモデルが、未知データについて最も精度の高い予言をできると仮定します。「強く」2分割するというのは、超平面とすべての学習データ点との距離$1/\lVert \mathbf{w} \rVert$が大きいことに相当します。線形分離が可能な学習データについて式{eq}`linear_separation`を満たす$(\mathbf{w}, b)$は一意ではありませんが、その中で$\lVert \mathbf{w} \rVert$が最も小さくなるものが、最適なモデルということになります。
 
 線形分離ができないような学習データについても、これと同じような発想で「できる限り」分離するという問題を考えることができます。この場合、学習とは$\lVert \mathbf{w} \rVert$ができるだけ小さく、かつ$\sum_{i} S_i(\mathbf{w}, b)$ができるだけ大きくなるような$\mathbf{w}$と$b$を探すことに相当し、以下の目的関数
 
@@ -115,7 +115,7 @@ y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)
 f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)
 ```
 
-の最小化で達成されます。ここで、係数$C>0$は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では$\mathrm{max}$関数で$S_i$の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット$\{\mathbf{X}_i | S_i < 1\}$のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは$\mathbf{w}$と$b$の値によりますが、一度$L$を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。
+の最小化で達成されます。ここで、係数$C>0$は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では$\mathrm{max}$関数で$S_i$の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット$\{\mathbf{X}_i | S_i < 1\}$のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは$\mathbf{w}$と$b$の値によりますが、一度$f$を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -168,7 +168,7 @@ G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j 
 :label: complementarity
 \begin{align}
 \alpha^*_i (\xi^*_i + S_i(\mathbf{w}^*, b^*) - 1) & = 0 \\
-(C - \alpha^*_i) \xi^*_i & = 0
+\beta^*_i \xi^*_i = (C - \alpha^*_i) \xi^*_i & = 0
 \end{align}
 ```
 
@@ -184,7 +184,7 @@ $$
 K: \: D \times D \to \mathbb{R}
 $$
 
-があるとします。する最も一般にサポートベクターマシンとは、学習データ$\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)$について目的関数
+があるとします。すると、最も一般に、サポートベクターマシンとは、学習データ$\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)$について目的関数
 
 ```{math}
 :label: dual_kernel
@@ -391,7 +391,7 @@ manual_kernel.measure_all()
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率を計算してください。
+作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率$|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_1)U_{\text{in}}(x_0)|0^{\otimes n}\rangle|^2$を計算します。
 
 ```{code-cell} ipython3
 ---
@@ -408,7 +408,8 @@ sampler = Sampler()
 first_two_inputs = np.concatenate(norm_train_data[:2]).flatten()
 
 job = sampler.run(manual_kernel, parameter_values=first_two_inputs, shots=10000)
-fidelity = job.result().quasi_dists[0][0]
+# quasi_dists[0]がmanual_kernelの測定結果のcountsｋら
+fidelity = job.result().quasi_dists[0].get(0, 0.)
 print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
 ```
 

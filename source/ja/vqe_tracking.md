@@ -225,6 +225,8 @@ H = SparsePauliOp(['IIZ', 'ZZI', 'ZIZ'], coeffs=[0.2, 0.3, 0.1])
 となります。このとき、通常のQiskitの約束に従って、量子ビットの順番が右から左（一番右が第0量子ビットにかかる演算子）であることに注意してください。
 
 ```{code-cell} ipython3
+:tags: [raises-exception, remove-output]
+
 ##################
 ### EDIT BELOW ###
 ##################
