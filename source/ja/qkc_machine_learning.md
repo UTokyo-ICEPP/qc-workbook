@@ -408,7 +408,7 @@ sampler = Sampler()
 first_two_inputs = np.concatenate(norm_train_data[:2]).flatten()
 
 job = sampler.run(manual_kernel, parameter_values=first_two_inputs, shots=10000)
-# quasi_dists[0]がmanual_kernelの測定結果のcountsｋら
+# quasi_dists[0]がmanual_kernelの測定結果のcountsから推定される確率分布
 fidelity = job.result().quasi_dists[0].get(0, 0.)
 print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
 ```

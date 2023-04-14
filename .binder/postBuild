@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null)
+
 git clone https://github.com/derlin/hepqpr-qallse
-cd hepqpr-qallse/src
-python setup.py install
+cp -r hepqpr-qallse/src/hepqpr $ROOTDIR/source
+ln -s $ROOTDIR/source/hepqpr $ROOTDIR/source/ja/hepqpr
