@@ -1,5 +1,6 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
