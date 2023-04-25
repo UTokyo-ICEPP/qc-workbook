@@ -735,12 +735,12 @@ U_H(t) \ket{\phi_j} = \exp \left( -\frac{i}{\hbar} H t \right) \ket{\phi_j} = \e
 <p>ハイゼンベルグモデルという、磁性体のトイモデルを考えます。空間中一列に固定された多数のスピンを持つ粒子（電子）の系で、隣接スピンの向きによってエネルギーが決まるような問題です。</p>
 <p>例えば、<span class="math notranslate nohighlight">\(n\)</span>スピン系で簡単な形式のハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-heisenberg">
-<span class="eqno">(13)<a class="headerlink" href="#equation-heisenberg" title="Permalink to this equation">¶</a></span>\[H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1})\]</div>
+<span class="eqno">(13)<a class="headerlink" href="#equation-heisenberg" title="Permalink to this equation">¶</a></span>\[H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j})\]</div>
 <p>です。ここで、<span class="math notranslate nohighlight">\(\sigma^{[X,Y,Z]}_j\)</span>は第<span class="math notranslate nohighlight">\(j\)</span>スピンに作用するパウリ演算子です。</p>
 <p>ただし、式<a class="reference internal" href="#equation-heisenberg">(13)</a>の和の記法には実は若干の省略があります。例えば第<span class="math notranslate nohighlight">\(j\)</span>項をより正確に書くと、</p>
 <div class="math notranslate nohighlight">
 \[
-I_0 \otimes \dots \otimes I_{j-1} \otimes \sigma^X_j \otimes \sigma^X_{j+1} \otimes I_{j+2} \otimes \dots I_{n-1}
+I_{n-1} \otimes \dots \otimes I_{j+2} \otimes \sigma^X_{j+1} \otimes \sigma^X_{j} \otimes I_{j-1} \otimes \dots I_{0}
 \]</div>
 <p>です。ここで<span class="math notranslate nohighlight">\(\otimes\)</span>は線形演算子間の「テンソル積」を表しますが、聞き慣れない方は掛け算だと思っておいてください。重要なのは、式<a class="reference internal" href="#equation-heisenberg">(13)</a>の各項が、上で触れたように<span class="math notranslate nohighlight">\(n\)</span>個の基底演算子の積になっているということです。さらに、この系では隣接スピン間の相互作用しか存在しないため、ハミルトニアンが<span class="math notranslate nohighlight">\(n-1\)</span>個の項に分解できています。</p>
 <p>この系では、隣接スピン間の向きが揃っている（内積が正）のときにエネルギーが低くなります<a class="footnote-reference brackets" href="#quantum-inner-product" id="id16">5</a>。少し考えるとわかりますが、すべてのスピンが完全に同じ方向を向いている状態が最もエネルギーの低いエネルギー固有状態です。そこで、最低エネルギー状態から少しだけずらして、スピンが一つだけ直角方向を向いている状態を始状態としたときのダイナミクスをシミュレートしてみましょう。</p>
@@ -748,25 +748,25 @@ I_0 \otimes \dots \otimes I_{j-1} \otimes \sigma^X_j \otimes \sigma^X_{j+1} \oti
 <p>時間発展演算子は</p>
 <div class="math notranslate nohighlight">
 \[
-U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \right]
+U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \right]
 \]</div>
 <p>ですが、ハミルトニアンの各項が互いに可換でないので、シミュレーションでは鈴木・トロッター分解を用いて近似します。各時間ステップ<span class="math notranslate nohighlight">\(\Delta t\)</span>での近似時間発展は</p>
 <div class="math notranslate nohighlight">
 \[
-\tilde{U}_{H;\Delta t} = \prod_{j=0}^{n-2} \exp\left( \frac{i \omega \Delta t}{2} \sigma^X_j\sigma^X_{j+1} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Y_j\sigma^Y_{j+1} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1} \right)
+\tilde{U}_{H;\Delta t} = \prod_{j=0}^{n-2} \exp\left( \frac{i \omega \Delta t}{2} \sigma^X_{j+1}\sigma^X_{j} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Y_{j+1}\sigma^Y_{j} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j} \right)
 \]</div>
 <p>です。</p>
 </div>
 <div class="section" id="id17">
 <h3><a class="toc-backref" href="#id28">量子ゲートでの表現</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
-<p>これを回転ゲートと制御ゲートで表します。まず<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1})\)</span>について考えてみましょう。この演算子の<span class="math notranslate nohighlight">\(j\)</span>-<span class="math notranslate nohighlight">\((j+1)\)</span>スピン系の4つの基底状態への作用は</p>
+<p>これを回転ゲートと制御ゲートで表します。まず<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j})\)</span>について考えてみましょう。この演算子の<span class="math notranslate nohighlight">\(j\)</span>-<span class="math notranslate nohighlight">\((j+1)\)</span>スピン系の4つの基底状態への作用は</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\upket_j \upket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \upket_j \upket_{j+1} \\
-\upket_j \downket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \upket_j \downket_{j+1} \\
-\downket_j \upket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \downket_j \upket_{j+1} \\
-\downket_j \downket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \downket_j \downket_{j+1}
+\upket_{j+1} \upket_{j} \rightarrow e^{i \omega \Delta t / 2} \upket_{j+1} \upket_{j} \\
+\upket_{j+1} \downket_{j} \rightarrow e^{-i \omega \Delta t / 2} \upket_{j+1} \downket_{j} \\
+\downket_{j+1} \upket_{j} \rightarrow e^{-i \omega \Delta t / 2} \downket_{j+1} \upket_{j} \\
+\downket_{j+1} \downket_{j} \rightarrow e^{i \omega \Delta t / 2} \downket_{j+1} \downket_{j}
 \end{align}
 \end{split}\]</div>
 <p>です。つまり、2つのスピンの「パリティ」（同一かどうか）に応じて、かかる位相の符号が違います。</p>
@@ -783,21 +783,21 @@ U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j
 \ket{11} \rightarrow e^{i \omega \Delta t / 2} \ket{11}
 \end{align}
 \end{split}\]</div>
-<p>と変換するので（確認してください）、まさに<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1})\)</span>の表現になっています。</p>
-<p>残りの2つの演算子も同様にパリティに対する回転で表せますが、CNOTで表現できるのは<span class="math notranslate nohighlight">\(Z\)</span>方向のパリティだけなので、先にスピンを回転させる必要があります。<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^X_j\sigma^X_{j+1})\)</span>による変換は</p>
+<p>と変換するので（確認してください）、まさに<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j})\)</span>の表現になっています。</p>
+<p>残りの2つの演算子も同様にパリティに対する回転で表せますが、CNOTで表現できるのは<span class="math notranslate nohighlight">\(Z\)</span>方向のパリティだけなので、先にスピンを回転させる必要があります。<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^X_{j+1}\sigma^X_{j})\)</span>による変換は</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\rightket_j \rightket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \rightket_j \rightket_{j+1} \\
-\rightket_j \leftket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \rightket_j \leftket_{j+1} \\
-\leftket_j \rightket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \leftket_j \rightket_{j+1} \\
-\leftket_j \leftket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \leftket_j \leftket_{j+1}
+\rightket_{j+1} \rightket_{j} \rightarrow e^{i \omega \Delta t / 2} \rightket_{j+1} \rightket_{j} \\
+\rightket_{j+1} \leftket_{j} \rightarrow e^{-i \omega \Delta t / 2} \rightket_{j+1} \leftket_{j} \\
+\leftket_{j+1} \rightket_{j} \rightarrow e^{-i \omega \Delta t / 2} \leftket_{j+1} \rightket_{j} \\
+\leftket_{j+1} \leftket_{j} \rightarrow e^{i \omega \Delta t / 2} \leftket_{j+1} \leftket_{j}
 \end{align}
 \end{split}\]</div>
 <p>で、式<a class="reference internal" href="#equation-left-right-kets">(12)</a>から、次の回路が対応する変換を引き起こすことがわかります（これも確認してください）。</p>
 <div class="cell tag_remove-input docutils container">
 </div>
-<p>最後に、<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Y_j\sigma^Y_{j+1})\)</span>に対応する回路は</p>
+<p>最後に、<span class="math notranslate nohighlight">\(\exp(\frac{i \omega \Delta t}{2} \sigma^Y_{j+1}\sigma^Y_{j})\)</span>に対応する回路は</p>
 <div class="cell tag_remove-input docutils container">
 </div>
 <p>です<a class="footnote-reference brackets" href="#sgate" id="id18">6</a>。</p>

@@ -538,10 +538,10 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">SparsePauliOp</span>
 <span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="c1"># このワークブック独自のモジュール</span>
-<span class="kn">from</span> <span class="nn">qc_workbook.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span><span class="p">,</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span>
-<span class="kn">from</span> <span class="nn">qc_workbook.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
+<span class="kn">from</span> <span class="nn">qc_workbook.dynamics</span> <span class="kn">import</span> <span class="n">plot_heisenberg_spins</span><span class="p">,</span> <span class="n">bit_expectations_sv</span><span class="p">,</span> <span class="n">bit_expectations_counts</span><span class="p">,</span> <span class="n">diagonalized_evolution</span>
 </pre></div>
 </div>
 </div>
@@ -714,22 +714,22 @@ H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1
 <p>と表現できることがわかります。一方、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>に関しては、やや込み入った議論<span id="id14">[<a class="reference internal" href="bibliography.html#id17" title="T. Banks, Leonard Susskind, and John Kogut. Strong-coupling calculations of lattice gauge theories: (1 + 1)-dimensional exercises. Phys. Rev. D, 13:1043–1053, Feb 1976. URL: https://link.aps.org/doi/10.1103/PhysRevD.13.1043, doi:10.1103/PhysRevD.13.1043.">BSK76</a>]</span>の末、</p>
 <div class="math notranslate nohighlight">
 \[
-\Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^+_j \sigma^-_{j+1}
+\Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^-_{j+1} \sigma^+_{j}
 \]</div>
 <p>が正しい表現であることがわかっています。ここで、</p>
 <div class="math notranslate nohighlight">
 \[
 \sigma^{\pm} = \frac{1}{2}(\sigma^X \pm i \sigma^Y)
 \]</div>
-<p>です。ハミルトニアンには<span class="math notranslate nohighlight">\(\Phi_j\Phi^{\dagger}_{j+1} \rightarrow i \sigma^-_j \sigma^+_{j+1}\)</span>も登場するので、二つの項を合わせると</p>
+<p>です。また、このワークブックでの約束に従って、右辺の<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>の順番をひっくり返してあります。ハミルトニアンには<span class="math notranslate nohighlight">\(\Phi_j\Phi^{\dagger}_{j+1} \rightarrow i \sigma^+_{j+1}\sigma^-_{j}\)</span>も登場するので、二つの項を合わせると</p>
 <div class="math notranslate nohighlight">
 \[
-\Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \rightarrow \frac{i}{2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1})
+\Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \rightarrow \frac{i}{2} (\sigma^X_{j+1}\sigma^X_j + \sigma^Y_{j+1}\sigma^Y_j)
 \]</div>
 <p>となります。まとめると、</p>
 <div class="math notranslate nohighlight">
 \[
-H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
+H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_j + \sigma^Y_{j+1}\sigma^Y_j) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_j \sigma^Z_k + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
 \]</div>
 <p>です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。</p>
 </div>
@@ -745,14 +745,14 @@ H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} +
 <p><strong>解説</strong>:</p>
 <p>偶数サイトでは<span class="math notranslate nohighlight">\(\plusket\)</span>が物質粒子の存在しない状態、奇数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が反物質粒子の存在しない状態を表すので、初期状態は粒子数密度0となります。しかし、場の量子論においては場の相互作用によって物質と反物質が対生成・対消滅を起こし、一般に系の粒子数の期待値は時間とともに変化します。</p>
 <p><strong>ヒント</strong>:</p>
-<p>上のハミルトニアンのパラメターの値は参考文献<span id="id16">[<a class="reference internal" href="bibliography.html#id14" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>]</span>と同一です。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
-<p>また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code>と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>と<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>という二つのリストを作ります。これらのリストの長さはハミルトニアンの項数で、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>の各要素は対応する項のパウリ行列のリスト、<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>の各要素はその項にかかる係数にします。例えば</p>
+<p>上のハミルトニアンのパラメターの値は参考文献<span id="id16">[<a class="reference internal" href="bibliography.html#id14" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>]</span>と同一です（ただし<span class="math notranslate nohighlight">\(\sigma\)</span>積の順番は逆です）。したがって、<span class="math notranslate nohighlight">\(n=4\)</span>, <span class="math notranslate nohighlight">\(\omega \Delta t = \pi/8\)</span>とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。</p>
+<p>また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code>と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>と<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>という二つのリストを作り、Qiskitの<code class="docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>というクラスに渡します。これらのリストの長さはハミルトニアンの項数で、<code class="docutils literal notranslate"><span class="pre">paulis</span></code>の各要素は対応する項のパウリ行列のリスト、<code class="docutils literal notranslate"><span class="pre">coeffs</span></code>の各要素はその項にかかる係数にします。例えば</p>
 <div class="math notranslate nohighlight">
 \[
-H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
+H = 0.5 \sigma^X_2 \sigma^Y_1 I_0 + I_2 \sigma^Z_1 \sigma^X_0
 \]</div>
 <p>というハミルトニアンに対しては、</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">paulis</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">]]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">paulis</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;XYI&#39;</span><span class="p">,</span> <span class="s1">&#39;IZX&#39;</span><span class="p">]</span>
 <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -805,25 +805,26 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <span class="n">circuits</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">simulator</span><span class="p">)</span>
 <span class="n">sim_job</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
 <span class="n">sim_counts_list</span> <span class="o">=</span> <span class="n">sim_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
-
-<span class="c1">## Numerical solution through diagonalization</span>
-
-<span class="c1"># Construct the Hamiltonian</span>
-<span class="n">paulis</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">coeffs</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_raises-exception tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Numerical solution through diagonalization</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT BELOW ###</span>
 <span class="c1">##################</span>
 
-<span class="n">paulis</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;i&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span>
-<span class="n">coeffs</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">paulis</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span>
+<span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]</span>
 
 <span class="c1">##################</span>
 <span class="c1">### EDIT ABOVE ###</span>
 <span class="c1">##################</span>
 
-<span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">make_hamiltonian</span><span class="p">(</span><span class="n">paulis</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span>
+<span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">(</span><span class="n">paulis</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
 
 <span class="c1"># Initial state as a statevector</span>
 <span class="n">initial_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
@@ -844,11 +845,11 @@ H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
 <span class="n">initial_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">initial_state</span><span class="p">))</span>
 <span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1">:0</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">b</span><span class="se">}}</span><span class="s1">&#39;</span>
 <span class="n">initial_counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">prob</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">initial_probs</span><span class="p">)</span> <span class="k">if</span> <span class="n">prob</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">)</span>
-<span class="n">sim_counts_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">initial_counts</span><span class="p">]</span> <span class="o">+</span> <span class="n">sim_counts_list</span>
+<span class="n">sim_counts_list_with_init</span> <span class="o">=</span> <span class="p">[</span><span class="n">initial_counts</span><span class="p">]</span> <span class="o">+</span> <span class="n">sim_counts_list</span>
 
 <span class="c1"># Plot the simulation results</span>
 <span class="n">time_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">omegadt</span> <span class="o">*</span> <span class="n">M</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">bit_exp</span> <span class="o">=</span> <span class="n">bit_expectations_counts</span><span class="p">(</span><span class="n">time_points</span><span class="p">,</span> <span class="n">sim_counts_list</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">bit_exp</span> <span class="o">=</span> <span class="n">bit_expectations_counts</span><span class="p">(</span><span class="n">time_points</span><span class="p">,</span> <span class="n">sim_counts_list_with_init</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_points</span><span class="p">,</span> <span class="n">number_density</span><span class="p">(</span><span class="n">bit_exp</span><span class="p">),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 </pre></div>

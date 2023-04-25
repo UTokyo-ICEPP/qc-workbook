@@ -486,13 +486,13 @@ const thebe_selector_output = ".output, .cell_output"
 <p>前回登場したハイゼンベルグモデルのハミルトニアンは</p>
 <div class="math notranslate nohighlight">
 \[
-H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \quad (J &gt; 0)
+H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \quad (J &gt; 0)
 \]</div>
 <p>というものでした。このハミルトニアンが表しているのは、空間中で一列に並んだスピンを持つ粒子が、隣接粒子間で相互作用を及ぼしているような系でした。ここで相互作用は、スピンの向きが揃っているときにエネルギーが低くなるようなものでした。したがって、全てののスピンが同じ方向を向いているときにエネルギーが最も低くなることが予想されました。</p>
 <p>今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を<span class="math notranslate nohighlight">\(+Z\)</span>方向にかけるとすれば、ハミルトニアンは</p>
 <div class="math notranslate nohighlight">
 \[
-H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1} + g \sigma^Z_j)
+H = -J \sum_{j=0}^{n-1} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j} + g \sigma^Z_j)
 \]</div>
 <p>となります。このハミルトニアンにはもう一点前回と異なる部分があります。前回はスピンに関する和を<span class="math notranslate nohighlight">\(j=0\)</span>から<span class="math notranslate nohighlight">\(n-2\)</span>まで取ることで、両端のスピンは「内側」のスピンとしか相互作用をしないような境界条件を採用していました。今回は和を<span class="math notranslate nohighlight">\(n-1\)</span>まで取っています。<span class="math notranslate nohighlight">\(\sigma^{X,Y,Z}_n\)</span>を<span class="math notranslate nohighlight">\(\sigma^{X,Y,Z}_0\)</span>と同一視することで、これは「周期境界条件」（一列ではなく環状に並んだスピン）を表します。</p>
 <p>このようなハミルトニアンの固有値や固有状態がどのような値を取るのか、具体例で確認しましょう。最も簡単な<span class="math notranslate nohighlight">\(n=2, g=0\)</span>というケースを考え、直接対角化して厳密解を求めます。</p>
@@ -502,10 +502,10 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">SparsePauliOp</span>
 <span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
 <span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="c1"># ワークブック独自のモジュール</span>
-<span class="kn">from</span> <span class="nn">qc_workbook.hamiltonian</span> <span class="kn">import</span> <span class="n">make_hamiltonian</span>
 <span class="kn">from</span> <span class="nn">qc_workbook.show_state</span> <span class="kn">import</span> <span class="n">show_state</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook ready&#39;</span><span class="p">)</span>
@@ -525,18 +525,22 @@ H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 <span class="c1"># Construct the Hamiltonian matrix</span>
 <span class="n">paulis</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 <span class="n">coeffs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="n">xx_template</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;XX&#39;</span>
+<span class="n">yy_template</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;YY&#39;</span>
+<span class="n">zz_template</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;ZZ&#39;</span>
+
 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_s</span><span class="p">):</span>
-    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;x&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_s</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;i&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_s</span><span class="p">)))</span>
-    <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">J</span><span class="p">)</span>
-    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;y&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_s</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;i&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_s</span><span class="p">)))</span>
-    <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">J</span><span class="p">)</span>
-    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;z&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_s</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;i&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_s</span><span class="p">)))</span>
-    <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">J</span><span class="p">)</span>
+    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xx_template</span><span class="p">[</span><span class="n">j</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xx_template</span><span class="p">[:</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yy_template</span><span class="p">[</span><span class="n">j</span><span class="p">:]</span> <span class="o">+</span> <span class="n">yy_template</span><span class="p">[:</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zz_template</span><span class="p">[</span><span class="n">j</span><span class="p">:]</span> <span class="o">+</span> <span class="n">zz_template</span><span class="p">[:</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">coeffs</span> <span class="o">+=</span> <span class="p">[</span><span class="o">-</span><span class="n">J</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+
     <span class="k">if</span> <span class="n">g</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">:</span>
-        <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;z&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="s1">&#39;i&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_s</span><span class="p">)))</span>
+        <span class="n">paulis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_s</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span> <span class="o">+</span> <span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="n">j</span><span class="p">)</span>
         <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">J</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
 
-<span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">make_hamiltonian</span><span class="p">(</span><span class="n">paulis</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span>
+<span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">(</span><span class="n">paulis</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
 
 <span class="c1"># Diagonalize and obtain the eigenvalues and vectors</span>
 <span class="n">eigvals</span><span class="p">,</span> <span class="n">eigvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
