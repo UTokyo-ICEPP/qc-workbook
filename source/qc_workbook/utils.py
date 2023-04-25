@@ -49,10 +49,10 @@ def operational_backend(
                 return False
 
         if qv is not None:
-            if config.quantum_volume != qv:
+            if config.quantum_volume is None or config.quantum_volume != qv:
                 return False
-        else:
-            if config.quantum_volume < min_qv:
+        elif min_qv > 0:
+            if config.quantum_volume is None or config.quantum_volume < min_qv:
                 return False
 
         return True
