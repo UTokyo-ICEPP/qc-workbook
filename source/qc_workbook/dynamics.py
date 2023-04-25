@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit
+from qiskit.quantum_info import SparsePauliOp
 
-from .hamiltonian import tensor_product, make_hamiltonian, diagonalized_evolution
 
 def make_heisenberg_circuits(n_spins, M, omegadt):
     circuits = []
@@ -71,6 +71,45 @@ def bit_expectations_sv(time_points, statevectors):
     return x, y
 
 
+def diagonalized_evolution(hamiltonian, initial_state, time, num_steps=100):
+    """Diagonalize the given reduced Hamiltonian and evolve the initial state by exp(-i time*hamiltonian).
+
+    Args:
+        hamiltonian (np.ndarray(shape=(D, D), dtype=np.complex128)): Hamiltonian matrix divided by hbar.
+        initial_state (np.ndarray(shape=(D,), dtype=np.complex128)): Initial state vector.
+        time (float): Evolution time.
+        num_steps (int): Number of steps (T) to divide time into.
+
+    Returns:
+        np.ndarray(shape=(T,), dtype=float): Time points.
+        np.ndarray(shape=(D, T), dtype=np.complex128): State vector as a function of time.
+    """
+
+    num_dim = hamiltonian.shape[0]
+    num_qubits = np.round(np.log2(num_dim)).astype(int)
+
+    # Create the array of time points
+    time_points = np.linspace(0., time, num_steps, endpoint=True)
+
+    ## Diagonalize the Hamiltonian
+    eigvals, eigvectors = np.linalg.eigh(hamiltonian)
+
+    ## Decompose the initial state vector into a linear combination of eigenvectors
+    # Matrix eigvectors has the form [v_0 v_1 v_2 ..], where v_i . v_j = delta_ij
+    # -> eigvectors^dagger @ initial_state = coefficients for the eigenvector decomposition of the initial state vector
+    initial_coeff = eigvectors.T.conjugate() @ initial_state
+    # Initial state as a matrix [c_0 v_0, c_1 v_1, ...] (shape (D, D))
+    initial_state_matrix = eigvectors * initial_coeff
+
+    ## Time-evolve the initial state to each time point
+    # Phase at each time point (shape (D, T))
+    phase = np.outer(-1.j * eigvals, time_points)
+    phase_factor = np.exp(phase)
+    statevectors = initial_state_matrix @ phase_factor # shape (D, T)
+
+    return time_points, statevectors
+
+
 def bit_expectations_counts(time_points, counts_list, num_bits):
     """Compute the bit expectation values from experiment results.
 
@@ -134,11 +173,11 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
         # Construct the numerical Hamiltonian matrix from a list of Pauli operators
         paulis = list()
         for j in range(num_spins - 1):
-            paulis.append(list('x' if k in (j, j + 1) else 'i' for k in range(num_spins)))
-            paulis.append(list('y' if k in (j, j + 1) else 'i' for k in range(num_spins)))
-            paulis.append(list('z' if k in (j, j + 1) else 'i' for k in range(num_spins)))
+            paulis.append('I' * (num_spins - j - 2) + 'XX' + 'I' * j)
+            paulis.append('I' * (num_spins - j - 2) + 'YY' + 'I' * j)
+            paulis.append('I' * (num_spins - j - 2) + 'ZZ' + 'I' * j)
 
-        hamiltonian = make_hamiltonian(paulis)
+        hamiltonian = SparsePauliOp(paulis).to_matrix()
 
         # Compute the statevector as a function of time from Hamiltonian diagonalization
         time_points, statevectors = diagonalized_evolution(-0.5 * hamiltonian, initial_state, omegadt * num_steps)
@@ -198,3 +237,20 @@ def plot_heisenberg_spins(counts_list, num_spins, initial_state, omegadt, add_th
 
     ax.set_xlabel(r'$\omega t$')
     ax.set_ylabel(r'$\langle S_z \rangle$')
+
+
+def tensor_product(ops):
+    """Recursively apply np.kron to construct a tensor product of the operators.
+
+    Args:
+        ops (List): List of (2, 2) arrays.
+
+    Returns:
+        np.ndarray(shape=(2 ** nops, 2 ** nops), dtype=np.complex128): Tensor product of ops.
+    """
+
+    prod = 1.
+    for op in ops:
+        prod = np.kron(op, prod)
+
+    return prod

@@ -49,7 +49,7 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 前回登場したハイゼンベルグモデルのハミルトニアンは
 
 $$
-H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \quad (J > 0)
+H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \quad (J > 0)
 $$
 
 というものでした。このハミルトニアンが表しているのは、空間中で一列に並んだスピンを持つ粒子が、隣接粒子間で相互作用を及ぼしているような系でした。ここで相互作用は、スピンの向きが揃っているときにエネルギーが低くなるようなものでした。したがって、全てののスピンが同じ方向を向いているときにエネルギーが最も低くなることが予想されました。
@@ -57,7 +57,7 @@ $$
 今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を$+Z$方向にかけるとすれば、ハミルトニアンは
 
 $$
-H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1} + g \sigma^Z_j)
+H = -J \sum_{j=0}^{n-1} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j} + g \sigma^Z_j)
 $$
 
 となります。このハミルトニアンにはもう一点前回と異なる部分があります。前回はスピンに関する和を$j=0$から$n-2$まで取ることで、両端のスピンは「内側」のスピンとしか相互作用をしないような境界条件を採用していました。今回は和を$n-1$まで取っています。$\sigma^{X,Y,Z}_n$を$\sigma^{X,Y,Z}_0$と同一視することで、これは「周期境界条件」（一列ではなく環状に並んだスピン）を表します。
@@ -71,10 +71,10 @@ $$
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit.quantum_info import SparsePauliOp
 from qiskit.visualization import plot_histogram
 from qiskit_aer import AerSimulator
 # ワークブック独自のモジュール
-from qc_workbook.hamiltonian import make_hamiltonian
 from qc_workbook.show_state import show_state
 
 print('notebook ready')
@@ -91,18 +91,22 @@ g = 0.
 # Construct the Hamiltonian matrix
 paulis = list()
 coeffs = list()
+
+xx_template = 'I' * (n_s - 2) + 'XX'
+yy_template = 'I' * (n_s - 2) + 'YY'
+zz_template = 'I' * (n_s - 2) + 'ZZ'
+
 for j in range(n_s):
-    paulis.append(list('x' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
-    paulis.append(list('y' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
-    paulis.append(list('z' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
+    paulis.append(xx_template[j:] + xx_template[:j])
+    paulis.append(yy_template[j:] + yy_template[:j])
+    paulis.append(zz_template[j:] + zz_template[:j])
+    coeffs += [-J] * 3
+
     if g != 0.:
-        paulis.append(list('z' if k == j else 'i' for k in range(n_s)))
+        paulis.append('I' * (n_s - j - 1) + 'Z' + 'I' * j)
         coeffs.append(-J * g)
 
-hamiltonian = make_hamiltonian(paulis, coeffs)
+hamiltonian = SparsePauliOp(paulis, coeffs).to_matrix()
 
 # Diagonalize and obtain the eigenvalues and vectors
 eigvals, eigvectors = np.linalg.eigh(hamiltonian)
