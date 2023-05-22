@@ -599,7 +599,7 @@ target_state_2q = random_statevector(2)
 を
 
 ```python
-target_state_2q = np.array([1., 0., 0., 1.], dtype=complex) / np.sqrt(2.)
+target_state_2q = Statevector(np.array([1., 0., 0., 1.], dtype=complex) / np.sqrt(2.))
 ```
 
 として実行するとどうなるでしょうか。エンタングルさせる場合とさせない場合で大きな違いが見えるでしょう。
@@ -607,7 +607,7 @@ target_state_2q = np.array([1., 0., 0., 1.], dtype=complex) / np.sqrt(2.)
 問題を3量子ビットに拡張し、GHZ状態（[単純な量子回路をゼロから書く](https://utokyo-icepp.github.io/qc-workbook/circuit_from_scratch.html#ghz)を参照）
 
 ```python
-target_state_3q = np.array([1.] + [0.] * 6 + [1.], dtype=complex) / np.sqrt(2.)
+target_state_3q = Statevector(np.array([1.] + [0.] * 6 + [1.], dtype=complex) / np.sqrt(2.))
 ```
 
 をターゲットにするなどして、遊んでみてください。
