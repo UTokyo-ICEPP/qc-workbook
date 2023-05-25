@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.8.10
 ---
 
 # 物理系を表現する
@@ -346,8 +346,6 @@ $$
 
 です。
 
-+++
-
 ### 量子ゲートでの表現
 
 これを回転ゲートと制御ゲートで表します。まず$\exp(\frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j})$について考えてみましょう。この演算子の$j$-$(j+1)$スピン系の4つの基底状態への作用は
@@ -365,7 +363,17 @@ $$
 
 パリティに関する演算をするにはCNOTを使います。例えば以下の回路
 
-![rzz](figs/rzz.png)
+[^quantum_inner_product]: これは量子力学的な系なので、もっと正確な表現は「隣接スピン間の内積が正であるようなハミルトニアンの固有状態の固有値が、そうでない固有状態の固有値より小さい」です。
+
+```{code-cell} ipython3
+:tags: [remove-input]
+
+circuit = QuantumCircuit(QuantumRegister(2, 'q'))
+circuit.cx(0, 1)
+circuit.rz(Parameter(r'-$\omega \Delta t$'), 1)
+circuit.cx(0, 1)
+circuit.draw('mpl')
+```
 
 によって、計算基底$\ket{00}, \ket{01}, \ket{10}, \ket{11}$はそれぞれ
 
@@ -393,22 +401,47 @@ $$
 
 で、式{eq}`left_right_kets`から、次の回路が対応する変換を引き起こすことがわかります（これも確認してください）。
 
-![rxx](figs/rxx.png)
+```{code-cell} ipython3
+:tags: [remove-input]
+
+circuit = QuantumCircuit(QuantumRegister(2, 'q'))
+circuit.h(0)
+circuit.h(1)
+circuit.cx(0, 1)
+circuit.rz(Parameter(r'-$\omega \Delta t$'), 1)
+circuit.cx(0, 1)
+circuit.h(0)
+circuit.h(1)
+circuit.draw('mpl')
+```
 
 最後に、$\exp(\frac{i \omega \Delta t}{2} \sigma^Y_{j+1}\sigma^Y_{j})$に対応する回路は
 
-![ryy](figs/ryy.png)
+```{code-cell} ipython3
+:tags: [remove-input]
+
+circuit = QuantumCircuit(QuantumRegister(2, 'q'))
+circuit.p(-np.pi / 2., 0)
+circuit.p(-np.pi / 2., 1)
+circuit.h(0)
+circuit.h(1)
+circuit.cx(0, 1)
+circuit.rz(Parameter(r'-$\omega \Delta t$'), 1)
+circuit.cx(0, 1)
+circuit.h(0)
+circuit.h(1)
+circuit.p(np.pi / 2., 0)
+circuit.p(np.pi / 2., 1)
+circuit.draw('mpl')
+```
 
 です[^sgate]。
-
-[^quantum_inner_product]: これは量子力学的な系なので、もっと正確な表現は「隣接スピン間の内積が正であるようなハミルトニアンの固有状態の固有値が、そうでない固有状態の固有値より小さい」です。
-[^sgate]: $P(\pi/2)$ゲートは$S$ゲートとも呼ばれます。$P(-\pi/2)$は$S^{\dagger}$です。
-
-+++
 
 ### 回路実装
 
 やっと準備が整ったので、シミュレーションを実装しましょう。実機で走らせられるように、$n=5$, $M=10$, $\omega \Delta t = 0.1$とします。上で決めたように、ビット0以外が$\upket$、ビット0が$\rightket$という初期状態から始めます。各$\Delta t$ステップごとに回路のコピーをとり、それぞれのコピーで測定を行うことで、時間発展の様子を観察します。
+
+[^sgate]: $P(\pi/2)$ゲートは$S$ゲートとも呼ばれます。$P(-\pi/2)$は$S^{\dagger}$です。
 
 ```{code-cell} ipython3
 # まずは全てインポート
