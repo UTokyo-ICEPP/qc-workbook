@@ -1,50 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>【課題】量子カーネルを使った新現象の分類 &#8212; 量子コンピューティング・ワークブック</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,469 +63,437 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'qkc_machine_learning';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="ToffoliゲートとShorコード" href="toffoli_shor_code.html" />
     <link rel="prev" title="量子機械学習を使った新しい素粒子現象の探索" href="vqc_machine_learning.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/favicon.ico" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="welcome.html">
-   量子コンピューティング・ワークブックへようこそ！
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータに触れる
- </span>
-</p>
+    
+    
+    <img src="_static/favicon.ico" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/favicon.ico" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    量子コンピューティング・ワークブックへようこそ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータに触れる</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="chsh_inequality.html">
-   CHSH不等式の破れを確認する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="nonlocal_correlations.html">
-   【課題】量子相関を調べる
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="chsh_inequality.html">CHSH不等式の破れを確認する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nonlocal_correlations.html">【課題】量子相関を調べる</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子回路を作る
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子回路を作る</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   【課題】アダマールテスト
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="circuit_from_scratch.html">単純な量子回路をゼロから書く</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_computation.html">【課題】アダマールテスト</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータでの並列計算
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータでの並列計算</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dynamics_simulation.html">
-   物理系を表現する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="more_dynamics.html">
-   【課題】量子ダイナミクスシミュレーション・続
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="addition_on_ibmq.html">
-   【参考】足し算を実機で行う
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="extreme_simd.html">計算をする量子回路の実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics_simulation.html">物理系を表現する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more_dynamics.html">【課題】量子ダイナミクスシミュレーション・続</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addition_on_ibmq.html">【参考】足し算を実機で行う</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ショアのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ショアのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="shor.html">
-   素因数分解アルゴリズムを学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="spectrum_estimation.html">
-   【課題】位相推定によるスペクトル分解
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="shor.html">素因数分解アルゴリズムを学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum_estimation.html">【課題】位相推定によるスペクトル分解</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  グローバーのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">グローバーのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grover.html">
-   データベース検索を行う
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="grover_number_light.html">
-   【課題】ビット反転ボードの操作を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grover.html">データベース検索を行う</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grover_number_light.html">【課題】ビット反転ボードの操作を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  変分法と変分量子固有値ソルバー
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">変分法と変分量子固有値ソルバー</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe.html">
-   変分法と変分量子固有値ソルバー法を学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe_tracking.html">
-   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqe.html">変分法と変分量子固有値ソルバー法を学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vqe_tracking.html">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子・古典ハイブリッド機械学習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子・古典ハイブリッド機械学習</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqc_machine_learning.html">
-   量子機械学習を使った新しい素粒子現象の探索
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   【課題】量子カーネルを使った新現象の分類
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqc_machine_learning.html">量子機械学習を使った新しい素粒子現象の探索</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">【課題】量子カーネルを使った新現象の分類</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  演習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">演習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="toffoli_shor_code.html">
-   ToffoliゲートとShorコード
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="toffoli_shor_code.html">ToffoliゲートとShorコード</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  補足
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">補足</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
-   実習の準備
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_intro.html">
-   予備知識：Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numerics.html">
-   予備知識：数値表現
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   参考文献
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   文献一覧
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">実習の準備</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_intro.html">予備知識：Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">予備知識：数値表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">参考文献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">文献一覧</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/qkc_machine_learning.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/qkc_machine_learning.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fqkc_machine_learning.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/qkc_machine_learning.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/qkc_machine_learning.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fqkc_machine_learning.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/qkc_machine_learning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="_sources/qkc_machine_learning.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>【課題】量子カーネルを使った新現象の分類</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#q-kernel">
-   量子カーネル
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#q-kernel-imp">
-     量子カーネルの評価
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#svm">
-   サポートベクターマシン
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id7">
-     2クラス線形分離問題
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id8">
-     双対形式
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
-     カーネル行列との関係
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qsvm-imp">
-   素粒子探索への応用
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#problem1">
-     問題1
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#problem2">
-     問題2
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#q-kernel">量子カーネル</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-kernel-imp">量子カーネルの評価</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#svm">サポートベクターマシン</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2クラス線形分離問題</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">双対形式</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">カーネル行列との関係</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qsvm-imp">素粒子探索への応用</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem1">問題1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem2">問題2</a></li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>【課題】量子カーネルを使った新現象の分類</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#q-kernel">
-   量子カーネル
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#q-kernel-imp">
-     量子カーネルの評価
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#svm">
-   サポートベクターマシン
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id7">
-     2クラス線形分離問題
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id8">
-     双対形式
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
-     カーネル行列との関係
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qsvm-imp">
-   素粒子探索への応用
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#problem1">
-     問題1
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#problem2">
-     問題2
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>【課題】量子カーネルを使った新現象の分類<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>【課題】量子カーネルを使った新現象の分類<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>これまで、量子・古典ハイブリッドアルゴリズムの一つである<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">量子回路学習</span></a>の手法を使って、素粒子物理での新粒子探索が可能かを見てきました。ここでは、<strong>量子機械学習</strong>の別の手法として、<strong>量子カーネル</strong>を用いた分類を考えてみます。特に、量子カーネルを活用した<strong>サポートベクターマシン</strong>の手法<span id="id2">[<a class="reference internal" href="bibliography.html#id25" title="Vojtěch Havlíček, Antonio D. Córcoles, Kristan Temme, Aram W. Harrow, Abhinav Kandala, Jerry M. Chow, and Jay M. Gambetta. Supervised learning with quantum-enhanced feature spaces. Nature, 567(7747):209–212, 2019. URL: https://doi.org/10.1038/s41586-019-0980-2, doi:10.1038/s41586-019-0980-2.">HavlivcekCorcolesT+19</a>]</span>を使って、同じ新粒子探索の問題に取り組みます。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
@@ -542,8 +520,8 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{| #1 \rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}\)</span></p>
-<div class="section" id="q-kernel">
-<span id="id4"></span><h2><a class="toc-backref" href="#id13">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this headline">¶</a></h2>
+<section id="q-kernel">
+<span id="id4"></span><h2><a class="toc-backref" href="#id13">量子カーネル</a><a class="headerlink" href="#q-kernel" title="Permalink to this heading">#</a></h2>
 <p>変分量子回路を使った量子回路学習では、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -555,18 +533,18 @@ U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
 \]</div>
 <p>として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、<span class="math notranslate nohighlight">\(\ket{\phi(x_i)}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi(x_j)}\)</span>の「近さ」あるいは「重なり具合」を表していると解釈できます。</p>
-<div class="section" id="q-kernel-imp">
-<span id="id5"></span><h3><a class="toc-backref" href="#id14">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this headline">¶</a></h3>
+<section id="q-kernel-imp">
+<span id="id5"></span><h3><a class="toc-backref" href="#id14">量子カーネルの評価</a><a class="headerlink" href="#q-kernel-imp" title="Permalink to this heading">#</a></h3>
 <p>量子カーネルを求めるためには、学習データの全てのペア<span class="math notranslate nohighlight">\(\{x_i,x_j\}\)</span>に対して、<span class="math notranslate nohighlight">\(K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2\)</span>を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>を計算するために、以下のような量子回路を考えます。</p>
 <a class="reference internal image-reference" href="_images/qke_circuit.png"><img alt="qke_circuit" class="align-center" src="_images/qke_circuit.png" style="width: 700px;" /></a>
 <p>この回路に入力データ<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>をエンコードして、回路の出力状態を<span class="math notranslate nohighlight">\(Z\)</span>基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（<span class="math notranslate nohighlight">\(0^n\)</span>ビット列が出てくる）確率が<span class="math notranslate nohighlight">\(K(x_i,x_j)\)</span>の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。<span class="math notranslate nohighlight">\(0^n\)</span>ビット列測定によってカーネルを決めるため、量子回路の測定回数<span class="math notranslate nohighlight">\(N\)</span>に対して<span class="math notranslate nohighlight">\({\cal O}(1/\sqrt{N})\)</span>程度の誤差がついてしまうのは仕方ないところです。</p>
-</div>
-</div>
-<div class="section" id="svm">
-<span id="id6"></span><h2><a class="toc-backref" href="#id15">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="svm">
+<span id="id6"></span><h2><a class="toc-backref" href="#id15">サポートベクターマシン</a><a class="headerlink" href="#svm" title="Permalink to this heading">#</a></h2>
 <p>上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、2クラスのデータ分類を行なってみます。</p>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id16">2クラス線形分離問題</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<section id="id7">
+<h3><a class="toc-backref" href="#id16">2クラス線形分離問題</a><a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
 <p>まず、2クラスの線形分離問題とはどういうものかを見ていきます。サンプル数<span class="math notranslate nohighlight">\(N\)</span>の学習データを<span class="math notranslate nohighlight">\(\{(\mathbf{X}_i,y_i)\}\:(i=1,\ldots,N)\)</span>とし、<span class="math notranslate nohighlight">\(\mathbf{X}_i \in \mathbb{R}^d\)</span>をインプット、<span class="math notranslate nohighlight">\(y_i\in\{+1,-1\}\)</span>をラベルと呼びます。分離問題とは、インプットの分布する空間<span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>に境界を定義し、ラベルの値が<span class="math notranslate nohighlight">\(+1\)</span>であるデータ点が属する領域と<span class="math notranslate nohighlight">\(-1\)</span>であるデータ点が属する領域に分けることを指します。そして、その境界が超平面である場合を線形分離と呼びます。ここで超平面とは、ある<span class="math notranslate nohighlight">\(\mathbf{w}\in\mathbb{R}^d, b \in \mathbb{R}\)</span>に対して集合</p>
 <div class="math notranslate nohighlight">
 \[
@@ -575,19 +553,19 @@ K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text
 <p>を指します。ベクトル<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>はこの超平面に直交し、そのノルムを<span class="math notranslate nohighlight">\(\lVert \mathbf{w} \rVert\)</span>と書くと、<span class="math notranslate nohighlight">\(b/\lVert \mathbf{w} \rVert\)</span>がこの超平面と原点との符号付き距離（<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>の方向が正）に対応します。</p>
 <p>超平面というのはシンプルであるがゆえに特殊な集合なので、学習データの分布のしかたによっては、超平面では分離できないケースもあり得ます。そのような分離が可能であるということは、</p>
 <div class="math notranslate nohighlight" id="equation-linear-separation">
-<span class="eqno">(24)<a class="headerlink" href="#equation-linear-separation" title="Permalink to this equation">¶</a></span>\[S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=1,\ldots,N\]</div>
+<span class="eqno">(24)<a class="headerlink" href="#equation-linear-separation" title="Permalink to this equation">#</a></span>\[S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=1,\ldots,N\]</div>
 <p>を満たす<span class="math notranslate nohighlight">\((\mathbf{w},b)\)</span>が存在することと等価です。この式の解釈ですが、括弧の中身<span class="math notranslate nohighlight">\(\mathbf{w} \cdot \mathbf{X}_i + b\)</span>はデータ点<span class="math notranslate nohighlight">\(X_i\)</span>と超平面<span class="math notranslate nohighlight">\((\mathbf{w}, b)\)</span>との符号付き距離の<span class="math notranslate nohighlight">\(\lVert \mathbf{w} \rVert\)</span>倍で、それに<span class="math notranslate nohighlight">\(y_i\)</span>をかけた結果が1よりも大きいということは、<span class="math notranslate nohighlight">\(y_i=1\)</span>のデータ点が超平面について正の領域、<span class="math notranslate nohighlight">\(y_i=-1\)</span>のデータ点が負の領域にあり、かつどの点も超平面から<span class="math notranslate nohighlight">\(1/\lVert \mathbf{w} \rVert\)</span>以上離れているということを意味します。</p>
 <p>さて、機械学習の目的は、学習データを元に何らかのモデルを作り、それを使って未知のインプットについて予言をすることにあります。今の分離問題においては、<span class="math notranslate nohighlight">\((\mathbf{w}, b)\)</span>がモデルにあたり、未知インプット<span class="math notranslate nohighlight">\(X\)</span>についてのラベル<span class="math notranslate nohighlight">\(y\)</span>の予言は</p>
 <div class="math notranslate nohighlight" id="equation-test-data-label">
-<span class="eqno">(25)<a class="headerlink" href="#equation-test-data-label" title="Permalink to this equation">¶</a></span>\[y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)\]</div>
+<span class="eqno">(25)<a class="headerlink" href="#equation-test-data-label" title="Permalink to this equation">#</a></span>\[y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)\]</div>
 <p>（<span class="math notranslate nohighlight">\(\mathrm{sgn}(z)\)</span>は<span class="math notranslate nohighlight">\(z \in \mathbb{R}\)</span>の符号）で与えられます。このとき、学習データを最も「強く」2分割するようなモデルが、未知データについて最も精度の高い予言をできると仮定します。「強く」2分割するというのは、超平面とすべての学習データ点との距離<span class="math notranslate nohighlight">\(1/\lVert \mathbf{w} \rVert\)</span>が大きいことに相当します。線形分離が可能な学習データについて式<a class="reference internal" href="#equation-linear-separation">(24)</a>を満たす<span class="math notranslate nohighlight">\((\mathbf{w}, b)\)</span>は一意ではありませんが、その中で<span class="math notranslate nohighlight">\(\lVert \mathbf{w} \rVert\)</span>が最も小さくなるものが、最適なモデルということになります。</p>
 <p>線形分離ができないような学習データについても、これと同じような発想で「できる限り」分離するという問題を考えることができます。この場合、学習とは<span class="math notranslate nohighlight">\(\lVert \mathbf{w} \rVert\)</span>ができるだけ小さく、かつ<span class="math notranslate nohighlight">\(\sum_{i} S_i(\mathbf{w}, b)\)</span>ができるだけ大きくなるような<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>と<span class="math notranslate nohighlight">\(b\)</span>を探すことに相当し、以下の目的関数</p>
 <div class="math notranslate nohighlight" id="equation-primal-1">
-<span class="eqno">(26)<a class="headerlink" href="#equation-primal-1" title="Permalink to this equation">¶</a></span>\[f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)\]</div>
+<span class="eqno">(26)<a class="headerlink" href="#equation-primal-1" title="Permalink to this equation">#</a></span>\[f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)\]</div>
 <p>の最小化で達成されます。ここで、係数<span class="math notranslate nohighlight">\(C&gt;0\)</span>は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では<span class="math notranslate nohighlight">\(\mathrm{max}\)</span>関数で<span class="math notranslate nohighlight">\(S_i\)</span>の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット<span class="math notranslate nohighlight">\(\{\mathbf{X}_i | S_i &lt; 1\}\)</span>のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>と<span class="math notranslate nohighlight">\(b\)</span>の値によりますが、一度<span class="math notranslate nohighlight">\(f\)</span>を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。</p>
-</div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id17">双対形式</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id8">
+<h3><a class="toc-backref" href="#id17">双対形式</a><a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
 <p>次に、この最適化問題（主形式）の「双対問題」を見てみましょう。双対は、最適化問題に拘束条件を導入したラグランジアンを定義し、その停留点での値を未定定数の関数として表現し直すことで得られます。拘束条件の導入にはラグランジュの未定乗数法の拡張であるところのKarush-Kuhn-Tucker (KKT)の手法を用います。未定乗数法は拘束条件が等式で表されるときのみ使えるのに対し、KKT条件は不等式拘束条件にも対応します。</p>
 <p>具体的には、まず式<a class="reference internal" href="#equation-primal-1">(26)</a>を<span class="math notranslate nohighlight">\(\mathrm{max}\)</span>関数を使わずに、パラメータ<span class="math notranslate nohighlight">\(\xi_i\)</span>を導入して次の形に書き換えます。</p>
 <div class="math notranslate nohighlight">
@@ -600,30 +578,30 @@ F(\mathbf{w}, b, \{\xi_i\}) &amp; = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \
 <p>下行の拘束条件に従って<span class="math notranslate nohighlight">\(F\)</span>を最小化する<span class="math notranslate nohighlight">\(\mathbf{w}, b, \{\xi_i\}\)</span>が見つかったとき、<span class="math notranslate nohighlight">\(f\)</span>も最小化されることを確かめてください。</p>
 <p>この最適化問題のラグランジアンは、非負の未定定数<span class="math notranslate nohighlight">\(\{\alpha_i\}\)</span>と<span class="math notranslate nohighlight">\(\{\beta_i\}\)</span>を導入して</p>
 <div class="math notranslate nohighlight" id="equation-lagrangian">
-<span class="eqno">(27)<a class="headerlink" href="#equation-lagrangian" title="Permalink to this equation">¶</a></span>\[L(\mathbf{w}, b, \{\xi_i\}; \{\alpha_i\}, \{\beta_i\}) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \xi_i - \sum_{i=1}^{N} \alpha_i \left(\xi_i + S_i(\mathbf{w}, b) - 1\right) - \sum_{i=1}^{N} \beta_i \xi_i\]</div>
+<span class="eqno">(27)<a class="headerlink" href="#equation-lagrangian" title="Permalink to this equation">#</a></span>\[L(\mathbf{w}, b, \{\xi_i\}; \{\alpha_i\}, \{\beta_i\}) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \xi_i - \sum_{i=1}^{N} \alpha_i \left(\xi_i + S_i(\mathbf{w}, b) - 1\right) - \sum_{i=1}^{N} \beta_i \xi_i\]</div>
 <p>で与えられます。停留点では</p>
 <div class="math notranslate nohighlight" id="equation-stationarity">
-<span class="eqno">(28)<a class="headerlink" href="#equation-stationarity" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(28)<a class="headerlink" href="#equation-stationarity" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 \frac{\partial L}{\partial \mathbf{w}} &amp; = \mathbf{w} - \sum_i \alpha_i y_i \mathbf{X}_i = 0 \\
 \frac{\partial L}{\partial b} &amp; = -\sum_i \alpha_i y_i = 0 \\
 \frac{\partial L}{\partial \xi_i} &amp; = C - \alpha_i - \beta_i = 0
 \end{align}\end{split}\]</div>
 <p>が成り立つので、式<a class="reference internal" href="#equation-lagrangian">(27)</a>にこれらの関係を代入すると、双対目的関数</p>
 <div class="math notranslate nohighlight" id="equation-dual">
-<span class="eqno">(29)<a class="headerlink" href="#equation-dual" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(29)<a class="headerlink" href="#equation-dual" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 G(\{\alpha_i\}) &amp; = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j y_i y_j \mathbf{X}_i \cdot \mathbf{X}_j \\
 \text{with} &amp; \sum_i \alpha_i y_i = 0, \: 0 \leq \alpha_i \leq C \quad \forall i
 \end{align}\end{split}\]</div>
 <p>が得られます。双対問題は、この<span class="math notranslate nohighlight">\(G\)</span>を最大化する<span class="math notranslate nohighlight">\(\{\alpha_i\}\)</span>を見つける問題となります。また、主形式の最適解<span class="math notranslate nohighlight">\(\mathbf{w}^*, b^*, \{\xi^*_i\}\)</span>と双対問題の最適解<span class="math notranslate nohighlight">\(\{\alpha^*_i\}\)</span>との間に</p>
 <div class="math notranslate nohighlight" id="equation-complementarity">
-<span class="eqno">(30)<a class="headerlink" href="#equation-complementarity" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(30)<a class="headerlink" href="#equation-complementarity" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 \alpha^*_i (\xi^*_i + S_i(\mathbf{w}^*, b^*) - 1) &amp; = 0 \\
 \beta^*_i \xi^*_i = (C - \alpha^*_i) \xi^*_i &amp; = 0
 \end{align}\end{split}\]</div>
 <p>という関係（相補性条件）が成り立ちます。</p>
-</div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id18">カーネル行列との関係</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id9">
+<h3><a class="toc-backref" href="#id18">カーネル行列との関係</a><a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
 <p>ここまで来てもカーネル行列とサポートベクターによる線形分離は一見無関係に思えますが、双対形式にヒントがあります。式<a class="reference internal" href="#equation-dual">(29)</a>に現れる<span class="math notranslate nohighlight">\(\mathbf{X}_i \cdot \mathbf{X}_j\)</span>はインプット空間を<span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>としたときのインプットベクトル同士の内積です。しかし、双対形式ではパラメータ<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>が現れないので、<span class="math notranslate nohighlight">\(\mathbf{X}_i\)</span>が何か他の線形空間<span class="math notranslate nohighlight">\(V\)</span>の元であるとしても問題として成立します。さらに、実はそもそもこの部分がベクトルの内積である必要すらありません。インプットを何か（線形とは限らない）空間<span class="math notranslate nohighlight">\(D\)</span>の元<span class="math notranslate nohighlight">\(x_i\)</span>とし、<span class="math notranslate nohighlight">\(D\)</span>の二つの元<span class="math notranslate nohighlight">\(x_i\)</span>と<span class="math notranslate nohighlight">\(x_j\)</span>の間の何らかの「距離」を表す関数</p>
 <div class="math notranslate nohighlight">
 \[
@@ -631,7 +609,7 @@ K: \: D \times D \to \mathbb{R}
 \]</div>
 <p>があるとします。すると、最も一般に、サポートベクターマシンとは、学習データ<span class="math notranslate nohighlight">\(\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)\)</span>について目的関数</p>
 <div class="math notranslate nohighlight" id="equation-dual-kernel">
-<span class="eqno">(31)<a class="headerlink" href="#equation-dual-kernel" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(31)<a class="headerlink" href="#equation-dual-kernel" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 G(\{\alpha_i\}) &amp; = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j y_i y_j K(x_i, x_j) \\
 \text{with} &amp; \sum_i \alpha_i y_i = 0, \: \alpha_i \geq 0 \quad \forall i
 \end{align}\end{split}\]</div>
@@ -655,10 +633,10 @@ y = \mathrm{sgn}\left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x) + b^*\r
 y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 \]</div>
 <p>を解くことで得られます。</p>
-</div>
-</div>
-<div class="section" id="qsvm-imp">
-<span id="id10"></span><h2><a class="toc-backref" href="#id19">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="qsvm-imp">
+<span id="id10"></span><h2><a class="toc-backref" href="#id19">素粒子探索への応用</a><a class="headerlink" href="#qsvm-imp" title="Permalink to this heading">#</a></h2>
 <p>それでは、<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">ここ</span></a>で考えた素粒子現象の探索問題に、量子サポートベクターマシンを応用してみましょう。</p>
 <p>データセットの準備は同じです。</p>
 <div class="cell docutils container">
@@ -677,6 +655,12 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 <span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">SparsePauliOp</span>
 <span class="kn">from</span> <span class="nn">qiskit_aer</span> <span class="kn">import</span> <span class="n">AerSimulator</span>
 <span class="kn">from</span> <span class="nn">qiskit_machine_learning.kernels</span> <span class="kn">import</span> <span class="n">FidelityQuantumKernel</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/dateutil/zoneinfo/__init__.py:26: UserWarning: I/O error(2): No such file or directory
+  warnings.warn(&quot;I/O error({0}): {1}&quot;.format(e.errno, e.strerror))
 </pre></div>
 </div>
 </div>
@@ -730,8 +714,8 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 </div>
 </div>
 </div>
-<div class="section" id="problem1">
-<span id="id11"></span><h3><a class="toc-backref" href="#id20">問題1</a><a class="headerlink" href="#problem1" title="Permalink to this headline">¶</a></h3>
+<section id="problem1">
+<span id="id11"></span><h3><a class="toc-backref" href="#id20">問題1</a><a class="headerlink" href="#problem1" title="Permalink to this heading">#</a></h3>
 <p>各自特徴量マップを選び、<code class="docutils literal notranslate"><span class="pre">feature_map</span></code>という変数名の量子回路オブジェクトとして実装してください。<a class="reference internal" href="vqc_machine_learning.html"><span class="doc">量子機械学習を使った新しい素粒子現象の探索</span></a>のように<code class="docutils literal notranslate"><span class="pre">ZFeatureMap</span></code>や<code class="docutils literal notranslate"><span class="pre">ZZFeatureMap</span></code>などのクラスを利用しても、自分で空の<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトを作り、<code class="docutils literal notranslate"><span class="pre">Parameter</span></code>や<code class="docutils literal notranslate"><span class="pre">ParameterVector</span></code>を使って「手で」回路を書いても構いません。</p>
 <p>使用する量子ビットの数も原則自由ですが、後で利用する<code class="docutils literal notranslate"><span class="pre">FidelityQuantumKernel</span></code>クラスはインプットの変数の数と量子ビット数が等しいときに一番うまく動作するようです。</p>
 <div class="cell docutils container">
@@ -753,9 +737,9 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="problem2">
-<span id="id12"></span><h3><a class="toc-backref" href="#id21">問題2</a><a class="headerlink" href="#problem2" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="problem2">
+<span id="id12"></span><h3><a class="toc-backref" href="#id21">問題2</a><a class="headerlink" href="#problem2" title="Permalink to this heading">#</a></h3>
 <p>問題1で決めた特徴量マップからカーネル行列要素を計算するための<code class="docutils literal notranslate"><span class="pre">manual_kernel</span></code>という変数名の量子回路を作ってください。Qiskitにはこれを自動でやってくれるAPI（<code class="docutils literal notranslate"><span class="pre">FidelityQuantumKernel</span></code>クラス）が準備されていますが、ここでは空の<code class="docutils literal notranslate"><span class="pre">QuantumCircuit</span></code>オブジェクトから始めて、上で決めた特徴量マップ回路からパラメータ付きの回路を作ってください。</p>
 <p><strong>ヒント1</strong></p>
 <p>QuantumCircuitオブジェクトに別のQuantumCircuitを貼り付けるには</p>
@@ -866,9 +850,9 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -882,7 +866,7 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -890,44 +874,119 @@ y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="vqc_machine_learning.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">量子機械学習を使った新しい素粒子現象の探索</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="vqc_machine_learning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">量子機械学習を使った新しい素粒子現象の探索</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="toffoli_shor_code.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="toffoli_shor_code.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">ToffoliゲートとShorコード</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By 東京大学素粒子物理国際研究センター<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
       </div>
-    </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
 
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#q-kernel">量子カーネル</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-kernel-imp">量子カーネルの評価</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#svm">サポートベクターマシン</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2クラス線形分離問題</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">双対形式</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">カーネル行列との関係</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qsvm-imp">素粒子探索への応用</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem1">問題1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem2">問題2</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By 東京大学素粒子物理国際研究センター
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

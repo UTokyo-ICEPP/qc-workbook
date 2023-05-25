@@ -1,50 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>【課題】量子相関を調べる &#8212; 量子コンピューティング・ワークブック</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,446 +63,367 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nonlocal_correlations';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="単純な量子回路をゼロから書く" href="circuit_from_scratch.html" />
     <link rel="prev" title="CHSH不等式の破れを確認する" href="chsh_inequality.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/favicon.ico" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="welcome.html">
-   量子コンピューティング・ワークブックへようこそ！
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータに触れる
- </span>
-</p>
+    
+    
+    <img src="_static/favicon.ico" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/favicon.ico" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    量子コンピューティング・ワークブックへようこそ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータに触れる</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="chsh_inequality.html">
-   CHSH不等式の破れを確認する
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   【課題】量子相関を調べる
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="chsh_inequality.html">CHSH不等式の破れを確認する</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">【課題】量子相関を調べる</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子回路を作る
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子回路を作る</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   【課題】アダマールテスト
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="circuit_from_scratch.html">単純な量子回路をゼロから書く</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_computation.html">【課題】アダマールテスト</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータでの並列計算
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータでの並列計算</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dynamics_simulation.html">
-   物理系を表現する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="more_dynamics.html">
-   【課題】量子ダイナミクスシミュレーション・続
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="addition_on_ibmq.html">
-   【参考】足し算を実機で行う
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="extreme_simd.html">計算をする量子回路の実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics_simulation.html">物理系を表現する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more_dynamics.html">【課題】量子ダイナミクスシミュレーション・続</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addition_on_ibmq.html">【参考】足し算を実機で行う</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ショアのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ショアのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="shor.html">
-   素因数分解アルゴリズムを学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="spectrum_estimation.html">
-   【課題】位相推定によるスペクトル分解
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="shor.html">素因数分解アルゴリズムを学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum_estimation.html">【課題】位相推定によるスペクトル分解</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  グローバーのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">グローバーのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grover.html">
-   データベース検索を行う
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="grover_number_light.html">
-   【課題】ビット反転ボードの操作を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grover.html">データベース検索を行う</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grover_number_light.html">【課題】ビット反転ボードの操作を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  変分法と変分量子固有値ソルバー
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">変分法と変分量子固有値ソルバー</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe.html">
-   変分法と変分量子固有値ソルバー法を学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe_tracking.html">
-   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqe.html">変分法と変分量子固有値ソルバー法を学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vqe_tracking.html">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子・古典ハイブリッド機械学習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子・古典ハイブリッド機械学習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqc_machine_learning.html">
-   量子機械学習を使った新しい素粒子現象の探索
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="qkc_machine_learning.html">
-   【課題】量子カーネルを使った新現象の分類
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqc_machine_learning.html">量子機械学習を使った新しい素粒子現象の探索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qkc_machine_learning.html">【課題】量子カーネルを使った新現象の分類</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  演習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">演習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="toffoli_shor_code.html">
-   ToffoliゲートとShorコード
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="toffoli_shor_code.html">ToffoliゲートとShorコード</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  補足
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">補足</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
-   実習の準備
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_intro.html">
-   予備知識：Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numerics.html">
-   予備知識：数値表現
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   参考文献
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   文献一覧
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">実習の準備</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_intro.html">予備知識：Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">予備知識：数値表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">参考文献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">文献一覧</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/nonlocal_correlations.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fnonlocal_correlations.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
-</div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
+<div class="article-header-buttons">
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-        </div>
 
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qc">
-   QCシミュレータの使い方
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id4">
-   測定基底の変換
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id6">
-   観測量の期待値とその計算法
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#chsh">
-   CHSH不等式の解釈
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
-   問題：ベル状態について調べる
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#sigma">
-     一般の
-     <span class="math notranslate nohighlight">
-      \(\sigma\)
-     </span>
-     演算子の期待値
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
-     実験1
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
-     ベル状態の何がすごいのか？
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
-     実験2
-    </a>
-   </li>
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fnonlocal_correlations.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
   </ul>
- </li>
-</ul>
+</div>
 
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nonlocal_correlations.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>【課題】量子相関を調べる</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qc">QCシミュレータの使い方</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">測定基底の変換</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">観測量の期待値とその計算法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chsh">CHSH不等式の解釈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">問題：ベル状態について調べる</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sigma">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">実験1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">ベル状態の何がすごいのか？</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">実験2</a></li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>【課題】量子相関を調べる</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qc">
-   QCシミュレータの使い方
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id4">
-   測定基底の変換
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id6">
-   観測量の期待値とその計算法
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#chsh">
-   CHSH不等式の解釈
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
-   問題：ベル状態について調べる
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#sigma">
-     一般の
-     <span class="math notranslate nohighlight">
-      \(\sigma\)
-     </span>
-     演算子の期待値
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
-     実験1
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
-     ベル状態の何がすごいのか？
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
-     実験2
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>【課題】量子相関を調べる<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>【課題】量子相関を調べる<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\bra}[1]{\langle#1|}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\rmI}{\mathrm{I}}\)</span>
@@ -517,8 +448,8 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 </ul>
 </div>
-<div class="section" id="qc">
-<h2><a class="toc-backref" href="#id16">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this headline">¶</a></h2>
+<section id="qc">
+<h2><a class="toc-backref" href="#id16">QCシミュレータの使い方</a><a class="headerlink" href="#qc" title="Permalink to this heading">#</a></h2>
 <p>実習で見たように、QCで実現される量子状態は、量子力学の公理に基づいて理論的に計算・予測できます。そこで用いられる数学的操作も単なる足し算や掛け算（線形演算）なので、実はQCの量子状態は（古典）計算機で比較的簡単に計算できます。当然のことですが、QCは何も魔法のブラックボックスというわけではありません。</p>
 <p>ただし、古典計算機で量子状態を再現するためには、特殊な場合を除いて、量子ビット数の指数関数的な量のメモリが必要になります。これも前半で見たように、<span class="math notranslate nohighlight">\(n\)</span>量子ビットあれば、系の自由度（degrees of freedom / dof: 実数自由パラメータの数）は<span class="math notranslate nohighlight">\(2^{n+1} - 2\)</span>ですので、例えば各自由度を64ビット（＝8バイト）の浮動小数点で表現するとしたら、必要なメモリは(-2を無視して)</p>
 <div class="math notranslate nohighlight">
@@ -605,9 +536,9 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 <p>上のように、<code class="docutils literal notranslate"><span class="pre">qasm_simulator</span></code>は実機と同様に<code class="docutils literal notranslate"><span class="pre">run</span></code>関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った<code class="docutils literal notranslate"><span class="pre">job_monitor()</span></code>関数を使用していません。また、シミュレータにはノイズがない<a class="footnote-reference brackets" href="#simulator-noise" id="id3">1</a>ので、<span class="math notranslate nohighlight">\(S\)</span>の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。</p>
-</div>
-<div class="section" id="id4">
-<h2><a class="toc-backref" href="#id17">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id4">
+<h2><a class="toc-backref" href="#id17">測定基底の変換</a><a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
 <p>さて、おさらいをすると、上の<span class="math notranslate nohighlight">\(C^{\rmI, \rmII, \rmIII, \rmIV}\)</span>を計算する4つの回路は以下のようなものでした。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])</span>
 <span class="k">for</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">circuits</span><span class="p">,</span> <span class="n">axs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
@@ -619,11 +550,11 @@ const thebe_selector_output = ".output, .cell_output"
 <p>ここまで「測定」とはレジスタの量子状態<span class="math notranslate nohighlight">\(\sum_{j=0}^{2^n-1} c_j \ket{j}\)</span>からビット列<span class="math notranslate nohighlight">\(j\)</span>を確率<span class="math notranslate nohighlight">\(|c_j|^2\)</span>で得る行為である、と説明してきました。しかし、本来「測定」はもっと一般的な概念です。それを理解するために、まず、量子力学的には計算基底状態<span class="math notranslate nohighlight">\(\ket{j}\)</span>は何ら特別な状態ではないということを理解しておきましょう。</p>
 <p>例えば1量子ビットにおいて、計算基底状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>ですが、以下のような状態<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>を考えることもできます。</p>
 <div class="math notranslate nohighlight" id="equation-theta-ket-def">
-<span class="eqno">(2)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{\theta_{+}} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
+<span class="eqno">(2)<a class="headerlink" href="#equation-theta-ket-def" title="Permalink to this equation">#</a></span>\[\begin{split}\ket{\theta_{+}} := R_y(\theta)\ket{0} = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1} \\
 \ket{\theta_{-}} := R_y(\theta)\ket{1} = -\sin\frac{\theta}{2}\ket{0} + \cos\frac{\theta}{2}\ket{1}\end{split}\]</div>
 <p>すると、</p>
 <div class="math notranslate nohighlight" id="equation-theta-ket-inverse-def">
-<span class="eqno">(3)<a class="headerlink" href="#equation-theta-ket-inverse-def" title="Permalink to this equation">¶</a></span>\[\begin{split}\ket{0} = \cos\frac{\theta}{2}\ket{\theta_{+}} - \sin\frac{\theta}{2}\ket{\theta_{-}} \\
+<span class="eqno">(3)<a class="headerlink" href="#equation-theta-ket-inverse-def" title="Permalink to this equation">#</a></span>\[\begin{split}\ket{0} = \cos\frac{\theta}{2}\ket{\theta_{+}} - \sin\frac{\theta}{2}\ket{\theta_{-}} \\
 \ket{1} = \sin\frac{\theta}{2}\ket{\theta_{+}} + \cos\frac{\theta}{2}\ket{\theta_{-}},\end{split}\]</div>
 <p>つまり、計算基底状態が<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>の重ね合わせとして表現できます。量子ビットの任意の状態は<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>の重ね合わせで表現できるので、<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>の重ね合わせでも表現できるということになります。そのようなときは<span class="math notranslate nohighlight">\(\ket{\theta_{+}}\)</span>と<span class="math notranslate nohighlight">\(\ket{\theta_{-}}\)</span>を基底として状態を表しているわけです。</p>
 <p>一般に、量子力学的には、2つの異なる状態<span class="math notranslate nohighlight">\(\ket{a} \nsim \ket{b}\)</span>を考えれば、それらの重ね合わせで量子ビットの任意の状態が表現できます。そして、<span class="math notranslate nohighlight">\(\ket{a}\)</span>と<span class="math notranslate nohighlight">\(\ket{b}\)</span>が直交する<a class="footnote-reference brackets" href="#orthogonal" id="id5">2</a>ときに状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が</p>
@@ -646,9 +577,9 @@ R_y(-\theta)\ket{\psi} = \alpha \ket{0} + \beta \ket{1}
 \]</div>
 <p>が得られます。この<span class="math notranslate nohighlight">\(R_y(-\theta)\ket{\psi}\)</span>を計算基底で測定した結果は、<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を<span class="math notranslate nohighlight">\(\ket{\theta_{+}}, \ket{\theta_{-}}\)</span>基底で測定した結果と等価です。</p>
 <p>このように、測定を行いたい基底（ここでは<span class="math notranslate nohighlight">\(\ket{\theta_{+}}, \ket{\theta_{-}}\)</span>）を<span class="math notranslate nohighlight">\(\ket{0}, \ket{1}\)</span>から得るための変換ゲート（<span class="math notranslate nohighlight">\(R_y(\theta)\)</span>）の逆変換を測定したい状態にかけることで、計算基底での測定で求める結果を得ることができます。</p>
-</div>
-<div class="section" id="id6">
-<h2><a class="toc-backref" href="#id18">観測量の期待値とその計算法</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id6">
+<h2><a class="toc-backref" href="#id18">観測量の期待値とその計算法</a><a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
 <p>課題の説明に入る前に、さらに話が込み入ってきますが、量子計算でも多出する（ワークブックでは特に<a class="reference internal" href="vqe.html"><span class="doc">変分法と変分量子固有値ソルバー法を学習する</span></a>以降）概念である「観測量の期待値」について説明します。</p>
 <p>観測量とはそのまま「観測できる量」のことで、量子状態から取り出せる（古典的）情報のこととも言えます。例えば、何かしらの粒子の運動を量子力学的に記述した場合、その粒子の位置や運動量などが観測量です。</p>
 <p>ケットで表される量子状態に対して、観測量はケットに作用する「エルミート演算子」で表現されます。エルミート以前にそもそも演算子という言葉をこれまで使っていませんが、量子力学において演算子とは、状態ケットを他の状態ケットに変換する作用で、特に線形なもの、すなわち</p>
@@ -675,16 +606,16 @@ A \ket{\phi_j} = a_j \ket{\phi_j}
 \bra{\psi} A \ket{\psi} = \sum_{j=0}^{2^n-1} a_j |\gamma_j|^2
 \]</div>
 <p>となります。ここから、量子コンピュータにおいて観測量の期待値を計算する方法を見出すことができます。具体的には、</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>観測量をエルミート演算子で表現する</p></li>
 <li><p>演算子を対角化し、固有値と対応する固有ベクトルを求める</p></li>
 <li><p>固有ベクトルを基底として、レジスタの状態を測定する</p></li>
 <li><p>測定から得られた確率分布を重みとして固有値の平均値を取る</p></li>
 </ol>
 <p>です<a class="footnote-reference brackets" href="#pauli-decomposition" id="id9">5</a>。3の測定の際には、上のセクションで説明した測定基底の変換を利用します。</p>
-</div>
-<div class="section" id="chsh">
-<h2><a class="toc-backref" href="#id19">CHSH不等式の解釈</a><a class="headerlink" href="#chsh" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="chsh">
+<h2><a class="toc-backref" href="#id19">CHSH不等式の解釈</a><a class="headerlink" href="#chsh" title="Permalink to this heading">#</a></h2>
 <p>実習の中で、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -739,7 +670,7 @@ C = \bra{\psi'} \sigma^0_B \sigma^0_A \ket{\psi'} = \bra{\psi} \sigma^{\lambda}_
 <p>を表していたのでした。</p>
 <p>これを踏まえて、CHSH不等式の左辺は結局何を計算していたのか、見直してみましょう。ベル状態を</p>
 <div class="math notranslate nohighlight" id="equation-bell-state">
-<span class="eqno">(4)<a class="headerlink" href="#equation-bell-state" title="Permalink to this equation">¶</a></span>\[\ket{\Psi} := \frac{1}{\sqrt{2}} \left(\ket{0}_B \ket{0}_A + \ket{1}_B \ket{1}_A\right)\]</div>
+<span class="eqno">(4)<a class="headerlink" href="#equation-bell-state" title="Permalink to this equation">#</a></span>\[\ket{\Psi} := \frac{1}{\sqrt{2}} \left(\ket{0}_B \ket{0}_A + \ket{1}_B \ket{1}_A\right)\]</div>
 <p>とおきます。<span class="math notranslate nohighlight">\(R_y(\pi/4)\ket{0}, R_y(\pi/2)\ket{0}, R_y(3\pi/4)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子をそれぞれ<span class="math notranslate nohighlight">\(\sigma^{\pi/4}, \sigma^{\pi/2}, \sigma^{3\pi/4}\)</span>とすると、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -753,11 +684,11 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 という量を定義すると、エンタングルメントのない古典力学において<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>である。</p>
 </div></blockquote>
 <p>となります。</p>
-</div>
-<div class="section" id="id11">
-<h2><a class="toc-backref" href="#id20">問題：ベル状態について調べる</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="sigma">
-<h3><a class="toc-backref" href="#id21">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a><a class="headerlink" href="#sigma" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id11">
+<h2><a class="toc-backref" href="#id20">問題：ベル状態について調べる</a><a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h2>
+<section id="sigma">
+<h3><a class="toc-backref" href="#id21">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a><a class="headerlink" href="#sigma" title="Permalink to this heading">#</a></h3>
 <p>上のように<span class="math notranslate nohighlight">\(R_y(\theta)\ket{0}\)</span>が固有値<span class="math notranslate nohighlight">\(+1\)</span>の固有ベクトルとなるような演算子を<span class="math notranslate nohighlight">\(\sigma^{\theta}\)</span>として、<span class="math notranslate nohighlight">\(\bra{\Psi} \sigma^{\chi}_B \sigma^{\theta}_A \ket{\Psi}\)</span>を計算してみましょう。まず基底変換を具体的に書き下します。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -770,15 +701,15 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 \end{split}\]</div>
 <p>したがって、</p>
 <div class="math notranslate nohighlight" id="equation-quantum-correlation">
-<span class="eqno">(5)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(5)<a class="headerlink" href="#equation-quantum-correlation" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 \bra{\Psi} \sigma^{\chi}_B \sigma^{\theta}_A \ket{\Psi} &amp; = \bra{\Psi'} \sigma^{0}_B \sigma^{0}_A \ket{\Psi'} \\
 &amp; = \cos^2\left(\frac{\theta - \chi}{2}\right) - \sin^2\left(\frac{\theta - \chi}{2}\right) \\
 &amp; = \cos(\theta - \chi)
 \end{align}\end{split}\]</div>
 <p>となります。</p>
-</div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id22">実験1</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id12">
+<h3><a class="toc-backref" href="#id22">実験1</a><a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h3>
 <p>上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットにそれぞれ適当な<span class="math notranslate nohighlight">\(R_y\)</span>ゲートをかけ、期待値<span class="math notranslate nohighlight">\(C\)</span>を<span class="math notranslate nohighlight">\(R_y\)</span>ゲートのパラメータの組み合わせについて二次元プロットに起こしてみます。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Consider 20 points each for theta and phi (400 points total)</span>
 <span class="n">ntheta</span> <span class="o">=</span> <span class="mi">20</span>
@@ -852,9 +783,9 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 </pre></div>
 </div>
 <p>プロット上に、合わせて<span class="math notranslate nohighlight">\(|S| = 2\sqrt{2}\)</span>となる時の<span class="math notranslate nohighlight">\(\theta, \chi\)</span>の値の組み合わせを表示してあります（<span class="math notranslate nohighlight">\(\langle \sigma^{\chi} \sigma^{\theta} \rangle\)</span>を足す点は赤、引く点は白）</p>
-</div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id23">ベル状態の何がすごいのか？</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id13">
+<h3><a class="toc-backref" href="#id23">ベル状態の何がすごいのか？</a><a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h3>
 <p>ここまで、かなり天下り的に「エンタングルメント」や「ベル状態」が登場してきて、CHSH不等式が破れているから量子力学だ、と言われても、そもそも量子現象がないとしたら何が期待されるのか、なぜベル状態が不思議なのか、といったある種の「出発点」が欠けていると感じている方も多いかと思います（量子ネイティブを育成するという観点からは、出発点が量子力学でありエンタングルメントは当たり前、ということでいいのかもしれませんが）。量子現象のない「古典力学」とはすなわち、ボールを投げたら放物線を描いて地面に落ちる、といった我々の日常的な感覚に沿った物理法則体系とも言えます。そこで、一旦量子力学を忘れて、日常的な感覚でベル状態を解釈することを試みましょう。</p>
 <p><strong>量子ビットAとBはそれぞれどんな状態にある？</strong></p>
 <p>量子コンピュータ上で実験をしているので、量子ビットAとBは1mmも離れていません（IBMQのような超電導型のコンピュータの実態は、数mm四方のシリコンチップ上にプリントされた金属の回路です）が、これまでの議論にそもそもAとBの間の距離は一切登場しませんでした。実際、AとBをエンタングルさせてから、何らかの方法で二つを100m引き離したとしても、AとBの関係は全く変わりません。そのようにバラバラにして扱える二つの物があるとしたら、日常的な感覚で言えば、それぞれの物が独立に何らかの状態にあると思うのが自然です。ケットの記法で言えば、<span class="math notranslate nohighlight">\(\ket{\psi}_B\ket{\phi}_A\)</span>というような状態（「可分状態」）です。</p>
@@ -863,7 +794,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <p>ベル状態を計算基底で測定すると、00か11というビット列が等しい確率で得られます。ならば、二つの量子ビットが相関しているとしても、全体が<span class="math notranslate nohighlight">\(\ket{00}\)</span>という状態にあったり<span class="math notranslate nohighlight">\(\ket{11}\)</span>という状態にあったりして、それがランダムに切り替わっていると思えばいいのでしょうか？</p>
 <p>再び式<a class="reference internal" href="#equation-bell-state">(4)</a>を眺めると、この解釈も正しくないことがわかります。例えば式<a class="reference internal" href="#equation-theta-ket-inverse-def">(3)</a>を用いると</p>
 <div class="math notranslate nohighlight" id="equation-bell-state-basis-change">
-<span class="eqno">(6)<a class="headerlink" href="#equation-bell-state-basis-change" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{align}
+<span class="eqno">(6)<a class="headerlink" href="#equation-bell-state-basis-change" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{align}
 \ket{\Psi} = &amp; \frac{1}{\sqrt{2}} \left(\ket{0}_B \ket{0}_A + \ket{1}_B \ket{1}_A\right) \\
 = &amp; \frac{1}{\sqrt{2}} \left[
 \left( \cos\frac{\theta}{2} \ket{\theta_+}_B - \sin\frac{\theta}{2} \ket{\theta_-}_B \right)
@@ -890,9 +821,9 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 \end{split}\]</div>
 <p>です。最後の不等式では、<span class="math notranslate nohighlight">\(-1 \leq x, y \leq 1\)</span>を満たす<span class="math notranslate nohighlight">\(x, y\)</span>について<span class="math notranslate nohighlight">\(|x+y| + |x-y| \leq 2\)</span>が常に成り立つことを利用しました。</p>
 <p>様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では<span class="math notranslate nohighlight">\(|S| \leq 2\)</span>」という命題の意味です。</p>
-</div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id24">実験2</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id14">
+<h3><a class="toc-backref" href="#id24">実験2</a><a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h3>
 <p>上で言及した「確率1/2で<span class="math notranslate nohighlight">\(\ket{00}\)</span>、確率1/2で<span class="math notranslate nohighlight">\(\ket{11}\)</span>」という状態（「混合状態」という状態の一種です）も、少し工夫をすると量子回路で再現することができます。まず量子ビットを3つ使って「GHZ状態」</p>
 <div class="math notranslate nohighlight">
 \[
@@ -934,7 +865,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counts_ignoring_qubit2</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">bitstring</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add the counts of cases where qubit C is 0 and 1&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the counts of cases where qubit C is 0 and 1&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;1</span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -1007,9 +938,9 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
 <dd><p>実はただ量子ビットを放置するだけでも、測定をして結果を見ないのと同じ効果をもたらすことができます。これをthe principle of implicit measurementと呼びます。</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1023,7 +954,7 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -1031,44 +962,115 @@ S = C^{\rmI} - C^{\rmII} + C^{\rmIII} + C^{\rmIV} = \bra{\Psi} \sigma^{\pi/4}_B 
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="chsh_inequality.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">CHSH不等式の破れを確認する</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chsh_inequality.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">CHSH不等式の破れを確認する</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="circuit_from_scratch.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="circuit_from_scratch.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">単純な量子回路をゼロから書く</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By 東京大学素粒子物理国際研究センター<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
       </div>
-    </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
 
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qc">QCシミュレータの使い方</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">測定基底の変換</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">観測量の期待値とその計算法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chsh">CHSH不等式の解釈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">問題：ベル状態について調べる</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sigma">一般の<span class="math notranslate nohighlight">\(\sigma\)</span>演算子の期待値</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">実験1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">ベル状態の何がすごいのか？</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">実験2</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By 東京大学素粒子物理国際研究センター
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

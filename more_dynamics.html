@@ -1,50 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>【課題】量子ダイナミクスシミュレーション・続 &#8212; 量子コンピューティング・ワークブック</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,455 +63,434 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'more_dynamics';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【参考】足し算を実機で行う" href="addition_on_ibmq.html" />
     <link rel="prev" title="物理系を表現する" href="dynamics_simulation.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/favicon.ico" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="welcome.html">
-   量子コンピューティング・ワークブックへようこそ！
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータに触れる
- </span>
-</p>
+    
+    
+    <img src="_static/favicon.ico" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/favicon.ico" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    量子コンピューティング・ワークブックへようこそ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータに触れる</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="chsh_inequality.html">
-   CHSH不等式の破れを確認する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="nonlocal_correlations.html">
-   【課題】量子相関を調べる
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="chsh_inequality.html">CHSH不等式の破れを確認する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nonlocal_correlations.html">【課題】量子相関を調べる</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子回路を作る
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子回路を作る</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   【課題】アダマールテスト
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="circuit_from_scratch.html">単純な量子回路をゼロから書く</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_computation.html">【課題】アダマールテスト</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータでの並列計算
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータでの並列計算</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dynamics_simulation.html">
-   物理系を表現する
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   【課題】量子ダイナミクスシミュレーション・続
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="addition_on_ibmq.html">
-   【参考】足し算を実機で行う
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="extreme_simd.html">計算をする量子回路の実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics_simulation.html">物理系を表現する</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">【課題】量子ダイナミクスシミュレーション・続</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addition_on_ibmq.html">【参考】足し算を実機で行う</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ショアのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ショアのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="shor.html">
-   素因数分解アルゴリズムを学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="spectrum_estimation.html">
-   【課題】位相推定によるスペクトル分解
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="shor.html">素因数分解アルゴリズムを学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum_estimation.html">【課題】位相推定によるスペクトル分解</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  グローバーのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">グローバーのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grover.html">
-   データベース検索を行う
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="grover_number_light.html">
-   【課題】ビット反転ボードの操作を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grover.html">データベース検索を行う</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grover_number_light.html">【課題】ビット反転ボードの操作を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  変分法と変分量子固有値ソルバー
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">変分法と変分量子固有値ソルバー</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe.html">
-   変分法と変分量子固有値ソルバー法を学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe_tracking.html">
-   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqe.html">変分法と変分量子固有値ソルバー法を学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vqe_tracking.html">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子・古典ハイブリッド機械学習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子・古典ハイブリッド機械学習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqc_machine_learning.html">
-   量子機械学習を使った新しい素粒子現象の探索
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="qkc_machine_learning.html">
-   【課題】量子カーネルを使った新現象の分類
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqc_machine_learning.html">量子機械学習を使った新しい素粒子現象の探索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qkc_machine_learning.html">【課題】量子カーネルを使った新現象の分類</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  演習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">演習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="toffoli_shor_code.html">
-   ToffoliゲートとShorコード
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="toffoli_shor_code.html">ToffoliゲートとShorコード</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  補足
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">補足</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
-   実習の準備
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_intro.html">
-   予備知識：Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numerics.html">
-   予備知識：数値表現
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   参考文献
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   文献一覧
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">実習の準備</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_intro.html">予備知識：Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">予備知識：数値表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">参考文献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">文献一覧</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/more_dynamics.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/more_dynamics.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fmore_dynamics.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/more_dynamics.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/more_dynamics.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fmore_dynamics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/more_dynamics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="_sources/more_dynamics.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>【課題】量子ダイナミクスシミュレーション・続</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#x">
-   問題1: ハイゼンベルグモデル、X方向のスピン
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id3">
-     問題
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id4">
-     おまけ: スピン総和
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
-   問題2: シュウィンガーモデル
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id6">
-     シュウィンガーモデルの物理
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id11">
-     ハミルトニアンを物質場のみで記述する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
-     ハミルトニアンをパウリ行列で表現する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id15">
-     問題
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x">問題1: ハイゼンベルグモデル、X方向のスピン</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">問題</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">おまけ: スピン総和</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">問題2: シュウィンガーモデル</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">シュウィンガーモデルの物理</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">ハミルトニアンを物質場のみで記述する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">ハミルトニアンをパウリ行列で表現する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">問題</a></li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>【課題】量子ダイナミクスシミュレーション・続</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#x">
-   問題1: ハイゼンベルグモデル、X方向のスピン
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id3">
-     問題
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id4">
-     おまけ: スピン総和
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
-   問題2: シュウィンガーモデル
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id6">
-     シュウィンガーモデルの物理
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id11">
-     ハミルトニアンを物質場のみで記述する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
-     ハミルトニアンをパウリ行列で表現する
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id15">
-     問題
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>【課題】量子ダイナミクスシミュレーション・続<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>【課題】量子ダイナミクスシミュレーション・続<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>第三回の実習では量子計算の並列性と、その顕著な利用法としての量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -525,10 +514,10 @@ const thebe_selector_output = ".output, .cell_output"
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\plusket}{\ket{+}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\minusket}{\ket{-}}\)</span></p>
-<div class="section" id="x">
-<h2><a class="toc-backref" href="#id18">問題1: ハイゼンベルグモデル、X方向のスピン</a><a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3><a class="toc-backref" href="#id19">問題</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="x">
+<h2><a class="toc-backref" href="#id18">問題1: ハイゼンベルグモデル、X方向のスピン</a><a class="headerlink" href="#x" title="Permalink to this heading">#</a></h2>
+<section id="id3">
+<h3><a class="toc-backref" href="#id19">問題</a><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <p>実習ではハイゼンベルグモデルのシミュレーションをし、各スピンの<span class="math notranslate nohighlight">\(Z\)</span>方向の期待値の時間発展を追いました。しかし、シミュレーションそのものは最終的なオブザーバブル（観測量）によらず成立するので、（ほぼ）同じ回路を用いて系の他の性質を調べることもできます。そこで、各スピンの<span class="math notranslate nohighlight">\(X\)</span>方向の期待値の時間発展を測定する回路を書き、実習時と同様に時間に対してプロットしてください。</p>
 <p><strong>ヒント</strong>:</p>
 <p><a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py">プロット用関数<code class="docutils literal notranslate"><span class="pre">plot_heisenberg_spins</span></code></a>で厳密解のカーブを書くとき、追加の引数<code class="docutils literal notranslate"><span class="pre">spin_component='x'</span></code>を渡すと<span class="math notranslate nohighlight">\(X\)</span>方向のスピンのプロットに切り替わります。ただし、実験結果の<code class="docutils literal notranslate"><span class="pre">counts_list</span></code>は相応する測定の結果となっていなければいけません。具体的には、各スピンについて「0が測定される＝スピンが+<span class="math notranslate nohighlight">\(X\)</span>を向いている、1が測定される＝スピンが-<span class="math notranslate nohighlight">\(X\)</span>を向いている」という対応付けが必要です。）</p>
@@ -628,9 +617,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p>完成した回路のコードとシミュレーション結果によるプロット</p></li>
 <li><p>一般の方向のスピンの期待値を測定するためにはどうすればいいかの説明</p></li>
 </ul>
-</div>
-<div class="section" id="id4">
-<h3><a class="toc-backref" href="#id20">おまけ: スピン総和</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id4">
+<h3><a class="toc-backref" href="#id20">おまけ: スピン総和</a><a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
 <p>注：これは量子コンピューティングというより物理の問題なので、興味のある方だけ考えてみてください。</p>
 <p>上のハイゼンベルグモデルのシミュレーションで、初期状態の<span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(Y\)</span>, <span class="math notranslate nohighlight">\(Z\)</span>方向のスピン期待値の全系での平均値<span class="math notranslate nohighlight">\(m_x\)</span>, <span class="math notranslate nohighlight">\(m_y\)</span>, <span class="math notranslate nohighlight">\(m_z\)</span>はそれぞれ</p>
 <div class="math notranslate nohighlight">
@@ -640,18 +629,18 @@ m_y = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Y}_j \rangle = 0 \\
 m_z = \frac{1}{n} \sum_{j=0}^{n} \langle \sigma^{Z}_j \rangle = \frac{n-1}{n}
 \end{split}\]</div>
 <p>です。これらの平均値はどう時間発展するでしょうか。理論的議論をし、シミュレーションで数値的に確かめてください。</p>
-</div>
-</div>
-<div class="section" id="id5">
-<h2><a class="toc-backref" href="#id21">問題2: シュウィンガーモデル</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="id5">
+<h2><a class="toc-backref" href="#id21">問題2: シュウィンガーモデル</a><a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
 <p>これまで扱ったような、スピンに関連する現象とは異なる物理モデルのシミュレーションをしましょう。空間1次元、時間1次元の時空における量子電磁力学の模型「シュウィンガーモデル」を考えます。</p>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id22">シュウィンガーモデルの物理</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<section id="id6">
+<h3><a class="toc-backref" href="#id22">シュウィンガーモデルの物理</a><a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <p>簡単に物理の解説をします（ここは読み飛ばしても差し支えありません）。といっても、まともにゼロから解説をしたらあまりにも長くなってしまうので、かなり前提知識を仮定します。興味のある方は参考文献<span id="id7">[<a class="reference internal" href="bibliography.html#id14" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>, <a class="reference internal" href="bibliography.html#id13" title="Mikhail Shifman. Advanced Topics in Quantum Field Theory, chapter 33.1, pages 299-304. Cambridge University Press, 2012.">Shi12</a>]</span>などを参照してください。特に<span id="id8">[<a class="reference internal" href="bibliography.html#id14" title="Esteban A. Martinez, Christine A. Muschik, Philipp Schindler, Daniel Nigg, Alexander Erhard, Markus Heyl, Philipp Hauke, Marcello Dalmonte, Thomas Monz, Peter Zoller, and et al. Real-time dynamics of lattice gauge theories with a few-qubit quantum computer. Nature, 534(7608):516–519, Jun 2016. URL: http://dx.doi.org/10.1038/nature18318, doi:10.1038/nature18318.">MMS+16</a>]</span>は実際にこれから実装する回路をイオントラップ型量子コンピュータで実行した論文です。</p>
 <p>量子電磁力学とは量子場の理論の一種です。量子場の理論とは物質やその相互作用（力）をすべて量子力学的な「場」（時空中の各点に応じた値を持つ存在）で記述した理論で、素粒子論などで物質の根源的な性質を記述する際の基本言語です。量子場の理論において、一部の場を「物質場」とし、それに特定の対称性（<span class="math notranslate nohighlight">\(U(1)\)</span>ゲージ対称性）を持たせると、「電荷」が生み出され、電荷を持った場の間の相互作用を媒介する「光子場」が生じます。電荷を持った場と光子場の振る舞いを記述するのが量子電磁力学です。</p>
 <p>量子場の理論は「ラグランジアン」<a class="footnote-reference brackets" href="#lagrangian" id="id9">1</a>を指定すれば定まります。シュウィンガーモデルのラグランジアンは物質場（電子）<span class="math notranslate nohighlight">\(\psi\)</span>とゲージ場（光子）<span class="math notranslate nohighlight">\(A\)</span>からなり、</p>
 <div class="math notranslate nohighlight" id="equation-schwinger-lagrangian">
-<span class="eqno">(14)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">¶</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
+<span class="eqno">(14)<a class="headerlink" href="#equation-schwinger-lagrangian" title="Permalink to this equation">#</a></span>\[\mathcal{L} = -\frac{1}{4g^2} F^{\mu\nu}F_{\mu\nu} + \bar{\psi} (i\gamma^{\mu}D_{\mu} - m) \psi\]</div>
 <p>です。ただし、これまでの物理系を扱った話と異なり、ここでは場の量子論の一般慣習に従って、光速<span class="math notranslate nohighlight">\(c\)</span>とプランク定数<span class="math notranslate nohighlight">\(\hbar\)</span>がともに1である単位系を使っています。</p>
 <p>式<a class="reference internal" href="#equation-schwinger-lagrangian">(14)</a>の指数<span class="math notranslate nohighlight">\(\mu, \nu\)</span>は0（時間次元）か1（空間次元）の値を取ります。<span class="math notranslate nohighlight">\(\frac{1}{2g} F_{\mu\nu}\)</span>は<span class="math notranslate nohighlight">\(A\)</span>の強度テンソル（電場）で</p>
 <div class="math notranslate nohighlight">
@@ -661,18 +650,18 @@ F_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu}
 <p>です。<span class="math notranslate nohighlight">\(\psi\)</span>は物質と反物質を表す2元スピノルで、<span class="math notranslate nohighlight">\(m\)</span>がその質量となります。<span class="math notranslate nohighlight">\(\{\gamma^0, \gamma^1\}\)</span>は2次元のクリフォード代数の表現です。</p>
 <p>このラグランジアンを元に、Kogut-Susskindの手法<span id="id10">[<a class="reference internal" href="bibliography.html#id16" title="A. Casher, J. Kogut, and Leonard Susskind. Vacuum polarization and the absence of free quarks. Phys. Rev. D, 10:732–745, Jul 1974. URL: https://link.aps.org/doi/10.1103/PhysRevD.10.732, doi:10.1103/PhysRevD.10.732.">CKS74</a>]</span>でモデルを空間格子（格子間隔<span class="math notranslate nohighlight">\(a\)</span>）上の場の理論に移すと、そのハミルトニアンは</p>
 <div class="math notranslate nohighlight" id="equation-kogut-susskind-hamiltonian">
-<span class="eqno">(15)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">¶</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
+<span class="eqno">(15)<a class="headerlink" href="#equation-kogut-susskind-hamiltonian" title="Permalink to this equation">#</a></span>\[H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\theta_{j}} \Phi_{j+1} + \Phi_{j} e^{-i\theta_{j}} \Phi^{\dagger}_{j+1} \right] + 2 J \sum_{j=0}^{n-2} L_{j}^2 + 2 \mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \bigg\}\]</div>
 <p>となります。ここで<span class="math notranslate nohighlight">\(J = g^2 a^2 / 2\)</span>, <span class="math notranslate nohighlight">\(\mu = m a\)</span>, また<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>上の（1元）物質場、<span class="math notranslate nohighlight">\(\theta_j\)</span>は<span class="math notranslate nohighlight">\(j\)</span>上のゲージ場、<span class="math notranslate nohighlight">\(L_j\)</span>は格子<span class="math notranslate nohighlight">\(j\)</span>と<span class="math notranslate nohighlight">\(j+1\)</span>間の接続上の電場です。</p>
 <p>Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは<span class="math notranslate nohighlight">\(j\)</span>が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト<span class="math notranslate nohighlight">\(j\)</span>の基底<span class="math notranslate nohighlight">\(\plusket_j\)</span>と<span class="math notranslate nohighlight">\(\minusket_j\)</span>を、<span class="math notranslate nohighlight">\(\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>が</p>
 <div class="math notranslate nohighlight" id="equation-creation-annihilation">
-<span class="eqno">(16)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">¶</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
+<span class="eqno">(16)<a class="headerlink" href="#equation-creation-annihilation" title="Permalink to this equation">#</a></span>\[\begin{split}\Phi_j \plusket_j = \minusket_j \\
 \Phi_j \minusket_j = 0 \\
 \Phi^{\dagger}_j \plusket_j = 0 \\
 \Phi^{\dagger}_j \minusket_j = \plusket_j\end{split}\]</div>
 <p>と作用する状態と定めます。質量項の符号から、偶数サイトでは<span class="math notranslate nohighlight">\(\minusket\)</span>が粒子が存在する状態、<span class="math notranslate nohighlight">\(\plusket\)</span>が存在しない状態を表現し、奇数サイトでは逆に<span class="math notranslate nohighlight">\(\plusket\)</span>が粒子あり、<span class="math notranslate nohighlight">\(\minusket\)</span>が粒子なしを表すことがわかります。つまり、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\)</span>と<span class="math notranslate nohighlight">\(\Phi_j\)</span>はサイト<span class="math notranslate nohighlight">\(j\)</span>における電荷の上昇と下降を引き起こす演算子です。</p>
-</div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id23">ハミルトニアンを物質場のみで記述する</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id11">
+<h3><a class="toc-backref" href="#id23">ハミルトニアンを物質場のみで記述する</a><a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h3>
 <p><span class="math notranslate nohighlight">\(\newcommand{\flhalf}[1]{\left\lfloor \frac{#1}{2} \right\rfloor}\)</span></p>
 <p>このままのハミルトニアンではまだデジタルモデルが構築しにくいので、ゲージを固定して<span class="math notranslate nohighlight">\(\theta\)</span>と<span class="math notranslate nohighlight">\(L\)</span>を除いてしまいます<a class="footnote-reference brackets" href="#another-approach" id="id12">2</a>。まず<span class="math notranslate nohighlight">\(\Phi_j\)</span>を以下のように再定義します。</p>
 <div class="math notranslate nohighlight">
@@ -702,9 +691,9 @@ L_j = \sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \flhalf{j} - 1
 H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \right] + 2J \sum_{j=0}^{n-2} \left[\sum_{k=0}^{j} \Phi_{k}^{\dagger} \Phi_{k} - \flhalf{j} - 1 \right]^2 + 2\mu \sum_{j=0}^{n-1} (-1)^{j+1} \Phi^{\dagger}_{j} \Phi_{j} \right\}
 \]</div>
 <p>が得られます。</p>
-</div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id24">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id13">
+<h3><a class="toc-backref" href="#id24">ハミルトニアンをパウリ行列で表現する</a><a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h3>
 <p>最後に、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をスピン<span class="math notranslate nohighlight">\(\pm Z\)</span>の状態のようにみなして、<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_j\)</span>と<span class="math notranslate nohighlight">\(\Phi^{\dagger}_j\Phi_{j+1}\)</span>をパウリ行列で表現します。式<a class="reference internal" href="#equation-creation-annihilation">(16)</a>から
 前者は</p>
 <div class="math notranslate nohighlight">
@@ -732,9 +721,9 @@ H = \frac{1}{2a} \left\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} \Phi_{j+1
 H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_j + \sigma^Y_{j+1}\sigma^Y_j) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_j \sigma^Z_k + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
 \]</div>
 <p>です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。</p>
-</div>
-<div class="section" id="id15">
-<h3><a class="toc-backref" href="#id25">問題</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id15">
+<h3><a class="toc-backref" href="#id25">問題</a><a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h3>
 <p>上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、<span class="math notranslate nohighlight">\(\plusket\)</span>と<span class="math notranslate nohighlight">\(\minusket\)</span>をそれぞれ<span class="math notranslate nohighlight">\(\ket{0}\)</span>と<span class="math notranslate nohighlight">\(\ket{1}\)</span>に対応させて、8ビット量子レジスタに対して実装してください。初期状態は真空、つまりどのサイトにも粒子・反粒子が存在しない状態<span class="math notranslate nohighlight">\(\ket{+-+-+-+-}\)</span>とし、系全体の粒子数密度の期待値</p>
 <div class="math notranslate nohighlight">
 \[
@@ -868,9 +857,9 @@ H = 0.5 \sigma^X_2 \sigma^Y_1 I_0 + I_2 \sigma^Z_1 \sigma^X_0
 <dd><p>参考文献<span id="id17">[<a class="reference internal" href="bibliography.html#id15" title="Alexander F. Shaw, Pavel Lougovski, Jesse R. Stryker, and Nathan Wiebe. Quantum Algorithms for Simulating the Lattice Schwinger Model. Quantum, 4:306, aug 2020. URL: https://doi.org/10.22331/q-2020-08-10-306, doi:10.22331/q-2020-08-10-306.">SLSW20</a>]</span>では、別のアプローチで同じハミルトニアンの量子回路実装をしています。</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -884,7 +873,7 @@ H = 0.5 \sigma^X_2 \sigma^Y_1 I_0 + I_2 \sigma^Z_1 \sigma^X_0
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -892,44 +881,116 @@ H = 0.5 \sigma^X_2 \sigma^Y_1 I_0 + I_2 \sigma^Z_1 \sigma^X_0
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="dynamics_simulation.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">物理系を表現する</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dynamics_simulation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">物理系を表現する</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="addition_on_ibmq.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="addition_on_ibmq.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">【参考】足し算を実機で行う</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By 東京大学素粒子物理国際研究センター<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
       </div>
-    </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
 
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x">問題1: ハイゼンベルグモデル、X方向のスピン</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">問題</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">おまけ: スピン総和</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">問題2: シュウィンガーモデル</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">シュウィンガーモデルの物理</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">ハミルトニアンを物質場のみで記述する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">ハミルトニアンをパウリ行列で表現する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">問題</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By 東京大学素粒子物理国際研究センター
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

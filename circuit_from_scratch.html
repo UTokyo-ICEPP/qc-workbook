@@ -1,50 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>単純な量子回路をゼロから書く &#8212; 量子コンピューティング・ワークブック</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,587 +63,452 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'circuit_from_scratch';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】アダマールテスト" href="quantum_computation.html" />
     <link rel="prev" title="【課題】量子相関を調べる" href="nonlocal_correlations.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/favicon.ico" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="welcome.html">
-   量子コンピューティング・ワークブックへようこそ！
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータに触れる
- </span>
-</p>
+    
+    
+    <img src="_static/favicon.ico" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/favicon.ico" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    量子コンピューティング・ワークブックへようこそ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータに触れる</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="chsh_inequality.html">
-   CHSH不等式の破れを確認する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="nonlocal_correlations.html">
-   【課題】量子相関を調べる
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="chsh_inequality.html">CHSH不等式の破れを確認する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nonlocal_correlations.html">【課題】量子相関を調べる</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子回路を作る
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子回路を作る</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   【課題】アダマールテスト
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">単純な量子回路をゼロから書く</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_computation.html">【課題】アダマールテスト</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータでの並列計算
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータでの並列計算</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dynamics_simulation.html">
-   物理系を表現する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="more_dynamics.html">
-   【課題】量子ダイナミクスシミュレーション・続
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="addition_on_ibmq.html">
-   【参考】足し算を実機で行う
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="extreme_simd.html">計算をする量子回路の実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics_simulation.html">物理系を表現する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more_dynamics.html">【課題】量子ダイナミクスシミュレーション・続</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addition_on_ibmq.html">【参考】足し算を実機で行う</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ショアのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ショアのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="shor.html">
-   素因数分解アルゴリズムを学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="spectrum_estimation.html">
-   【課題】位相推定によるスペクトル分解
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="shor.html">素因数分解アルゴリズムを学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum_estimation.html">【課題】位相推定によるスペクトル分解</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  グローバーのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">グローバーのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grover.html">
-   データベース検索を行う
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="grover_number_light.html">
-   【課題】ビット反転ボードの操作を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grover.html">データベース検索を行う</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grover_number_light.html">【課題】ビット反転ボードの操作を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  変分法と変分量子固有値ソルバー
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">変分法と変分量子固有値ソルバー</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe.html">
-   変分法と変分量子固有値ソルバー法を学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe_tracking.html">
-   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqe.html">変分法と変分量子固有値ソルバー法を学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vqe_tracking.html">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子・古典ハイブリッド機械学習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子・古典ハイブリッド機械学習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqc_machine_learning.html">
-   量子機械学習を使った新しい素粒子現象の探索
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="qkc_machine_learning.html">
-   【課題】量子カーネルを使った新現象の分類
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqc_machine_learning.html">量子機械学習を使った新しい素粒子現象の探索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qkc_machine_learning.html">【課題】量子カーネルを使った新現象の分類</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  演習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">演習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="toffoli_shor_code.html">
-   ToffoliゲートとShorコード
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="toffoli_shor_code.html">ToffoliゲートとShorコード</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  補足
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">補足</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
-   実習の準備
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_intro.html">
-   予備知識：Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numerics.html">
-   予備知識：数値表現
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   参考文献
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   文献一覧
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">実習の準備</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_intro.html">予備知識：Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">予備知識：数値表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">参考文献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">文献一覧</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/circuit_from_scratch.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/circuit_from_scratch.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fcircuit_from_scratch.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/circuit_from_scratch.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/circuit_from_scratch.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fcircuit_from_scratch.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/circuit_from_scratch.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="_sources/circuit_from_scratch.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>単純な量子回路をゼロから書く</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
-   状態ベクトルシミュレータで量子状態を調べる
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-gates">
-   その他のゲート
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id5">
-     1、2量子ビット
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id6">
-     3量子ビット以上
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id7">
-   量子状態生成
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id8">
-     問題1: 1量子ビット、相対位相付き
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
-     問題2: ベル状態、相対位相付き
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ghz">
-     問題3: GHZ状態
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equal-superposition">
-     問題4: Equal superposition
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
-     問題5: 特定の基底の符号を反転させる
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equal-superposition-with-phase">
-     問題6: Equal superpositionに位相を付ける
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
-   量子計算プリミティブ
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
-     条件分岐
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id15">
-       測定結果に基づいた分岐
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id16">
-       条件分岐としての制御ゲート
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id17">
-     関数
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id18">
-     状態ベクトルの内積
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#swap">
-       SWAPテスト
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#inverse-circuit">
-       逆回路の利用
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id20">
-   複製不可能定理とテレポーテーション
-  </a>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">状態ベクトルシミュレータで量子状態を調べる</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-gates">その他のゲート</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">1、2量子ビット</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3量子ビット以上</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">量子状態生成</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">問題1: 1量子ビット、相対位相付き</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">問題2: ベル状態、相対位相付き</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ghz">問題3: GHZ状態</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-superposition">問題4: Equal superposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">問題5: 特定の基底の符号を反転させる</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-superposition-with-phase">問題6: Equal superpositionに位相を付ける</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">量子計算プリミティブ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">条件分岐</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">測定結果に基づいた分岐</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">条件分岐としての制御ゲート</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">関数</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">状態ベクトルの内積</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#swap">SWAPテスト</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-circuit">逆回路の利用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">複製不可能定理とテレポーテーション</a></li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>単純な量子回路をゼロから書く</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
-   状態ベクトルシミュレータで量子状態を調べる
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-gates">
-   その他のゲート
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id5">
-     1、2量子ビット
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id6">
-     3量子ビット以上
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id7">
-   量子状態生成
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id8">
-     問題1: 1量子ビット、相対位相付き
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
-     問題2: ベル状態、相対位相付き
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ghz">
-     問題3: GHZ状態
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equal-superposition">
-     問題4: Equal superposition
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
-     問題5: 特定の基底の符号を反転させる
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equal-superposition-with-phase">
-     問題6: Equal superpositionに位相を付ける
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
-   量子計算プリミティブ
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id14">
-     条件分岐
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id15">
-       測定結果に基づいた分岐
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id16">
-       条件分岐としての制御ゲート
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id17">
-     関数
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id18">
-     状態ベクトルの内積
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#swap">
-       SWAPテスト
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#inverse-circuit">
-       逆回路の利用
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id20">
-   複製不可能定理とテレポーテーション
-  </a>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>単純な量子回路をゼロから書く<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>単純な量子回路をゼロから書く<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p><a class="reference internal" href="chsh_inequality.html"><span class="doc">CHSH不等式の破れを確認する</span></a>で、量子回路の基本的な書き方と実機での実行の仕方を学びました。そこで出てきたように、QCでは量子レジスタに特定の量子状態を実現することが計算を行うこととなります。そこで今回は、基本的なゲートを組み合わせて様々な量子状態を作る実習を行います。</p>
 <div class="contents local topic" id="id2">
 <p class="topic-title">目次</p>
@@ -677,8 +552,8 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\braket}[2]{\langle #1 | #2 \rangle}\)</span></p>
-<div class="section" id="id3">
-<h2><a class="toc-backref" href="#id21">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<section id="id3">
+<h2><a class="toc-backref" href="#id21">状態ベクトルシミュレータで量子状態を調べる</a><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <p>第一回の課題で利用したQCシミュレータ<code class="docutils literal notranslate"><span class="pre">AerSimulator</span></code>は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、<code class="docutils literal notranslate"><span class="pre">AerSimulator</span></code>の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -703,6 +578,11 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aer_simulator_statevector
+</pre></div>
+</div>
+</div>
 </div>
 <p>シミュレートする回路を作ります。ここでは例として前半で登場した回路1を使います。測定以外のゲートをかけていきます。</p>
 <div class="cell docutils container">
@@ -715,6 +595,9 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e2157fdc94a2dd934ae31252bef6adab01fd8f5e48d124561a310d98a323485d.png" src="_images/e2157fdc94a2dd934ae31252bef6adab01fd8f5e48d124561a310d98a323485d.png" />
 </div>
 </div>
 <div class="admonition caution">
@@ -745,6 +628,12 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;numpy.ndarray&#39;&gt; complex128
+[ 0.27059805+0.j  0.65328148+0.j -0.65328148+0.j  0.27059805+0.j]
+</pre></div>
+</div>
+</div>
 </div>
 <p>状態ベクトルは<code class="docutils literal notranslate"><span class="pre">np.asarray()</span></code>でnumpy配列に変換できます。データタイプは128ビットの複素数（実部と虚部それぞれ64ビット）です。配列のインデックスがそのまま二進数としてみなした計算基底の値に対応しています。</p>
 <p>状態ベクトルデータから数式の文字列を作る<a class="reference external" href="https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py"><code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>という関数</a>はこのワークブックのレポジトリからインポートしています。</p>
@@ -757,14 +646,18 @@ const thebe_selector_output = ".output, .cell_output"
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle = 0.271 |0\rangle + 0.653 |1\rangle - 0.653 |2\rangle + 0.271 |3\rangle\]</div>
+</div>
 </div>
 <p>前回より、<a class="reference internal" href="chsh_inequality.html#equation-eqn-circuit1">(1)</a>は<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2}} (s\ket{00} + c\ket{01} - c\ket{10} + s\ket{11})\)</span>（<span class="math notranslate nohighlight">\(s:=\sin(\pi/8)=0.271\sqrt{2}\)</span>, <span class="math notranslate nohighlight">\(c:=\cos(\pi/8)=0.653\sqrt{2}\)</span>）という状態を作るもののはずでした。実際に計算された終状態の状態ベクトルが一致しています。</p>
-</div>
-<div class="section" id="other-gates">
-<span id="id4"></span><h2><a class="toc-backref" href="#id22">その他のゲート</a><a class="headerlink" href="#other-gates" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="other-gates">
+<span id="id4"></span><h2><a class="toc-backref" href="#id22">その他のゲート</a><a class="headerlink" href="#other-gates" title="Permalink to this heading">#</a></h2>
 <p><a class="reference internal" href="chsh_inequality.html"><span class="doc">CHSH不等式の破れを確認する</span></a>で、よく使われる1量子ビットゲートと2量子ビット制御ゲートを紹介しましたが、他にも知っておくと便利なゲートがいくつかあります。</p>
-<div class="section" id="id5">
-<h3><a class="toc-backref" href="#id23">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<section id="id5">
+<h3><a class="toc-backref" href="#id23">1、2量子ビット</a><a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
 <table class="table">
 <colgroup>
 <col style="width: 25%" />
@@ -820,9 +713,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id24">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id6">
+<h3><a class="toc-backref" href="#id24">3量子ビット以上</a><a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <p>量子レジスタに対する全ての操作が1量子ビットゲートと2量子ビット制御ゲート（実際にはCNOTのみ）の組み合わせで表現できることはすでに触れましたが、実際に量子回路を書くときには3つ以上の量子ビットにかかるゲートを使用したほうがアルゴリズムをコンパクトに表現できます（最終的には1量子ビットゲートと2量子ビット制御ゲートに分解して実行されます）。</p>
 <p>3量子ビット以上にかかるゲートも基本は制御ゲートで、よく使われるのは制御ビットが複数あるような多重制御（multi-controlled）ゲート<span class="math notranslate nohighlight">\(C^{ij\dots}_{k}[U]\)</span>です。そのうち制御ビットが2つで標的ビット1つに<span class="math notranslate nohighlight">\(X\)</span>をかける<span class="math notranslate nohighlight">\(C^{ij}_{k}[X]\)</span>は特別多用され、Toffoliゲートとも呼ばれます。</p>
 <p>多重制御ゲートでない3量子ビットゲートの例として、controlled SWAPというものも存在します。制御ビット1つで他の2つの量子ビットの間の量子状態交換を制御します。当然制御ビットを増やしたmulti-controlled SWAPというものも考えられます。</p>
@@ -835,15 +728,15 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </pre></div>
 </div>
 <p>となります。</p>
-</div>
-</div>
-<div class="section" id="id7">
-<h2><a class="toc-backref" href="#id25">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="id7">
+<h2><a class="toc-backref" href="#id25">量子状態生成</a><a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
 <p>それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。</p>
 <p>実は<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>関数には回路オブジェクトを直接渡すこともできるので（内部でシミュレータを実行し状態ベクトルオブジェクトを取得する）、ここからはその機能を利用します。また、コード中登場する<code class="docutils literal notranslate"><span class="pre">amp_norm</span></code>や<code class="docutils literal notranslate"><span class="pre">phase_norm</span></code>は、表示される数式において振幅や位相の共通因子をくくりだすために設定されています。</p>
 <p>各問題のコードセルには、ヒントとして回路が一部分だけ書かれています。残りの<code class="docutils literal notranslate"><span class="pre">circuit.?</span></code>の部分を埋めてみましょう。答えは一行とは限りません。また、同じ状態を作る量子回路は無数に存在するので、ヒントを消して独自の実装をしても構いません。</p>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id26">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<section id="id8">
+<h3><a class="toc-backref" href="#id26">問題1: 1量子ビット、相対位相付き</a><a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>1量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -883,9 +776,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <p>です。</p>
 </div>
-</div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id27">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id9">
+<h3><a class="toc-backref" href="#id27">問題2: ベル状態、相対位相付き</a><a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>2量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -921,9 +814,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="ghz">
-<h3><a class="toc-backref" href="#id28">問題3: GHZ状態</a><a class="headerlink" href="#ghz" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="ghz">
+<h3><a class="toc-backref" href="#id28">問題3: GHZ状態</a><a class="headerlink" href="#ghz" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>3量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -959,9 +852,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="equal-superposition">
-<h3><a class="toc-backref" href="#id29">問題4: Equal superposition</a><a class="headerlink" href="#equal-superposition" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="equal-superposition">
+<h3><a class="toc-backref" href="#id29">問題4: Equal superposition</a><a class="headerlink" href="#equal-superposition" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -1004,9 +897,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <p>が正解です。</p>
 </div>
-</div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id30">問題5: 特定の基底の符号を反転させる</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id10">
+<h3><a class="toc-backref" href="#id30">問題5: 特定の基底の符号を反転させる</a><a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>問題4の4ビットequal superposition状態において、基底<span class="math notranslate nohighlight">\(\ket{5}\)</span>の符号を反転させなさい。</p>
 <div class="cell tag_remove-output docutils container">
@@ -1048,9 +941,9 @@ C^i_j[P(\phi)] \ket{11} = e^{i\phi} \ket{11}\end{split}\]</div>
 </div>
 <p>ビット1と3にかかっている<span class="math notranslate nohighlight">\(X\)</span>ゲートは当然他の基底にも影響するので、例えば<span class="math notranslate nohighlight">\(\ket{0011}\)</span>は<span class="math notranslate nohighlight">\(\ket{0110}\)</span>となります。しかし、1と3に<span class="math notranslate nohighlight">\(X\)</span>をかけて<span class="math notranslate nohighlight">\(\ket{1111}\)</span>になるのは<span class="math notranslate nohighlight">\(\ket{0101}\)</span>だけなので、逆操作でちゃんと「後片付け」さえすれば、この一連の操作で<span class="math notranslate nohighlight">\(\ket{5}\)</span>だけをいじることができます。</p>
 </div>
-</div>
-<div class="section" id="equal-superposition-with-phase">
-<span id="id12"></span><h3><a class="toc-backref" href="#id31">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#equal-superposition-with-phase" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="equal-superposition-with-phase">
+<span id="id12"></span><h3><a class="toc-backref" href="#id31">問題6: Equal superpositionに位相を付ける</a><a class="headerlink" href="#equal-superposition-with-phase" title="Permalink to this heading">#</a></h3>
 <p><strong>問題</strong></p>
 <p>一般の<span class="math notranslate nohighlight">\(n\)</span>量子ビットに対して状態</p>
 <div class="math notranslate nohighlight">
@@ -1116,16 +1009,16 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </div>
 <p>が正解となります。</p>
 </div>
-</div>
-</div>
-<div class="section" id="id13">
-<h2><a class="toc-backref" href="#id32">量子計算プリミティブ</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="id13">
+<h2><a class="toc-backref" href="#id32">量子計算プリミティブ</a><a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h2>
 <p>量子計算をする回路を実装するにあたって、いくつか知っておくと便利な「パーツ」があります。これらは単体で「アルゴリズム」と呼べるものではなく、量子コンピュータを使った様々な計算の過程で、状況に合わせて応用する回路の雛形です。</p>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id33">条件分岐</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<section id="id14">
+<h3><a class="toc-backref" href="#id33">条件分岐</a><a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h3>
 <p>古典的には、ほとんどのプログラムが条件分岐<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">...</span> <span class="pre">else</span> <span class="pre">...</span></code>がなければ成り立ちません。量子コンピュータのプログラムである量子回路で、条件分岐に対応するものはなんでしょうか？</p>
-<div class="section" id="id15">
-<h4><a class="toc-backref" href="#id34">測定結果に基づいた分岐</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<section id="id15">
+<h4><a class="toc-backref" href="#id34">測定結果に基づいた分岐</a><a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h4>
 <p>一つ考えうるのは、「回路のある時点である量子レジスタを測定し、その結果に応じて異なるゲートを他のレジスタにかける」という構造です。これまで測定とは量子回路の一番最後で行うものだと言ってきましたが、実は測定も一つのオペレーションとしてどこで行っても構いません。ただし、例えば状態<span class="math notranslate nohighlight">\(\ket{\psi} = \sum_{k} c_k \ket{k}\)</span>にあるレジスタを計算基底で測定し、<span class="math notranslate nohighlight">\(j\)</span>というビット列が得られたとすると、そのレジスタは<span class="math notranslate nohighlight">\(\ket{j}\)</span>という状態に「射影」されてしまい、元々の<span class="math notranslate nohighlight">\(\{c_k\}\)</span>という振幅の情報は失われます。</p>
 <p>例として、サイズ4のレジスタ1にequal superpositionを実現し、測定して得られた計算基底<span class="math notranslate nohighlight">\(j\)</span>に応じて<span class="math notranslate nohighlight">\(R_y(2 \pi \frac{j}{16})\)</span>をレジスタ2の量子ビットにかける回路を書いてみます。</p>
 <div class="cell docutils container">
@@ -1153,6 +1046,9 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/4205895a1331a9b4dcc1a73cca5de516f903c2b7b1d9c5ef57bac48f24b8bb69.png" src="_images/4205895a1331a9b4dcc1a73cca5de516f903c2b7b1d9c5ef57bac48f24b8bb69.png" />
+</div>
 </div>
 <p>測定オペレーションが入っているので、この回路をstatevector simulatorに渡すと、シミュレーションを実行するごとにレジスタ1の状態がランダムに決定されます。次のセルを複数回実行して、上の回路が狙い通り動いていることを確認してみましょう。</p>
 <p>入力と出力のレジスタの値が別々に表示されるよう、<code class="docutils literal notranslate"><span class="pre">statevector_expr</span></code>の<code class="docutils literal notranslate"><span class="pre">register_sizes</span></code>という引数を利用して、5ビットの回路を4ビットと1ビットに分けて解釈するよう指定します。</p>
@@ -1179,10 +1075,14 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle =  - 0.383 |0:10\rangle + 0.924 |1:10\rangle\]</div>
 </div>
 </div>
-<div class="section" id="id16">
-<h4><a class="toc-backref" href="#id35">条件分岐としての制御ゲート</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="id16">
+<h4><a class="toc-backref" href="#id35">条件分岐としての制御ゲート</a><a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h4>
 <p>上の方法は古典プログラミングとの対応が明らかですが、あまり「量子ネイティブ」な計算の仕方とは言えません。量子計算でより自然なのは、重ね合わせ状態の生成を条件分岐とみなし、全ての分岐が回路の中で同時に扱われるようにすることです。それは結局制御ゲートを使うということに他なりません。</p>
 <p>上の回路の量子条件分岐版は以下のようになります。</p>
 <div class="cell docutils container">
@@ -1203,6 +1103,9 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/f24b2bab528a34a1ea7c62cb02c788a378393b712dfc416bf1438a1289755376.png" src="_images/f24b2bab528a34a1ea7c62cb02c788a378393b712dfc416bf1438a1289755376.png" />
+</div>
 </div>
 <p>今度は全ての分岐が重ね合わさった量子状態が実現しています。</p>
 <div class="cell docutils container">
@@ -1212,11 +1115,15 @@ e^{2\pi i sk/2^n} \ket{k} = e^{2\pi i sk_{n-1}/2} \ket{k_{n-1}} \otimes \cdots \
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle | \text{final} \rangle = 0.250 |0:0\rangle + 0.245 |0:1\rangle + 0.231 |0:2\rangle + 0.208 |0:3\rangle + 0.177 |0:4\rangle + 0.139 |0:5\rangle \\  + 0.096 |0:6\rangle + 0.049 |0:7\rangle - 0.049 |0:9\rangle - 0.096 |0:10\rangle - 0.139 |0:11\rangle - 0.177 |0:12\rangle \\  - 0.208 |0:13\rangle - 0.231 |0:14\rangle - 0.245 |0:15\rangle + 0.049 |1:1\rangle + 0.096 |1:2\rangle + 0.139 |1:3\rangle \\  + 0.177 |1:4\rangle + 0.208 |1:5\rangle + 0.231 |1:6\rangle + 0.245 |1:7\rangle + 0.250 |1:8\rangle + 0.245 |1:9\rangle \\  + 0.231 |1:10\rangle + 0.208 |1:11\rangle + 0.177 |1:12\rangle + 0.139 |1:13\rangle + 0.096 |1:14\rangle + 0.049 |1:15\rangle\end{split}\]</div>
 </div>
 </div>
-</div>
-<div class="section" id="id17">
-<h3><a class="toc-backref" href="#id36">関数</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="id17">
+<h3><a class="toc-backref" href="#id36">関数</a><a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h3>
 <p>整数値変数<span class="math notranslate nohighlight">\(x\)</span>を引数に取り、バイナリ値<span class="math notranslate nohighlight">\(f(x) \in \{0, 1\}\)</span>を返す関数<span class="math notranslate nohighlight">\(f\)</span>を量子回路で実装する一つの方法は、</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1253,6 +1160,9 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/a51b823e076a2d8ca6731885a781c03037b0e30c338d9197599766a6f0e76fb1.png" src="_images/a51b823e076a2d8ca6731885a781c03037b0e30c338d9197599766a6f0e76fb1.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1260,11 +1170,15 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle =  |9:6\rangle\]</div>
+</div>
 </div>
 <p>入力レジスタの状態を色々変えて、状態ベクトルの変化を見てみましょう。</p>
-</div>
-<div class="section" id="id18">
-<h3><a class="toc-backref" href="#id37">状態ベクトルの内積</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id18">
+<h3><a class="toc-backref" href="#id37">状態ベクトルの内積</a><a class="headerlink" href="#id18" title="Permalink to this heading">#</a></h3>
 <p>次に紹介するのは、二つの状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>の間の内積の絶対値自乗<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|^2\)</span>を計算するテクニックです。</p>
 <p>まず、量子計算において二つの状態ベクトルの間の内積は、</p>
 <div class="math notranslate nohighlight">
@@ -1276,7 +1190,7 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 \end{split}\]</div>
 <p>に対して</p>
 <div class="math notranslate nohighlight" id="equation-inner-product">
-<span class="eqno">(7)<a class="headerlink" href="#equation-inner-product" title="Permalink to this equation">¶</a></span>\[\braket{\psi}{\phi} = \sum_{k=0}^{2^n-1} c^{*}_k d_k\]</div>
+<span class="eqno">(7)<a class="headerlink" href="#equation-inner-product" title="Permalink to this equation">#</a></span>\[\braket{\psi}{\phi} = \sum_{k=0}^{2^n-1} c^{*}_k d_k\]</div>
 <p>で定義できます。内積の重要な性質として</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1307,11 +1221,11 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 \end{split}\]</div>
 <p>となり、2-ノルムが内積<span class="math notranslate nohighlight">\(\braket{\psi}{\phi}\)</span>に依存します。</p>
 <p>内積や2-ノルムの計算は量子計算の様々な局面で登場します。それではその計算をする量子回路の組み方を見ていきましょう。実は2通りの異なる方法があります。</p>
-<div class="section" id="swap">
-<h4><a class="toc-backref" href="#id38">SWAPテスト</a><a class="headerlink" href="#swap" title="Permalink to this headline">¶</a></h4>
+<section id="swap">
+<h4><a class="toc-backref" href="#id38">SWAPテスト</a><a class="headerlink" href="#swap" title="Permalink to this heading">#</a></h4>
 <p>状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>（具体的に実装するためここでは3量子ビットの状態とする）が二つのレジスタに実現しているような次の回路を実行し、<code class="docutils literal notranslate"><span class="pre">test_output</span></code>で0が出る確率を<span class="math notranslate nohighlight">\(P_0\)</span>、1が出る確率を<span class="math notranslate nohighlight">\(P_1\)</span>とすると、</p>
 <div class="math notranslate nohighlight" id="equation-swap-test">
-<span class="eqno">(8)<a class="headerlink" href="#equation-swap-test" title="Permalink to this equation">¶</a></span>\[P_0 - P_1 = |\braket{\psi}{\phi}|^2\]</div>
+<span class="eqno">(8)<a class="headerlink" href="#equation-swap-test" title="Permalink to this equation">#</a></span>\[P_0 - P_1 = |\braket{\psi}{\phi}|^2\]</div>
 <p>が成り立ちます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1366,12 +1280,21 @@ U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;qiskit.circuit.instructionset.InstructionSet at 0x7f980ec17f70&gt;
+</pre></div>
+</div>
+<img alt="_images/f71b820845c845681486032617e7ecf6877842e09241d21fc5db1a4839956522.png" src="_images/f71b820845c845681486032617e7ecf6877842e09241d21fc5db1a4839956522.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/cf216930948947cd3f3df0941d3723bd90a19371897a15e58fd7e0aae9322d45.png" src="_images/cf216930948947cd3f3df0941d3723bd90a19371897a15e58fd7e0aae9322d45.png" />
 </div>
 </div>
 <p>式<a class="reference internal" href="#equation-swap-test">(8)</a>を導いてみましょう。</p>
@@ -1416,12 +1339,20 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \psi \rangle = 0.939e^{1.92 \cdot \pi i} |0\rangle + 0.343e^{0.08 \cdot \pi i} |7\rangle\]</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\phi&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \phi \rangle = 0.378 |0\rangle + 0.109i |1\rangle + 0.659 |2\rangle - 0.191i |3\rangle + 0.160 |4\rangle - 0.259i |5\rangle + 0.279 |6\rangle + 0.451i |7\rangle\]</div>
 </div>
 </div>
 <p>で、<span class="math notranslate nohighlight">\(|\braket{\psi}{\phi}|^2\)</span>は</p>
@@ -1430,6 +1361,11 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sv_psi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">psi_circuit</span><span class="p">)</span>
 <span class="n">sv_phi</span> <span class="o">=</span> <span class="n">get_statevector_array</span><span class="p">(</span><span class="n">phi_circuit</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv_psi</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="o">*</span> <span class="n">sv_phi</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20287760299395322
 </pre></div>
 </div>
 </div>
@@ -1447,15 +1383,20 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20437
+</pre></div>
+</div>
+</div>
 </div>
 <p>です。</p>
-</div>
-<div class="section" id="inverse-circuit">
-<span id="id19"></span><h4><a class="toc-backref" href="#id39">逆回路の利用</a><a class="headerlink" href="#inverse-circuit" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="inverse-circuit">
+<span id="id19"></span><h4><a class="toc-backref" href="#id39">逆回路の利用</a><a class="headerlink" href="#inverse-circuit" title="Permalink to this heading">#</a></h4>
 <p>上の回路では入力状態<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>や<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>を適当な量子回路で作りましたが、見ればわかるようにSWAPテストは入力の生成過程によらず成り立ちます。例えばなんらかの「量子メモリ」デバイスがあって、そこから二つのデータレジスタに直接<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>と<span class="math notranslate nohighlight">\(\ket{\phi}\)</span>がロードされてもいいわけです。ところが、現在の実際の量子コンピューティングにおいては、量子コンピュータ中の状態というのは全て<span class="math notranslate nohighlight">\(\ket{0}\)</span>にゲートをかけていくことでしか作れません。</p>
 <p>入力状態が既知の回路で作られる場合は、SWAPテストよりもコンパクトで効率的な内積の絶対値自乗の計算方法があります。次のような回路を組むと、測定値が0である確率を<span class="math notranslate nohighlight">\(P_0\)</span>として</p>
 <div class="math notranslate nohighlight" id="equation-inverse-circuit">
-<span class="eqno">(9)<a class="headerlink" href="#equation-inverse-circuit" title="Permalink to this equation">¶</a></span>\[P_0 = |\braket{\psi}{\phi}|^2\]</div>
+<span class="eqno">(9)<a class="headerlink" href="#equation-inverse-circuit" title="Permalink to this equation">#</a></span>\[P_0 = |\braket{\psi}{\phi}|^2\]</div>
 <p>が成り立ちます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1471,6 +1412,9 @@ P_1 &amp; = \frac{1}{4} \lVert (\ket{\phi}_{\mathrm{d2}} \ket{\psi}_{\mathrm{d1}
 <span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6c039e56227953a83c3e4c0d7bd2e02fd8423709000631333816b64ff4ad1e64.png" src="_images/6c039e56227953a83c3e4c0d7bd2e02fd8423709000631333816b64ff4ad1e64.png" />
 </div>
 </div>
 <p>ポイントは<code class="docutils literal notranslate"><span class="pre">psi_circuit.inverse()</span></code>で得られる<code class="docutils literal notranslate"><span class="pre">psi_circuit</span></code>の逆回路です。逆回路とは、ゲートの順番を反転させ、全てのゲートをその逆操作で置き換えたものです。<span class="math notranslate nohighlight">\(\ket{0}\)</span>から<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>を作る回路を<span class="math notranslate nohighlight">\(U_{\psi}\)</span>と表すと、逆回路は<span class="math notranslate nohighlight">\(U_{\psi}^{-1}\)</span>もしくは<span class="math notranslate nohighlight">\(U_{\psi}^{\dagger}\)</span>と書かれ、</p>
@@ -1537,12 +1481,17 @@ P_0 = |\braket{0}{U^{-1}_{\psi} \phi}|^2 = |\braket{\psi}{\phi}|^2
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.202728
+</pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id20">
-<h2><a class="toc-backref" href="#id40">複製不可能定理とテレポーテーション</a><a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+</section>
+<section id="id20">
+<h2><a class="toc-backref" href="#id40">複製不可能定理とテレポーテーション</a><a class="headerlink" href="#id20" title="Permalink to this heading">#</a></h2>
 <p>量子アルゴリズムを考え、実装する時に非常に重要なのが、<strong>任意の未知の量子状態の独立な複製を作る量子回路は存在しない</strong>という複製不可能定理（no-cloning theorem）です。この定理は具体的には、入力状態<span class="math notranslate nohighlight">\(\ket{\psi}_{\mathrm{in}}\)</span>と、同じビット数の初期化した出力レジスタ<span class="math notranslate nohighlight">\(\ket{0}_{\mathrm{out}}\)</span>がある時、<span class="math notranslate nohighlight">\(\psi\)</span>に依存しない回路<span class="math notranslate nohighlight">\(U\)</span>で</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1610,6 +1559,9 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/b7878156fea3dbaf4c937b26b88c29476809dd23ca133ac7131783c4627bdba5.png" src="_images/b7878156fea3dbaf4c937b26b88c29476809dd23ca133ac7131783c4627bdba5.png" />
+</div>
 </div>
 <p>入力ビットの状態は</p>
 <div class="cell docutils container">
@@ -1617,6 +1569,10 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="n">statevector_expr</span><span class="p">(</span><span class="n">prep_circuit</span><span class="p">,</span> <span class="n">state_label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\text</span><span class="si">{in}</span><span class="s1">&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{in} \rangle = 0.939 |0\rangle + 0.343e^{0.57 \cdot \pi i} |1\rangle\]</div>
 </div>
 </div>
 <p>回路の終状態は</p>
@@ -1626,6 +1582,10 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\displaystyle | \text{final} \rangle = 0.939 |0:1:0\rangle + 0.343e^{0.57 \cdot \pi i} |1:1:0\rangle\]</div>
+</div>
 </div>
 <p>上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが<span class="math notranslate nohighlight">\(\ket{\text{in}}\)</span>と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。</p>
 <dl class="footnote brackets">
@@ -1633,8 +1593,8 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
 <dd><p>（多重）制御<span class="math notranslate nohighlight">\(P\)</span>ゲートはどのビットを制御と呼んでも標的と呼んでも同じ作用をするので、<span class="math notranslate nohighlight">\(C^{123}_0[P(\pi)]\)</span>でもなんでも構いません。</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1648,7 +1608,7 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -1656,44 +1616,134 @@ U (\ket{\psi}_{\mathrm{in}} \ket{0}_{\mathrm{out}}) \sim \ket{\psi}_{\mathrm{in}
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="nonlocal_correlations.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">【課題】量子相関を調べる</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nonlocal_correlations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">【課題】量子相関を調べる</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="quantum_computation.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="quantum_computation.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">【課題】アダマールテスト</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By 東京大学素粒子物理国際研究センター<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
       </div>
-    </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
 
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">状態ベクトルシミュレータで量子状態を調べる</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-gates">その他のゲート</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">1、2量子ビット</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3量子ビット以上</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">量子状態生成</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">問題1: 1量子ビット、相対位相付き</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">問題2: ベル状態、相対位相付き</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ghz">問題3: GHZ状態</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-superposition">問題4: Equal superposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">問題5: 特定の基底の符号を反転させる</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-superposition-with-phase">問題6: Equal superpositionに位相を付ける</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">量子計算プリミティブ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">条件分岐</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">測定結果に基づいた分岐</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">条件分岐としての制御ゲート</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">関数</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">状態ベクトルの内積</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#swap">SWAPテスト</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-circuit">逆回路の利用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">複製不可能定理とテレポーテーション</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By 東京大学素粒子物理国際研究センター
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

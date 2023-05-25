@@ -1,50 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>素因数分解アルゴリズムを学習する &#8212; 量子コンピューティング・ワークブック</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,569 +63,448 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'shor';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="【課題】位相推定によるスペクトル分解" href="spectrum_estimation.html" />
     <link rel="prev" title="【参考】足し算を実機で行う" href="addition_on_ibmq.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/favicon.ico" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">量子コンピューティング・ワークブック</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="welcome.html">
-   量子コンピューティング・ワークブックへようこそ！
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータに触れる
- </span>
-</p>
+    
+    
+    <img src="_static/favicon.ico" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/favicon.ico" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    量子コンピューティング・ワークブックへようこそ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータに触れる</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="chsh_inequality.html">
-   CHSH不等式の破れを確認する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="nonlocal_correlations.html">
-   【課題】量子相関を調べる
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="chsh_inequality.html">CHSH不等式の破れを確認する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nonlocal_correlations.html">【課題】量子相関を調べる</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子回路を作る
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子回路を作る</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="circuit_from_scratch.html">
-   単純な量子回路をゼロから書く
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="quantum_computation.html">
-   【課題】アダマールテスト
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="circuit_from_scratch.html">単純な量子回路をゼロから書く</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_computation.html">【課題】アダマールテスト</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子コンピュータでの並列計算
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子コンピュータでの並列計算</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="extreme_simd.html">
-   計算をする量子回路の実装
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dynamics_simulation.html">
-   物理系を表現する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="more_dynamics.html">
-   【課題】量子ダイナミクスシミュレーション・続
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="addition_on_ibmq.html">
-   【参考】足し算を実機で行う
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="extreme_simd.html">計算をする量子回路の実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics_simulation.html">物理系を表現する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more_dynamics.html">【課題】量子ダイナミクスシミュレーション・続</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addition_on_ibmq.html">【参考】足し算を実機で行う</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ショアのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ショアのアルゴリズム</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   素因数分解アルゴリズムを学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="spectrum_estimation.html">
-   【課題】位相推定によるスペクトル分解
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">素因数分解アルゴリズムを学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum_estimation.html">【課題】位相推定によるスペクトル分解</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  グローバーのアルゴリズム
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">グローバーのアルゴリズム</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grover.html">
-   データベース検索を行う
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="grover_number_light.html">
-   【課題】ビット反転ボードの操作を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grover.html">データベース検索を行う</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grover_number_light.html">【課題】ビット反転ボードの操作を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  変分法と変分量子固有値ソルバー
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">変分法と変分量子固有値ソルバー</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe.html">
-   変分法と変分量子固有値ソルバー法を学習する
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="vqe_tracking.html">
-   【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqe.html">変分法と変分量子固有値ソルバー法を学習する</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vqe_tracking.html">【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  量子・古典ハイブリッド機械学習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">量子・古典ハイブリッド機械学習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="vqc_machine_learning.html">
-   量子機械学習を使った新しい素粒子現象の探索
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="qkc_machine_learning.html">
-   【課題】量子カーネルを使った新現象の分類
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="vqc_machine_learning.html">量子機械学習を使った新しい素粒子現象の探索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qkc_machine_learning.html">【課題】量子カーネルを使った新現象の分類</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  演習
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">演習</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="toffoli_shor_code.html">
-   ToffoliゲートとShorコード
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="toffoli_shor_code.html">ToffoliゲートとShorコード</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  補足
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">補足</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="prerequisites.html">
-   実習の準備
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_intro.html">
-   予備知識：Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numerics.html">
-   予備知識：数値表現
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   参考文献
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   文献一覧
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">実習の準備</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_intro.html">予備知識：Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">予備知識：数値表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">参考文献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">文献一覧</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/shor.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/shor.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fshor.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/shor.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/UTokyo-ICEPP/qc-workbook/master?urlpath=lab/tree/shor.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/UTokyo-ICEPP/qc-workbook/issues/new?title=Issue%20on%20page%20%2Fshor.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/shor.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="_sources/shor.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>素因数分解アルゴリズムを学習する</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-introduction">
-   はじめに
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qpe">
-   量子位相推定
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-1qubit">
-     1量子ビットの位相推定
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#n">
-     <span class="math notranslate nohighlight">
-      \(n\)
-     </span>
-     量子ビットの位相推定
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qpe-imp">
-   QPEの簡単な例を実装する
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-imp-simulator">
-     シミュレータでの実験
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-imp-real">
-     量子コンピュータでの実験
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-algo">
-   ショアのアルゴリズム
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#factoring-example">
-     素因数分解の例
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-circuit">
-     量子回路
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-measurement">
-     測定結果の解析
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#continued-fractions">
-     連分数展開
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#modular-exponentiation">
-     剰余指数化
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-imp">
-   アルゴリズムの実装
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-period">
-     位数の発見
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-oracle">
-     オラクルの実装
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-circuit">
-     回路全体の実装
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-ana">
-     計算結果の解析
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-introduction">はじめに</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe">量子位相推定</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-1qubit">1量子ビットの位相推定</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#n"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp">QPEの簡単な例を実装する</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp-simulator">シミュレータでの実験</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp-real">量子コンピュータでの実験</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-algo">ショアのアルゴリズム</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factoring-example">素因数分解の例</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-circuit">量子回路</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-measurement">測定結果の解析</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continued-fractions">連分数展開</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modular-exponentiation">剰余指数化</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp">アルゴリズムの実装</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-period">位数の発見</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-oracle">オラクルの実装</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-circuit">回路全体の実装</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-ana">計算結果の解析</a></li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>素因数分解アルゴリズムを学習する</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-introduction">
-   はじめに
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qpe">
-   量子位相推定
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-1qubit">
-     1量子ビットの位相推定
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#n">
-     <span class="math notranslate nohighlight">
-      \(n\)
-     </span>
-     量子ビットの位相推定
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qpe-imp">
-   QPEの簡単な例を実装する
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-imp-simulator">
-     シミュレータでの実験
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#qpe-imp-real">
-     量子コンピュータでの実験
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-algo">
-   ショアのアルゴリズム
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#factoring-example">
-     素因数分解の例
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-circuit">
-     量子回路
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-measurement">
-     測定結果の解析
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#continued-fractions">
-     連分数展開
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#modular-exponentiation">
-     剰余指数化
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#shor-imp">
-   アルゴリズムの実装
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-period">
-     位数の発見
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-oracle">
-     オラクルの実装
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-circuit">
-     回路全体の実装
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#shor-imp-ana">
-     計算結果の解析
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1>素因数分解アルゴリズムを学習する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>素因数分解アルゴリズムを学習する<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>この実習では<strong>ショアのアルゴリズム</strong>を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズム<span id="id2">[<a class="reference internal" href="bibliography.html#id7" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5.3, pages 226-234. Cambridge University Press, 2000.">NC00c</a>, <a class="reference internal" href="bibliography.html#id18" title="Peter W. Shor. Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer. SIAM Review, 41(2):303-332, 1999. URL: https://doi.org/10.1137/S0036144598347011, arXiv:https://doi.org/10.1137/S0036144598347011, doi:10.1137/S0036144598347011.">Sho99</a>]</span>は最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている<strong>量子位相推定</strong>と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。</p>
 <div class="contents local topic" id="id3">
 <p class="topic-title">目次</p>
@@ -655,19 +544,19 @@ const thebe_selector_output = ".output, .cell_output"
 <p><span class="math notranslate nohighlight">\(\newcommand{\ket}[1]{|#1\rangle}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\modequiv}[3]{#1 \equiv #2 \pmod{#3}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\modnequiv}[3]{#1 \not\equiv #2 \pmod{#3}}\)</span></p>
-<div class="section" id="shor-introduction">
-<span id="id4"></span><h2><a class="toc-backref" href="#id23">はじめに</a><a class="headerlink" href="#shor-introduction" title="Permalink to this headline">¶</a></h2>
+<section id="shor-introduction">
+<span id="id4"></span><h2><a class="toc-backref" href="#id23">はじめに</a><a class="headerlink" href="#shor-introduction" title="Permalink to this heading">#</a></h2>
 <p>古典計算をはるかに上回る能力を持つ量子計算の一つの例として、最も広く知られているのがショアの量子計算アルゴリズムでしょう。このアルゴリズムが考える問題は、大きな正の数を二つの素数の積に分解するというもので、問題自体はシンプルです。しかし、古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると<strong>指数関数的に計算量が増える</strong>と予想されています。
 ショアのアルゴリズムを用いれば、同じ問題を<strong>多項式時間で解くことができる</strong>と考えられています（一般的に、問題のサイズに対して多項式で増える計算時間で解くことができれば、それは有効なアルゴリズムだと見なされます）。</p>
 <p>古典計算での素因数分解の難しさは、現在広く使われている鍵暗号技術の元になっています。なので、指数関数的に高速なショアのアルゴリズムが量子コンピュータで実現されれば、秘密の情報が暴かれる可能性があります。ショアのアルゴリズムが大きく注目される理由はそこにあります。</p>
-</div>
-<div class="section" id="qpe">
-<span id="id5"></span><h2><a class="toc-backref" href="#id24">量子位相推定</a><a class="headerlink" href="#qpe" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="qpe">
+<span id="id5"></span><h2><a class="toc-backref" href="#id24">量子位相推定</a><a class="headerlink" href="#qpe" title="Permalink to this heading">#</a></h2>
 <p>まず、ショアのアルゴリズムの元になっている「<strong>量子位相推定」</strong>（<em>Quantum Phase Estimation</em>, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「<strong>量子フーリエ変換</strong>」（<em>Quantum Fourier Transform</em>, QFT）の理解が欠かせませんが、QFTについては、この<a class="reference internal" href="circuit_from_scratch.html"><span class="doc std std-doc">実習</span></a>の問題7、もしくは参考文献[1]を参照してください。</p>
 <p>QPEはとても大事な計算手法で、ショアのアルゴリズムだけでなく、いろいろな量子アルゴリズムのサブルーチンとしても使われています。</p>
 <p>QPEが考える問題は、「あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が与えられるとして、その固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めることができるか？」という問題です。</p>
-<div class="section" id="qpe-1qubit">
-<span id="id6"></span><h3><a class="toc-backref" href="#id25">1量子ビットの位相推定</a><a class="headerlink" href="#qpe-1qubit" title="Permalink to this headline">¶</a></h3>
+<section id="qpe-1qubit">
+<span id="id6"></span><h3><a class="toc-backref" href="#id25">1量子ビットの位相推定</a><a class="headerlink" href="#qpe-1qubit" title="Permalink to this heading">#</a></h3>
 <p>まず、下図にあるような量子回路を考えてみましょう。上側の量子ビットは<span class="math notranslate nohighlight">\(\ket{0}\)</span>、下側の量子ビットには<span class="math notranslate nohighlight">\(U\)</span>の固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が初期状態として与えられているとします。</p>
 <a class="reference internal image-reference" href="_images/qpe_1qubit.png"><img alt="qpe_1qubit" class="align-center" src="_images/qpe_1qubit.png" style="width: 300px;" /></a>
 <p>この場合、量子回路の1-3の各ステップでの量子状態は、以下のように表現できます。</p>
@@ -683,9 +572,9 @@ const thebe_selector_output = ".output, .cell_output"
 <p>この制御<span class="math notranslate nohighlight">\(U\)</span>ゲートの部分がショアのアルゴリズムの「オラクル」に対応しています。その後ろには逆量子フーリエ変換が来ますが、1量子ビットの場合は<span class="math notranslate nohighlight">\(H\)</span>ゲート（<span class="math notranslate nohighlight">\(H=H^\dagger\)</span>）です。つまり、1量子ビットの量子フーリエ変換は<span class="math notranslate nohighlight">\(H\)</span>ゲートそのものということですね。</p>
 </div>
 <p>本題に戻って、では少ない測定回数でも精度良く位相を決める方法は、何か考えられるでしょうか。。</p>
-</div>
-<div class="section" id="n">
-<span id="qpe-nqubit"></span><h3><a class="toc-backref" href="#id26"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a><a class="headerlink" href="#n" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="n">
+<span id="qpe-nqubit"></span><h3><a class="toc-backref" href="#id26"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a><a class="headerlink" href="#n" title="Permalink to this heading">#</a></h3>
 <p>そこで、上側のレジスタを<span class="math notranslate nohighlight">\(n\)</span>量子ビットに拡張した量子回路（下図）を考えてみましょう。</p>
 <a class="reference internal image-reference" href="_images/qpe_wo_iqft.png"><img alt="qpe_wo_iqft" class="align-center" src="_images/qpe_wo_iqft.png" style="width: 500px;" /></a>
 <p>それに応じて、下側のレジスタにも<span class="math notranslate nohighlight">\(U\)</span>を繰り返し適用することになりますが、鍵になるのは<span class="math notranslate nohighlight">\(U\)</span>を2の羃乗回適用するところです。それがどういう意味を持つのかを理解するために、準備として<span class="math notranslate nohighlight">\(U^{2^x}\ket{\psi}\)</span>が以下のように書けることを見ておきます（まあ当然と言えば当然ですが）。</p>
@@ -709,10 +598,10 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>ステップ <span class="math notranslate nohighlight">\(n+1\)</span>後の<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタの状態をよく見ると、この状態はQFTで<span class="math notranslate nohighlight">\(j\)</span>を<span class="math notranslate nohighlight">\(2^n\theta\)</span>としたものと同等であることが分かります。つまり、この<span class="math notranslate nohighlight">\(n\)</span>ビットレジスタに逆フーリエ変換<span class="math notranslate nohighlight">\(\rm{QFT}^\dagger\)</span>を適用すれば、状態<span class="math notranslate nohighlight">\(\ket{2^n\theta}\)</span>が得られるわけです！この状態を測定すれば、<span class="math notranslate nohighlight">\(2^n\theta\)</span>つまり固有値の位相<span class="math notranslate nohighlight">\(\theta\)</span>（を<span class="math notranslate nohighlight">\(2^n\)</span>倍したもの）を求めることができるというのがQPEです（下図）。</p>
 <a class="reference internal image-reference" href="_images/qpe.png" id="qpe-nqubit-fig"><img alt="qpe" class="align-center" id="qpe-nqubit-fig" src="_images/qpe.png" style="width: 700px;" /></a>
 <p>ただし、一般に<span class="math notranslate nohighlight">\(2^n \theta\)</span>が整数であるとは限りません。非整数値に対する逆フーリエ変換については、<a class="reference internal" href="numerics.html#nonintegral-fourier"><span class="std std-ref">補足ページ</span></a>を参照してください。</p>
-</div>
-</div>
-<div class="section" id="qpe-imp">
-<span id="id7"></span><h2><a class="toc-backref" href="#id27">QPEの簡単な例を実装する</a><a class="headerlink" href="#qpe-imp" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="qpe-imp">
+<span id="id7"></span><h2><a class="toc-backref" href="#id27">QPEの簡単な例を実装する</a><a class="headerlink" href="#qpe-imp" title="Permalink to this heading">#</a></h2>
 <p>では実際に、簡単な回路を使って量子位相推定を実装してみましょう。</p>
 <p>まず、あるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>に対して<span class="math notranslate nohighlight">\(U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}\)</span>となる固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>が必要ですが、ここでは<span class="math notranslate nohighlight">\(U\)</span>として1量子ビットの<span class="math notranslate nohighlight">\(S\)</span>ゲート（位相<span class="math notranslate nohighlight">\(\sqrt{Z}\)</span>ゲート）を考えてみます。<span class="math notranslate nohighlight">\(\ket{1}=\begin{pmatrix}0\\1\end{pmatrix}\)</span>として、<span class="math notranslate nohighlight">\(S\ket{1}=e^{i\pi/2}\ket{1}\)</span>となるので<span class="math notranslate nohighlight">\(\ket{1}\)</span>は<span class="math notranslate nohighlight">\(S\)</span>の固有ベクトル、<span class="math notranslate nohighlight">\(e^{i\pi/2}\)</span>がその固有値です。QPEは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を求めるので、<span class="math notranslate nohighlight">\(S\)</span>の場合は<span class="math notranslate nohighlight">\(\theta=1/4\)</span>を求めることに相当します。これを回路を使って実際に確かめてみます。</p>
 <div class="cell docutils container">
@@ -769,7 +658,7 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">qreg</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;逆量子フーリエ変換用の回路&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;逆量子フーリエ変換用の回路&quot;&quot;&quot;</span>
     <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
 
     <span class="c1">##################</span>
@@ -794,12 +683,15 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/71cccaafd6d3c27c763c282dae4265f8b89b666bd82896fc82dec0f4d716ebf9.png" src="_images/71cccaafd6d3c27c763c282dae4265f8b89b666bd82896fc82dec0f4d716ebf9.png" />
+</div>
 </div>
 <p><strong>解答</strong></p>
 <div class="toggle docutils container">
 <p><a class="reference internal" href="extreme_simd.html#fourier-addition"><span class="std std-ref">量子フーリエ変換による足し算</span></a>の<code class="docutils literal notranslate"><span class="pre">setup_addition</span></code>関数中のInverse QFTと書かれている部分を利用します。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">qreg</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;逆量子フーリエ変換用の回路&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;逆量子フーリエ変換用の回路&quot;&quot;&quot;</span>
     <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
 
     <span class="c1">##################</span>
@@ -825,10 +717,8 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </pre></div>
 </div>
 </div>
-<div class="cell tag_remove-input tag_remove-output docutils container">
-</div>
-<div class="section" id="qpe-imp-simulator">
-<span id="id8"></span><h3><a class="toc-backref" href="#id28">シミュレータでの実験</a><a class="headerlink" href="#qpe-imp-simulator" title="Permalink to this headline">¶</a></h3>
+<section id="qpe-imp-simulator">
+<span id="id8"></span><h3><a class="toc-backref" href="#id28">シミュレータでの実験</a><a class="headerlink" href="#qpe-imp-simulator" title="Permalink to this heading">#</a></h3>
 <p>シミュレータで実行して、測定結果の確率分布を作ってみます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -861,6 +751,9 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/ae0ead99b56d9374a0cc2e002d59c30938a665457f9c14d8be3c278d4c314c31.png" src="_images/ae0ead99b56d9374a0cc2e002d59c30938a665457f9c14d8be3c278d4c314c31.png" />
+</div>
 </div>
 <p>答えは10進数で2になっていますね。ここで測定した答えは<span class="math notranslate nohighlight">\(\ket{2^n\theta}\)</span>だったことを思い出すと、<span class="math notranslate nohighlight">\(\theta=2/2^3=1/4\)</span>となって正しい<span class="math notranslate nohighlight">\(\theta\)</span>が得られたことが分かります。</p>
 <p>ここで見た量子回路はシンプルですが、いろいろ拡張して振る舞いを理解するのに役立ちます。例えば、以下の問題を調べてみてください。</p>
@@ -869,9 +762,9 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <li><p>角度の選び方によっては、得られる位相の精度が悪くなります。その場合、どうすればより良い精度で測定できるでしょうか？</p></li>
 <li><p><span class="math notranslate nohighlight">\(S\)</span>ゲートの場合固有ベクトルは<span class="math notranslate nohighlight">\(\ket{1}\)</span>でしたが、<span class="math notranslate nohighlight">\(\ket{1}\)</span>以外の状態を使うとどうなりますか？特に固有ベクトルと線形従属なベクトルを使った場合の振る舞いを見てみてください。</p></li>
 </ul>
-</div>
-<div class="section" id="qpe-imp-real">
-<span id="id9"></span><h3><a class="toc-backref" href="#id29">量子コンピュータでの実験</a><a class="headerlink" href="#qpe-imp-real" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="qpe-imp-real">
+<span id="id9"></span><h3><a class="toc-backref" href="#id29">量子コンピュータでの実験</a><a class="headerlink" href="#qpe-imp-real" title="Permalink to this heading">#</a></h3>
 <p>最後に量子コンピュータで実行して、結果を確認してみましょう、以下のようにすることで、現時点でbusyでないマシンを優先的に選んで実行してくれます。</p>
 <div class="cell tag_raises-exception tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -910,10 +803,10 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="shor-algo">
-<span id="id10"></span><h2><a class="toc-backref" href="#id30">ショアのアルゴリズム</a><a class="headerlink" href="#shor-algo" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="shor-algo">
+<span id="id10"></span><h2><a class="toc-backref" href="#id30">ショアのアルゴリズム</a><a class="headerlink" href="#shor-algo" title="Permalink to this heading">#</a></h2>
 <p>では、そろそろ本題であるショアのアルゴリズムに入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数<span class="math notranslate nohighlight">\(N\)</span>を、自明ではない素数の積<span class="math notranslate nohighlight">\(N=qp\)</span>に分解する」という問題です。</p>
 <p>まず、整数の剰余についての表記法をおさらいしておきます。以下のような整数<span class="math notranslate nohighlight">\(x\)</span>の並びを考えたとき、例えば3で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
@@ -949,8 +842,8 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <p>ですね。この時、<span class="math notranslate nohighlight">\(\modequiv{x}{y}{3}\)</span>と書くものとします（<span class="math notranslate nohighlight">\(k\)</span>を0以上の整数とすれば、<span class="math notranslate nohighlight">\(x=3k+y\)</span>と書くこともできます）。</p>
 <p>ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。「アルゴリズムの一部でしか量子計算を使わないのはなぜ？」と思うかもしれませんが、この青地の部分を古典計算で実行するのが難しいというのがその理由です。つまり、古典計算で十分なところは古典計算にまかして、古典計算では難しい部分を量子計算で実行するというのがその発想の大元にあります。なぜ青地の部分が古典計算では難しいのかは追々明らかになります。</p>
 <a class="reference internal image-reference" href="_images/shor_flow.png" id="shor-algo-fig"><img alt="shor_flow" class="align-center" id="shor-algo-fig" src="_images/shor_flow.png" style="width: 500px;" /></a>
-<div class="section" id="factoring-example">
-<span id="id11"></span><h3><a class="toc-backref" href="#id31">素因数分解の例</a><a class="headerlink" href="#factoring-example" title="Permalink to this headline">¶</a></h3>
+<section id="factoring-example">
+<span id="id11"></span><h3><a class="toc-backref" href="#id31">素因数分解の例</a><a class="headerlink" href="#factoring-example" title="Permalink to this heading">#</a></h3>
 <p>簡単な例として、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解をこのアルゴリズムに沿って考えてみましょう。</p>
 <p>例えば、15に素な数として仮に<span class="math notranslate nohighlight">\(a=7\)</span>を選んだとします。そこで<span class="math notranslate nohighlight">\(7^x\)</span>を15で割った余りを<span class="math notranslate nohighlight">\(y\)</span>とすると</p>
 <table class="colwidths-auto table">
@@ -986,9 +879,9 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 \{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}
 \]</div>
 <p>となって、<span class="math notranslate nohighlight">\(15=5\times3\)</span>が得られました!</p>
-</div>
-<div class="section" id="shor-circuit">
-<span id="id12"></span><h3><a class="toc-backref" href="#id32">量子回路</a><a class="headerlink" href="#shor-circuit" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="shor-circuit">
+<span id="id12"></span><h3><a class="toc-backref" href="#id32">量子回路</a><a class="headerlink" href="#shor-circuit" title="Permalink to this heading">#</a></h3>
 <p>では次に、<span class="math notranslate nohighlight">\(N=15\)</span>の素因数分解を実装する量子回路を考えていきましょう。いきなり答えを書いてしまうようですが、回路自体は以下のような構成をしています。</p>
 <a class="reference internal image-reference" href="_images/shor.png" id="shor-circuit-fig"><img alt="shor" class="align-center" id="shor-circuit-fig" src="_images/shor.png" style="width: 700px;" /></a>
 <p>上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つずつなのは、15が4ビット（<span class="math notranslate nohighlight">\(n=4\)</span>）で表現できるからです（15の2進数表記 = <span class="math notranslate nohighlight">\(1111_2\)</span>）。状態は全て<span class="math notranslate nohighlight">\(\ket{0}\)</span>に初期化されているものとして、測定用レジスタの状態を<span class="math notranslate nohighlight">\(\ket{x}\)</span>、作業用レジスタの状態を<span class="math notranslate nohighlight">\(\ket{w}\)</span>とします。
@@ -1031,13 +924,13 @@ U^{2^x}\ket{\psi}&amp;=U^{2^x-1}U\ket{\psi}\\
 <li><p>ステップ 5 :最後に測定用レジスタを測定すると、0, 4, 8, 12がそれぞれ1/4の確率で得られます。</p></li>
 </ul>
 <p>ステップ 2で<span class="math notranslate nohighlight">\(7^x \bmod 15\)</span>を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。</p>
-</div>
-<div class="section" id="shor-measurement">
-<span id="id13"></span><h3><a class="toc-backref" href="#id33">測定結果の解析</a><a class="headerlink" href="#shor-measurement" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="shor-measurement">
+<span id="id13"></span><h3><a class="toc-backref" href="#id33">測定結果の解析</a><a class="headerlink" href="#shor-measurement" title="Permalink to this heading">#</a></h3>
 <p>この測定結果の意味を考察してみましょう。ショアのアルゴリズムの<a class="reference internal" href="#shor-circuit-fig"><span class="std std-ref">回路</span></a>と<span class="math notranslate nohighlight">\(n\)</span>量子ビット位相推定の<a class="reference internal" href="#qpe-nqubit-fig"><span class="std std-ref">回路</span></a>の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>の位相<span class="math notranslate nohighlight">\(\theta\)</span>を<span class="math notranslate nohighlight">\(2^4=16\)</span>倍したものになっているはずです。つまり、例えば測定用レジスタを測定した結果が仮に4の場合、位相<span class="math notranslate nohighlight">\(\theta\)</span>は<span class="math notranslate nohighlight">\(\theta=4/16=0.25\)</span>です。この位相の値は何を意味しているのでしょうか？</p>
 <p>ショアのアルゴリズムの量子回路として、これまで<span class="math notranslate nohighlight">\(\ket{w}=\ket{0}^{\otimes n}\)</span>を初期状態として、<span class="math notranslate nohighlight">\(U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}\)</span> <span class="math notranslate nohighlight">\((f(x) = a^x \bmod N)\)</span> となるオラクル<span class="math notranslate nohighlight">\(U_f\)</span>を考えてきました。この<span class="math notranslate nohighlight">\(U_f\)</span>を実装するために、以下のようなユニタリー演算子<span class="math notranslate nohighlight">\(U\)</span>を考えてみます。</p>
 <div class="math notranslate nohighlight" id="equation-u-action">
-<span class="eqno">(17)<a class="headerlink" href="#equation-u-action" title="Permalink to this equation">¶</a></span>\[\begin{split}U\ket{m} =
+<span class="eqno">(17)<a class="headerlink" href="#equation-u-action" title="Permalink to this equation">#</a></span>\[\begin{split}U\ket{m} =
 \begin{cases}
 \ket{am \bmod N)} &amp; 0 \leq m \leq N - 1 \\
 \ket{m} &amp; N \leq m \leq 2^n-1
@@ -1073,14 +966,14 @@ U\ket{\psi_s}=e^{2\pi is/r}\ket{\psi_s}
 \]</div>
 <p>つまり、ショアのアルゴリズムのオラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作は、固有値<span class="math notranslate nohighlight">\(e^{2\pi is/r}\)</span>を持つ固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi_s}\)</span>の重ね合わせ状態<span class="math notranslate nohighlight">\(\ket{1}\)</span>にユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回適用することと同等なわけです。量子位相推定の<a class="reference internal" href="#qpe-nqubit-fig"><span class="std std-ref">回路</span></a>と比較すれば、やっていることはほぼ同じですね。その後に逆QFTを掛けるということまで考えれば、まさにQPEそのものの操作を行っていることに対応しています。</p>
 <p>QPEで得られる位相は何だったかを思い出すと、それは<span class="math notranslate nohighlight">\(U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}\)</span>なるユニタリー演算<span class="math notranslate nohighlight">\(U\)</span>と固有ベクトル<span class="math notranslate nohighlight">\(\ket{\psi}\)</span>に対する固有値<span class="math notranslate nohighlight">\(e^{2\pi i\theta}\)</span>に含まれる位相<span class="math notranslate nohighlight">\(\theta\)</span>でした。以上のことから、ショアのアルゴリズムから得られる位相<span class="math notranslate nohighlight">\(\theta\)</span>は、<span class="math notranslate nohighlight">\(s/r\)</span>（の整数倍）の意味を持つことも分かるでしょう。</p>
-</div>
-<div class="section" id="continued-fractions">
-<span id="id14"></span><h3><a class="toc-backref" href="#id34">連分数展開</a><a class="headerlink" href="#continued-fractions" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="continued-fractions">
+<span id="id14"></span><h3><a class="toc-backref" href="#id34">連分数展開</a><a class="headerlink" href="#continued-fractions" title="Permalink to this heading">#</a></h3>
 <p>以上の考察から、測定の結果得られる位相は<span class="math notranslate nohighlight">\(\theta \approx s/r\)</span>であることが分かりました。この結果から位数<span class="math notranslate nohighlight">\(r\)</span>を求めるために<strong>連分数展開</strong>という手法を使いますが、詳細は他の文献に委ねます（<span id="id15">[<a class="reference internal" href="bibliography.html#id7" title="Michael A Nielsen and Isaac L Chuang. Quantum Computation and Quantum Information, chapter 5.3, pages 226-234. Cambridge University Press, 2000.">NC00c</a>]</span>にもp.230に記述があります）。この手法を使うことで、<span class="math notranslate nohighlight">\(\theta\)</span>に最も近い分数として<span class="math notranslate nohighlight">\(s/r\)</span>を求めることができます。</p>
 <p>例えば<span class="math notranslate nohighlight">\(\theta=0.25\)</span>の場合、<span class="math notranslate nohighlight">\(r=4\)</span>が得られます（頻度は小さいですが<span class="math notranslate nohighlight">\(r=8\)</span>が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（<a class="reference internal" href="#factoring-example"><span class="std std-ref">ここ</span></a>を参照）。</p>
-</div>
-<div class="section" id="modular-exponentiation">
-<span id="id16"></span><h3><a class="toc-backref" href="#id35">剰余指数化</a><a class="headerlink" href="#modular-exponentiation" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="modular-exponentiation">
+<span id="id16"></span><h3><a class="toc-backref" href="#id35">剰余指数化</a><a class="headerlink" href="#modular-exponentiation" title="Permalink to this heading">#</a></h3>
 <p>オラクル<span class="math notranslate nohighlight">\(U_f\)</span>による操作<span class="math notranslate nohighlight">\(U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}\)</span>とはどういうものか、もう少し考えてみましょう。<span class="math notranslate nohighlight">\(f(x) = a^x \bmod N\)</span>は、<span class="math notranslate nohighlight">\(x\)</span>の2進数表記</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1098,13 +991,13 @@ f(x) &amp; = a^x \bmod N \\
 <p>と書くことができます。つまり、この関数は以下のようなユニタリー演算を考えれば実装することができます。</p>
 <a class="reference internal image-reference" href="_images/shor_oracle.png"><img alt="shor_oracle" class="align-center" src="_images/shor_oracle.png" style="width: 600px;" /></a>
 <p><span class="math notranslate nohighlight">\(n\)</span>量子ビットQPEの<a class="reference internal" href="#qpe-nqubit-fig"><span class="std std-ref">回路</span></a>と比較すれば、このユニタリーはQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された<span class="math notranslate nohighlight">\(a^x \bmod N\)</span>を適用してQPEの<span class="math notranslate nohighlight">\(U^{2^x}\)</span>演算を実現する手法を、<strong>剰余指数化</strong>と呼びます。</p>
-</div>
-</div>
-<div class="section" id="shor-imp">
-<span id="id17"></span><h2><a class="toc-backref" href="#id36">アルゴリズムの実装</a><a class="headerlink" href="#shor-imp" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="shor-imp">
+<span id="id17"></span><h2><a class="toc-backref" href="#id36">アルゴリズムの実装</a><a class="headerlink" href="#shor-imp" title="Permalink to this heading">#</a></h2>
 <p>ここから、ショアのアルゴリズムを実装していきます。</p>
-<div class="section" id="shor-imp-period">
-<span id="id18"></span><h3><a class="toc-backref" href="#id37">位数の発見</a><a class="headerlink" href="#shor-imp-period" title="Permalink to this headline">¶</a></h3>
+<section id="shor-imp-period">
+<span id="id18"></span><h3><a class="toc-backref" href="#id37">位数の発見</a><a class="headerlink" href="#shor-imp-period" title="Permalink to this heading">#</a></h3>
 <p>まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。</p>
 <p><span class="math notranslate nohighlight">\(N\)</span>を正の整数として、関数<span class="math notranslate nohighlight">\(f(x) = a^x \bmod N\)</span>の振る舞いを考えます。<a class="reference internal" href="#shor-algo-fig"><span class="std std-ref">ショアのアルゴリズム</span></a>に立ち返ってみると、
 ここで<span class="math notranslate nohighlight">\(a\)</span>は<span class="math notranslate nohighlight">\(N\)</span>と互いに素な<span class="math notranslate nohighlight">\(N\)</span>未満の正の整数で、位数<span class="math notranslate nohighlight">\(r\)</span>は<span class="math notranslate nohighlight">\(\modequiv{a^r}{1}{N}\)</span>を満たす非ゼロの最小の整数でした。
@@ -1134,10 +1027,13 @@ f(x) &amp; = a^x \bmod N \\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/f6277c6278893d4b425ba36309db451adf3c90a9dca5c83e0ce65cc8ae2e6db7.png" src="_images/f6277c6278893d4b425ba36309db451adf3c90a9dca5c83e0ce65cc8ae2e6db7.png" />
 </div>
 </div>
-<div class="section" id="shor-imp-oracle">
-<span id="id19"></span><h3><a class="toc-backref" href="#id38">オラクルの実装</a><a class="headerlink" href="#shor-imp-oracle" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="shor-imp-oracle">
+<span id="id19"></span><h3><a class="toc-backref" href="#id38">オラクルの実装</a><a class="headerlink" href="#shor-imp-oracle" title="Permalink to this heading">#</a></h3>
 <p>以下では、<span class="math notranslate nohighlight">\(N=15\)</span>を素因数に分解してみます。上で説明したように、<span class="math notranslate nohighlight">\(U\ket{m}=\ket{am \bmod N}\)</span>となるユニタリー<span class="math notranslate nohighlight">\(U\)</span>を<span class="math notranslate nohighlight">\(x\)</span>回繰り返すことで、オラクル<span class="math notranslate nohighlight">\(U_f\)</span>を実装します。</p>
 <p>練習問題として、<span class="math notranslate nohighlight">\(C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)\)</span>を実行する関数<code class="docutils literal notranslate"><span class="pre">c_amod15</span></code>を以下に実装してください（<code class="docutils literal notranslate"><span class="pre">c_amod15</span></code>全体は制御ゲートを返しますが、標的レジスタのユニタリー演算、特に<span class="math notranslate nohighlight">\(U\)</span>に対応する部分を書いてください）。</p>
 <p>関数の引数<code class="docutils literal notranslate"><span class="pre">a</span></code>は15より小さく15と互いに素な整数のみを考えます。また、実は一般に<span class="math notranslate nohighlight">\(a = N-1\)</span>の場合、<span class="math notranslate nohighlight">\(\modequiv{a^2}{1}{N}\)</span>なので位数<span class="math notranslate nohighlight">\(r\)</span>は2、したがって<span class="math notranslate nohighlight">\(a^{r/2} = a\)</span>、<span class="math notranslate nohighlight">\(\modequiv{a + 1}{0}{N}\)</span>となり、ショアのアルゴリズムには使えないことが分かります。したがって、考えるべき<code class="docutils literal notranslate"><span class="pre">a</span></code>の値は13以下です。</p>
@@ -1145,7 +1041,7 @@ f(x) &amp; = a^x \bmod N \\
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;mod 15による制御ゲート&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;mod 15による制御ゲート&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2, 4, 7, 8, 11, or 13&quot;</span><span class="p">)</span>
@@ -1171,7 +1067,7 @@ f(x) &amp; = a^x \bmod N \\
 
     <span class="c1"># U_powerをゲートに変換</span>
     <span class="n">gate</span> <span class="o">=</span> <span class="n">U_power</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
-    <span class="n">gate</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">^</span><span class="si">{</span><span class="mi">2</span> <span class="o">**</span> <span class="n">l</span><span class="si">}</span><span class="s2"> mod 15&quot;</span>
+    <span class="n">gate</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">^</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">l</span><span class="si">}</span><span class="s2"> mod 15&quot;</span>
 
     <span class="c1"># gateを制御ゲートに変換</span>
     <span class="n">c_gate</span> <span class="o">=</span> <span class="n">gate</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
@@ -1187,7 +1083,7 @@ f(x) &amp; = a^x \bmod N \\
 \[m=\sum_{j=0}^{3} 2^j m_j \, (m_j=0,1)\]</div>
 <p>とすると、</p>
 <div class="math notranslate nohighlight" id="equation-ammod15">
-<span class="eqno">(18)<a class="headerlink" href="#equation-ammod15" title="Permalink to this equation">¶</a></span>\[am \bmod 15 = \left( \sum_{j=0}^{3} 2^{j+\log_2 a} m_j \right) \bmod 15\]</div>
+<span class="eqno">(18)<a class="headerlink" href="#equation-ammod15" title="Permalink to this equation">#</a></span>\[am \bmod 15 = \left( \sum_{j=0}^{3} 2^{j+\log_2 a} m_j \right) \bmod 15\]</div>
 <p>ですが、<span class="math notranslate nohighlight">\(15 = 2^4 - 1\)</span>で、一般に自然数<span class="math notranslate nohighlight">\(n, m\)</span>と<span class="math notranslate nohighlight">\(n-pm &lt; m\)</span>となる最小の自然数<span class="math notranslate nohighlight">\(p\)</span>について</p>
 <div class="math notranslate nohighlight">
 \[2^n \bmod (2^m - 1) = 2^{n-pm}\]</div>
@@ -1297,11 +1193,9 @@ f(x) &amp; = a^x \bmod N \\
 </div>
 <p>が正解です。</p>
 </div>
-<div class="cell tag_remove-input tag_remove-output docutils container">
-</div>
-</div>
-<div class="section" id="shor-imp-circuit">
-<span id="id21"></span><h3><a class="toc-backref" href="#id39">回路全体の実装</a><a class="headerlink" href="#shor-imp-circuit" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="shor-imp-circuit">
+<span id="id21"></span><h3><a class="toc-backref" href="#id39">回路全体の実装</a><a class="headerlink" href="#shor-imp-circuit" title="Permalink to this heading">#</a></h3>
 <p>測定用ビットとして、8量子ビットを使います。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1339,6 +1233,9 @@ f(x) &amp; = a^x \bmod N \\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/bdfa13657c801d56b56dac39609a729da9a47bc07bb60fb95a61437e6f6651ba.png" src="_images/bdfa13657c801d56b56dac39609a729da9a47bc07bb60fb95a61437e6f6651ba.png" />
+</div>
 </div>
 <p>シミュレータで実行して、結果を確認してみます。</p>
 <div class="cell docutils container">
@@ -1351,10 +1248,13 @@ f(x) &amp; = a^x \bmod N \\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/965e9ec4bae62807c13232564c0a7185ae8e244a083aab0cc00c3123c34a4ffa.png" src="_images/965e9ec4bae62807c13232564c0a7185ae8e244a083aab0cc00c3123c34a4ffa.png" />
 </div>
 </div>
-<div class="section" id="shor-imp-ana">
-<span id="id22"></span><h3><a class="toc-backref" href="#id40">計算結果の解析</a><a class="headerlink" href="#shor-imp-ana" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="shor-imp-ana">
+<span id="id22"></span><h3><a class="toc-backref" href="#id40">計算結果の解析</a><a class="headerlink" href="#shor-imp-ana" title="Permalink to this heading">#</a></h3>
 <p>出力された結果から、位相を求めてみます。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1364,7 +1264,7 @@ f(x) &amp; = a^x \bmod N \\
     <span class="n">phase</span> <span class="o">=</span> <span class="n">decimal</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_meas</span><span class="p">)</span>
     <span class="n">measured_phases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
     <span class="c1"># これらの値をテーブルの行に追加：</span>
-    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decimal</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">      </span><span class="si">{</span><span class="n">decimal</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n_meas</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">phase</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decimal</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">      </span><span class="si">{</span><span class="n">decimal</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">n_meas</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">phase</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># 結果を表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Register Output    Phase&#39;</span><span class="p">)</span>
@@ -1372,6 +1272,16 @@ f(x) &amp; = a^x \bmod N \\
 
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Register Output    Phase
+------------------------
+128      128/256 = 0.500
+192      192/256 = 0.750
+ 64       64/256 = 0.250
+  0        0/256 = 0.000
 </pre></div>
 </div>
 </div>
@@ -1393,12 +1303,22 @@ f(x) &amp; = a^x \bmod N \\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Phase   Fraction   Guess for r
+-------------------------------------
+     0.500       1/ 2             2
+     0.750       3/ 4             4
+     0.250       1/ 4             4
+     0.000       0/ 1             1
+</pre></div>
+</div>
+</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">limit_denominator</span></code>メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。</p>
 <p>測定された結果のうち、2つ（64と192）が正しい答えである<span class="math notranslate nohighlight">\(r=4\)</span>を与えたことが分かります。</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1412,7 +1332,7 @@ f(x) &amp; = a^x \bmod N \\
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -1420,44 +1340,130 @@ f(x) &amp; = a^x \bmod N \\
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="addition_on_ibmq.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">【参考】足し算を実機で行う</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="addition_on_ibmq.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">【参考】足し算を実機で行う</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="spectrum_estimation.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="spectrum_estimation.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">【課題】位相推定によるスペクトル分解</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By 東京大学素粒子物理国際研究センター<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
       </div>
-    </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
 
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-introduction">はじめに</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe">量子位相推定</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-1qubit">1量子ビットの位相推定</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#n"><span class="math notranslate nohighlight">\(n\)</span>量子ビットの位相推定</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp">QPEの簡単な例を実装する</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp-simulator">シミュレータでの実験</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qpe-imp-real">量子コンピュータでの実験</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-algo">ショアのアルゴリズム</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factoring-example">素因数分解の例</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-circuit">量子回路</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-measurement">測定結果の解析</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continued-fractions">連分数展開</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modular-exponentiation">剰余指数化</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp">アルゴリズムの実装</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-period">位数の発見</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-oracle">オラクルの実装</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-circuit">回路全体の実装</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shor-imp-ana">計算結果の解析</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By 東京大学素粒子物理国際研究センター
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
