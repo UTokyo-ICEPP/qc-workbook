@@ -602,7 +602,7 @@ O(b, T) = \sum_{i=1}^N a_{i} T_i + \sum_{i=1}^N \sum_{j&lt;i}^N b_{ij} T_i T_j
 \]</div>
 <p>を最小化する<span class="math notranslate nohighlight">\(\{T_i\}\)</span>を求めます。ここで<span class="math notranslate nohighlight">\(a_i\)</span>は上で決めたセグメント<span class="math notranslate nohighlight">\(i\)</span>のスコア、<span class="math notranslate nohighlight">\(b_{ij}\)</span>はセグメント<span class="math notranslate nohighlight">\(i\)</span>と<span class="math notranslate nohighlight">\(j\)</span>のペアのスコアです。<span class="math notranslate nohighlight">\(a_i\)</span>の値が小さい（検出器中心を向いている）、かつ<span class="math notranslate nohighlight">\(b_{ij}\)</span>の値が小さい（正しい飛跡と無矛盾な）ペアを組んでいるセグメントを採用し、そうでないものを棄却するほど、<span class="math notranslate nohighlight">\(O\)</span>の値は小さくなります。採用すべきセグメントが決まれば、それに基づいてすべての粒子飛跡を再構成できるので、この最小化問題を解くことがトラッキングに対応します。</p>
 <p>上のような形式の最適化問題を<strong>QUBO</strong>（<em>Quadratic Unconstrained Binary Optimization</em>、2次制約無し2値最適化）と呼びます。一見特殊な形式ですが、実は様々な最適化問題（例えば有名な巡回セールスマン問題なども）がQUBOの形に落とし込めることが知られています。また、ここでは直接関係しませんが、量子アニーリングマシンと呼ばれるタイプの量子コンピュータでは、QUBOを解くことが動作の基本です。</p>
-<p>それでは、まずスコア<span class="math notranslate nohighlight">\(a_{i}\)</span>と<span class="math notranslate nohighlight">\(b_{ij}\)</span>を読み出しましょう。この後のプログラミングを簡単にするため、二つのスコアセットは一つの二次元配列<code class="docutils literal notranslate"><span class="pre">b</span></code>に記録されており、<code class="docutils literal notranslate"><span class="pre">b[i,</span> <span class="pre">i]</span></code>が<span class="math notranslate nohighlight">\(a_i\)</span>に対応するようになっています。</p>
+<p>それでは、まずスコア<span class="math notranslate nohighlight">\(a_{i}\)</span>と<span class="math notranslate nohighlight">\(b_{ij}\)</span>を読み出しましょう。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># スコアの読み込み</span>
@@ -642,7 +642,7 @@ T_i = \frac{1}{2} (1 - s_i)
 \[
 H(h, J, s) = \sum_{i=1}^N h_i Z_i + \sum_{i=1}^N \sum_{j&lt;i}^N J_{ij} Z_i Z_j + \text{(constant)}
 \]</div>
-<p>が得られます。これは物理を始め自然科学の様々な場面で登場するIsing模型のハミルトニアンと同じ形になっています。右辺の<span class="math notranslate nohighlight">\(constant\)</span>はハミルトニアンの定数項で、変分法において意味を持たないので以降は無視します。</p>
+<p>が得られます。これは物理を始め自然科学の様々な場面で登場するIsing模型のハミルトニアンと同じ形になっています。右辺の<span class="math notranslate nohighlight">\(\text{constant}\)</span>はハミルトニアンの定数項で、変分法において意味を持たないので以降は無視します。</p>
 <p>以下のセルで、上の処方に従ってIsingハミルトニアンの係数<span class="math notranslate nohighlight">\(h_i\)</span>と<span class="math notranslate nohighlight">\(J_{ij}\)</span>を計算してください。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
