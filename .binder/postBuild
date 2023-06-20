@@ -2,6 +2,8 @@
 
 ROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null)
 
-git clone https://github.com/derlin/hepqpr-qallse
-cp -r hepqpr-qallse/src/hepqpr $ROOTDIR/source
-ln -s $ROOTDIR/source/hepqpr $ROOTDIR/source/ja/hepqpr
+# Binder runtime environment is primarily derived from requirements.txt in this directory; anything that can't be pip-installed must be processed here
+
+git clone https://github.com/LAL/trackml-library.git
+pip3 install ./trackml-library
+rm -rf trackml-library

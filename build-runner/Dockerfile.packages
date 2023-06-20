@@ -1,10 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get -y update && \
-    apt-get install -y \
-       python3 \
-       python3-venv \
-       python3-pip
+    apt-get install -y python3 python3-venv python3-pip git
 
 # First line: jupyter-book installs a bunch of dependencies and some have
 # superficially conflicting version requirements. Conflict occurs because
@@ -17,5 +14,13 @@ RUN pip3 install --no-cache-dir mdit-py-plugins==0.3.5 docutils==0.17.1 pydata-s
     pip3 install --no-cache-dir pandas==1.5.3 && \
     pip3 install --no-cache-dir scikit-learn==1.2.2 && \
     pip3 install --no-cache-dir jupyter-book==0.15.1 tabulate==0.9.0
+
+# The next two blocks are libraries required at runtime (not build time) only, so they are not needed in principle
+# (Cells using these libraries are tagged as "throws-exception")
+RUN pip3 install dwave-qbsolv
+
+RUN git clone https://github.com/LAL/trackml-library.git && \
+    pip3 install ./trackml-library && \
+    rm -rf trackml-library
 
 # Tag as yiiyama/jupyterbook-qiskit-packages:__version__
