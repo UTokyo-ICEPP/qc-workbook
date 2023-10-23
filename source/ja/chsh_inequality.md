@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # CHSH不等式の破れを確認する
@@ -52,15 +52,15 @@ QCの基本的な仕組みは、「何らかの物理的な系（超電導共振
 
 ## CHSH不等式
 
-量子力学的状態が実際に存在するかどうかを確かめる実験として、CHSH不等式{cite}`PhysRevLett.23.880,nielsen_chuang_epr`の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。
+量子力学的状態が実際に存在するかどうかを確かめる実験として、2022年のノーベル物理学賞でも取り上げられたCHSH不等式{cite}`chsh`の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。
 
-通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、[IBM Quantum](https://quantum-computing.ibm.com/)を通じて[IBM Q System One](https://www.ibm.com/quantum-computing/systems/)量子コンピュータを利用します。
+通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。
 
 +++
 
 ## Qiskitの基本構造
 
-IBM Q System OneのQCで量子計算を実行するには、IBMの提供する[Qiskit](https://qiskit.org/)というPythonライブラリを利用します。Qiskitの基本的な使い方は
+IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://qiskit.org/" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は
 
 1. 使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る
 1. 回路を実行して計算結果を得る。ここでは二通りのオプションがあり、
@@ -70,7 +70,7 @@ IBM Q System OneのQCで量子計算を実行するには、IBMの提供する[Q
 
 です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては{doc}`第一回の課題 <nonlocal_correlations>`を参照してください。
 
-Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば[Qiskitのドキュメンテーション](https://qiskit.org/documentation/)をあたってみましょう。
+Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a href="https://qiskit.org/documentation/" target="_blank">Qiskitのドキュメンテーション</a>をあたってみましょう。
 
 +++
 
@@ -94,13 +94,13 @@ $$
 |\alpha|^2 + |\beta|^2 = 1
 $$
 
-という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり
+という関係を満たさなければならず、かつ全体の位相（global phase）は意味を持たない、つまり、任意の実数$\theta$に対して
 
 $$
 \alpha \ket{0} + \beta \ket{1} \sim e^{i\theta} (\alpha \ket{0} + \beta \ket{1})
 $$
 
-（ここで $\sim$ は「同じ量子状態を表す」という意味）という制約があります。
+（ここで $\sim$ は「同じ量子状態を表す」という意味）である、という制約があります。
 
 複素数1つは実数2つで書けるので、$\alpha$と$\beta$をあわせて実数4つ分の情報が入っているようですが、2つの拘束条件があるため、実際の自由度は 4-2=2 個です。自由度の数をあらわにして量子ビットの状態を記述するときは、
 
@@ -135,7 +135,7 @@ $$
 つまり、量子ビット$n$個のレジスタでは、基底の数が$2^n$個で、それぞれに複素数の振幅がかかるので、実数$2 \times 2^n - 2$個分の情報が記録できることになります。これが量子計算に関して「指数関数的」という表現がよく用いられる所以です。
 
 量子レジスタの計算基底状態の表記法としては、上に書いたようにケットを$n$個並べたり$n$個の0/1を一つのケットの中に並べたりする方法がありますが、さらにコンパクトなのが、0/1の並び（ビット列）を二進数とみなして、対応する（十進数の）数字で表現する方法です。例えば4量子ビットのレジスタで状態$\ket{0000}$と$\ket{1111}$はそれぞれ$\ket{0}$と$\ket{15}$と書けます。
- 
+
 ただし、ここで注意すべきなのは、左右端のどちらが「1の位」なのか事前に約束しないといけないことです。$\ket{0100}$を$\ket{4}$（右端が1の位）とするか$\ket{2}$（左端が1の位）とするかは約束次第です。このワークブックでは、Qiskitでの定義に従って、右端を1の位とします。同時に、レジスタの最初の量子ビットが1の位に対応するようにしたいので、ケットや0/1を並べて計算基底を表現するときは、右から順にレジスタの量子ビットを並べていくことにします。
 
 Qiskitには量子レジスタオブジェクトがあり、
@@ -175,7 +175,7 @@ circuit.h(register[1])
 ```{code-block} python
 circuit.measure_all()
 ```
- 
+
 測定は量子レジスタの状態を「覗き見る」ような操作ですが、一回の測定操作で具体的に起きることは、各量子ビットに対して0もしくは1という値が得られるというだけです。つまり、量子状態が$2^n$個の計算基底の複雑な重ね合わせであったとしても、測定をすると一つの計算基底に対応するビット列が出てくるだけということになります。しかも、一度測定してしまった量子ビットはもう状態を変えてしまっていて、複雑な重ね合わせは失われてしまいます。
 
 ではこの「一つの計算基底」がどの基底なのかというと、実は特殊な場合を除いて決まっていません。全く同じ回路を繰り返し実行して測定すると、毎回ランダムにビット列が決まります。ただし、このランダムさには法則があって、**特定のビット列が得られる確率は、対応する計算基底の振幅の絶対値自乗**となっています。つまり、$n$ビットレジスタの状態$\sum_{j=0}^{2^n-1} c_j \ket{j}$があるとき、測定でビット列$k$が得られる確率は$|c_k|^2$です。根本的には、この確率の分布$|c_0|^2, |c_1|^2, \dots, |c_{2^n-1}|^2$こそが量子計算の結果です。
@@ -251,10 +251,12 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 # まずは必要になるpythonモジュールをすべてインポートしておく
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, IBMQ, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit import QuantumCircuit, transpile
+from qiskit.providers.ibmq import least_busy
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
+from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.utils import operational_backend
 
@@ -361,7 +363,7 @@ $$
 = & C^1_0[R_y(\theta_3 - \theta_2)]\left(\sqrt{\frac{3}{10}} \ket{0}_1 + \sqrt{\frac{7}{10}} \ket{1}_1\right) R_y(\theta_2)\ket{0}_0\\
 = & \sqrt{\frac{3}{10}} \ket{0}_1 R_y(\theta_2)\ket{0}_0 + \sqrt{\frac{7}{10}} \ket{1}_1 R_y(\theta_3)\ket{0}_0 \\
 = & \sqrt{\frac{3}{10}} \ket{0}_1 \left(\sqrt{\frac{1}{3}} \ket{0}_0 + \sqrt{\frac{2}{3}} \ket{1}_0\right) + \sqrt{\frac{7}{10}} \ket{1}_1 \left(\sqrt{\frac{3}{7}} \ket{0}_0 + \sqrt{\frac{4}{7}} \ket{1}_0\right) \\
-= & \sqrt{\frac{1}{10}} \ket{00} + \sqrt{\frac{2}{10}} \ket{01} + \sqrt{\frac{3}{10}} \ket{10} + \sqrt{\frac{4}{10}} \ket{11} 
+= & \sqrt{\frac{1}{10}} \ket{00} + \sqrt{\frac{2}{10}} \ket{01} + \sqrt{\frac{3}{10}} \ket{10} + \sqrt{\frac{4}{10}} \ket{11}
 \end{align}
 $$
 
@@ -540,24 +542,25 @@ $$
 
 ## 回路を実機で実行する
 
-まずはIBMQに認証・接続します。自分のラップトップなどローカルの環境ですでに{ref}`認証設定がされている <install_token>`場合は`IBMQ.load_account()`で接続ができます。設定がない場合は`enable_account()`関数に{ref}`トークン <copy_token>`を渡してIBMQに接続します。
+まずはIBMQに認証・接続します。IBM Quantum Experience (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに{ref}`認証設定が保存されている <install_token>`場合は`provider = IBMProvider()`で接続ができます。設定がない場合は`IBMProvider`のコンストラクタに{ref}`トークン <install_token>`を渡してIBMQに接続します。
 
 ```{code-cell} ipython3
 :tags: [remove-output, raises-exception]
 
+# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# instance = 'hub-x/group-y/project-z'
+instance = None
+
 try:
-    IBMQ.load_account()
-except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
+    provider = IBMProvider(instance=instance)
+except AccountNotFoundError:
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 ```
 
 認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
-
-# IBMQプロバイダ（実機へのアクセスを管理するオブジェクト）
-provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
 
 # バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得する
 # operational_backendはこのワークブック用にqc_workbook.utilsで定義された関数
@@ -591,9 +594,9 @@ job_monitor(job, interval=2)
 
 IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。
 
-バックエンドごとのキューの長さは[IBM Quantumのバックエンド一覧ページ](https://quantum-computing.ibm.com/services?services=systems)から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
+バックエンドごとのキューの長さは<a href="https://quantum-computing.ibm.com/services?services=systems" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
 
-また、自分の投じたジョブのステータスは[ジョブ一覧ページ](https://quantum-computing.ibm.com/jobs)から確認できます。
+また、自分の投じたジョブのステータスは<a href="https://quantum-computing.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。
 
 Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように`job_monitor`を使います。
 
@@ -617,7 +620,7 @@ for idx in range(4):
     counts = result.get_counts(idx)
     # データをリストに足す
     counts_list.append(counts)
-    
+
 print(counts_list)
 ```
 
@@ -634,12 +637,12 @@ except NameError:
         {'00': 3414, '01': 693, '10': 953, '11': 3132},
         {'00': 3661, '01': 725, '10': 768, '11': 3038}
     ]
-    
+
     shots = 8192
 ```
 
 ````{tip}
-ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って`retrieve_job`というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantum Experienceのホームページにリストされているので、そこにあるジョブID（603d8bef43659838aのような）をコピーし、
+ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って`retrieve_job`というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（cgr3kaemln50ss91pj10のような）をコピーし、
 
 ```{code-block} python
 backend = provider.get_backend('__backend_you_used__')
@@ -681,7 +684,7 @@ for ic, counts in enumerate(counts_list):
 
 # 4つの要素を同時にshotsで規格化（リストではこういうことはできない）
 C /= shots
-    
+
 S = C[0] - C[1] + C[2] + C[3]
 
 print('C:', C)
@@ -693,11 +696,3 @@ else:
 ```
 
 無事、$S$が2を超えました。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

@@ -42,21 +42,21 @@ if options.checkout:
     os.chdir(os.path.dirname(workdir))
     # Can think about installing gitpython if needed
     subprocess.Popen(['git', 'clone', '-b', options.branch, remote_repo]).wait()
-    
+
 # Add the source directory to PYTHONPATH
 
 try:
     os.environ['PYTHONPATH'] += f':{options.source}'
 except KeyError:
     os.environ['PYTHONPATH'] = options.source
-    
+
 # Wipe out the build area if required
 
 if options.clean:
     shutil.rmtree(build_path, ignore_errors=True)
-    
+
 # Build the book
-    
+
 with tempfile.TemporaryDirectory() as temp_home:
     # Move HOME so qiskit won't load the IBMQ credentials
     current_home = os.environ['HOME']
@@ -64,7 +64,7 @@ with tempfile.TemporaryDirectory() as temp_home:
 
     # Also set a flag
     os.environ['JUPYTERBOOK_BUILD'] = '1'
-    
+
     # Also write the build configuration file here (update the repository parameter to remote_repo)
     with open(os.path.join(full_source_path, '_config.yml')) as src:
         config = yaml.load(src, Loader)
@@ -75,10 +75,10 @@ with tempfile.TemporaryDirectory() as temp_home:
             pass
 
     config_path = os.path.join(current_home, '_config.yml')
-    
+
     with open(config_path, 'w') as out:
         out.write(yaml.dump(config))
-    
+
     try:
         build.callback(path_source=full_source_path,
                        path_output=full_output_path,
@@ -96,7 +96,7 @@ with tempfile.TemporaryDirectory() as temp_home:
 
     finally:
         os.environ['HOME'] = current_home
-        
+
 # Cleanup
 
 if not options.keep_reports:

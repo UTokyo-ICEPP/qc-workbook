@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【参考】足し算を実機で行う
@@ -38,9 +38,10 @@ language_info:
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit import QuantumRegister, QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 from qiskit_experiments.library import CorrelatedReadoutError
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
@@ -53,22 +54,20 @@ print('notebook ready')
 ```{code-cell} ipython3
 :tags: [remove-output, raises-exception]
 
-provider_def = ('ibm-q', 'open', 'main')
+instance = 'ibm-q/open/main'
 
 try:
-    IBMQ.load_account()
+    provider = IBMProvider(instance=instance)
 except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
-
-provider = IBMQ.get_provider(*provider_def)
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-if provider_def == ('ibm-q', 'open', 'main'):
+if instance == 'ibm-q/open/main':
     from qiskit.test.mock import FakeGuadalupe
-    
+
     backend = FakeGuadalupe()
 
 else:
@@ -81,12 +80,10 @@ print(f'Using backend {backend.name()}')
 実習と全く同じ`setup_addition`関数と、次のセルで効率化前の回路を返す`make_original_circuit`関数を定義します。
 
 ```{code-cell} ipython3
-:tags: []
-
 def setup_addition(circuit, reg1, reg2, reg3):
     """Set up an addition subroutine to a circuit with three registers
     """
-    
+
     # Equal superposition in register 3
     circuit.h(reg3)
 
@@ -113,7 +110,7 @@ def setup_addition(circuit, reg1, reg2, reg3):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1 + reg3.size
             circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
+
         circuit.h(reg3[itarg])
 
 def make_original_circuit(n1, n2):
@@ -127,13 +124,13 @@ def make_original_circuit(n1, n2):
 
     # QuantumCircuit can be instantiated from multiple registers
     circuit = QuantumCircuit(reg1, reg2, reg3)
-    
+
     # Set register 1 and 2 to equal superpositions
     circuit.h(reg1)
     circuit.h(reg2)
 
     setup_addition(circuit, reg1, reg2, reg3)
-    
+
     circuit.measure_all()
 
     return circuit
@@ -142,31 +139,29 @@ def make_original_circuit(n1, n2):
 (4, 4)から(1, 1)までそれぞれオリジナルと効率化した回路の二通りを作り、全てリストにまとめてバックエンドに送ります。
 
 ```{code-cell} ipython3
-:tags: []
-
 # count_ops()の結果をテキストにする関数
 def display_nops(circuit):
     nops = circuit.count_ops()
     text = []
     for key in ['rz', 'x', 'sx', 'cx']:
         text.append(f'N({key})={nops.get(key, 0)}')
-        
+
     return ', '.join(text)
 
 # オリジナルと効率化した回路を作る関数
 def make_circuits(n1, n2, backend):
     print(f'Original circuit with n1, n2 = {n1}, {n2}')
     circuit_orig = make_original_circuit(n1, n2)
-    
+
     print('  Transpiling..')
     circuit_orig = transpile(circuit_orig, backend=backend, optimization_level=3)
-    
+
     print(f'  Done. Ops: {display_nops(circuit_orig)}')
     circuit_orig.name = f'original_{n1}_{n2}'
 
     print(f'Optimized circuit with n1, n2 = {n1}, {n2}')
     circuit_opt = optimized_additions(n1, n2)
-    
+
     n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
 
     print('  Transpiling..')
@@ -201,7 +196,7 @@ for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
 
 # バックエンドで定められた最大のショット数だけ各回路を実行
 shots = backend.configuration().max_shots
-    
+
 print(f'Submitting {len(circuits)} circuits to {backend.name()}, {shots} shots each')
 
 if backend.provider() is None:
@@ -211,9 +206,9 @@ if backend.provider() is None:
     for circuit in circuits:
         job = backend.run(circuit, shots=shots)
         counts_list.append(job.result().get_counts())
-        
+
     print('Job Status: job has successfully run')
-        
+
 else:
     job = backend.run(circuits, shots=shots)
 
@@ -240,7 +235,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 def count_correct_additions(counts, n1, n2):
     """Extract the addition equation from the counts dict key and tally up the correct ones."""
-    
+
     correct = 0
 
     for key, value in counts.items():
@@ -254,7 +249,7 @@ def count_correct_additions(counts, n1, n2):
 
     return correct
 
-    
+
 icirc = 0
 for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
     for ctype in ['Original', 'Optimized']:
@@ -347,14 +342,14 @@ for backend in [backend_qv8, backend_qv16, backend_qv32]:
     shots = backend.configuration().max_shots
     job = backend.run(circuits, shots=shots)
     jobs.append(job)
-    
+
 for job, qv in zip(jobs, [8, 16, 32]):
     print(f'QV {qv} job')
     job_monitor(job, interval=2)
 
 for job, qv in zip(jobs, [8, 16, 32]):
     counts_list = job.result().get_counts()
-    
+
     for counts, ctype in zip(counts_list, ['Original', 'Optimized']):
         n_correct = count_correct_additions(counts, n1, n2)
         shots = sum(counts.values())
@@ -432,10 +427,4 @@ mitigated_counts = dict((key, value * shots) for key, value in mitigated_probs.i
 n_correct = count_correct_additions(mitigated_counts, n1, n2)
 r_correct = n_correct / shots
 print(f'QV 32 optimized circuit with error mitigation ({n1}, {n2}): {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
-```
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
 ```

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】量子ダイナミクスシミュレーション・続
@@ -55,10 +55,11 @@ $\newcommand{\minusket}{\ket{-}}$
 # 必要なモジュールを先にインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, transpile
+from qiskit.quantum_info import SparsePauliOp
+from qiskit_aer import AerSimulator
 # このワークブック独自のモジュール
-from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts
-from qc_workbook.hamiltonian import make_hamiltonian, diagonalized_evolution
+from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts, diagonalized_evolution
 ```
 
 ```{code-cell} ipython3
@@ -106,7 +107,7 @@ for istep in range(M):
         circuit.h(j + 1)
         circuit.p(np.pi / 2., j)
         circuit.p(np.pi / 2., j + 1)
-        
+
     # Copy of the circuit up to this point
     snapshot = circuit.copy()
 
@@ -121,13 +122,13 @@ for istep in range(M):
     ### EDIT ABOVE ###
     ##################
 
-    snapshot.measure_all()        
+    snapshot.measure_all()
     circuits.append(snapshot)
-        
-qasm_simulator = Aer.get_backend('qasm_simulator')
 
-circuits = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits, shots=shots)
+simulator = AerSimulator()
+
+circuits = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
 
 # Initial state as a statevector
@@ -265,7 +266,7 @@ $$
 と表現できることがわかります。一方、$\Phi^{\dagger}_j\Phi_{j+1}$に関しては、やや込み入った議論{cite}`PhysRevD.13.1043`の末、
 
 $$
-\Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^+_j \sigma^-_{j+1}
+\Phi^{\dagger}_j\Phi_{j+1} \rightarrow i \sigma^-_{j+1} \sigma^+_{j}
 $$
 
 が正しい表現であることがわかっています。ここで、
@@ -274,16 +275,16 @@ $$
 \sigma^{\pm} = \frac{1}{2}(\sigma^X \pm i \sigma^Y)
 $$
 
-です。ハミルトニアンには$\Phi_j\Phi^{\dagger}_{j+1} \rightarrow i \sigma^-_j \sigma^+_{j+1}$も登場するので、二つの項を合わせると
+です。また、このワークブックでの約束に従って、右辺の$j$と$j+1$の順番をひっくり返してあります。ハミルトニアンには$\Phi_j\Phi^{\dagger}_{j+1} \rightarrow i \sigma^+_{j+1}\sigma^-_{j}$も登場するので、二つの項を合わせると
 
 $$
-\Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \rightarrow \frac{i}{2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1})
+\Phi^{\dagger}_{j} \Phi_{j+1} + \Phi_j \Phi^{\dagger}_{j+1} \rightarrow \frac{i}{2} (\sigma^X_{j+1}\sigma^X_j + \sigma^Y_{j+1}\sigma^Y_j)
 $$
 
 となります。まとめると、
 
 $$
-H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_j \sigma^X_{j+1} + \sigma^Y_j \sigma^Y_{j+1}) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_k \sigma^Z_j + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
+H \rightarrow \frac{1}{4a} \left\{ \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_j + \sigma^Y_{j+1}\sigma^Y_j) + J \sum_{j=1}^{n-2} (n - j - 1) \sum_{k=0}^{j-1} \sigma^Z_j \sigma^Z_k + \sum_{j=0}^{n-1} \left[ (-1)^{j+1} \mu - J \flhalf{n-j} \right] \sigma^Z_j \right\}
 $$
 
 です。ただし、計算過程で現れる定数項（恒等演算子に比例する項）は時間発展において系の状態に全体位相をかける作用しか持たないため、無視しました。
@@ -308,18 +309,18 @@ $$
 
 **ヒント**:
 
-上のハミルトニアンのパラメターの値は参考文献{cite}`Martinez_2016`と同一です。したがって、$n=4$, $\omega \Delta t = \pi/8$とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。
+上のハミルトニアンのパラメターの値は参考文献{cite}`Martinez_2016`と同一です（ただし$\sigma$積の順番は逆です）。したがって、$n=4$, $\omega \Delta t = \pi/8$とすれば、論文中の図3aを再現できるはずです。答え合わせに使ってください。
 
-また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、`plot_heisenberg_spins`と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、`paulis`と`coeffs`という二つのリストを作ります。これらのリストの長さはハミルトニアンの項数で、`paulis`の各要素は対応する項のパウリ行列のリスト、`coeffs`の各要素はその項にかかる係数にします。例えば
+また、問題を解くためのヒントではありませんが、ハイゼンベルグモデルと同様にこのモデルでも対角化による厳密解を比較的簡単にプロットできるように道具立てがしてあります。下のコードのテンプレートでは、シミュレーション回路と厳密解を計算するためのハミルトニアンのパウリ行列分解だけ指定すれば、`plot_heisenberg_spins`と同様のプロットが作成されるようになっています。パウリ行列分解を指定するには、`paulis`と`coeffs`という二つのリストを作り、Qiskitの`SparsePauliOp`というクラスに渡します。これらのリストの長さはハミルトニアンの項数で、`paulis`の各要素は対応する項のパウリ行列のリスト、`coeffs`の各要素はその項にかかる係数にします。例えば
 
 $$
-H = 0.5 \sigma^X_0 \sigma^Y_1 I_2 + I_0 \sigma^Z_1 \sigma^X_2
+H = 0.5 \sigma^X_2 \sigma^Y_1 I_0 + I_2 \sigma^Z_1 \sigma^X_0
 $$
 
 というハミルトニアンに対しては、
 
 ```{code-block} python
-paulis = [['x', 'y', 'i'], ['i', 'z', 'x']]
+paulis = ['XYI', 'IZX']
 coeffs = [0.5, 1.]
 ```
 
@@ -364,38 +365,38 @@ for istep in range(M):
     ##################
 
     #circuit.?
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     circuits.append(circuit.measure_all(inplace=False))
 
 # Run the circuits in the simulator
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-circuits = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits, shots=shots)
+circuits = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
+```
+
+```{code-cell} ipython3
+:tags: [raises-exception, remove-output]
 
 ## Numerical solution through diagonalization
-
-# Construct the Hamiltonian
-paulis = []
-coeffs = []
 
 ##################
 ### EDIT BELOW ###
 ##################
 
-paulis = [['i'] * n]
-coeffs = None
+paulis = ['I' * n]
+coeffs = [1.]
 
 ##################
 ### EDIT ABOVE ###
 ##################
 
-hamiltonian = make_hamiltonian(paulis, coeffs)
+hamiltonian = SparsePauliOp(paulis, coeffs).to_matrix()
 
 # Initial state as a statevector
 initial_state = np.zeros(2 ** n, dtype=np.complex128)
@@ -416,11 +417,11 @@ plt.plot(time_points, number_density(bit_exp))
 initial_probs = np.square(np.abs(initial_state))
 fmt = f'{{:0{n}b}}'
 initial_counts = dict((fmt.format(idx), prob) for idx, prob in enumerate(initial_probs) if prob != 0.)
-sim_counts_list = [initial_counts] + sim_counts_list
+sim_counts_list_with_init = [initial_counts] + sim_counts_list
 
 # Plot the simulation results
 time_points = np.linspace(0., omegadt * M, M + 1, endpoint=True)
-_, bit_exp = bit_expectations_counts(time_points, sim_counts_list, n)
+_, bit_exp = bit_expectations_counts(time_points, sim_counts_list_with_init, n)
 
 plt.plot(time_points, number_density(bit_exp), 'o')
 ```
@@ -430,11 +431,3 @@ plt.plot(time_points, number_density(bit_exp), 'o')
 **提出するもの**
 
 - 完成した回路のコードとシミュレーション結果によるプロット
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

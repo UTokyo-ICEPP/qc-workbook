@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 単純な量子回路をゼロから書く
@@ -41,9 +41,7 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 ## 状態ベクトルシミュレータで量子状態を調べる
 
-第一回の課題で利用したQCシミュレータ`qasm_simulator`は、実機と同様に量子回路の測定結果をヒストグラムとして返してくれるものでした。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`statevector_simulator`（状態ベクトルシミュレータ）を利用します。状態ベクトルシミュレータは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
-
-シミュレータへのアクセスは`qasm_simulator`同様`Aer`からです。
+第一回の課題で利用したQCシミュレータ`AerSimulator`は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`AerSimulator`の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -52,7 +50,8 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Math
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, transpile
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
+from qiskit_aer import AerSimulator
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.show_state import statevector_expr
 
@@ -60,7 +59,7 @@ print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-simulator = Aer.get_backend('statevector_simulator')
+simulator = AerSimulator(method='statevector')
 print(simulator.name())
 ```
 
@@ -76,13 +75,17 @@ circuit.draw('mpl')
 ```
 
 ```{caution}
-回路に測定操作(`measure_all()`)を加えてしまうと、`statevector_simulator`を利用して測定前の回路の量子状態を確認することができなくなります。
+回路に測定操作(`measure_all()`)を加えてしまうと、状態ベクトルシミュレータを利用して測定前の回路の量子状態を確認することができなくなります。
 ```
 
 状態ベクトルシミュレーションを実行する際も`transpile`とバックエンドの`run`関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので`get_counts`ではなく`result.data()['statevector']`を参照します。
 
 ```{code-cell} ipython3
 def get_statevector_array(circuit):
+    # 渡された回路のコピーを使う
+    circuit = circuit.copy()
+    # 量子回路の終状態の状態ベクトルを保存するインストラクション
+    circuit.save_statevector()
     # 再び「おまじない」のtranspileをしてから、run()に渡す
     circuit = transpile(circuit, backend=simulator)
     job = simulator.run(circuit)
@@ -195,6 +198,8 @@ circuit.mcry(theta, [i, j], k)
 それでは、これまでに登場したゲートを使って量子状態生成のエクササイズをしましょう。
 
 実は`statevector_expr`関数には回路オブジェクトを直接渡すこともできるので（内部でシミュレータを実行し状態ベクトルオブジェクトを取得する）、ここからはその機能を利用します。また、コード中登場する`amp_norm`や`phase_norm`は、表示される数式において振幅や位相の共通因子をくくりだすために設定されています。
+
+各問題のコードセルには、ヒントとして回路が一部分だけ書かれています。残りの`circuit.?`の部分を埋めてみましょう。答えは一行とは限りません。また、同じ状態を作る量子回路は無数に存在するので、ヒントを消して独自の実装をしても構いません。
 
 +++
 
@@ -412,7 +417,7 @@ circuit = QuantumCircuit(num_qubits)
 ##################
 for i in range(num_qubits):
     circuit.h(i)
-    
+
 # circuit.?
 ##################
 ### EDIT ABOVE ###
@@ -657,7 +662,7 @@ circuit.x(output_register)
 for idx in range(3):
     # その上で、CNOTを使ってinput_registerでビットが1である時にoutput_registerの対応するビットが0にする
     circuit.cx(input_register[idx], output_register[idx])
-    
+
 circuit.draw('mpl')
 ```
 
@@ -856,11 +861,11 @@ print(np.square(np.abs(np.sum(sv_psi.conjugate() * sv_phi))))
 それに対し上の回路を1000000回実行した時の$P_0 - P_1$は
 
 ```{code-cell} ipython3
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 shots = 1000000
 
-circuit = transpile(circuit, backend=qasm_simulator)
-counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+circuit = transpile(circuit, backend=simulator)
+counts = simulator.run(circuit, shots=shots).result().get_counts()
 
 print((counts['0'] - counts['1']) / shots)
 ```
@@ -968,8 +973,8 @@ $$
 ```{code-cell} ipython3
 shots = 1000000
 
-circuit = transpile(circuit, backend=qasm_simulator)
-counts = qasm_simulator.run(circuit, shots=shots).result().get_counts()
+circuit = transpile(circuit, backend=simulator)
+counts = simulator.run(circuit, shots=shots).result().get_counts()
 
 print(counts['000'] / shots)
 ```

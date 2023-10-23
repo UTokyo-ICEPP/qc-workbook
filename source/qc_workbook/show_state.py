@@ -2,7 +2,8 @@ from typing import Tuple, List, Union, Optional
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from qiskit import Aer, transpile, QuantumCircuit
+from qiskit import transpile, QuantumCircuit
+from qiskit_aer import AerSimulator
 
 def show_state(
     statevector: Union[QuantumCircuit, np.ndarray],
@@ -16,7 +17,7 @@ def show_state(
     ax: Optional[mpl.axes.Axes] = None
 ) -> Union[None, mpl.figure.Figure]:
     """Show the quantum state of the circuit as text in a matplotlib Figure.
-    
+
     Args:
         statevector: Input statevector or a QuantumCircuit whose final state is to be extracted.
         amp_norm: Specification of the normalization of amplitudes by (numeric devisor, unit in latex).
@@ -27,7 +28,7 @@ def show_state(
         binary: Show ket indices in binary.
         state_label: If not None, prepend '|`state_label`> = ' to the printout.
         ax: Axes object. A new axes is created if None.
-        
+
     Returns:
         The newly created figure object if ax is None.
     """
@@ -36,22 +37,22 @@ def show_state(
                              terms_per_row=terms_per_row, binary=binary, state_label=state_label)
 
     row_texts = list(f'${line}$' for line in lines)
-    
+
     fig = None
     if ax is None:
         fig = plt.figure(figsize=[10., 0.5 * len(lines)])
         ax = fig.add_subplot()
-        
+
     ax.axis('off')
-    
+
     num_rows = len(row_texts)
-    
+
     for irow, row_text in enumerate(row_texts):
         ax.text(0.5, 1. / num_rows * (num_rows - irow - 1), row_text, fontsize='x-large', ha='center')
 
     if fig is not None:
         return fig
-    
+
 
 def statevector_expr(
     statevector: Union[np.ndarray, QuantumCircuit],
@@ -78,28 +79,33 @@ def statevector_expr(
         amp_format: Format for the numerical value of the amplitude absolute values.
         phase_format: Format for the numerical value of the phases.
         state_label: If not None, prepend '|`state_label`> = ' to the printout.
-        
+
     Returns:
         LaTeX expression string (if terms_per_row <= 0) or a list of expression lines.
     """
     ## If a QuantumCircuit is passed, extract the statevector
-    
-    if isinstance(statevector, QuantumCircuit):
-        # Run the circuit in statevector_simulator and obtain the final state statevector
-        simulator = Aer.get_backend('statevector_simulator')
 
-        circuit = transpile(statevector, backend=simulator)
+    if isinstance(statevector, QuantumCircuit):
+        circuit = statevector.copy()
+        # Run the circuit in statevector_simulator and obtain the final state statevector
+        simulator = AerSimulator(method='statevector')
+
+        # Append an instruction to save the statevector of the final state of the circuit
+        circuit.save_statevector()
+
+        # Transpile and run the circuit
+        circuit = transpile(circuit, backend=simulator)
         statevector = np.asarray(simulator.run(circuit).result().data()['statevector'])
-    
+
     ## Setup
-    
+
     log2_shape = np.log2(statevector.shape[0])
     assert log2_shape == np.round(log2_shape), 'Invalid statevector'
     num_qubits = np.round(log2_shape).astype(int)
-    
+
     # Set the numerical tolerance for various comparisons
     tolerance = 1.e-3
-   
+
     # Ket format template
     ket_template = ' |'
     if register_sizes is not None:
@@ -114,19 +120,19 @@ def statevector_expr(
             slots = ['{}']
 
     ket_template += ':'.join(slots) + r'\rangle'
-    
+
     # Amplitude format template
     amp_format = f'{{:{amp_format}}}'
-    
+
     # Phase format template
     phase_format = f'{{:{phase_format}}}'
-  
+
     ## Preprocess the statevector
-    
+
     # Absolute value and the phase of the amplitudes
     absamp = np.abs(statevector)
     phase = np.angle(statevector)
-    
+
     indices = np.asarray(absamp > tolerance).nonzero()[0]
     absamp = absamp[indices]
     phase = phase[indices]
@@ -144,7 +150,7 @@ def statevector_expr(
         absamp /= amp_norm[0]
         rounded_amp = np.round(absamp).astype(int)
         amp_is_int = np.asarray(np.abs(absamp - rounded_amp) < tolerance, dtype=bool)
-        
+
     nonzero_phase = np.asarray(np.abs(phase) > tolerance, dtype=bool)
     phase = np.where(phase > 0., phase, phase + 2. * np.pi)
     reduced_phase = phase / np.pi
@@ -158,7 +164,7 @@ def statevector_expr(
         phase /= phase_norm[0]
         rounded_phase = np.round(phase).astype(int)
         phase_is_int = np.asarray(np.abs(phase - rounded_phase) < tolerance, dtype=bool)
-       
+
     if register_sizes is not None:
         register_sizes = np.array(register_sizes)
         cumul_register_sizes = np.roll(np.cumsum(register_sizes), 1)
@@ -166,20 +172,20 @@ def statevector_expr(
         register_indices = np.tile(np.expand_dims(indices, axis=1), (1, register_sizes.shape[0]))
         register_indices = np.right_shift(register_indices, cumul_register_sizes)
         register_indices = np.mod(register_indices, np.power(2, register_sizes))
-        
+
     ## Compile the LaTeX expressions
-        
+
     # List to be concatenated into the final latex string
     lines = []
     str_terms = []
-    
+
     # Pre- and Post-expressions
     pre_expr = ''
     post_expr = ''
-    
+
     if state_label is not None:
         pre_expr += fr'| {state_label} \rangle = '
-    
+
     if phase_offset != 0.:
         if phase_norm is None:
             phase_value_expr = phase_format.format(phase_offest)
@@ -193,16 +199,16 @@ def statevector_expr(
                     phase_value_expr = fr'{rounded_phase_offset:d} \cdot {phase_norm[1]}'
             else:
                 phase_value_expr = phase_format.format(phase_offset) + fr' \cdot {phase_norm[1]}'
-            
+
         pre_expr += f'e^{{{phase_value_expr} i}}'
-        
+
     if amp_norm is not None:
         pre_expr += amp_norm[1]
-        
+
     if amp_norm is not None or phase_offset != 0.:
         pre_expr += r'\left('
         post_expr += r'\right)'
-        
+
     # Sign of each term
     sign = ''
 
@@ -227,7 +233,7 @@ def statevector_expr(
             else:
                 # Otherwise float * norm
                 basis_unsigned += amp_format.format(a)
-                
+
         # Write the phase
         if nonzero_phase[iterm]:
             # First check if the phase is a multiple of pi or pi/2
@@ -243,7 +249,7 @@ def statevector_expr(
 
             else:
                 p = phase[iterm]
-                
+
                 basis_unsigned += 'e^{'
                 if phase_norm is None:
                     # No phase normalization -> write as exp(raw float * i)
@@ -266,7 +272,7 @@ def statevector_expr(
             basis_unsigned += ket_template.format(idx)
 
         str_terms.append(sign + basis_unsigned)
-        
+
         sign = ' + '
 
         if terms_per_row > 0 and len(str_terms) == terms_per_row:
@@ -276,14 +282,14 @@ def statevector_expr(
 
     if len(str_terms) != 0:
         lines.append(''.join(str_terms))
-        
+
     lines[0] = pre_expr + lines[0]
     lines[-1] += post_expr
-        
+
     if len(lines) > 1 and (amp_norm is not None or phase_offset != 0.):
         lines[0] += r'\right.'
         lines[-1] = r'\left. ' + lines[-1]
-    
+
     if terms_per_row > 0:
         return lines
     else:

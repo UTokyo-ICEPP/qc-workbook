@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -78,36 +78,147 @@ $$
 (svm)=
 ## サポートベクターマシン
 
-上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、データ分類を行なってみます。
+上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、2クラスのデータ分類を行なってみます。
 
-まず、線形サポートベクターマシンとはどういうものかを見ていきます。2クラス分類を考えるとして、$+1$と$-1$を持つクラス$C=\{+1,-1\}$とします。学習データを$\{(\boldsymbol{x}_i,y_i)\}\:(i=1,\ldots,N)$とすると、$y_i\in\{+1,-1\}$です。$i$は各データを表すインデックス、$\boldsymbol{x}_i$は$d$次元の実数変数$\boldsymbol{x}_i\in\mathbb{R}^d$としておきます。
+### 2クラス線形分離問題
 
-サポートベクターによる線形分離とは、ある空間にデータ点の集合が分布しているとして、それを超平面（Hyperplane）で二つの領域に分離するという問題です。超平面とは、$\boldsymbol{w}\in\mathbb{R}^d$をデータと同じ次元数の実数ベクトルとして、$\boldsymbol{w}\circ\boldsymbol{x}+b=0$を満たす$(\boldsymbol{w},b)$のことを超平面と読んでいます。$b$はバイアス、$\circ$は内積を表していて、$\boldsymbol{w}$は超平面に直交するベクトルと考えることができます。データの線形分離は、
+まず、2クラスの線形分離問題とはどういうものかを見ていきます。サンプル数$N$の学習データを$\{(\mathbf{X}_i,y_i)\}\:(i=1,\ldots,N)$とし、$\mathbf{X}_i \in \mathbb{R}^d$をインプット、$y_i\in\{+1,-1\}$をラベルと呼びます。分離問題とは、インプットの分布する空間$\mathbb{R}^d$に境界を定義し、ラベルの値が$+1$であるデータ点が属する領域と$-1$であるデータ点が属する領域に分けることを指します。そして、その境界が超平面である場合を線形分離と呼びます。ここで超平面とは、ある$\mathbf{w}\in\mathbb{R}^d, b \in \mathbb{R}$に対して集合
 
 $$
-y_i(\boldsymbol{w}\circ\boldsymbol{x}_i+b)\geq1,\:\:\:\forall i=1,\ldots,N
+\{\mathbf{X}| \mathbf{X} \in \mathbb{R}^d, \: \mathbf{w}\cdot\mathbf{X}+b=0\}
 $$
 
-を満たす$(\boldsymbol{w},b)$を見つけることができれば、$2/||\boldsymbol{w}||$のマージン（超平面からデータ点までの距離）を持って分離できることが知られています。このような超平面が見つかれば、新しいテストデータ$\boldsymbol{x'}\in\mathbb{R}^d$に対して$\boldsymbol{w}\circ\boldsymbol{x'}+b$の符号（超平面で分離される領域のどちらにデータが分布しているか）を見ることで、分離ができるという仕組みです。
+を指します。ベクトル$\mathbf{w}$はこの超平面に直交し、そのノルムを$\lVert \mathbf{w} \rVert$と書くと、$b/\lVert \mathbf{w} \rVert$がこの超平面と原点との符号付き距離（$\mathbf{w}$の方向が正）に対応します。
+
+超平面というのはシンプルであるがゆえに特殊な集合なので、学習データの分布のしかたによっては、超平面では分離できないケースもあり得ます。そのような分離が可能であるということは、
+
+```{math}
+:label: linear_separation
+S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=1,\ldots,N
+```
+
+を満たす$(\mathbf{w},b)$が存在することと等価です。この式の解釈ですが、括弧の中身$\mathbf{w} \cdot \mathbf{X}_i + b$はデータ点$X_i$と超平面$(\mathbf{w}, b)$との符号付き距離の$\lVert \mathbf{w} \rVert$倍で、それに$y_i$をかけた結果が1よりも大きいということは、$y_i=1$のデータ点が超平面について正の領域、$y_i=-1$のデータ点が負の領域にあり、かつどの点も超平面から$1/\lVert \mathbf{w} \rVert$以上離れているということを意味します。
+
+さて、機械学習の目的は、学習データを元に何らかのモデルを作り、それを使って未知のインプットについて予言をすることにあります。今の分離問題においては、$(\mathbf{w}, b)$がモデルにあたり、未知インプット$X$についてのラベル$y$の予言は
+
+```{math}
+:label: test_data_label
+y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)
+```
+
+（$\mathrm{sgn}(z)$は$z \in \mathbb{R}$の符号）で与えられます。このとき、学習データを最も「強く」2分割するようなモデルが、未知データについて最も精度の高い予言をできると仮定します。「強く」2分割するというのは、超平面とすべての学習データ点との距離$1/\lVert \mathbf{w} \rVert$が大きいことに相当します。線形分離が可能な学習データについて式{eq}`linear_separation`を満たす$(\mathbf{w}, b)$は一意ではありませんが、その中で$\lVert \mathbf{w} \rVert$が最も小さくなるものが、最適なモデルということになります。
+
+線形分離ができないような学習データについても、これと同じような発想で「できる限り」分離するという問題を考えることができます。この場合、学習とは$\lVert \mathbf{w} \rVert$ができるだけ小さく、かつ$\sum_{i} S_i(\mathbf{w}, b)$ができるだけ大きくなるような$\mathbf{w}$と$b$を探すことに相当し、以下の目的関数
+
+```{math}
+:label: primal_1
+f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)
+```
+
+の最小化で達成されます。ここで、係数$C>0$は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では$\mathrm{max}$関数で$S_i$の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット$\{\mathbf{X}_i | S_i < 1\}$のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは$\mathbf{w}$と$b$の値によりますが、一度$f$を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-(qsvm)=
-### 量子サポートベクターマシン
+### 双対形式
 
-量子サポートベクターマシンは、ヒルベルト空間にエンコードされた特徴量空間で、このデータ分離を行います。上の式では、マージンが$2/||\boldsymbol{w}||$なので、$||\boldsymbol{w}||$を最小化することでマージンが大きな超平面を探すことが考えられます。特徴量空間での超平面探索では、非線形変換が可能な特徴量マップが関わってくるため、少し違う形ですが同等なものとして以下の距離に相当する量$L$
+次に、この最適化問題（主形式）の「双対問題」を見てみましょう。双対は、最適化問題に拘束条件を導入したラグランジアンを定義し、その停留点での値を未定定数の関数として表現し直すことで得られます。拘束条件の導入にはラグランジュの未定乗数法の拡張であるところのKarush-Kuhn-Tucker (KKT)の手法を用います。未定乗数法は拘束条件が等式で表されるときのみ使えるのに対し、KKT条件は不等式拘束条件にも対応します。
 
-$$
-L(\boldsymbol{\alpha})=\sum_{i=1}^N\alpha_i-\frac12\sum_{i,j=1}^Ny_iy_j\alpha_i\alpha_jK(\boldsymbol{x}_i,\boldsymbol{x}_j)
-$$
-
-を考えます。この$L$が最大になるパラメータ$\boldsymbol{\alpha}=\{\alpha_i\}\:(i=1,\ldots,N)$を見つける問題になるのですが、$\alpha_i$は以下の条件を満たす必要があります。
+具体的には、まず式{eq}`primal_1`を$\mathrm{max}$関数を使わずに、パラメータ$\xi_i$を導入して次の形に書き換えます。
 
 $$
-\sum_{i=1}^N\alpha_iy_i=0,\:\:\:\alpha_i\geq0
+\begin{align}
+F(\mathbf{w}, b, \{\xi_i\}) & = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \xi_i \\
+\text{with} & \: \xi_i \geq 1 - S_i, \: \xi_i \geq 0 \quad \forall i
+\end{align}
 $$
 
-最適化によって、$L$を最大化するパラメータ$\boldsymbol{\alpha}^*=\{\alpha_1^*,\ldots,\alpha_N^*\}$が見つかったとします。その最適パラメータと学習データで求めたカーネル行列を使うことで、新しいデータ$\boldsymbol{x'}$に対して$\sum_{i=1}^Ny_i\alpha_i^*K(\boldsymbol{x}_i,\boldsymbol{x'})+b^*$の符号を調べることで、クラス分類が可能になるというわけです。最適なバイアス$b^*$は$\sum_{j=1}^Ny_j\alpha_j^*K(\boldsymbol{x}_j,\boldsymbol{x}_i)+b=y_i$を解くことによって、最適パラメータ$\boldsymbol{\alpha}^*$と学習データから求めることができます。
+下行の拘束条件に従って$F$を最小化する$\mathbf{w}, b, \{\xi_i\}$が見つかったとき、$f$も最小化されることを確かめてください。
+
+この最適化問題のラグランジアンは、非負の未定定数$\{\alpha_i\}$と$\{\beta_i\}$を導入して
+
+```{math}
+:label: lagrangian
+L(\mathbf{w}, b, \{\xi_i\}; \{\alpha_i\}, \{\beta_i\}) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \xi_i - \sum_{i=1}^{N} \alpha_i \left(\xi_i + S_i(\mathbf{w}, b) - 1\right) - \sum_{i=1}^{N} \beta_i \xi_i
+```
+
+で与えられます。停留点では
+
+```{math}
+:label: stationarity
+\begin{align}
+\frac{\partial L}{\partial \mathbf{w}} & = \mathbf{w} - \sum_i \alpha_i y_i \mathbf{X}_i = 0 \\
+\frac{\partial L}{\partial b} & = -\sum_i \alpha_i y_i = 0 \\
+\frac{\partial L}{\partial \xi_i} & = C - \alpha_i - \beta_i = 0
+\end{align}
+```
+
+が成り立つので、式{eq}`lagrangian`にこれらの関係を代入すると、双対目的関数
+
+```{math}
+:label: dual
+\begin{align}
+G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j y_i y_j \mathbf{X}_i \cdot \mathbf{X}_j \\
+\text{with} & \sum_i \alpha_i y_i = 0, \: 0 \leq \alpha_i \leq C \quad \forall i
+\end{align}
+```
+
+が得られます。双対問題は、この$G$を最大化する$\{\alpha_i\}$を見つける問題となります。また、主形式の最適解$\mathbf{w}^*, b^*, \{\xi^*_i\}$と双対問題の最適解$\{\alpha^*_i\}$との間に
+
+```{math}
+:label: complementarity
+\begin{align}
+\alpha^*_i (\xi^*_i + S_i(\mathbf{w}^*, b^*) - 1) & = 0 \\
+\beta^*_i \xi^*_i = (C - \alpha^*_i) \xi^*_i & = 0
+\end{align}
+```
+
+という関係（相補性条件）が成り立ちます。
+
++++ {"pycharm": {"name": "#%% md\n"}}
+
+### カーネル行列との関係
+
+ここまで来てもカーネル行列とサポートベクターによる線形分離は一見無関係に思えますが、双対形式にヒントがあります。式{eq}`dual`に現れる$\mathbf{X}_i \cdot \mathbf{X}_j$はインプット空間を$\mathbb{R}^d$としたときのインプットベクトル同士の内積です。しかし、双対形式ではパラメータ$\mathbf{w}$が現れないので、$\mathbf{X}_i$が何か他の線形空間$V$の元であるとしても問題として成立します。さらに、実はそもそもこの部分がベクトルの内積である必要すらありません。インプットを何か（線形とは限らない）空間$D$の元$x_i$とし、$D$の二つの元$x_i$と$x_j$の間の何らかの「距離」を表す関数
+
+$$
+K: \: D \times D \to \mathbb{R}
+$$
+
+があるとします。すると、最も一般に、サポートベクターマシンとは、学習データ$\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)$について目的関数
+
+```{math}
+:label: dual_kernel
+\begin{align}
+G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j y_i y_j K(x_i, x_j) \\
+\text{with} & \sum_i \alpha_i y_i = 0, \: \alpha_i \geq 0 \quad \forall i
+\end{align}
+```
+
+を最大化する問題として定義できます。
+
+上で定義したカーネル行列は、まさにこの距離関数$K(x_i, x_j)$に相当します。これでやっとカーネル行列をどうサポートベクターマシンに取り入れるのかが明らかになりました。
+
+さて、式{eq}`complementarity`の相補性条件をよく眺めると、$\alpha^*_i, \xi^*_i, S^*_i$ ($S^*_i := S_i(\mathbf{w}^*, b^*)$)について
+
+- $\alpha^*_i = C, \xi^*_i = 1 - S^*_i \geq 0$
+- $\alpha^*_i = 0, \xi^*_i = 0$
+- $0 < \alpha^*_i < C, \xi^*_i = 0, S^*_i = 1$
+
+の3通りの値の組み合わせしかないことがわかります。特に、$S^*_i > 1$のとき$\alpha^*_i = 0$となります。すると、式{eq}`dual_kernel`における和はすべて$S^*_i \leq 1$であるような$i$、つまりサポートベクターについてのみ取ればいいことがわかります。
+
+最後に、カーネル形式で表したサポートベクターマシンで学習を行った（$G$を最大化する$\{\alpha_i\}$を見つけた）ときに、未知データ$x$に対するラベルの予言がどう与えられるかを考えます。元の形式（主形式と呼びます）ではラベルが式{eq}`test_data_label`で与えられますが、ここに式{eq}`stationarity`の第一式を代入すると、
+
+$$
+y = \mathrm{sgn}\left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x) + b^*\right)
+$$
+
+となります。ここで$\alpha^*_i$は$G$を最大化する最適パラメータで、$i$についての和はサポートベクターについてのみ取っています。パラメータ$b$の値の最適値$b^*$は、$S^*_j = 1$となるデータ点$j$について
+
+$$
+y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
+$$
+
+を解くことで得られます。
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -119,32 +230,20 @@ $$
 データセットの準備は同じです。
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
-# General imports
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
-# scikit-learn imports
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
-# Qiskit imports
-from qiskit import QuantumCircuit, Aer, transpile
-from qiskit.circuit import QuantumCircuit, Parameter, ParameterVector
-from qiskit.circuit.library import PauliFeatureMap, ZFeatureMap, ZZFeatureMap
-from qiskit.circuit.library import TwoLocal, NLocal, RealAmplitudes, EfficientSU2
-from qiskit.circuit.library import HGate, RXGate, RYGate, RZGate, CXGate, CRXGate, CRZGate
-from qiskit_machine_learning.kernels import QuantumKernel
+from qiskit import QuantumCircuit, transpile
+from qiskit.circuit import Parameter, ParameterVector
+from qiskit.circuit.library import TwoLocal, ZFeatureMap, ZZFeatureMap
+from qiskit.primitives import Sampler
+from qiskit.quantum_info import SparsePauliOp
+from qiskit_aer import AerSimulator
+from qiskit_machine_learning.kernels import FidelityQuantumKernel
 ```
 
 ```{code-cell} ipython3
@@ -158,50 +257,43 @@ pycharm:
 ---
 # ファイルから変数を読み出す
 df = pd.read_csv("data/SUSY_1K.csv",
-                 names=('isSignal','lep1_pt','lep1_eta','lep1_phi','lep2_pt','lep2_eta',
-                        'lep2_phi','miss_ene','miss_phi','MET_rel','axial_MET','M_R','M_TR_2',
-                        'R','MT2','S_R','M_Delta_R','dPhi_r_b','cos_theta_r1'))
+                 names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
+                        'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
+                        'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
 
 # 学習に使う変数の数
 feature_dim = 3  # dimension of each data point
 
 # 3, 5, 7変数の場合に使う変数のセット
 if feature_dim == 3:
-    SelectedFeatures = ['lep1_pt', 'lep2_pt', 'miss_ene']
+    selected_features = ['lep1_pt', 'lep2_pt', 'miss_ene']
 elif feature_dim == 5:
-    SelectedFeatures = ['lep1_pt','lep2_pt','miss_ene','M_TR_2','M_Delta_R']
+    selected_features = ['lep1_pt', 'lep2_pt', 'miss_ene', 'M_TR_2', 'M_Delta_R']
 elif feature_dim == 7:
-    SelectedFeatures = ['lep1_pt','lep1_eta','lep2_pt','lep2_eta','miss_ene','M_TR_2','M_Delta_R']
+    selected_features = ['lep1_pt', 'lep1_eta', 'lep2_pt', 'lep2_eta', 'miss_ene', 'M_TR_2', 'M_Delta_R']
 
-# 学習に使う事象数: trainingは訓練用サンプル、testingはテスト用サンプル
+# 学習に使う事象数: trainは訓練用サンプル、testはテスト用サンプル
 train_size = 20
 test_size = 20
 
-# オプティマイザーをCallする回数の上限
-niter = 300
-random_seed = 10598
-
-df_sig = df.loc[df.isSignal==1, SelectedFeatures]
-df_bkg = df.loc[df.isSignal==0, SelectedFeatures]
+df_sig = df.loc[df.isSignal==1, selected_features]
+df_bkg = df.loc[df.isSignal==0, selected_features]
 
 # サンプルの生成
 df_sig_train = df_sig.values[:train_size]
 df_bkg_train = df_bkg.values[:train_size]
-df_sig_test = df_sig.values[train_size:train_size+test_size]
-df_bkg_test = df_bkg.values[train_size:train_size+test_size]
-train_data = np.concatenate([df_sig_train,df_bkg_train])
-test_data = np.concatenate([df_sig_test,df_bkg_test])
-#print('train_data =',training_data)
-#print('test_data =',test_data)
-train_label = np.concatenate([np.ones((train_size),dtype=int),np.zeros((train_size),dtype=int)])
-test_label = np.concatenate([np.ones((test_size),dtype=int),np.zeros((test_size),dtype=int)])
+df_sig_test = df_sig.values[train_size:train_size + test_size]
+df_bkg_test = df_bkg.values[train_size:train_size + test_size]
+# 最初のtrain_size事象がSUSY粒子を含む信号事象、残りのtrain_size事象がSUSY粒子を含まない背景事象
+train_data = np.concatenate([df_sig_train, df_bkg_train])
+# 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象
+test_data = np.concatenate([df_sig_test, df_bkg_test])
 
-train_label_one_hot = np.zeros((train_size*2, 2))
-for i in range(train_size*2):
-    train_label_one_hot[i, train_label[i]] = 1
-test_label_one_hot = np.zeros((test_size*2, 2))
-for i in range(test_size*2):
-    test_label_one_hot[i, test_label[i]] = 1
+# ラベル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）
+train_label = np.zeros(train_size * 2, dtype=int)
+train_label[:train_size] = 1
+test_label = np.zeros(train_size * 2, dtype=int)
+test_label[:test_size] = 1
 
 mms = MinMaxScaler((-1, 1))
 norm_train_data = mms.fit_transform(train_data)
@@ -213,7 +305,9 @@ norm_test_data = mms.transform(test_data)
 (problem1)=
 ### 問題1
 
-各自特徴量マップを選び、実装してください。
+各自特徴量マップを選び、`feature_map`という変数名の量子回路オブジェクトとして実装してください。{doc}`vqc_machine_learning`のように`ZFeatureMap`や`ZZFeatureMap`などのクラスを利用しても、自分で空の`QuantumCircuit`オブジェクトを作り、`Parameter`や`ParameterVector`を使って「手で」回路を書いても構いません。
+
+使用する量子ビットの数も原則自由ですが、後で利用する`FidelityQuantumKernel`クラスはインプットの変数の数と量子ビット数が等しいときに一番うまく動作するようです。
 
 ```{code-cell} ipython3
 ---
@@ -228,7 +322,11 @@ pycharm:
 ### EDIT BELOW ###
 ##################
 
-feature_map = ...
+#回路をスクラッチから書く場合
+input_features = ParameterVector('x', feature_dim)
+num_qubits = feature_dim
+feature_map = QuantumCircuit(num_qubits)
+# ...
 
 ##################
 ### EDIT ABOVE ###
@@ -240,7 +338,34 @@ feature_map = ...
 (problem2)=
 ### 問題2
 
-最初の二つのデータ$x_0=$norm_train_data[0]と$x_1=$norm_train_data[1]に対するカーネル行列要素を計算するための量子回路を作ってください。このページの下にQuantumKernelクラスを使った例がありますが、ここでは上で決めた特徴量マップに合うように自分で量子回路を書いてください。その回路に$x_0$と$x_1$を入力として与えた回路をqc_circuitとして作るという問題です。
+問題1で決めた特徴量マップからカーネル行列要素を計算するための`manual_kernel`という変数名の量子回路を作ってください。Qiskitにはこれを自動でやってくれるAPI（`FidelityQuantumKernel`クラス）が準備されていますが、ここでは空の`QuantumCircuit`オブジェクトから始めて、上で決めた特徴量マップ回路からパラメータ付きの回路を作ってください。
+
+**ヒント1**
+
+QuantumCircuitオブジェクトに別のQuantumCircuitを貼り付けるには
+```python
+circuit.compose(another_circuit, inplace=True)
+```
+とします。このとき`inplace=True`を忘れると、`compose`メソッドは`circuit`に`another_circuit`を貼り付ける代わりに新しい回路オブジェクトを返してしまいます。
+
+**ヒント2**
+
+QuantumCircuitには`inverse()`という、逆回路を返すメソッドが備わっています。
+
+**ヒント3**
+
+`manual_kernel`のパラメータセットに注意してください。`feature_map`やその単純なコピーから`manual_kernel`を作っただけでは、後者は前者に使われるパラメータしか持ちません。
+
+回路のパラメータセットを別のパラメータセットに置き換える方法として、
+
+```python
+current_parameters = circuit.parameters
+new_parameters = ParameterVector('new_params', len(current_parameters))
+bind_params = dict(zip(current_parameters, new_parameters))
+new_circuit = circuit.assign_parameters(bind_params, inplace=False)
+```
+
+などがあります。この場合、`new_circuit`は`new_parameters`でパラメタライズされます。
 
 ```{code-cell} ipython3
 ---
@@ -251,20 +376,22 @@ pycharm:
 
     '
 ---
+manual_kernel = QuantumCircuit(feature_map.num_qubits)
+
 ##################
 ### EDIT BELOW ###
 ##################
 
-qc_circuit = QuantumCircuit()
-
 ##################
 ### EDIT ABOVE ###
 ##################
+
+manual_kernel.measure_all()
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率を計算してください。
+作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率$|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_1)U_{\text{in}}(x_0)|0^{\otimes n}\rangle|^2$を計算します。
 
 ```{code-cell} ipython3
 ---
@@ -276,17 +403,17 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-backend = Aer.get_backend('qasm_simulator')
-qc_circuit = transpile(qc_circuit, backend=backend, seed_transpiler=random_seed)
-job = backend.run(qc_circuit, shots=8192, seed_simulator=random_seed)
+sampler = Sampler()
 
-counts = job.result().get_counts(qc_circuit)
-print(f"Probability of observing 0^n state = {counts['0'*feature_dim]/sum(counts.values())}")
+first_two_inputs = np.concatenate(norm_train_data[:2]).flatten()
+
+job = sampler.run(manual_kernel, parameter_values=first_two_inputs, shots=10000)
+# quasi_dists[0]がmanual_kernelの測定結果のcountsから推定される確率分布
+fidelity = job.result().quasi_dists[0].get(0, 0.)
+print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
-
-Qiskitには特徴量マップから量子カーネルを作ってくれるAPI（QuantumKernelクラス）が準備されていて、それを使えば課題2は実は簡単に実行できます。
+次に同じことを`FidelityQuantumKernel`クラスを利用して行います。
 
 ```{code-cell} ipython3
 ---
@@ -298,15 +425,21 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-q_kernel = QuantumKernel(feature_map=feature_map, quantum_instance=Aer.get_backend('statevector_simulator'))
+# FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
+q_kernel = FidelityQuantumKernel(feature_map=feature_map)
 
-qc_circuit = q_kernel.construct_circuit(norm_train_data[0], norm_train_data[1])
+bind_params = dict(zip(feature_map.parameters, norm_train_data[0]))
+feature_map_0 = feature_map.bind_parameters(bind_params)
+bind_params = dict(zip(feature_map.parameters, norm_train_data[1]))
+feature_map_1 = feature_map.bind_parameters(bind_params)
+
+qc_circuit = q_kernel.fidelity.create_fidelity_circuit(feature_map_0, feature_map_1)
 qc_circuit.decompose().decompose().draw('mpl')
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-QuantumKernelを使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。
+`FidelityQuantumKernel`を使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。
 
 ```{code-cell} ipython3
 ---
@@ -343,7 +476,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-qc_svc = SVC(kernel='precomputed')
+qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
 qc_svc.fit(matrix_train, train_label)
 
 train_score = qc_svc.score(matrix_train, train_label)
@@ -357,27 +490,7 @@ print(f'Precomputed kernel: Classification Test score:  {test_score*100}%')
 
 **提出するもの**
 - 選んだ特徴量マップの説明とそのコード（問題１）
-- カーネル行列要素を計算するための量子回路のコードと、その回路を使って計算した0を測定する確率の結果（問題２）
+- カーネル行列要素を計算するための量子回路のコードと、その回路を使って計算した$K(x_0, x_1)$の値（問題２）
 - この{doc}`ワークブック <vqc_machine_learning>`にある変分量子回路を使った量子機械学習との比較
    - 二つの方法を同じ条件（特徴量の変数、データサンプルのサイズ、特徴量マップ）で比較した時に、分類性能に対して何か系統的な違いは見えるでしょうか。特徴量やサンプルサイズを変えて比較するなどして、その振る舞いを自分なりに考察してみてください。
    - 一方が他方に比べて系統的に分類性能が悪くなっている場合、どうすれば悪い方を改善できるでしょうか。サンプルサイズが小さい時には、どちらの方法でも過学習（テストデータでの分類性能が訓練データでの分類性能より悪くなる）の傾向が見えていると思います。過学習をできるだけ抑えながら、分類性能を改善する方法がないか、考察してみてください。
-
-+++ {"pycharm": {"name": "#%% md\n"}}
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```
-
-```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
-pycharm:
-  name: '#%%
-
-    '
----
-
-```

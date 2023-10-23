@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -324,11 +324,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Qiskit関連のパッケージをインポート
-from qiskit import IBMQ, Aer, QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
 from qiskit.quantum_info import Statevector
 from qiskit.visualization import plot_histogram
 from qiskit.tools.monitor import job_monitor
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
 from qc_workbook.utils import operational_backend
@@ -434,7 +436,7 @@ def diffuser(n):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     qc.h(range(n))
 
     #print(qc)
@@ -470,17 +472,17 @@ def diffuser(n):
     qc.h(n-1)
 
     qc.x(list(range(n)))
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     qc.h(range(n))
 
     #print(qc)
     U_s = qc.to_gate()
     U_s.name = "U_s"
-    return U_s    
+    return U_s
 ```
 
 ````
@@ -501,7 +503,7 @@ pycharm:
     '
 tags: [remove-output]
 ---
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 grover_circuit = transpile(grover_circuit, backend=simulator)
 results = simulator.run(grover_circuit, shots=1024).result()
 answer = results.get_counts()
@@ -550,12 +552,12 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # 量子コンピュータで実行する場合
-try:
-    IBMQ.load_account()
-except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
+instance = 'ibm-q/open/main'
 
-provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+try:
+    provider = IBMProvider(instance=instance)
+except IBMQAccountCredentialsNotFound:
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 
 backend_list = provider.backends(filters=operational_backend(min_qubits=6))
 backend = least_busy(backend_list)
@@ -662,15 +664,13 @@ for Niter in range(1,11):
         grover_circuit_iterN.append(oracle_gate, list(range(n)))
         grover_circuit_iterN.append(diffuser(n), list(range(n)))
     grover_circuit_iterN.measure_all()
-    #print(grover_circuit_iterN)
 
     grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
     results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
     answer = results.get_counts()
-    #show_distribution(answer)
 
     x.append(Niter)
-    y.append(answer_sim_iterN_tr[format(Nsol,'b').zfill(n)])
+    y.append(answer[format(Nsol,'b').zfill(n)])
 
 plt.clf()
 plt.scatter(x,y)
@@ -762,11 +762,3 @@ plt.show()
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

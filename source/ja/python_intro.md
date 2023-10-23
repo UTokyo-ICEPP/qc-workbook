@@ -1,11 +1,12 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +20,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 予備知識：Python
@@ -76,14 +77,14 @@ print(b)
 
 if b == 15:
     # bの値が15の時、インデントされている部分が実行される
-    print('b is True')
+    print('b is fifteen')
     print('This line is also executed')
-    
+
 else:
     # それ以外の場合、インデントされている部分が実行される
-    print('b is False')
+    print('b is some other number')
     print('This line is also not executed')
-    
+
 # インデンテーションが解消された＝if文を抜けた
 print('This line is always executed')
 ```
@@ -102,7 +103,7 @@ if b == 2:
 
     # 3回実行のループは抜けたが、if b == 2:のブロックの中
     print('b is 2 and I printed three times')
-    
+
 else:
     # それ以外の場合、インデントされている部分が実行される
     if a == 3:
@@ -331,7 +332,7 @@ x = 3
 print(s + x)
 ```
 
-文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります
+文字列と整数の足し算は定義されていないためです。このような場合は、`str(x)`として`x`の10進数表現の文字列を作ります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -340,7 +341,7 @@ print(s + x)
 print(s + str(x))
 ```
 
-ただ、この方法で変数の文字列表現をたくさん作ると、コードが冗長になりやすい問題があります。
+ただ、この方法で変数の文字列表現をたくさん作ると、下のようにコードが冗長になりやすい問題があります。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -664,7 +665,7 @@ print('Conditional expression on the length of my_empty_tuple:')
 if my_empty_tuple:
     # my_empty_tupleの長さが0でないケース
     print('my_empty_tuple is actually not empty')
-    
+
 # 条件文にはelseがなくてもいい
 ```
 
@@ -678,21 +679,21 @@ if my_empty_tuple:
 # リストの要素についてループ。インデントされている部分が要素数だけ繰り返し実行され、変数elementに各要素が代入される
 for element in my_list:
     print(f'another_function({element}, {element}) = {another_function(element, element)}')
-    
+
 # 0から5までの整数についてループ
 for index in range(6):
     print(f'another_function({index}) = {another_function(index)}')
-    
+
 # 配列の各要素が一定の長さの配列である場合、要素配列の要素を直接ループ変数に代入できる
 list_of_tuples = [('x', 10), ('y', 6)]
 for char_var, num_var in list_of_tuples:
     print(f'char_var = {char_var}, num_var = {num_var}')
-    
+
 # my_stringの長さが10以上になるまでループ
 my_string = ''
 while len(my_string) < 10: # 文字列の長さもlen()でわかる
     my_string += 'abc'
-    
+
 print(my_string)
 ```
 
@@ -724,7 +725,7 @@ class MoreFunctionalClass:
     # メソッドの一例
     def add_y_to_x(self):
         return self.attr_x + self._y
-    
+
 # MoreFunctionalClassのインスタンスを作り、変数mに代入する
 m = MoreFunctionalClass(2, 5)
 
@@ -773,10 +774,10 @@ x = 3
 try:
     # 文字列と整数を加えようとするとエラーになる
     print(s + x)
-    
+
 except TypeError: # TypeError型の例外が発生したら、以下のブロックを実行する
     print(f'Oops, {type(s)} and {type(x)} are not compatible')
-    
+
 except: # その他の型の例外が発生したら、以下のブロックを実行する
     print(f'This was unexpected: We got a {ex}')
 ```
@@ -797,7 +798,7 @@ if 'a' in d:
 else:
     print('d does not have an entry for "a"')
     a_value = None
-    
+
 # もっと効率的な実装
 try:
     a_value = d['a']
@@ -895,6 +896,19 @@ for key, value in d.items():
 d.get('that', 39) # 39 (default value)
 ```
 
+リスト、タプル、辞書などを生成するときに時々使う構文を紹介します。
+
+```{code-cell} ipython3
+# list comprehension: 一行の中でforループを回す
+list(f'a{i}' for i in range(3)) # ['a0', 'a1', 'a2']
+
+# dictは（キー, 値）のタプルの配列からも生成できる
+dict((f'v{i}', i) for i in range(3)) # {'v0': 0, 'v1': 1, 'v2': 2}
+
+# dictのタプル配列からの生成とzipの組み合わせ
+dict(zip(['a', 'b', 'c'], [3, 4, 5])) # {'a': 3, 'b': 4, 'c': 5}
+```
+
 ### NumPy
 
 Pythonで数値計算をする際に今や欠かせない存在になっているのが、NumPy（「なむぱい」もしくは「なむぴー」）ライブラリです。NumPyは基本的には数値の（多次元）配列に対して効率的に数値計算をすることを目的に書かれていますが、サポートされている計算オペレーションの多様さも支持を広げる要因になっています。
@@ -990,7 +1004,7 @@ list1 + list2 # これではただリストが繋がるだけなので
 list3 = []
 for i1, i2 in zip(list1, list2):
     list3.append(i1 + i2)
-    
+
 print(list3)
 ```
 
@@ -1071,6 +1085,7 @@ Matplotlibのモジュール名は`matplotlib`ですが、また慣習的に`mpl
 ```{code-cell} ipython3
 :tags: [remove-output]
 
+%matplotlib inline
 import matplotlib.pyplot as plt
 ```
 
@@ -1114,3 +1129,38 @@ plt.legend()
 ```
 
 `plt.plot`や`plt.scatter`を複数実行すると、同じAxesにグラフが重なってプロットされます。実行の際に`label='some text'`という引数を足し、`plt.legend()`を呼ぶと、凡例が表示されます。また`plt.xlabel()`や`plt.ylabel()`でX, Y軸にタイトルをつけたり、`plt.title()`でプロット全体にタイトルをつけたりできます。
+
++++
+
+### Jupyter
+
+Pythonはもともとコマンドラインからスクリプト・プログラムとして実行したり、プロンプトを通じて一行ずつ動かしたりするようにできていますが、近年では（今このノートブックを表示・実行している）JupyterやVisual Studioなどの実行環境を通じてインタラクティブかつグラフィカルにプログラミングができるようになりました。
+
+中でもJupyterはIPythonというライブラリと深く関係しており、ブラウザ上で快適にPythonを動かす様々なツールを提供しています。その中から、ここではこのワークブックで登場する数式や画像を表示させるための関数だけを紹介します。
+
+```{code-cell} ipython3
+# デモのためわざと図の自動描画機能をオフにする
+%matplotlib
+from IPython.display import display
+
+# subplots()に何も引数を渡さないと、Axes一つのFigureができる
+fig, ax = plt.subplots()
+
+# スキャッタープロットを描く
+xdata = np.array([1., 3.3, 2.5])
+ydata = np.array([9.6, 7.4, 5.5])
+ax.scatter(xdata, ydata, label='points')
+ax.legend();
+```
+
+```{code-cell} ipython3
+# 自動描画されない図はdisplay()で表示できる
+display(fig)
+```
+
+```{code-cell} ipython3
+# LaTeXで書いた数式をタイプセットする
+from IPython.display import Math
+
+Math(r'\frac{e^{2 \pi i j k}}{\sqrt{2}}')
+```

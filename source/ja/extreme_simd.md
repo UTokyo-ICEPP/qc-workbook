@@ -1,11 +1,12 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +20,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 計算をする量子回路の実装
@@ -94,9 +95,11 @@ $$
 import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Math
-from qiskit import QuantumRegister, QuantumCircuit, IBMQ, Aer, transpile
+from qiskit import QuantumRegister, QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 from qc_workbook.show_state import statevector_expr
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
@@ -105,8 +108,6 @@ print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 num_qubits = 6
 
 circuit = QuantumCircuit(num_qubits)
@@ -124,7 +125,7 @@ j_indices = np.nonzero(j_bits)[0]
 # 最後にcircuit.x()
 for idx in j_indices:
     circuit.x(idx)
-    
+
 ## Alternative method
 #for i in range(num_qubits):
 #    if ((j >> i) & 1) == 1:
@@ -143,22 +144,20 @@ for itarg in range(num_qubits - 1, -1, -1):
         # 標的と制御ビットのインデックスに応じた角度で制御Pゲートをかける
         power = ictrl - itarg - 1 + num_qubits
         circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
-        
+
     # 回路図を見やすくするためにバリアを入れる
     circuit.barrier()
 
 # 最後にビットの順番を反転させる
 for i in range(num_qubits // 2):
     circuit.swap(i, num_qubits - 1 - i)
-    
+
 ## ここまでがQFT
 
 circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 sqrt_2_to_n = 2 ** (num_qubits // 2)
 amp_norm = (1. / sqrt_2_to_n, r'\frac{1}{%d}' % sqrt_2_to_n)
 phase_norm = (2 * np.pi / (2 ** num_qubits), r'\frac{2 \pi i}{%d}' % (2 ** num_qubits))
@@ -312,9 +311,9 @@ def setup_addition(circuit, reg1, reg2, reg3):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1 + reg3.size
             circuit.cp(-dphi * (2 ** power), reg3[ictrl], reg3[itarg])
-        
+
         circuit.h(reg3[itarg])
-        
+
 print('Defined function setup_addition')
 ```
 
@@ -388,8 +387,6 @@ $$
 実際に`setup_addition`を使って足し算をしてみましょう。レジスタ1と2は4ビットとして、$a=9, b=13$を考えます。
 
 ```{code-cell} ipython3
-:tags: []
-
 a = 9
 b = 13
 
@@ -427,8 +424,6 @@ circuit.draw('mpl')
 再び`statevector_expr`関数を使って終状態を確認してみましょう。
 
 ```{code-cell} ipython3
-:tags: []
-
 expr = statevector_expr(circuit, register_sizes=(n1, n2, n3))
 Math(expr)
 ```
@@ -454,8 +449,6 @@ $$
 を行うので、$\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)$個のゲートで$2^{n_1+n_2}$通りの足し算を並列に行います。実際にこれを確認してみましょう。
 
 ```{code-cell} ipython3
-:tags: []
-
 n1 = 4
 n2 = 4
 n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
@@ -471,7 +464,7 @@ circuit.h(reg1)
 circuit.h(reg2)
 
 setup_addition(circuit, reg1, reg2, reg3)
-    
+
 expr = statevector_expr(circuit, register_sizes=(n1, n2, n3), amp_norm=(1. / np.sqrt(2 ** (n1 + n2)), r'\frac{1}{\sqrt{2^{n_1 + n_2}}}'))
 Math(expr)
 ```
@@ -531,7 +524,6 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 ```{image} figs/melbourne_topology.png
 :height: 200px
-:name: ibmq_16_melbourne
 ```
 
 図中、数字のついた丸が量子ビットを表し、線が量子ビット同士の繋がりを表します。
@@ -560,20 +552,18 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 :tags: [remove-output]
 
 # よりアクセス権の広いプロバイダを使える場合は、下を書き換える
-provider_def = ('ibm-q', 'open', 'main')
+instance = 'ibm-q/open/main'
 
-if provider_def == ('ibm-q', 'open', 'main'):
+if instance == 'ibm-q/open/main':
     from qiskit.test.mock import FakeGuadalupe
-    
+
     backend = FakeGuadalupe()
 
 else:
     try:
-        IBMQ.load_account()
-    except IBMQAccountCredentialsNotFound:
-        IBMQ.enable_account('__paste_your_token_here__')
-
-    provider = IBMQ.get_provider(*provider_def)
+        provider = IBMProvider(instance=instance)
+    except AccountNotFoundError:
+        provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 
     backend_list = provider.backends(filters=operational_backend(min_qubits=13))
     backend = least_busy(backend_list)
@@ -615,12 +605,12 @@ print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_o
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-job_original = qasm_simulator.run(circuit_original_tr, shots=20)
+job_original = simulator.run(circuit_original_tr, shots=20)
 counts_original = job_original.result().get_counts()
 
-job_optimized = qasm_simulator.run(circuit_optimized_tr, shots=20)
+job_optimized = simulator.run(circuit_optimized_tr, shots=20)
 counts_optimized = job_optimized.result().get_counts()
 
 def plot_counts(counts, n1, n2, ax):
@@ -638,7 +628,7 @@ def plot_counts(counts, n1, n2, ax):
         x2 = int(key[-n1 - n2:-n1], 2) # next-to-last n2 digits
         x3 = int(key[:-n1 - n2], 2) # first n3 digits
         labels.append('{} + {} = {}'.format(x1, x2, x3))
-        
+
     x = np.linspace(0., len(labels), len(labels), endpoint=False)
 
     # 棒グラフをプロット
@@ -662,11 +652,3 @@ fig.subplots_adjust(bottom=-0.2)
 ```
 
 両方の回路とも、正しい足し算の式がランダムに出現していることを確認してください。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 物理系を表現する
@@ -315,7 +315,7 @@ $$
 
 ```{math}
 :label: heisenberg
-H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1})
+H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j})
 ```
 
 です。ここで、$\sigma^{[X,Y,Z]}_j$は第$j$スピンに作用するパウリ演算子です。
@@ -323,7 +323,7 @@ H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \
 ただし、式{eq}`heisenberg`の和の記法には実は若干の省略があります。例えば第$j$項をより正確に書くと、
 
 $$
-I_0 \otimes \dots \otimes I_{j-1} \otimes \sigma^X_j \otimes \sigma^X_{j+1} \otimes I_{j+2} \otimes \dots I_{n-1}
+I_{n-1} \otimes \dots \otimes I_{j+2} \otimes \sigma^X_{j+1} \otimes \sigma^X_{j} \otimes I_{j-1} \otimes \dots I_{0}
 $$
 
 です。ここで$\otimes$は線形演算子間の「テンソル積」を表しますが、聞き慣れない方は掛け算だと思っておいてください。重要なのは、式{eq}`heisenberg`の各項が、上で触れたように$n$個の基底演算子の積になっているということです。さらに、この系では隣接スピン間の相互作用しか存在しないため、ハミルトニアンが$n-1$個の項に分解できています。
@@ -335,27 +335,27 @@ $$
 時間発展演算子は
 
 $$
-U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \right]
+U_H(t) = \exp \left[ \frac{i\omega t}{2} \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \right]
 $$
 
 ですが、ハミルトニアンの各項が互いに可換でないので、シミュレーションでは鈴木・トロッター分解を用いて近似します。各時間ステップ$\Delta t$での近似時間発展は
 
 $$
-\tilde{U}_{H;\Delta t} = \prod_{j=0}^{n-2} \exp\left( \frac{i \omega \Delta t}{2} \sigma^X_j\sigma^X_{j+1} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Y_j\sigma^Y_{j+1} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1} \right)
+\tilde{U}_{H;\Delta t} = \prod_{j=0}^{n-2} \exp\left( \frac{i \omega \Delta t}{2} \sigma^X_{j+1}\sigma^X_{j} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Y_{j+1}\sigma^Y_{j} \right) \exp\left( \frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j} \right)
 $$
 
 です。
 
 ### 量子ゲートでの表現
 
-これを回転ゲートと制御ゲートで表します。まず$\exp(\frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1})$について考えてみましょう。この演算子の$j$-$(j+1)$スピン系の4つの基底状態への作用は
+これを回転ゲートと制御ゲートで表します。まず$\exp(\frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j})$について考えてみましょう。この演算子の$j$-$(j+1)$スピン系の4つの基底状態への作用は
 
 $$
 \begin{align}
-\upket_j \upket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \upket_j \upket_{j+1} \\
-\upket_j \downket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \upket_j \downket_{j+1} \\
-\downket_j \upket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \downket_j \upket_{j+1} \\
-\downket_j \downket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \downket_j \downket_{j+1}
+\upket_{j+1} \upket_{j} \rightarrow e^{i \omega \Delta t / 2} \upket_{j+1} \upket_{j} \\
+\upket_{j+1} \downket_{j} \rightarrow e^{-i \omega \Delta t / 2} \upket_{j+1} \downket_{j} \\
+\downket_{j+1} \upket_{j} \rightarrow e^{-i \omega \Delta t / 2} \downket_{j+1} \upket_{j} \\
+\downket_{j+1} \downket_{j} \rightarrow e^{i \omega \Delta t / 2} \downket_{j+1} \downket_{j}
 \end{align}
 $$
 
@@ -386,16 +386,16 @@ $$
 \end{align}
 $$
 
-と変換するので（確認してください）、まさに$\exp(\frac{i \omega \Delta t}{2} \sigma^Z_j\sigma^Z_{j+1})$の表現になっています。
+と変換するので（確認してください）、まさに$\exp(\frac{i \omega \Delta t}{2} \sigma^Z_{j+1}\sigma^Z_{j})$の表現になっています。
 
-残りの2つの演算子も同様にパリティに対する回転で表せますが、CNOTで表現できるのは$Z$方向のパリティだけなので、先にスピンを回転させる必要があります。$\exp(\frac{i \omega \Delta t}{2} \sigma^X_j\sigma^X_{j+1})$による変換は
+残りの2つの演算子も同様にパリティに対する回転で表せますが、CNOTで表現できるのは$Z$方向のパリティだけなので、先にスピンを回転させる必要があります。$\exp(\frac{i \omega \Delta t}{2} \sigma^X_{j+1}\sigma^X_{j})$による変換は
 
 $$
 \begin{align}
-\rightket_j \rightket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \rightket_j \rightket_{j+1} \\
-\rightket_j \leftket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \rightket_j \leftket_{j+1} \\
-\leftket_j \rightket_{j+1} \rightarrow e^{-i \omega \Delta t / 2} \leftket_j \rightket_{j+1} \\
-\leftket_j \leftket_{j+1} \rightarrow e^{i \omega \Delta t / 2} \leftket_j \leftket_{j+1}
+\rightket_{j+1} \rightket_{j} \rightarrow e^{i \omega \Delta t / 2} \rightket_{j+1} \rightket_{j} \\
+\rightket_{j+1} \leftket_{j} \rightarrow e^{-i \omega \Delta t / 2} \rightket_{j+1} \leftket_{j} \\
+\leftket_{j+1} \rightket_{j} \rightarrow e^{-i \omega \Delta t / 2} \leftket_{j+1} \rightket_{j} \\
+\leftket_{j+1} \leftket_{j} \rightarrow e^{i \omega \Delta t / 2} \leftket_{j+1} \leftket_{j}
 \end{align}
 $$
 
@@ -415,7 +415,7 @@ circuit.h(1)
 circuit.draw('mpl')
 ```
 
-最後に、$\exp(\frac{i \omega \Delta t}{2} \sigma^Y_j\sigma^Y_{j+1})$に対応する回路は
+最後に、$\exp(\frac{i \omega \Delta t}{2} \sigma^Y_{j+1}\sigma^Y_{j})$に対応する回路は
 
 ```{code-cell} ipython3
 :tags: [remove-input]
@@ -444,13 +444,13 @@ circuit.draw('mpl')
 [^sgate]: $P(\pi/2)$ゲートは$S$ゲートとも呼ばれます。$P(-\pi/2)$は$S^{\dagger}$です。
 
 ```{code-cell} ipython3
-:tags: []
-
 # まずは全てインポート
 import numpy as np
-from qiskit import QuantumCircuit, Aer, IBMQ, transpile
+from qiskit import QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
 from qc_workbook.utils import operational_backend
@@ -502,7 +502,7 @@ for istep in range(M):
     # この時点での回路のコピーをリストに保存
     # measure_all(inplace=False) はここまでの回路のコピーに測定を足したものを返す
     circuits.append(circuit.measure_all(inplace=False))
-    
+
 print(f'{len(circuits)} circuits created')
 ```
 
@@ -515,12 +515,12 @@ initial_state[0:2] = np.sqrt(0.5)
 
 shots = 100000
 
-qasm_simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 
-circuits_qasm = transpile(circuits, backend=qasm_simulator)
-sim_job = qasm_simulator.run(circuits_qasm, shots=shots)
+circuits_sim = transpile(circuits, backend=simulator)
+sim_job = simulator.run(circuits_sim, shots=shots)
 sim_counts_list = sim_job.result().get_counts()
-   
+
 plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
 ```
 
@@ -533,12 +533,13 @@ plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theo
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
+# よりアクセス権の広いプロバイダを使える場合は、下を書き換える
+instance = 'ibm-q/open/main'
+
 try:
-    IBMQ.load_account()
+    provider = IBMProvider(instance=instance)
 except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
-    
-provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 
 backend_list = provider.backends(filters=operational_backend(min_qubits=n_spins, min_qv=32))
 backend = least_busy(backend_list)
@@ -562,10 +563,4 @@ counts_list = job.result().get_counts()
 :tags: [raises-exception, remove-output]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
-```
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
 ```

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-src=/usr/local/lib/python3.8/dist-packages
+PYTHON=$(cd /usr/local/lib;ls -d python3.*)
+
+src=/usr/local/lib/$PYTHON/dist-packages
 mkdir -p /packages/$src
 cp -r $src/* /packages/$src
 cd /packages/$src
@@ -37,7 +39,7 @@ mkdir -p /packages/$src
 cp -r $src/pkg_resources /packages/$src
 cp -r $src/setuptools* /packages/$src
 
-src=/usr/lib/python3.8
+src=/usr/lib/$PYTHON
 mkdir -p /packages/$src
 cp -r $src/distutils /packages/$src
 

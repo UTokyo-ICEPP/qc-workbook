@@ -1,11 +1,12 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +20,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】アダマールテスト
@@ -39,7 +40,8 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
 from qiskit.visualization import plot_histogram
 
 print('notebook ready')
@@ -144,7 +146,7 @@ $U^{-1}_k$とその制御ゲート化は$k$の関数として定義しておき�
 ```{code-cell} ipython3
 def make_cukinv_gate(k):
     uk = QuantumCircuit(data_width, name=f'u_{k}')
-    
+
     # kの２進数表現を得るために、unpackbitsを利用（他にもいろいろな方法がある）
     # unpackbitsはuint8タイプのアレイを引数に取るので、jをその形に変換してから渡している
     k_bits = np.unpackbits(np.asarray(k, dtype=np.uint8), bitorder='little')
@@ -154,10 +156,10 @@ def make_cukinv_gate(k):
 
     # 形式上逆回路を作るが、Xの逆操作はXなので、実は全く同一の回路
     ukinv = uk.inverse()
-    
+
     ukinv_gate = ukinv.to_gate()
     cukinv_gate = ukinv_gate.control(1)
-    
+
     return cukinv_gate
 ```
 
@@ -181,14 +183,14 @@ ks = np.arange(2 ** data_width)
 for k in ks:
     circuit_re = QuantumCircuit(reg_data, reg_test, creg_test)
     circuit_im = QuantumCircuit(reg_data, reg_test, creg_test)
-    
+
     ##################
     ### EDIT BELOW ###
     ##################
 
     # 制御ゲートをcircuitに組み込む例
     # circuit.append(cupsi_gate, qargs=([reg_test[0]] + reg_data[:]))
-    
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -200,7 +202,7 @@ for k in ks:
     circuits_im.append(circuit_im)
 
 # シミュレータで回路を実行
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 shots = 10000
 
 circuits_re = transpile(circuits_re, backend=simulator)
@@ -228,14 +230,18 @@ plt.xlabel('k')
 plt.legend();
 ```
 
-得られた結果と`statevector_simulator`で計算される状態ベクトルとを比較してみましょう。
+得られた結果と状態ベクトルシミュレータで計算される状態ベクトルとを比較してみましょう。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-sv_simulator = Aer.get_backend('statevector_simulator')
+sv_simulator = AerSimulator(method='statevector')
 
-circuit = transpile(upsi, backend=sv_simulator)
+# save_statevectorをくっつけるので元の回路をコピーする
+circuit = upsi.copy()
+circuit.save_statevector()
+
+circuit = transpile(circuit, backend=sv_simulator)
 statevector_truth = np.asarray(sv_simulator.run(circuit).result().data()['statevector'])
 
 plt.plot(ks, statevector_truth.real, label='Re($c_k$) truth')
@@ -281,14 +287,14 @@ blackbox_circuit = QuantumCircuit(haystack_register, name='blackbox') # レジ�
 needle_bits = 1 - np.unpackbits(np.asarray(needle, dtype=np.uint8), bitorder='little')[:num_qubits]
 for idx in np.nonzero(needle_bits)[0]:
     blackbox_circuit.x(haystack_register[idx])
-    
+
 # レジスタの（0番から）最後から二番目のビットまでで制御し、最後のビットを標的にする
 blackbox_circuit.mcp(np.pi, haystack_register[:-1], haystack_register[-1])
 
 # 後片付け
 for idx in np.nonzero(needle_bits)[0]:
     blackbox_circuit.x(haystack_register[idx])
-        
+
 blackbox_circuit.draw('mpl')
 ```
 
@@ -344,7 +350,7 @@ haystack_needle.draw('mpl')
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-simulator = Aer.get_backend('qasm_simulator')
+simulator = AerSimulator()
 haystack_needle = transpile(haystack_needle, backend=simulator)
 sim_job = simulator.run(haystack_needle, shots=10000)
 sim_result = sim_job.result()
@@ -357,11 +363,3 @@ plot_histogram(sim_result.get_counts(), figsize=(16, 4))
 - 問題2で、ヒストグラムから`needle`を見つける方法の記述
 - `haystack`レジスタが一般の$n$ビットであるとき、この方法で`needle`を探すことの問題点（実行時間の観点から）に関する考察
 - おまけ（評価対象外）：`haystack_needle`回路を適当な実機でも実行してみる。エラーによってシミュレーションと結果が大幅に異なると予想されるが、なぜ一見単純な回路が大きく撹乱されてしまうのか？を考えてみる
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

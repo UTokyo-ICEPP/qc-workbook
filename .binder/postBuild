@@ -1,5 +1,9 @@
 #!/bin/bash
 
-git clone https://github.com/derlin/hepqpr-qallse
-cd hepqpr-qallse/src
-python setup.py install
+ROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null)
+
+# Binder runtime environment is primarily derived from requirements.txt in this directory; anything that can't be pip-installed must be processed here
+
+git clone https://github.com/LAL/trackml-library.git
+pip3 install ./trackml-library
+rm -rf trackml-library

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -150,10 +150,12 @@ from fractions import Fraction
 import matplotlib.pyplot as plt
 import numpy as np
 
-from qiskit import IBMQ, QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
-from qiskit.providers.ibmq import least_busy, IBMQAccountCredentialsNotFound
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
 from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
+from qiskit_aer import AerSimulator
+from qiskit_ibm_provider import IBMProvider, least_busy
+from qiskit_ibm_provider.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
 from qc_workbook.utils import operational_backend
@@ -214,7 +216,7 @@ def qft_dagger(qreg):
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #qc.?
 
     ##################
@@ -254,7 +256,7 @@ def qft_dagger(qreg):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1
             qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
-        
+
         qc.h(itarg)
 
     ##################
@@ -282,7 +284,7 @@ def qft_dagger(qreg):
         for ictrl in range(itarg):
             power = ictrl - itarg - 1
             qc.cp(-2. * np.pi * (2 ** power), ictrl, itarg)
-        
+
         qc.h(itarg)
 
     qc.name = "IQFT"
@@ -301,7 +303,7 @@ angle = np.pi / 2
 
 for x, ctrl in enumerate(qreg_meas):
     qc.cp(angle * (2 ** x), ctrl, qreg_aux[0])
-    
+
 qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
 qc.measure(qreg_meas, creg_meas)
 ```
@@ -319,9 +321,8 @@ pycharm:
   name: '#%%
 
     '
-tags: []
 ---
-simulator = Aer.get_backend('aer_simulator')
+simulator = AerSimulator()
 shots = 2048
 qc_tr = transpile(qc, backend=simulator)
 results = simulator.run(qc_tr, shots=shots).result()
@@ -374,12 +375,12 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # 量子コンピュータで実行する場合
-try:
-    IBMQ.load_account()
-except IBMQAccountCredentialsNotFound:
-    IBMQ.enable_account('__paste_your_token_here__')
+instance = 'ibm-q/open/main'
 
-provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+try:
+    provider = IBMProvider(instance=instance)
+except IBMQAccountCredentialsNotFound:
+    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
 
 backend_list = provider.backends(filters=operational_backend(min_qubits=4))
 backend = least_busy(backend_list)
@@ -624,7 +625,7 @@ $n$量子ビットQPEの{ref}`回路 <qpe_nqubit_fig>`と比較すれば、こ�
 
 まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。
 
-$N$を正の整数として、関数$f(x) = a^x \bmod N$の振る舞いを考えます。[ショアのアルゴリズム](#shor_algo_fig)に立ち返ってみると、
+$N$を正の整数として、関数$f(x) = a^x \bmod N$の振る舞いを考えます。[ショアのアルゴリズム](shor_algo_fig)に立ち返ってみると、
 ここで$a$は$N$と互いに素な$N$未満の正の整数で、位数$r$は$\modequiv{a^r}{1}{N}$を満たす非ゼロの最小の整数でした。
 以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものです。
 
@@ -690,7 +691,7 @@ def c_amod15(a, l):
     ##################
     ### EDIT BELOW ###
     ##################
-    
+
     #if a == 2:
     #    ...
     #elif a == 4:
@@ -700,14 +701,14 @@ def c_amod15(a, l):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     # Uを2^l回繰り返す
     U_power = U.repeat(2 ** l)
 
     # U_powerをゲートに変換
     gate = U_power.to_gate()
     gate.name = f"{a}^{2 ** l} mod 15"
-    
+
     # gateを制御ゲートに変換
     c_gate = gate.control()
     return c_gate
@@ -785,7 +786,7 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -824,10 +825,10 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     if a in [7, 11, 13]:
         U.x([0, 1, 2, 3])
-        
+
     ##################
     ### EDIT ABOVE ###
     ##################
@@ -862,10 +863,10 @@ def c_amod15(a, l):
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
-        
+
     if a in [7, 11, 13]:
         U.x([0, 1, 2, 3])
-        
+
     U_power = U.repeat(2 ** l)
 
     gate = U_power.to_gate()
@@ -999,11 +1000,3 @@ for row in rows:
 `limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
 
 測定された結果のうち、2つ（64と192）が正しい答えである$r=4$を与えたことが分かります。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```

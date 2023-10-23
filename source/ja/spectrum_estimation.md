@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.10
+  version: 3.10.6
 ---
 
 # 【課題】位相推定によるスペクトル分解
@@ -49,7 +49,7 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 前回登場したハイゼンベルグモデルのハミルトニアンは
 
 $$
-H = -J \sum_{j=0}^{n-2} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1}) \quad (J > 0)
+H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \quad (J > 0)
 $$
 
 というものでした。このハミルトニアンが表しているのは、空間中で一列に並んだスピンを持つ粒子が、隣接粒子間で相互作用を及ぼしているような系でした。ここで相互作用は、スピンの向きが揃っているときにエネルギーが低くなるようなものでした。したがって、全てののスピンが同じ方向を向いているときにエネルギーが最も低くなることが予想されました。
@@ -57,7 +57,7 @@ $$
 今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を$+Z$方向にかけるとすれば、ハミルトニアンは
 
 $$
-H = -J \sum_{j=0}^{n-1} (\sigma^X_j\sigma^X_{j+1} + \sigma^Y_j\sigma^Y_{j+1} + \sigma^Z_j \sigma^Z_{j+1} + g \sigma^Z_j)
+H = -J \sum_{j=0}^{n-1} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j} + g \sigma^Z_j)
 $$
 
 となります。このハミルトニアンにはもう一点前回と異なる部分があります。前回はスピンに関する和を$j=0$から$n-2$まで取ることで、両端のスピンは「内側」のスピンとしか相互作用をしないような境界条件を採用していました。今回は和を$n-1$まで取っています。$\sigma^{X,Y,Z}_n$を$\sigma^{X,Y,Z}_0$と同一視することで、これは「周期境界条件」（一列ではなく環状に並んだスピン）を表します。
@@ -70,10 +70,11 @@ $$
 # まず必要なモジュールをインポートする
 import numpy as np
 import matplotlib.pyplot as plt
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, Aer, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit.quantum_info import SparsePauliOp
 from qiskit.visualization import plot_histogram
+from qiskit_aer import AerSimulator
 # ワークブック独自のモジュール
-from qc_workbook.hamiltonian import make_hamiltonian
 from qc_workbook.show_state import show_state
 
 print('notebook ready')
@@ -90,18 +91,22 @@ g = 0.
 # Construct the Hamiltonian matrix
 paulis = list()
 coeffs = list()
+
+xx_template = 'I' * (n_s - 2) + 'XX'
+yy_template = 'I' * (n_s - 2) + 'YY'
+zz_template = 'I' * (n_s - 2) + 'ZZ'
+
 for j in range(n_s):
-    paulis.append(list('x' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
-    paulis.append(list('y' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
-    paulis.append(list('z' if k in (j, (j + 1) % n_s) else 'i' for k in range(n_s)))
-    coeffs.append(-J)
+    paulis.append(xx_template[j:] + xx_template[:j])
+    paulis.append(yy_template[j:] + yy_template[:j])
+    paulis.append(zz_template[j:] + zz_template[:j])
+    coeffs += [-J] * 3
+
     if g != 0.:
-        paulis.append(list('z' if k == j else 'i' for k in range(n_s)))
+        paulis.append('I' * (n_s - j - 1) + 'Z' + 'I' * j)
         coeffs.append(-J * g)
 
-hamiltonian = make_hamiltonian(paulis, coeffs)
+hamiltonian = SparsePauliOp(paulis, coeffs).to_matrix()
 
 # Diagonalize and obtain the eigenvalues and vectors
 eigvals, eigvectors = np.linalg.eigh(hamiltonian)
@@ -227,15 +232,15 @@ pycharm:
 ---
 def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     """Return a function that implements a single Trotter step for the Heisenberg model.
-    
+
     The Heisenberg model Hamiltonian is
     H = -J * sum_of_sigmas = hbar*ω * Θ
-    
+
     The returned circuit implements a negative time evolution
     U = exp(-i H*(-τ)/hbar)
     where τ = 2π / ω, which leads to
     U = exp(i 2π Θ).
-    
+
     Because we employ the Suzuki-Trotter decomposition, the actual circuit corresponds to
     U = [exp(i 2π/num_steps Θ)]^num_steps.
 
@@ -265,7 +270,7 @@ def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     circuit = circuit.repeat(num_steps)
     circuit.name = 'U'
 
@@ -291,7 +296,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
         state_register (QuantumRegister): State register.
         readout_register (QuantumRegister): Readout register.
         u_circuit (QuantumCircuit): A circuit implementing U_H(-2π/ω).
-        
+
     Returns:
         QuantumCircuit: A circuit implementing the spectrum estimation of the given Hamiltonian.
     """
@@ -307,7 +312,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
 
         # Append the controlled gate specifying the control and target qubits
         circuit.append(controlled_u_gate, qargs=([qubit] + state_register[:]))
-        
+
     circuit.barrier()
 
     # Inverse QFT
@@ -322,7 +327,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
             circuit.cp(-dphi * (2 ** power), readout_register[jctrl], readout_register[jtarg])
 
         circuit.h(readout_register[jtarg])
-        
+
     return circuit
 ```
 
@@ -390,7 +395,7 @@ def make_initial_state(state_register, readout_register):
     ##################
     ### EDIT ABOVE ###
     ##################
-    
+
     return circuit
 
 
@@ -431,10 +436,10 @@ pycharm:
     '
 tags: [remove-output]
 ---
-# Run the circuit in qasm_simulator and plot the histogram
-qasm_simulator = Aer.get_backend('qasm_simulator')
-circuit = transpile(circuit, backend=qasm_simulator)
-job = qasm_simulator.run(circuit, shots=10000)
+# Run the circuit in simulator and plot the histogram
+simulator = AerSimulator()
+circuit = transpile(circuit, backend=simulator)
+job = simulator.run(circuit, shots=10000)
 result = job.result()
 counts = result.get_counts(circuit)
 plot_histogram(counts)
@@ -508,23 +513,30 @@ $|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので
 
 このようなプロットを$n=4$で$g$の値を0から0.5まで0.1刻みに変えながら作ってみましょう。
 
-まずは計算基底と$g$の値を引数に取り、終状態の確率分布を返す関数を定義します。シミュレータとして`qasm_simulator`を用いるほうがより実用に近くなりますが、実行時間や統計誤差の問題から、デフォルトでは`statevector_simulator`を使うことにします。
+まずは計算基底と$g$の値を引数に取り、終状態の確率分布を返す関数を定義します。通常のショットベースのシミュレータでは統計誤差の影響が乗るので、デフォルトでは状態ベクトルシミュレーションを使うことにします。
 
 [^unitarity]: これは$\{\ket{l}\}$と$\{\ket{\phi_m}\}$がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。
 
 ```{code-cell} ipython3
-def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=False):
+def get_spectrum_for_comp_basis(
+    n_state: int,
+    n_readout: int,
+    l: int,
+    energy_norm: float,
+    g: float,
+    shots: int = 0
+) -> np.ndarray:
     """Compute and return the distribution P_l(k, h) as an ndarray.
-    
+
     Args:
-        n_state (int): Size of the state register.
-        n_readout (int): Size of the readout register.
-        l (int): Index of the initial-state computational basis in the state register.
-        energy_norm (float): Hamiltonian normalization.
-        g (float): Parameter g of the Heisenberg model.
-        use_qasm (bool): Use the qasm_simulator if True.
+        n_state: Size of the state register.
+        n_readout: Size of the readout register.
+        l: Index of the initial-state computational basis in the state register.
+        energy_norm: Hamiltonian normalization.
+        g: Parameter g of the Heisenberg model.
+        shots: Number of shots. If <= 0, statevector simulation will be used.
     """
-    
+
     # Define the circuit
     state_register = QuantumRegister(n_state, 'state')
     readout_register = QuantumRegister(n_readout, 'readout')
@@ -534,20 +546,34 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
     for iq in range(n_state):
         if ((l >> iq) & 1) == 1:
             circuit.x(state_register[iq])
-            
+
     u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
     se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
 
     circuit.compose(se_circuit, inplace=True)
 
     # Extract the probability distribution as an array of shape (2 ** n_readout, 2 ** n_state)
-    if use_qasm:
+    if shots <= 0:
+        circuit.save_statevector()
+
+        simulator = AerSimulator(method='statevector')
+        circuit = transpile(circuit, backend=simulator)
+        job = simulator.run(circuit)
+        result = job.result()
+        statevector = result.data()['statevector']
+
+        # Convert the state vector into a probability distribution by taking the norm-squared
+        probs = np.square(np.abs(statevector)).reshape((2 ** n_readout, 2 ** n_state))
+        # Clean up the numerical artifacts
+        probs = np.where(probs > 1.e-6, probs, np.zeros_like(probs))
+
+    else:
         circuit.measure_all()
 
-        # Run the circuit in qasm_simulator and plot the histogram
-        qasm_simulator = Aer.get_backend('qasm_simulator')
-        circuit = transpile(circuit, backend=qasm_simulator)
-        job = qasm_simulator.run(circuit, shots=10000)
+        # Run the circuit in simulator and plot the histogram
+        simulator = AerSimulator()
+        circuit = transpile(circuit, backend=simulator)
+        job = simulator.run(circuit, shots=shots)
         result = job.result()
         counts = result.get_counts(circuit)
 
@@ -560,19 +586,7 @@ def get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g, use_qasm=
             probs[readout, state] = count
 
         probs /= np.sum(probs)
-    
-    else:
-        sv_simulator = Aer.get_backend('statevector_simulator')
-        circuit = transpile(circuit, backend=sv_simulator)
-        job = sv_simulator.run(circuit)
-        result = job.result()
-        statevector = result.data()['statevector']
-        
-        # Convert the state vector into a probability distribution by taking the norm-squared
-        probs = np.square(np.abs(statevector)).reshape((2 ** n_readout, 2 ** n_state))
-        # Clean up the numerical artifacts
-        probs = np.where(probs > 1.e-6, probs, np.zeros_like(probs))
-    
+
     # probs[k, h] = P_l(k, h)
     return probs
 ```
@@ -597,7 +611,7 @@ def get_full_spectrum(g):
     """
 
     spectrum = np.zeros(2 ** n_readout, dtype=float)
-    
+
     for l in range(2 ** n_state):
         probs = get_spectrum_for_comp_basis(n_state, n_readout, l, energy_norm, g)
         print('Computed spectrum for g = {:.1f} l = {:d}'.format(g, l))
@@ -609,7 +623,7 @@ def get_full_spectrum(g):
         ##################
         ### EDIT ABOVE ###
         ##################
-        
+
     return spectrum
 
 # roll(spectrum, 2^{n_R-1}) => range of k is [-2^{n_R}/2, 2^{n_R}/2 - 1]
@@ -670,11 +684,3 @@ $$
 $$
 
 が成り立つことがわかります。ここで$\delta_{mn}$はクロネッカーの$\delta$記号で、$m=n$のとき1、それ以外では0の値を持つ因子です。
-
-+++
-
-## 参考文献
-
-```{bibliography}
-:filter: docname in docnames
-```
