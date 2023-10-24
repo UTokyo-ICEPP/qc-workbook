@@ -287,7 +287,7 @@ $$
 
 最後に、$\plusket$と$\minusket$をスピン$\pm Z$の状態のようにみなして、$\Phi^{\dagger}_j\Phi_j$と$\Phi^{\dagger}_j\Phi_{j+1}$をパウリ行列で表現します。式{eq}`creation_annihilation`から
 前者は
-Lastly, we can consider $\plusket$ and $\minusket$ to be spin states $\pm Z$, and express \Phi^{\dagger}_j\Phi_j$と and $\Phi^{\dagger}_j\Phi_{j+1}$ as Pauli matrices. Based on Formula{eq}`creation_annihilation`, the former can be expressed as follows. 
+Lastly, we can consider $\plusket$ and $\minusket$ to be spin states $\pm Z$, and express $\Phi^{\dagger}_j\Phi_j$と and $\Phi^{\dagger}_j\Phi_{j+1}$ as Pauli matrices. Based on Formula{eq}`creation_annihilation`, the former can be expressed as follows. 
 
 $$
 \Phi^{\dagger}_j\Phi_j \rightarrow \frac{1}{2} (\sigma^Z_j + 1)
