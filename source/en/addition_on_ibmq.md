@@ -329,6 +329,8 @@ QVにはゲートや測定のエラー率だけでなく、トランスパイラ
 [^measurement_error]: 測定のエラーとは、具体的には状態$\ket{0}$や$\ket{1}$を測定したときにどのくらいの割合で0や1でない結果を得るかということを表した値です。
 [^qv]: QVはハードウェアの詳細に依存しないように定義されているので、量子ビット型の量子コンピュータであればIBMのマシンに限らずすべてQVで評価できます。実際、業界で徐々にQVを標準ベンチマークとして使う動きが広がってきているようです。
 
+[^qv]: QV is defined to not be reliant on hardware details, so it can be used to evaluate all quantum bit-based quantum computers, not just IBM machines. The industry as a whole is moving towards using QV as a standard benchmark.
+
 ```{code-cell} ipython3
 :tags: [remove-output, raises-exception]
 
