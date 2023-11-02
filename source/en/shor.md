@@ -24,12 +24,11 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-# 素因数分解アルゴリズムを学習する
+# Learning Integer Factoring Algorithm
 
 +++
 
-この実習では**ショアのアルゴリズム**を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズム{cite}`shor,nielsen_chuang_qft_app`は最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている**量子位相推定**と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。
-In this exercise, you will be learning about **Shor's algorithm**. You may have heard this name before, as Shor's algorithm{cite}`shor,nielsen_chuang_qft_app` is one of the most famous quantum algorithms. After learning the method called **quantum phase estimation**, on which Shor's algorithm is based, we will then introduce each step of Shor's algorithm, together with actual examples. Lastly, we will use Qiskit to implement Shor's algorithm and perform actual prime factorization.
+In this exercise, you will be learning about **Shor's algorithm**. You may have heard this name before, as Shor's algorithm{cite}`shor,nielsen_chuang_qft_app` is one of the most famous quantum algorithms. After learning the method called **quantum phase estimation**, on which Shor's algorithm is based, we will then introduce each step of Shor's algorithm, together with actual examples. Lastly, we will use Qiskit to implement Shor's algorithm and exercise integer factoring.
 
 ```{contents} 目次
 ---
@@ -42,35 +41,30 @@ $\newcommand{\modequiv}[3]{#1 \equiv #2 \pmod{#3}}$
 $\newcommand{\modnequiv}[3]{#1 \not\equiv #2 \pmod{#3}}$
 
 (shor_introduction)=
-## はじめに
+## Introduction
 
-古典計算をはるかに上回る能力を持つ量子計算の一つの例として、最も広く知られているのがショアの量子計算アルゴリズムでしょう。このアルゴリズムが考える問題は、大きな正の数を二つの素数の積に分解するというもので、問題自体はシンプルです。しかし、古典計算では素因数分解の有効なアルゴリズムが知られておらず、数が大きくなると**指数関数的に計算量が増える**と予想されています。
-ショアのアルゴリズムを用いれば、同じ問題を**多項式時間で解くことができる**と考えられています（一般的に、問題のサイズに対して多項式で増える計算時間で解くことができれば、それは有効なアルゴリズムだと見なされます）。
-One of the most widely known examples of how the capabilities of quantum computation far surpass classical computation is Shor's quantum calculation algorithm. The problem this algorithm seeks to address is breaking down a large positive number into two prime numbers. The problem itself is a simple one. However, there are no known classical computation algorithms that are effective at performing prime factorization, and as the numbers in question grow larger, the amount of calculation involved is believed to **grow exponentially**.  Using Shor's algorithm is believed to make it possible to solve this problem in **polynomial time** (generally speaking, if an algorithm can solve a problem with a computation time that increases polynomially with respect to the size of the problem, the algorithm is considered effective).
+One of the most widely known examples of how the capabilities of quantum computation far surpass classical computation is Shor's algorithm. The problem this algorithm seeks to address is to break down a large positive number into two prime numbers. The problem itself is a simple one. However, there are no known classical computation algorithms that can efficiently performe integer factoring, and as the number in question grows larger, the amount of calculation involved is believed to **grow exponentially**.  Using Shor's algorithm is believed to make it possible to solve this problem in **polynomial time** (generally speaking, if an algorithm can solve a problem with a computation time that increases polynomially with respect to the problem size, the algorithm is considered efficient).
 
-古典計算での素因数分解の難しさは、現在広く使われている鍵暗号技術の元になっています。なので、指数関数的に高速なショアのアルゴリズムが量子コンピュータで実現されれば、秘密の情報が暴かれる可能性があります。ショアのアルゴリズムが大きく注目される理由はそこにあります。
-The difficulty involved in performing prime factorization using classical calculation is the basis of the encryption technologies that are currently widely in use. Therefore, if it were possible to realize an exponentially fast Shor's algorithm using a quantum computer, it could result in the leakage of confidential information. This is why so much attention is being paid to Shor's algorithm.
+The difficulty involved in performing integer factoring with classical calculation is the basis of the encryption technologies that are currently widely in use. Therefore, if it were possible to realize an exponentially-fast Shor's algorithm using a quantum computer, it could result in the leakage of confidential information. This is why so much attention is being paid to Shor's algorithm.
 
 +++
 
 (qpe)=
-## 量子位相推定
+## Quantum Phase Estimation
 
-まず、ショアのアルゴリズムの元になっている「**量子位相推定」**（*Quantum Phase Estimation*, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「**量子フーリエ変換**」（*Quantum Fourier Transform*, QFT）の理解が欠かせませんが、QFTについては、この[実習](circuit_from_scratch.ipynb)の問題7、もしくは参考文献[1]を参照してください。
-First, let's learn about **quantum phase estimation**, or QPE, on which Shor's algorithm is based. If you understand Shor's algorithm, you will realize that the heart of the algorithm is basically QPE itself. To understand QPE, it is essential that you understand the **quantum Fourier transform**, or QFT. For more information on QFT, refer to task 7 of [this exercise](circuit_from_scratch.ipynb) or to reference material [1].
+First, let's learn about **quantum phase estimation** or QPE, on which Shor's algorithm is based. If you understand Shor's algorithm, you will realize that the heart of the algorithm is basically QPE itself. To understand QPE, it is essential that you understand the **quantum Fourier transform** or QFT. For more information about QFT, please refer to task 7 of [this exercise](circuit_from_scratch.ipynb) or to reference material[1].
 
-QPEはとても大事な計算手法で、ショアのアルゴリズムだけでなく、いろいろな量子アルゴリズムのサブルーチンとしても使われています。
 %（モンテカルロサンプラーの[実習](mc_sampler.ipynb)でも出てきます）。
+Since the QPE is a very important technique, it is widely used, not only in Shor's algorithm but also in various algorithms as a subroutine. 
 
-QPEが考える問題は、「あるユニタリー演算$U$に対して$U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$となる固有ベクトル$\ket{\psi}$が与えられるとして、その固有値$e^{2\pi i\theta}$の位相$\theta$を求めることができるか？」という問題です。
-The question QPE seeks to address is "given a unitary operation U and an eigenvector $\ket{\psi}$$ such that $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$, what is the phase $\theta$ of eigenvalue $e^{2\pi i\theta}$?"
+The question QPE seeks to address is
+"Given a unitary operation $U$ and an eigenvector $\ket{\psi}$ that satisfies $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$, what is the phase $\theta$ of the eigenvalue $e^{2\pi i\theta}$?"
 
 +++
 
 (qpe_1qubit)=
-### 1量子ビットの位相推定
-まず、下図にあるような量子回路を考えてみましょう。上側の量子ビットは$\ket{0}$、下側の量子ビットには$U$の固有ベクトル$\ket{\psi}$が初期状態として与えられているとします。
-First, let us consider a quantum circuit like the one in the figure below. Here, the upper side quantum bit is $\ket{0}$ and the lower side quantum bit is $U$'s eigenvector $\ket{\psi}$.
+### Single-Qubit QPE
+First, let us consider a quantum circuit like the one in the figure below. Here, the upper qubit is $\ket{0}$ and the lower qubit is $U$'s eigenvector $\ket{\psi}$.
 
 ```{image} figs/qpe_1qubit.png
 :alt: qpe_1qubit
@@ -78,31 +72,25 @@ First, let us consider a quantum circuit like the one in the figure below. Here,
 :align: center
 ```
 
-この場合、量子回路の1-3の各ステップでの量子状態は、以下のように表現できます。
-In this case, the quantum states in each of steps 1 to 3 of the quantum circuit can be expressed as shown below.
+In this case, the quantum states in each of steps 1 to 3 of the quantum circuit can be expressed as follows.
 
 - Step 1 : $\frac{1}{\sqrt{2}}(\ket{0}\ket{\psi}+\ket{1}\ket{\psi})$
 - Step 2 : $\frac{1}{\sqrt{2}}(\ket{0}\ket{\psi}+\ket{1} e^{2\pi i\theta}\ket{\psi})$
 - Step 3 : $\frac{1}{2}\left[(1+e^{2\pi i\theta})\ket{0}+(1-e^{2\pi i\theta})\ket{1}\right]\ket{\psi}$
 
-この状態で上側の量子ビットを測定すると、$|(1+e^{2\pi i\theta})/2|^2$の確率で0、$|(1-e^{2\pi i\theta})/2|^2$の確率で1を測定するでしょう。つまり、この確率の値から位相$\theta$を求めることができるわけです。
-しかし、$\theta$の値が小さい場合（$\theta\ll1$）、ほぼ100%の確率で0を測定し、ほぼ0％の確率で1を測定することになるため、100%あるいは0%からのずれを精度良く決めるためには測定を何度も繰り返す必要が出てきます。これではあまり優位性を感じませんね。。
-If we measure the upper quantum bit in this state, there is a $|(1+e^{2\pi i\theta})/2|^2$ probability that the value is 0 and a $|(1-e^{2\pi i\theta})/2|^2$ probability that it is 1. In other words, we can determine phase $\theta$ from these probability values. However, when the value of $\theta$ is small ($\theta\ll1$), there is an almost 100% probability that the measurement value will be 0 and an almost 0% probability that it will be 1. Therefore, in order to improve the precision beyond just 100% or 0%, we must perform measurement repeatedly. This does not make for a particularly superior approach.
+If we measure the upper qubit in this state, there is a $|(1+e^{2\pi i\theta})/2|^2$ probability that the value is 0 and a $|(1-e^{2\pi i\theta})/2|^2$ probability that it is 1. In other words, we can determine the value of $\theta$ from these probabilities. However, when the value of $\theta$ is small ($\theta\ll1$), there is an almost 100% probability that the measured value will be 0 and an almost 0% probability that it will be 1. Therefore, in order to measure small discrepancies from 100% or 0%, we will have to perform measurements many times. This does not make for a particularly superior approach.
 
 ```{hint}
-この制御$U$ゲートの部分がショアのアルゴリズムの「オラクル」に対応しています。その後ろには逆量子フーリエ変換が来ますが、1量子ビットの場合は$H$ゲート（$H=H^\dagger$）です。つまり、1量子ビットの量子フーリエ変換は$H$ゲートそのものということですね。
-This $U$ control gate corresponds to the "oracle" of Shor's algorithm. After it is a reverse quantum Fourier transform, but when working with one quantum bit, it is an $H$ gate ($H=H^\dagger$). In other words, a 1 quantum bit quantum Fourier transform is itself an $H$ gate.
+This controlled-$U$ gate corresponds to the "oracle" of Shor's algorithm. The inverse quantum Fourier transform comes (QFT) after that, and it is an $H$ gate for one-qubit case ($H=H^\dagger$). In other words, a single-qubit QFT is an $H$ gate itself.
 ```
 
-本題に戻って、では少ない測定回数でも精度良く位相を決める方法は、何か考えられるでしょうか。。
-Returning to the topic at hand, is there any way to determine the phase accurately, using only a small number of measurements?
+Returning to the topic at hand, let us see if there any way to determine the phase more accurately, using only a small number of measurements.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (qpe_nqubit)=
-### $n$量子ビットの位相推定
-そこで、上側のレジスタを$n$量子ビットに拡張した量子回路（下図）を考えてみましょう。
-Let us think of the upper register as a quantum circuit expanded to $n$ quantum bits (as shown in the figure below).
+### $n$-Qubit QPE
+Let us think of a quantum circuit with the upper register expanded to $n$ qubits (as shown in the figure below).
 
 ```{image} figs/qpe_wo_iqft.png
 :alt: qpe_wo_iqft
@@ -110,8 +98,7 @@ Let us think of the upper register as a quantum circuit expanded to $n$ quantum 
 :align: center
 ```
 
-それに応じて、下側のレジスタにも$U$を繰り返し適用することになりますが、鍵になるのは$U$を2の羃乗回適用するところです。それがどういう意味を持つのかを理解するために、準備として$U^{2^x}\ket{\psi}$が以下のように書けることを見ておきます（まあ当然と言えば当然ですが）。
-As a result of this, $U$ is repeatedly applied to the lower registers as well, but the key is that the number of times that $U$ is applied is an exponent of 2. To understand what this means, let's prepare by seeing that $U^{2^x}\ket{\psi}$ can be written as shown below (this may be obvious).
+As a result of this, $U$ is repeatedly applied to the lower registers, but the key is that the $U$ is applied $2^x$ times where $x$ runs from 0 through $n-1$. To understand what this means, let's check that $U^{2^x}\ket{\psi}$ can be written as shown below (this may be obvious).
 
 $$
 \begin{aligned}
@@ -123,7 +110,6 @@ U^{2^x}\ket{\psi}&=U^{2^x-1}U\ket{\psi}\\
 \end{aligned}
 $$
 
-この量子回路に対して、同様に1, 2, ... $n+1$の各ステップでの量子状態を追跡していくと、以下のようになることが分かります。
 If we trace the quantum states of this quantum circuit in the same fashion using steps 1, 2, ... $n+1$, we find the following.
 
 - Step 1 : $\frac{1}{\sqrt{2^n}}(\ket{0}+\ket{1})^{\otimes n}\ket{\psi}$
@@ -131,8 +117,7 @@ If we trace the quantum states of this quantum circuit in the same fashion using
 - $\cdots$
 - Step $n+1$ : $\frac{1}{\sqrt{2^n}}(\ket{0}+e^{2\pi i\theta2^{n-1}}\ket{1})(\ket{0}+e^{2\pi i\theta2^{n-2}}\ket{1})\cdots(\ket{0}+e^{2\pi i\theta2^0}\ket{1})\ket{\psi}$
 
-ステップ $n+1$後の$n$ビットレジスタの状態をよく見ると、この状態はQFTで$j$を$2^n\theta$としたものと同等であることが分かります。つまり、この$n$ビットレジスタに逆フーリエ変換$\rm{QFT}^\dagger$を適用すれば、状態$\ket{2^n\theta}$が得られるわけです！この状態を測定すれば、$2^n\theta$つまり固有値の位相$\theta$（を$2^n$倍したもの）を求めることができるというのがQPEです（下図）。
-If we look closely at the state of the $n$ bit register after step $n+1$, we will see that it is equal to if $j$ were set to $2^n\theta$ using QFT. In other words, if we apply reverse Fourier transform $\rm{QFT}^\dagger$ to this $n$ bit register, we would produce state $2^n\theta$!  If we measured this state, QPE could be used to determine $2^n$\theta$ -- that is, phase $\theta$ (multiplied by $2^n$) of the eigenvalue (see figure below).
+If we look closely at the state of the $n$-qubit register after step $n+1$, we will see that it is equivalent to the state with QFT where $j$ was replaced with $2^n\theta$. Thus, if we apply an inverse Fourier transform $\rm{QFT}^\dagger$ to this $n$-qubit state, we will be able to obtain the state $\ket{2^n\theta}$!  Measuring this state, we can determine $2^n$\theta$ -- that is, phase $\theta$ (multiplied by $2^n$) of the eigenvalue. This is how the QPE works (see figure below).
 
 (qpe_nqubit_fig)=
 ```{image} figs/qpe.png
@@ -141,7 +126,6 @@ If we look closely at the state of the $n$ bit register after step $n+1$, we wil
 :align: center
 ```
 
-ただし、一般に$2^n \theta$が整数であるとは限りません。非整数値に対する逆フーリエ変換については、{ref}`補足ページ <nonintegral_fourier>`を参照してください。
 However, generally speaking, there is not guarantee that $2^n \theta$ will be an integer. See the {ref}`supplementary information page <nonintegral_fourier>` for information about performing inverse Fourier transformation on non-integer values.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -149,9 +133,9 @@ However, generally speaking, there is not guarantee that $2^n \theta$ will be an
 (qpe_imp)=
 ## QPEの簡単な例を実装する
 
-では実際に、簡単な回路を使って量子位相推定を実装してみましょう。
+Next, let's try to implement QPE using a simple quantum circuit.
 
-まず、あるユニタリー演算$U$に対して$U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$となる固有ベクトル$\ket{\psi}$が必要ですが、ここでは$U$として1量子ビットの$S$ゲート（位相$\sqrt{Z}$ゲート）を考えてみます。$\ket{1}=\begin{pmatrix}0\\1\end{pmatrix}$として、$S\ket{1}=e^{i\pi/2}\ket{1}$となるので$\ket{1}$は$S$の固有ベクトル、$e^{i\pi/2}$がその固有値です。QPEは固有値$e^{2\pi i\theta}$の位相$\theta$を求めるので、$S$の場合は$\theta=1/4$を求めることに相当します。これを回路を使って実際に確かめてみます。
+First, it is necessary to prepare an eigenstate $\ket{\psi}$ and a unitary operator $U$ that satisfy $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$. Here we consider $S$ gate (phase $\sqrt{Z}$ gate) as $U$. Since $S\ket{1}=e^{i\pi/2}\ket{1}$ with $\ket{1}=\begin{pmatrix}0\\1\end{pmatrix}$, $\ket{1}$ is an eigenvector of $S$ gate and $e^{i\pi/2}$ is its eigenvalue. This means that $\theta=1/4$ for $U=S$ because QPE allows us to estimate phase $\theta$ of the eigenvalue $e^{2\pi i\theta}$. We will confirm this using a quantum circuit.
 
 ```{code-cell} ipython3
 ---
@@ -172,13 +156,13 @@ from qiskit_aer import AerSimulator
 from qiskit_ibm_provider import IBMProvider, least_busy
 from qiskit_ibm_provider.accounts import AccountNotFoundError
 
-# ワークブック独自のモジュール
+# Modules for this workbook
 from qc_workbook.utils import operational_backend
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-固有ベクトル$\ket{1}$を保持する1量子ビットレジスタと、位相推定用のレジスタ（3量子ビット）を持つ回路を作ります。$\ket{1}$は$\ket{0}$にパウリ$X$を掛けて作り、位相推定用の制御$S$ゲートを$2^x$回適用します。
+We create a quantum circuit consisting of a single-qubit register for an eigenvetor $\ket{1}$ and a 3-qubit register for phase estimation. $\ket{1}$ is prepared by applying a Pauli-$X$ to $\ket{0}$, and then the controlled-$S$ gate is applied $2^x$ times for QPE.
 
 ```{code-cell} ipython3
 ---
@@ -189,33 +173,33 @@ pycharm:
 ---
 n_meas = 3
 
-# 位相測定用のレジスタ
+# Reigster used to obtain phase
 qreg_meas = QuantumRegister(n_meas, name='meas')
-# 固有ベクトルを保持するレジスタ
+# Register used to hold eigenvector
 qreg_aux = QuantumRegister(1, name='aux')
-# 位相測定の結果が書き出される古典レジスタ
+# Classical register written by the output of phase estimation
 creg_meas = ClassicalRegister(n_meas, name='out')
 
-# 2つの量子レジスタと1つの古典レジスタから量子回路を作る
+# Create quantum circuit from above registers
 qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
 
-# それぞれのレジスタを初期化
+# Initialize individudal registers
 qc.h(qreg_meas)
 qc.x(qreg_aux)
 
-# angle/(2π)がQPEで求めたい位相
+# This is the phase value that we want to get with QPE
 angle = np.pi / 2
 
-# S = P(π/2)なので、(Controlled-S)^x を CP(xπ/2) で代替
+# Replace (Controlled-S)^x with CP(xπ/2) because S = P(π/2)
 for x, ctrl in enumerate(qreg_meas):
     qc.cp(angle * (2 ** x), ctrl, qreg_aux[0])
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-位相推定用のレジスタに逆量子フーリエ変換を適用して、量子ビットを測定します。
+Then, we measure qubits after applying an inverse QFT to the register for phase estimation.
 
-この{ref}`実習 <fourier_addition>`を参考にして、QFTの**逆回路**`qft_dagger(qreg)`を書いてみてください。引数の`qreg`は測定用レジスタオブジェクトです。
+Write an **inverse circuit of QFT** based on {ref}`this workbook <fourier_addition>`. The `qreg` argument is an object of the measurement register.  
 
 ```{code-cell} ipython3
 ---
@@ -225,7 +209,7 @@ pycharm:
     '
 ---
 def qft_dagger(qreg):
-    """逆量子フーリエ変換用の回路"""
+    """Circuit for inverse quantum fourier transform"""
     qc = QuantumCircuit(qreg)
 
     ##################
@@ -249,15 +233,15 @@ qc.measure(qreg_meas, creg_meas)
 qc.draw('mpl')
 ```
 
-**解答**
+**Solution**
 
 ````{toggle}
 
-{ref}`fourier_addition`の`setup_addition`関数中のInverse QFTと書かれている部分を利用します。
+Use Inverse QFT in `setup_addition` funton of {ref}`fourier_addition`
 
 ```{code-block} python
 def qft_dagger(qreg):
-    """逆量子フーリエ変換用の回路"""
+    """Circuit for inverse quantum fourier transform"""
     qc = QuantumCircuit(qreg)
 
     ##################
@@ -287,7 +271,7 @@ def qft_dagger(qreg):
 ```{code-cell} ipython3
 :tags: [remove-input, remove-output]
 
-## テキスト作成用のセル
+## Cell for text
 
 def qft_dagger(qreg):
     qc = QuantumCircuit(qreg)
@@ -326,9 +310,9 @@ qc.measure(qreg_meas, creg_meas)
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (qpe_imp_simulator)=
-### シミュレータでの実験
+### Experiment using Simulator
 
-シミュレータで実行して、測定結果の確率分布を作ってみます。
+The probability distribution of the measured outcome is produced using simulator.
 
 ```{code-cell} ipython3
 ---
@@ -367,19 +351,19 @@ show_distribution(answer)
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-答えは10進数で2になっていますね。ここで測定した答えは$\ket{2^n\theta}$だったことを思い出すと、$\theta=2/2^3=1/4$となって正しい$\theta$が得られたことが分かります。
+Here the answer is 2 in decimal number. Since the measured result should be $\ket{2^n\theta}$, $\theta=2/2^3=1/4$, thus we successfully obtain the correct $\theta$. 
 
-ここで見た量子回路はシンプルですが、いろいろ拡張して振る舞いを理解するのに役立ちます。例えば、以下の問題を調べてみてください。
-- （グローバル因子を除いて）$S=P(\pi/2)$ゲートの例を見ましたが、角度を$0<\phi<\pi$の範囲で変えた$P(\phi)$ゲートではどうなるでしょうか？
-- 角度の選び方によっては、得られる位相の精度が悪くなります。その場合、どうすればより良い精度で測定できるでしょうか？
-- $S$ゲートの場合固有ベクトルは$\ket{1}$でしたが、$\ket{1}$以外の状態を使うとどうなりますか？特に固有ベクトルと線形従属なベクトルを使った場合の振る舞いを見てみてください。
+The quantum circuit used here is simple, but is a good staring point to explore the behaviour of QPE circuit. Please examine the followings, for example:
+- Here we examined the case of $S=P(\pi/2)$ (except global phase). What happens if we insted use $P(\phi)$ gate with the $\phi$ value varying within $0<\phi<\pi$?
+- You will see that the precision of estimated phase value gets worse depending on the choice of $\phi$. How can you improve the precision?
+- We used $\ket{1}$ as it is eigenvector of $S$ gate, but what happens if we use a state different from $\ket{1}$? Please examine the case when the state is linearly dependent of the eigenvector.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (qpe_imp_real)=
-### 量子コンピュータでの実験
+### Experiment with Quantum Computer
 
-最後に量子コンピュータで実行して、結果を確認してみましょう、以下のようにすることで、現時点でbusyでないマシンを優先的に選んで実行してくれます。
+Finally, we will run the circuit on quantum computer and check results. We can use the least busy machine by using the following syntax. 
 
 ```{code-cell} ipython3
 ---
@@ -389,7 +373,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# 量子コンピュータで実行する場合
+# Running on real IBM device
 instance = 'ibm-q/open/main'
 
 try:
@@ -410,7 +394,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。
+# Execute circuit on the least busy backend. Monitor jobs in the queue.
 qc_tr = transpile(qc, backend=backend, optimization_level=3)
 job = backend.run(qc_tr, shots=shots)
 job_monitor(job, interval=2)
@@ -424,30 +408,26 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# 計算結果
+# Results
 results = job.result()
 answer = results.get_counts()
 show_distribution(answer)
 ```
 
 (shor_algo)=
-## ショアのアルゴリズム
+## Shor's Algorithm
 
-では、そろそろ本題であるショアのアルゴリズムに入っていきましょう。ショアのアルゴリズムが考えるのは「ある正の合成数$N$を、自明ではない素数の積$N=qp$に分解する」という問題です。
-Very well, let's move on to the main topic, Shor's algorithm. Shor's algorithm attempts to break down a positive composite number $N$ into the non-obvious product of two primes $N=qp$. 
+Very well, let's move on to the main topic, Shor's algorithm. Shor's algorithm attempts to break down a positive composite number $N$ into a product of two prime numbers $N=qp$.
 
-まず、整数の剰余についての表記法をおさらいしておきます。以下のような整数$x$の並びを考えたとき、例えば3で割った余りを$y$とすると
-First, let's review the method of notation used for integer remainders. Consider the following string of values for integer $x$. If they are divided, for example, by 3, then the values of the remainder $y$ will be as shown below.
+First, let's review the method of notation used for integer remainders. Consider the following string of integer values $x$. If they are divided, for example, by 3, then the values of the remainder $y$ will be as shown below.
 
 |x|0|1|2|3|4|5|6|7|8|9|
 |-|-|-|-|-|-|-|-|-|-|-|
 |y|0|1|2|0|1|2|0|1|2|0|
 
-ですね。この時、$\modequiv{x}{y}{3}$と書くものとします（$k$を0以上の整数とすれば、$x=3k+y$と書くこともできます）。
 Let us write this as $\modequiv{x}{y}{3}$ (if $k$ is an integer value of 0 or greater, this can also be written as $x=3k+y$).
 
-ショアのアルゴリズムの流れを書くと、以下のようなフローチャートになります。黒字の部分は古典計算で実行し、青地の部分を量子コンピュータで実行することになります。「アルゴリズムの一部でしか量子計算を使わないのはなぜ？」と思うかもしれませんが、この青地の部分を古典計算で実行するのが難しいというのがその理由です。つまり、古典計算で十分なところは古典計算にまかして、古典計算では難しい部分を量子計算で実行するというのがその発想の大元にあります。なぜ青地の部分が古典計算では難しいのかは追々明らかになります。
-We can write out the process of Shor's algorithm in the form of the flowchart below. The items in black are computed using classical calculation, and the items in blue are computed using a quantum computer. You may be wondering why we use quantum calculation for only part of the algorithm. This is because calculating the blue parts through classical calculation is difficult. In other words, the basic idea is to use classical calculation for elements that it can handle, and quantum calculation for elements that classical calculation has difficulty with. Later on, it will become clear why classical calculation would have difficulty performing the calculations in blue.
+Shor's algorithm is composed of multiple steps of computation and they can be written in the form of flowchart below. The steps in black are computed using classical calculation, and those in blue are computed using a quantum computer. You might be wondering why we use quantum calculation only for a part of the algorithm. This is because that blue part is difficult to calcualte classically. that is, the basic idea is to use classical calculation for the steps that can be efficiently processed classically, and quantum calculation for those that cannot be done classically. Later on, it will become clear why classical calculation has difficulty in performing the blue part.
 
 (shor_algo_fig)=
 ```{image} figs/shor_flow.png
@@ -459,35 +439,30 @@ We can write out the process of Shor's algorithm in the form of the flowchart be
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (factoring_example)=
-### 素因数分解の例
-簡単な例として、$N=15$の素因数分解をこのアルゴリズムに沿って考えてみましょう。
-For a simple example, let us consider the prime factorization of $N=15$ using this algorithm.
+### Example of Integer Factoring
 
-例えば、15に素な数として仮に$a=7$を選んだとします。そこで$7^x$を15で割った余りを$y$とすると
-For example, imagine that we have selected $a=7$ as the coprime number for 15. If we divide $7^x$ by 15, the remainder $y$ will be as shown below.
+As a simple example, let us consider the factoring of $N=15$ using this algorithm.
+
+For example, imagine that we have selected $a=7$ as a coprime number to 15. Dividing $7^x$ by 15, the remainder $y$ is as follows.
 
 |x|0|1|2|3|4|5|6|$\cdots$|
 |-|-|-|-|-|-|-|-|-|
 |y|1|7|4|13|1|7|4|$\cdots$|
 
-のようになります。つまり、$\modequiv{7^r}{1}{15}$を満たす最小の非自明な$r$は4になることが分かります。
-$r=4$は偶数なので、$\modequiv{x}{7^{4/2}}{15}$が定義でき、$x=4$です。$x+1 = \modnequiv{5}{0}{15}$なので、
-As you can see, the smallest unobvious value for $r$ that meets the condition $\modequiv{7^r}{1}{15}$ is 4.  $r=4$ is an even number, so we can define $\modequiv{x}{7^{4/2}}{15}$, and $x=4$. $x+1 = \modnequiv{5}{0}{15}$, so the following is true.
+As you can see, the smallest (non-trivial) value for $r$ that meets the condition $\modequiv{7^r}{1}{15}$ is 4.  Since $r=4$ is an even number, we can define $\modequiv{x}{7^{4/2}}{15}$, that leads to $x=4$. $x+1 = \modnequiv{5}{0}{15}$, so the following is true.
 
 $$
 \{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}
 $$
 
-となって、$15=5\times3$が得られました!
-We produce the result $15=5\times3$!
+Thus, we managed to obtain the result $15=5\times3$!
 
 +++
 
 (shor_circuit)=
-### 量子回路
+### Quantum Circuit
 
-では次に、$N=15$の素因数分解を実装する量子回路を考えていきましょう。いきなり答えを書いてしまうようですが、回路自体は以下のような構成をしています。
-Next, let's look at a quantum circuit for performing the prime factorization of $N=15$. It might seem like we're jumping right to the answer, but below is the structure of the circuit itself.
+Next, let's look at a quantum circuit to perform integer factoring of $N=15$. It might look like we're jumping right to the answer, but below is the structure of the circuit itself.
 
 (shor_circuit_fig)=
 ```{image} figs/shor.png
@@ -496,9 +471,7 @@ Next, let's look at a quantum circuit for performing the prime factorization of 
 :align: center
 ```
 
-上段にある4個の量子ビットが測定用のレジスタ、下段の4個の量子ビットが作業用のレジスタに対応します。それぞれのレジスタが4つずつなのは、15が4ビット（$n=4$）で表現できるからです（15の2進数表記 = $1111_2$）。状態は全て$\ket{0}$に初期化されているものとして、測定用レジスタの状態を$\ket{x}$、作業用レジスタの状態を$\ket{w}$とします。
-$U_f$は以下のようなオラクル
-The top four quantum bits are the measurement registers, and the bottom four quantum bits are the work registers. There are four of each register because 15 can be expressed with four bits ($n=4$) (15 in binary notation is $1111_2$). All of them are initialized to $\ket{0}$, the states of the measurement bits are $\ket{x}$, and the states of the work bits are $\ket{w}$. $U_f$ is the oracle indicated below.
+The top 4 qubits comprise the measurement register, and the bottom 4 the work register. Each register has 4 qubits ($n=4$) because they suffice to express 15 (the binary notation of 15 is $1111_2$). All the qubits are initialized to $\ket{0}$, and the state of the measurement (work) register is represented as $\ket{x}$ ($\ket{w}$). $U_f$ is the oracle given below:
 
 ```{image} figs/shor_oracle2.png
 :alt: shor_oracle2
@@ -506,15 +479,12 @@ The top four quantum bits are the measurement registers, and the bottom four qua
 :align: center
 ```
 
-で、作業用レジスタの出力状態が$\ket{w\oplus f(x)}$になるものと理解しておきます（詳細は後で説明します）。関数$f(x)$は$f(x) = a^x \bmod N$とします。
-We know that the output state of the work bits is $\ket{w\oplus f(x)}$ (that will be explained in detail later). Let us define the function $f(x)$ as $f(x) = a^x \bmod N$.
+and it outputs the state $\ket{w\oplus f(x)}$ in the work register (this will be explained in detail later). Let us define the function $f(x)$ as $f(x) = a^x \bmod N$.
 
-では、同様に回路のステップ 1-5ごとに量子状態を見ていきましょう。まずステップ 1で測定用量子レジスタの等しい重ね合わせ状態を生成します。各計算基底は0から15までの整数で書いておくことにします。
-Let us, in the same way, observe the quantum states of the circuit through steps 1 through 5. First, in step 1, we generate an equal superposition of measurement quantum bits. Let's write each computational basis as an integer between 0 and 15.
+As done above, let us check the quantum states of the circuit through steps 1 through 5. First, in step 1, we generate an equal superposition of computational basis states in the measurement register. Let's write each computational basis state as an integer between 0 and 15.
 
 - Step 1 :$\frac{1}{\sqrt{2^4}}\left[\sum_{j=0}^{2^4-1}\ket{j}\right]\ket{0}^{\otimes 4} = \frac{1}{4}\left[\ket{0}+\ket{1}+\cdots+\ket{15}\right]\ket{0}^{\otimes 4}$
 
-オラクル$U_f$を適用した後の状態は、オラクルの定義から以下のようになります。
 After applying the oracle $U_f$, given the definition of the oracle, the state is as follows.
 
 - Step 2 :
@@ -526,13 +496,11 @@ $$
 \end{aligned}
 $$
 
-ステップ 2の後に作業用レジスタを測定します。$\ket{w}$は$\ket{7^x \bmod 15}$、つまり$\ket{1}$, $\ket{7}$, $\ket{4}$, $\ket{13}$のどれかなので、例えば測定の結果13が得られたとします。その場合、測定用レジスタの状態は
-After step 2, we measure the work bit. $\ket{w}$ is $\ket{7^x \bmod 15}$, in other words either $\ket{1}$,$\ket{7}$,$\ket{4}$, or $\ket{13}$. Let us assume, for example, that the measurement result was 13. In that case, the state of the measurement bit would be as follows.
+After step 2, we measure the work register. $\ket{w}$ is $\ket{7^x \bmod 15}$, that is, either one of the four states $\ket{1}$, $\ket{7}$, $\ket{4}$ and $\ket{13}$. Let us assume, for example, that the measurement result was 13. In that case, the state of the measurement register would be:
 
 - Step 3 :$\frac{1}{2}\left[\ket{3}+\ket{7}+\ket{11}+\ket{15}\right]$
 
-となります。次に、測定用レジスタに逆量子フーリエ変換$\rm{QFT}^\dagger$を適用します。逆量子フーリエ変換はある状態$\ket{j}$を$\ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}\ket{k}$に変換するので、
-Next, we apply inverse quantum Fourier transform $\rm{QFT}^\dagger$ to the measurement bit. The inverse quantum Fourier transform transforms state $\ket{j}$ as follows: $\ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}\ket{k}$.
+Next, an inverse QFT $\rm{QFT}^\dagger$ is applied to the measurement register. The inverse QFT converts $\ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1}e^{\frac{-2\pi ijk}{N}}\ket{k}$.
 
 - Step 4 :
 
@@ -544,23 +512,20 @@ $$
 \end{aligned}
 $$
 
-Here, the key is that only the states $\ket{0}$,$\ket{4}$,$\ket{8}$, and $\ket{12}$ appear. We use quantum state interference to reduce the amplitudes of incorrect solutions.
+Here, the key is that only the states $\ket{0}$, $\ket{4}$, $\ket{8}$ and $\ket{12}$ appear. Here the interference between quantum states is exploited to reduce the amplitudes of incorrect solutions.
 
 - Step 5 :Last, we measure the measurement bit, and find that 0, 4, 8, and 12 each occur with a 1/4 probability.
 - 
-ステップ 2で$7^x \bmod 15$を計算しているので想像がつきますが、すでに繰り返しの兆候が現れていますね。
-In step 2, we calculated $7^x \bmod 15$, so you may have already realized this, but the signs of repetition are becoming apparent.
+You may have anticipated, but the signs of repetition is becoming apparent because $7^x \bmod 15$ is calculated in step 2. 
 
 +++
 
 (shor_measurement)=
-### 測定結果の解析
+### Analysis of Measurement Results
 
-この測定結果の意味を考察してみましょう。ショアのアルゴリズムの{ref}`回路 <shor_circuit_fig>`と$n$量子ビット位相推定の{ref}`回路 <qpe_nqubit_fig>`の類似性から、ここではこの2つが同一の働きをするものと仮定してみます（以下で補足説明します）。その場合、測定用レジスタは固有値$e^{2\pi i\theta}$の位相$\theta$を$2^4=16$倍したものになっているはずです。つまり、例えば測定用レジスタを測定した結果が仮に4の場合、位相$\theta$は$\theta=4/16=0.25$です。この位相の値は何を意味しているのでしょうか？
-Let's think about what these measurement results mean. Given the similarity between the Shor's algorithm {ref}`circuit <shor_circuit_fig>` and the $n$-quantum bit phase estimation {ref}`circuit <qpe_nqubit_fig>`, we can hypothesize that both are functioning in the same way (a supplementary explanation is provided below). If that is the case, then the measurement register should be $2^4=16$ times the phase $\theta$ of eigenvalue $e^{2\pi i\theta}$. In other words, if, hypothetically, the result when we measured the measurement register was 4, the phase $\theta$ should be $\thetaθ=4/16=0.2$. What does this phase value mean?
+Let's think about what these measurement results mean. Given the similarity between the Shor's algorithm {ref}`circuit <shor_circuit_fig>` and the $n$-qubit QPE {ref}`circuit <qpe_nqubit_fig>`, we can natually hypothesize that both function in the same way (supplementary explanation is provided below). If that is the case, the measurement register should represent $2^4=16$ times the phase $\theta$ of eigenvalue $e^{2\pi i\theta}$. If we get, e.g., 4, from the measurement register, the phase $\theta$ will be $\theta=4/16=0.25$. What does this value mean?
 
-ショアのアルゴリズムの量子回路として、これまで$\ket{w}=\ket{0}^{\otimes n}$を初期状態として、$U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ $(f(x) = a^x \bmod N)$ となるオラクル$U_f$を考えてきました。この$U_f$を実装するために、以下のようなユニタリー演算子$U$を考えてみます。
-When thinking about a quantum circuit for Shor's algorithm, we have so far used $\ket{w}=\ket{0}^{\otimes n}$ as the initial state and an oracle $U_f$ of $U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ $(f(x) = a^x \bmod N)$. To implement this $U_f$, we have considered the following unitary operator $U$.
+As a quantum circuit for Shor's algorithm, we have so far used $\ket{w}=\ket{0}^{\otimes n}$ as the initial state and an oracle $U_f$ that acts as $U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ $(f(x) = a^x \bmod N)$. To implement this $U_f$, let us consider the following unitary operator $U$.
 
 ```{math}
 :label: U_action
@@ -571,15 +536,13 @@ U\ket{m} =
 \end{cases}
 ```
 
-このユニタリーは、
-This unitary satisfies the following.
+This unitary satisfies the following relation:
 
 $$
 U^{x}\ket{1} = U^{x-1} \ket{a \bmod N} = U^{x-2} \ket{a^2 \bmod N} = \cdots = \ket{a^x \bmod N}
 $$
 
-を満たすので、$w=0$とした$U_f\ket{x}\ket{0}$を$U$を使って実装することができます。
-Therefore, we can use $U$ to implement $U_f\ket{x}\ket{0}$ where $w=0$.
+Therefore, we can use the $U$ to implement $U_f\ket{x}\ket{0}$ where $w=0$.
 
 $$
 \begin{aligned}
@@ -589,56 +552,49 @@ U_f\ket{x}\ket{0}&=\ket{x}\ket{0 \oplus (a^x \bmod N)}\\
 \end{aligned}
 $$
 
-ここで、天下り的ではありますが
-Here, we'll define the following (skipping the explanation of how this was arrived at).
+Here, we'll consider the state $\ket{\psi_s}$ as defined follows, with $s$ being an integer within $0 \leq s \leq r-1$:
 
 $$
 \ket{\psi_s} \equiv \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1}e^{-2\pi isk/r}\ket{a^k \bmod N}
 $$
 
-（$s$は$0 \leq s \leq r-1$の整数）となるベクトル$\ket{\psi_s}$を定義すると、
-If we define vector $\ket{\psi_s}$ such that the value of $s$ is an integer that meets the condition $0 \leq s \leq r-1$, we can derive the following.
+With this state $\ket{\psi_s}$, we can derive  
 
 $$
-\frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}\ket{\psi_s}=\ket{1}
+\frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}\ket{\psi_s}=\ket{1}.
 $$
 
-が導けると同時に、$\ket{\psi_s}$は$U$の固有ベクトルであり、固有値$e^{2\pi is/r}$を持つことが分かります。
-At the same time, we can see that $\ket{\psi_s}$ is $U$'s eigenvector and has eigenvalue $e^{2\pi is/r}$.
+At the same time, we can see that the $\ket{\psi_s}$ is an eigenvector of the operator $U$ and has an eigenvalue $e^{2\pi is/r}$:
 
 $$
 U\ket{\psi_s}=e^{2\pi is/r}\ket{\psi_s}
 $$
 
-つまり、ショアのアルゴリズムのオラクル$U_f$による操作は、固有値$e^{2\pi is/r}$を持つ固有ベクトル$\ket{\psi_s}$の重ね合わせ状態$\ket{1}$にユニタリー$U$を$x$回適用することと同等なわけです。量子位相推定の{ref}`回路 <qpe_nqubit_fig>`と比較すれば、やっていることはほぼ同じですね。その後に逆QFTを掛けるということまで考えれば、まさにQPEそのものの操作を行っていることに対応しています。
-In other words, the operations performed by Shor's algorithm oracle $U_f$ are equivalent to applying unitary $U$ to $\ket{1}$, the superposition of the eigenvector $\ket{\psi_s}$ of the eigenvalue $e^{2\pi is/r} a total of $x$ times. If you compare this to the quantum phase estimation circuit, you'll see that they're doing basically the same thing. After this, if you think through the process including applying the inverse QFT, you'll see that it corresponds exactly to the operations involved in QPE.
+In other words, the operation of performing an oracle $U_f$ in Shor's algorithm is equivalent to applying the unitary $U$ $x$ times to $\ket{1}$, which is the superposition of the eigenvectors $\ket{\psi_s}$ of eigenvalue $e^{2\pi is/r}. If you compare this with the {ref}`QPE circuit<qpe_nqubit_fig>`, it is obvious that they are essentially doing the same thing. Since the inverse QFT is performed after these operations, the entire operation corresponds exactly to QPE.
 
-QPEで得られる位相は何だったかを思い出すと、それは$U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$なるユニタリー演算$U$と固有ベクトル$\ket{\psi}$に対する固有値$e^{2\pi i\theta}$に含まれる位相$\theta$でした。以上のことから、ショアのアルゴリズムから得られる位相$\theta$は、$s/r$（の整数倍）の意味を持つことも分かるでしょう。
-If you think back to what the phase determined using QPE was, you'll recall that it was the $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$ unitary operation $U$ and the phase $\theta$ included in the eigenvalue $e^{2\pi i\theta}$ for eigenvector $\ket{\psi}$. Given the above, you can see that the phase $\theta$ determined using Shor's algorithm is (an integer multiple of) $s/r$.
+Recall that the phase value determined using QPE is $\theta$ of the eigenvalue $e^{2\pi i\theta}$ for the unitary $U$ and eigenvector $\ket{\psi}$ that satisfy $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$. From these, you would see that the phase $\theta$ derived from Shor's algorithm is (an integer multiple of) $s/r$.
 
 +++
 
 (continued_fractions)=
-### 連分数展開
-以上の考察から、測定の結果得られる位相は$\theta \approx s/r$であることが分かりました。この結果から位数$r$を求めるために**連分数展開**という手法を使いますが、詳細は他の文献に委ねます（{cite}`nielsen_chuang_qft_app`にもp.230に記述があります）。この手法を使うことで、$\theta$に最も近い分数として$s/r$を求めることができます。
-Through the above, we determined that the phase obtained from measurement is $\theta \approx s/r$. To determine the order $r$ from these results, we use **continued-fraction expansion**. We'll leave the details of this to other reference materials (it is also discussed on P. 230 of {cite}`nielsen_chuang_qft_app`). We can use this method to determine $s/r$, the closest fraction to $\theta$.
+### Continued Fraction Expansion
 
-例えば$\theta=0.25$の場合、$r=4$が得られます（頻度は小さいですが$r=8$が得られる可能性もあります）。ここまでできれば、あとは古典計算のみで求める素因数に分解することができますね（{ref}`ここ <factoring_example>`を参照）。
-For example, if $\theta=0.25$, then $r=4$ (although infrequent, we may also arrive at $r=8$). If you can get this far, then you can use classical calculation to break it down into the prime factors being sought (as discussed here).
+Through the above, we understood that the phase obtained by the measurement is $\theta \approx s/r$. In order to derive an order $r$ from these results, we will use **continued-fraction expansion** but the details will be left to other references (P. 230, Box 5.3 of {cite}`nielsen_chuang_qft_app` describes the continued fraction algorithm). This method allows us to determine $s/r$ as the closet fracton to $\theta$.
+
+For example, we get $r=4$ if $\theta=0.25$ (though we might have $r=8$ at small frequency). If you can get this far, then you can use classical calculation to break it down into two prime numbers (See {ref}`here<factoring_example>`).
 
 +++
 
 (modular_exponentiation)=
-### 剰余指数化
-オラクル$U_f$による操作$U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$とはどういうものか、もう少し考えてみましょう。$f(x) = a^x \bmod N$は、$x$の2進数表記
-Let's explore the operation of oracle $U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ a bit further. For $f(x) = a^x \bmod N$, we will use the binary representation of $x$:
+### Modular Exponentiation
+
+Let's explore the operation of oracle $U_f\ket{x}\ket{w}=\ket{x}\ket{w\oplus f(x)}$ a bit further. By using the binary representation of $x$:
 
 $$
-x=(x_{n-1}x_{n-2}\cdots x_0)_2 = 2^{n-1}x_{n-1}+2^{n-2}x_{n-2}+\cdots+2^0x_0
+x=(x_{n-1}x_{n-2}\cdots x_0)_2 = 2^{n-1}x_{n-1}+2^{n-2}x_{n-2}+\cdots+2^0x_0,
 $$
 
-を使って
-We can therefore express it as follows.
+we can express $f(x) = a^x \bmod N$ as follows.
 
 $$
 \begin{aligned}
@@ -648,8 +604,7 @@ f(x) & = a^x \bmod N \\
 \end{aligned}
 $$
 
-と書くことができます。つまり、この関数は以下のようなユニタリー演算を考えれば実装することができます。
-That is, this function could be implemented using unitary operations as shown below.
+That is, this function can be implemented using unitary operations as shown below.
 
 ```{image} figs/shor_oracle.png
 :alt: shor_oracle
@@ -658,25 +613,25 @@ That is, this function could be implemented using unitary operations as shown be
 ```
 
 $n$量子ビットQPEの{ref}`回路 <qpe_nqubit_fig>`と比較すれば、このユニタリーはQPEの$U^{2^x}$演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された$a^x \bmod N$を適用してQPEの$U^{2^x}$演算を実現する手法を、**剰余指数化**と呼びます。
-If you compare this to an $n$-quantum bit QPE circuit, you'll see that this unitary is implementing the QPE $U^{2^x}$ operation. Applying $a^x \bmod N$, controlled by each bit of the 1st register, to the contents of the second register (in the diagram above, the register connected to the bottommost wire) to implement the QPE $U^{2^x}$ operation is called remainder exponentiation.
+Comparing this circuit with $n$-qubit QPE {ref}`circuit<qpe_nqubit_fig>`, you'll immediately see that this circuit implements $U^{2^x}$ operations of the QPE. Applying $a^x \bmod N$, controlled by each qubit of the 1st register, to the contents of the second register (corresponding to the bottom wire in the diagram above) to implement the $U^{2^x}$ operations of QPE is called modular exponentiation.
 
 (shor_imp)=
-## アルゴリズムの実装
-ここから、ショアのアルゴリズムを実装していきます。
-We will now switch to implementing Shor's algorithm.
+## Implementation of Shor's algorithm
+
+We will now switch to code implementation of Shor's algorithm.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_period)=
 ### 位数の発見
 
-まず最初に、繰り返しの位数（周期）を発見するアルゴリズムを見てみます。
-First, let's look at the algorithm for determining the order (period) of repetitions.
+First, let's look into the algorithm for determining the order (period) of repetitions.
 
 $N$を正の整数として、関数$f(x) = a^x \bmod N$の振る舞いを考えます。[ショアのアルゴリズム](shor_algo_fig)に立ち返ってみると、
 ここで$a$は$N$と互いに素な$N$未満の正の整数で、位数$r$は$\modequiv{a^r}{1}{N}$を満たす非ゼロの最小の整数でした。
 以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものです。
-Using a positive integer for $N$, let's consider the behavior of function $f(x) = a^x \bmod N$. If we look back at Shor's algorithm, we see that $a$ is a positive integer smaller than $N$ that is a coprime number of $N$ and order $r$ is the smallest non-zero integer that satisfies $\modequiv{a^r}{1}{N}$. The graph below shows an example of this function. The lines between the points are for confirming periodicity.
+With a positive integer $N$, let's investigate the behavior of function $f(x) = a^x \bmod N$. In [Shor's algorithm](shor_algo_fig), $a$ is a positive integer that is smaller than $N$ and $a$ and $N$ are coprime. The order $r$ is the smallest non-zero integer that satisfies $\modequiv{a^r}{1}{N}$. 
+The graph shown below is an example of this function. The arrow between the two points indicates the periodicity.
 
 ```{code-cell} ipython3
 ---
@@ -690,12 +645,10 @@ pycharm:
 N = 35
 a = 3
 
-# プロットするデータを計算する
 # Calculate the data to be plotted
 xvals = np.arange(35)
 yvals = [np.mod(a**x, N) for x in xvals]
 
-# matplotlibを使って描画
 # Use matplotlib to perform plotting
 fig, ax = plt.subplots()
 ax.plot(xvals, yvals, linewidth=1, linestyle='dotted', marker='x')
@@ -712,17 +665,17 @@ else:
 ```
 
 (shor_imp_oracle)=
-### オラクルの実装
+### Oracle Implementation
 
 以下では、$N=15$を素因数に分解してみます。上で説明したように、$U\ket{m}=\ket{am \bmod N}$となるユニタリー$U$を$x$回繰り返すことで、オラクル$U_f$を実装します。
-Below, let's perform prime factorialization on $N=15$. As explained above, we implement oracle $U_f$ by implementing unitary $U\ket{m}=\ket{am \bmod N}$ a total of $x$ times.
+Below we aim at factoring $N=15$. As explained above, we implement the oracle $U_f$ by repeating the unitary $U\ket{m}=\ket{am \bmod N}$ $x$ times.
 
 練習問題として、$C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$を実行する関数`c_amod15`を以下に実装してください（`c_amod15`全体は制御ゲートを返しますが、標的レジスタのユニタリー演算、特に$U$に対応する部分を書いてください）。
-For this practice task, implement the function `c_amod15`, which performs $C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$, as shown below (`c_amod15` returns a controlled gate, but write the part $U$ that corresponds to the unitary operation on the target bit).
+For this practice task, please implement the function `c_amod15` that executes $C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$ below (`c_amod15` returns the entire controlled gate, but here you should write $U$ that is applied to the target register).
 
-関数の引数`a`は15より小さく15と互いに素な整数のみを考えます。また、実は一般に$a = N-1$の場合、$\modequiv{a^2}{1}{N}$なので位数$r$は2、したがって$a^{r/2} = a$、$\modequiv{a + 1}{0}{N}$となり、ショアのアルゴリズムには使えないことが分かります。したがって、考えるべき`a`の値は13以下です。
+Consider the argument `a` which is an integer smaller than 15 and is coprime to 15. In general, when $a = N-1$, $r=2$ because $\modequiv{a^2}{1}{N}$. Therefore, $a^{r/2} = a$ and $\modequiv{a + 1}{0}{N}$, meaning that such `a` cannot be used for Shor's algorithm. This would require the value of `a` to be less than or equal to 13.  
 
-一般の$a$と$N$についてこのようなユニタリを作るには非常に込み入った回路が必要になりますが{cite}`shor_oracle`、$N=15$に限った場合は数行のコードで実装できます。
+Such unitary operation will need a complicated circuit if it should work for general values of $a$ and $N${cite}`shor_oracle`, but it can be implemented with a few lines of code if the problem is restricted to $N=15$.  
 
 ```{code-cell} ipython3
 ---
@@ -755,51 +708,49 @@ def c_amod15(a, l):
     ### EDIT ABOVE ###
     ##################
 
-    # Uを2^l回繰り返す
+    # Repeating U 2^l times
     U_power = U.repeat(2 ** l)
 
-    # U_powerをゲートに変換
+    # Convert U_power to gate
     gate = U_power.to_gate()
     gate.name = f"{a}^{2 ** l} mod 15"
 
-    # gateを制御ゲートに変換
+    # Convert gate to controlled operation
     c_gate = gate.control()
     return c_gate
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-**解答**
+**Solution**
 
 ````{toggle}
-まず、`a=2, 4, 8`のケースを考えます。$m$を二進数分解して
+First we consider the case of `a=2, 4, 8`. Representing $m$ as a binary number:
 
 ```{math}
 m=\sum_{j=0}^{3} 2^j m_j \, (m_j=0,1)
 ```
-
-とすると、
 
 ```{math}
 :label: ammod15
 am \bmod 15 = \left( \sum_{j=0}^{3} 2^{j+\log_2 a} m_j \right) \bmod 15
 ```
 
-ですが、$15 = 2^4 - 1$で、一般に自然数$n, m$と$n-pm < m$となる最小の自然数$p$について
+Note $15 = 2^4 - 1$. In general, for nutaral numbers $n, m$ and the smallest natural number $p$ that satisfies $n-pm < m$, the following relation holds (the proof is simple):
 
 ```{math}
 2^n \bmod (2^m - 1) = 2^{n-pm}
 ```
 
-が成り立つので（証明は簡単なので考えてみてください）、$2^{j+\log_2 a} \bmod 15$は$j=0, 1, 2, 3$に対して値$1, 2, 4, 8$をそれぞれ一度だけ取ります。
+Therefore, $2^{j+\log_2 a} \bmod 15$ takes a value of $1, 2, 4, 8$ once and only once for $j=0, 1, 2, 3$. 
 
-したがって$m \leq 14$に対しては式{eq}`ammod15`の右辺の括弧の各項について15の剰余を取っても和が15以上にならないので
+For $m \leq 14$, since the sum of the modulo 15 of individual terms inside the parentheses on the righthand side of Equation {eq}`ammod15` never exceeds 15,
 
 ```{math}
 am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
 ```
 
-つまり、$a$倍して15での剰余を取る操作を各ビットに対して独立に考えて良いことがわかります。そこで実際に$2^{j+\log_2 a} \bmod 15$の値を書き出してみると
+it turns out that we can multiply by $a$ and take a modulo 15 for each bit independently. If we write out the values of $2^{j+\log_2 a} \bmod 15$:
 
 |       | $j=0$ | $j=1$ | $j=2$ | $j=3$ |
 |-------|-------|-------|-------|-------|
@@ -807,7 +758,7 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
 | $a=4$ | 4     |  8    | 1     | 2     |
 | $a=8$ | 8     |  1    | 2     | 4     |
 
-となります。このような作用はサイクリックなビットシフトとして記述でき、例えば`a=2`なら
+This action can be implemented using a cyclic bit shift. For example, `a=2` should be as follows: 
 
 ```{math}
 \begin{align}
@@ -818,7 +769,7 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
 \end{align}
 ```
 
-となればいいので、量子回路としてはSWAPゲートを利用して実装できます。
+We can implement this using SWAP gates into a quantum circuit.
 
 ```{code-block} python
     ##################
