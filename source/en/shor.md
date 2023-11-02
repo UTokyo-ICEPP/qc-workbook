@@ -173,7 +173,7 @@ pycharm:
 ---
 n_meas = 3
 
-# Reigster used to obtain phase
+# Register used to obtain phase
 qreg_meas = QuantumRegister(n_meas, name='meas')
 # Register used to hold eigenvector
 qreg_aux = QuantumRegister(1, name='aux')
@@ -612,7 +612,6 @@ That is, this function can be implemented using unitary operations as shown belo
 :align: center
 ```
 
-$n$量子ビットQPEの{ref}`回路 <qpe_nqubit_fig>`と比較すれば、このユニタリーはQPEの$U^{2^x}$演算を実装しているものだと分かるでしょう。このように、第2レジスタ（上図では一番下のワイヤに繋がるレジスタ）の内容に、第1レジスタの各ビットで制御された$a^x \bmod N$を適用してQPEの$U^{2^x}$演算を実現する手法を、**剰余指数化**と呼びます。
 Comparing this circuit with $n$-qubit QPE {ref}`circuit<qpe_nqubit_fig>`, you'll immediately see that this circuit implements $U^{2^x}$ operations of the QPE. Applying $a^x \bmod N$, controlled by each qubit of the 1st register, to the contents of the second register (corresponding to the bottom wire in the diagram above) to implement the $U^{2^x}$ operations of QPE is called modular exponentiation.
 
 (shor_imp)=
@@ -623,13 +622,10 @@ We will now switch to code implementation of Shor's algorithm.
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_period)=
-### 位数の発見
+### Order Finding
 
 First, let's look into the algorithm for determining the order (period) of repetitions.
 
-$N$を正の整数として、関数$f(x) = a^x \bmod N$の振る舞いを考えます。[ショアのアルゴリズム](shor_algo_fig)に立ち返ってみると、
-ここで$a$は$N$と互いに素な$N$未満の正の整数で、位数$r$は$\modequiv{a^r}{1}{N}$を満たす非ゼロの最小の整数でした。
-以下のグラフにこの関数の例を示します。 ポイント間の線は周期性を確認するためのものです。
 With a positive integer $N$, let's investigate the behavior of function $f(x) = a^x \bmod N$. In [Shor's algorithm](shor_algo_fig), $a$ is a positive integer that is smaller than $N$ and $a$ and $N$ are coprime. The order $r$ is the smallest non-zero integer that satisfies $\modequiv{a^r}{1}{N}$. 
 The graph shown below is an example of this function. The arrow between the two points indicates the periodicity.
 
@@ -667,10 +663,8 @@ else:
 (shor_imp_oracle)=
 ### Oracle Implementation
 
-以下では、$N=15$を素因数に分解してみます。上で説明したように、$U\ket{m}=\ket{am \bmod N}$となるユニタリー$U$を$x$回繰り返すことで、オラクル$U_f$を実装します。
 Below we aim at factoring $N=15$. As explained above, we implement the oracle $U_f$ by repeating the unitary $U\ket{m}=\ket{am \bmod N}$ $x$ times.
 
-練習問題として、$C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$を実行する関数`c_amod15`を以下に実装してください（`c_amod15`全体は制御ゲートを返しますが、標的レジスタのユニタリー演算、特に$U$に対応する部分を書いてください）。
 For this practice task, please implement the function `c_amod15` that executes $C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$ below (`c_amod15` returns the entire controlled gate, but here you should write $U$ that is applied to the target register).
 
 Consider the argument `a` which is an integer smaller than 15 and is coprime to 15. In general, when $a = N-1$, $r=2$ because $\modequiv{a^2}{1}{N}$. Therefore, $a^{r/2} = a$ and $\modequiv{a + 1}{0}{N}$, meaning that such `a` cannot be used for Shor's algorithm. This would require the value of `a` to be less than or equal to 13.  
@@ -777,16 +771,16 @@ We can implement this using SWAP gates into a quantum circuit.
     ##################
 
     if a == 2:
-        # 下の位を上に移すので、上の位から順にSWAPしていく
+        # Applying SWAP gates from higher qubits in this order
         U.swap(3, 2)
         U.swap(2, 1)
         U.swap(1, 0)
     elif a == 4:
-        # 「一つ飛ばし」のビットシフト
+        # Bit shift by skipping one bit 
         U.swap(3, 1)
         U.swap(2, 0)
     elif a == 8:
-        # 下から順
+        # Applying from lower qubits
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
@@ -796,9 +790,9 @@ We can implement this using SWAP gates into a quantum circuit.
     ##################
 ```
 
-このようにSWAPゲートを利用すると、おまけの利点として、$m=15$の場合は$U$がレジスタの状態を変えないので、式{eq}`U_action`が正しく実現されることになります。ただ、下でこの関数を実際に使う時には、作業用レジスタに$\ket{15}$という状態が現れることは実はないので、この点はあまり重要ではありません。
+A good thing about using SWAP gates in this way is that Equation {eq}`U_action` is correctly realized because the $U$ does not change state in the register for $m=15$. This is however not very crucial when using this function below, because $\ket{15}$ does not appear in the work register.
 
-残りの`a=7, 11, 13`はどうでしょうか。ここでも15という数字の特殊性が発揮されます。$7 = 15 - 8$、$11 = 15 - 4$、$13 = 15 - 2$であることに着目すると、
+How about `a=7, 11, 13`? Again, we can exploit some uniqueness of the number 15. Noting that $7 = 15 - 8$, $11 = 15 - 4 and $13 = 15 - 2$, 
 
 ```{math}
 \begin{align}
@@ -808,7 +802,7 @@ We can implement this using SWAP gates into a quantum circuit.
 \end{align}
 ```
 
-つまり、上の`a=2, 4, 8`のケースの結果を15から引くような回路を作ればいいことがわかります。そして、4ビットのレジスタにおいて15から値を引くというのは、全てのビットを反転させる（$X$ゲートをかける）ことに対応するので、最終的には
+we can see that the circuit we want is the one that subtracts the results of `a=2, 4, 8` from 15. Subtracting from 15 for a 4-bit register corresponds to reversing all the bits, that is, applying $X$ gates. Therefore, what we need finally is something like below:
 
 ```{code-block} python
     ##################
@@ -816,16 +810,16 @@ We can implement this using SWAP gates into a quantum circuit.
     ##################
 
     if a in [2, 13]:
-        # 下の位を上に移すので、上の位から順にSWAPしていく
+        # Applying SWAP gates from higher qubits in this order
         U.swap(3, 2)
         U.swap(2, 1)
         U.swap(1, 0)
     elif a in [4, 11]:
-        # 「一つ飛ばし」のビットシフト
+        # Bit shift by skipping one bit
         U.swap(3, 1)
         U.swap(2, 0)
     elif a in [8, 7]:
-        # 下から順
+        # Applying from lower qubits
         U.swap(1, 0)
         U.swap(2, 1)
         U.swap(3, 2)
@@ -838,7 +832,6 @@ We can implement this using SWAP gates into a quantum circuit.
     ##################
 ```
 
-が正解です。
 ````
 
 ```{code-cell} ipython3
@@ -851,7 +844,7 @@ pycharm:
     '
 tags: [remove-input, remove-output]
 ---
-# テキスト作成用のセル
+# Cell for text
 
 def c_amod15(a, l):
     U = QuantumCircuit(4, name='U')
@@ -882,10 +875,9 @@ def c_amod15(a, l):
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_circuit)=
-### 回路全体の実装
+### Implementation of Entire Circuit
 
-測定用ビットとして、8量子ビットを使います。
-Let's use 8 quantum bits as measurement bits.
+Let's use 8 qubits for the measurement register.
 
 ```{code-cell} ipython3
 ---
@@ -896,41 +888,39 @@ pycharm:
 
     '
 ---
-# 15と互いに素な数
+# Coprime to 15
 a = 7
 
-# 測定用ビットの数（位相推定の精度）
 # Number of measurement bits (precision of phase estimation)
 n_meas = 8
 
-# 位相測定用のレジスタ
+# Register used to obtain phase
 qreg_meas = QuantumRegister(n_meas, name='meas')
-# Uを作用させる作業用レジスタ
+# Register to hold eigenvector
 qreg_aux = QuantumRegister(4, name='aux')
-# 位相測定の結果が書き出される古典レジスタ
+# Classical register written by the output of phase estimation
 creg_meas = ClassicalRegister(n_meas, name='out')
 
-# 2つの量子レジスタと1つの古典レジスタから量子回路を作る
+# Create quantum circuit from above registers
 qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
 
-# 測定用レジスタをequal superpositionに初期化
+# Initialize individual registers
 qc.h(qreg_meas)
-# 作業用レジスタを|1>に初期化
 qc.x(qreg_aux[0])
 
-# 制御Uゲートを適用
+# Apply controlled-U gate
 for l, ctrl in enumerate(qreg_meas):
     qc.append(c_amod15(a, l), qargs=([ctrl] + qreg_aux[:]))
 
-# 逆QFTを適用
+# Apply inverse QFT
 qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
 
-# 回路を測定
+# Measure the circuit
 qc.measure(qreg_meas, creg_meas)
 qc.draw('mpl')
 ```
 
-シミュレータで実行して、結果を確認してみます。
+Execute the circuit using simulator and check the results.
 
 ```{code-cell} ipython3
 ---
@@ -951,8 +941,8 @@ show_distribution(answer)
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (shor_imp_ana)=
-### 計算結果の解析
-出力された結果から、位相を求めてみます。
+### Analysis of Measured Results
+Let's get phase from the output results.
 
 ```{code-cell} ipython3
 ---
@@ -965,13 +955,13 @@ pycharm:
 ---
 rows, measured_phases = [], []
 for output in answer:
-    decimal = int(output, 2)  # 10進数に変換
+    decimal = int(output, 2)  # Converting to decimal number
     phase = decimal / (2 ** n_meas)
     measured_phases.append(phase)
-    # これらの値をテーブルの行に追加：
+    # Save these values
     rows.append(f"{decimal:3d}      {decimal:3d}/{2 ** n_meas} = {phase:.3f}")
 
-# 結果を表示
+# Print the results
 print('Register Output    Phase')
 print('------------------------')
 
@@ -979,8 +969,7 @@ for row in rows:
     print(row)
 ```
 
-得られた位相の情報から、連分数アルゴリズムを使用して$s$と$r$を見つけることができます。Pythonの組み込みの`fractions`(分数)モジュールを使用して、小数を`Fraction`オブジェクトに変換できます。
-From the phase information you obtain, you can use the continued fraction expansion algorithm to determine $s$ and $r$. You can use the built-in Python `fractions` module to convert decimals into `Fraction` objects.
+From the phase information, you can determine $s$ and $r$ using the continued fraction expansion. You can use the built-in Python `fractions` module to convert fractions into `Fraction` objects.
 
 ```{code-cell} ipython3
 ---
@@ -996,7 +985,7 @@ for phase in measured_phases:
     frac = Fraction(phase).limit_denominator(15)
     rows.append(f'{phase:10.3f}      {frac.numerator:2d}/{frac.denominator:2d} {frac.denominator:13d}')
 
-# 結果を表示
+# Print the results
 print('     Phase   Fraction   Guess for r')
 print('-------------------------------------')
 
@@ -1004,8 +993,6 @@ for row in rows:
     print(row)
 ```
 
-`limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
-Use the `limit_denominator` method to use a fraction with a denominator smaller than a specific value (in this case, 15) to obtain the value closest to the phase value.
+Using the `limit_denominator` method, we obtain the fraction closest to the phase value, for which the denominator is smaller than a specific value (15 in this case). 
 
-測定された結果のうち、2つ（64と192）が正しい答えである$r=4$を与えたことが分かります。
-As you can see from the measurement results, two values (64 and 192) produce the correct answer, $r=4$.
+From the measurement results, you can see that the two values (64 and 192) provide the correct answer of $r=4$.
