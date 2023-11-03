@@ -22,7 +22,7 @@ language_info:
   version: 3.10.6
 ---
 
-# 【課題】位相推定によるスペクトル分解
+# 【Exercise】Spectral Decomposition with Phase Estimation
 
 ```{contents} 目次
 ---
@@ -34,43 +34,35 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 
 +++
 
-## エネルギースペクトルを求める
+## Estimation of Energy Spectra
 
-{doc}`後の実習 <vqe>`にも現れるように、物理学や化学において、系のエネルギー固有値（スペクトル）と対応する固有状態を求めるということは非常に重要な問題です。系のエネルギースペクトルを求めることとは、系を表すハミルトニアンを決め、それを対角化することに対応します。
-In physics and chemistry, determining the eigenstates that correspond to the energy eigenvalues (spectra) of systems is an extremely important task, an example of which appears in a {doc}`later exercise<vqe>`. To determine the energy spectrum of a system, you decide on the Hamiltonian that expresses the system and then diagonalize it.
+In physics and chemistry, determining energy eigenvalues (spectra) and corresponding eigenstates of a system is an extremely important task, an example of which appears in a {doc}`later exercise<vqe>`. Deriving the energy spectrum of a system is equivalent to determining the Hamiltonian that governs the system and diagonalizing it.
 
-しかし、{doc}`前回の実習 <dynamics_simulation>`でも出てきたように、一般的に量子系の次元数は莫大で、ハミルトニアンの対角化の肝となる逆行列の計算をまともに行うことはできません。同実習では、そのような場合でも、ハミルトニアンが効率的な鈴木・トロッター分解を許す形であれば、量子コンピュータを使って時間発展シミュレーションを行えるということを示しました。ただし、このシミュレーションでは、系のエネルギー固有値や固有状態を明示的に利用しませんでした。
-However, as we saw in the {doc}`previous exercise<dynamics_simulation>`, the number of dimensions in a typical quantum system is extremely large, so we cannot properly perform the inverse matrix calculations that are the key to diagonalizing the Hamiltonian. In that exercise, we found that even in that case, if we could perform efficient Suzuki-trotter transformation of the Hamiltonian, we could use a quantum computer to perform a time evolution simulation. However, in this simulation, the system's energy eigenvalues and eigenstates cannot be explicitly used.
+However, as we saw in the {doc}`previous exercise<dynamics_simulation>`, the number of dimensions in a typical quantum system is extremely large, and we cannot properly perform the inverse matrix calculations that are the key to diagonalizing the Hamiltonian. In the exercise, we found that even in that case, if the form of the Hamiltonian allows us to perform efficient Suzuki-Trotter decomposition, we can simulate time evolution of the system using a quantum computer. However, in this simulation, we did not use energy eigenvalues and eigenstates of the system explicitly.
 
-実は、同じ時間発展シミュレーションの手法と、{doc}`shor`で登場した位相推定の手法を組み合わせると、エネルギー固有値も数値的に求めることができます{cite}`Aspuru-Guzik1704`。さらに、工夫によっては対応する固有状態も調べられます。ここでは外部磁場のかかったハイゼンベルグモデルを題材に、位相推定によるエネルギースペクトル分解をしてみましょう。
-We can, though, combine the same time evolution simulation methods with the phase estimation method that appeared in {doc}`"Learning about the prime factorization algorithm"` to quantitatively determine the energy eigenvalues{cite}`Aspuru-Guzik1704`. We can also apply a little ingenuity to investigate the eigenstates. In this assignment, we will use phase estimation to perform energy spectrum factorization on a Heisenberg model with an external magnetic field.
+In fact, we can numerically determine the energy eigenvalues{cite}`Aspuru-Guzik1704` by combining the simulation of time evolution with the phase estimation method that we discussed in {doc}`shor`. This approach could be even extended to investigate corresponding eigenstates. In this assignment, we will consider Heisenberg model with an external magnetic field and attempt the decomposition of energy spectra using phase estimation technique.
 
 +++
 
 ## ハイゼンベルグモデル再考
 
-前回登場したハイゼンベルグモデルのハミルトニアンは
 The Hamiltonian of the Heisenberg model, introduced in the previous section, is as follows.
 
 $$
 H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \quad (J > 0)
 $$
 
-というものでした。このハミルトニアンが表しているのは、空間中で一列に並んだスピンを持つ粒子が、隣接粒子間で相互作用を及ぼしているような系でした。ここで相互作用は、スピンの向きが揃っているときにエネルギーが低くなるようなものでした。したがって、全てののスピンが同じ方向を向いているときにエネルギーが最も低くなることが予想されました。
-This Hamiltonian represents a system in which there is a line of particles with spins, suspended in space, and adjacent particles mutually interact. In this mutual interaction, when spins are aligned, the amount of energy is low. Therefore, if all of the spins were aligned, we would expect the energy to be at its minimum.
+This Hamiltonian represents a system composed of particles with spins, lined up in one dimensional space, that interact between adjacent particles. In this system, the interactions will lower the energy when the directions of the spins are aligned. Therefore, the lowest energy will be achived when all the spin directions are aligned. 
 
-今回は、このハミルトニアンに外部からの磁場の影響を入れます。外部磁場がある時は、スピンが磁場の方向を向いているときにエネルギーが低くなります。したがって、外部磁場を$+Z$方向にかけるとすれば、ハミルトニアンは
-In this assignment, we will apply an external magnetic field to the Hamiltonian. When there is an external magnetic field, the level of energy is low when the spin is aligned with the magnetic field. Therefore, if we apply the external magnetic field in the +$Z$ direction, the Hamiltonian is as follows.
+In this assignment, we will apply an external magnetic field to the system. When there is an external magnetic field, the energy will be lowered when the spin is aligned with the magnetic field. Therefore, if we apply the external magnetic field along the +$Z$ direction, the Hamiltonian is as follows.
 
 $$
 H = -J \sum_{j=0}^{n-1} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j} + g \sigma^Z_j)
 $$
 
-となります。このハミルトニアンにはもう一点前回と異なる部分があります。前回はスピンに関する和を$j=0$から$n-2$まで取ることで、両端のスピンは「内側」のスピンとしか相互作用をしないような境界条件を採用していました。今回は和を$n-1$まで取っています。$\sigma^{X,Y,Z}_n$を$\sigma^{X,Y,Z}_0$と同一視することで、これは「周期境界条件」（一列ではなく環状に並んだスピン）を表します。
-There is another difference between this Hamiltonian and the Hamiltonian from the previous section. Previously, we took the sum of the spins from $j=0$ to $n-2$, applying border conditions such that the spins of each particle on an end of the string of particles only interacted with the one particle next to it on the "inner side" of the string. This time, we will take the sum all the way to $n-1$. If we treat $\sigma^{X,Y,Z}_n$ the same as $\sigma^{X,Y,Z}_0$, this is a "periodic boundary condition" (the spin in a ring, instead of a string).
+This Hamiltonian has one more difference from the one considered previously. For the previous case, we considered the boundary condition that the spins located at the end of the chain interacted only spins at "inner side" of the chain by taking the sum of the spins from $j=0$ to $n-2$. This time the sum is taken all the way to $n-1$. This represents "periodic boundary condition" (the spins on a circle, not on a straight line) by treating $\sigma^{X,Y,Z}_n$ as equal to $\sigma^{X,Y,Z}_0$.
 
-このようなハミルトニアンの固有値や固有状態がどのような値を取るのか、具体例で確認しましょう。最も簡単な$n=2, g=0$というケースを考え、直接対角化して厳密解を求めます。
-Let's look at a specific example at possible values of the Hamiltonian's eigenvalues and eigenstates. Let's look at the simplest example, $n=2$, $g=0$, and directly diagonalize it to determine the exact solution.
+Let's look into the eigenvalues and eigenstates of such Hamiltonian for a specific example. We consider the simplest case of $n=2$ and $g=0$, and derive the true answers by exact diagonalization. 
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -124,8 +116,7 @@ for i in range(eigvals.shape[0]):
     show_state(eigvectors[:, i], binary=True, state_label=r'\phi_{} (E={}J)'.format(i, eigvals[i]))
 ```
 
-最後の部分で、[`show_state`関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py)を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値$-2J$）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値$6J$）は$1/\sqrt{2} (-\ket{01} + \ket{10})$です。
-In the last section, the [`show_state` function](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py) was used to show the eigenvalues and eigenvectors. We can see that there are three independent eigenvectors that correspond to the lowest energy state (eigenvalue $-2J$). Therefore, an arbitrary linear sum of these eigenvectors is also the lowest energy state. The excited state (eigenvalue $6J$) is $1/\sqrt{2} (-\ket{01} + \ket{10})$.
+In the last part, the [`show_state` function](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py) was used to show the eigenvalues and eigenvectors. We can see that there are three independent eigenvectors that correspond to the lowest energy state (eigenvalue $-2J$). Therefore, an arbitrary linear combination of these eigenvectors is also the lowest energy state. The excited state (eigenvalue $6J$) is $1/\sqrt{2} (-\ket{01} + \ket{10})$.
 
 +++
 
