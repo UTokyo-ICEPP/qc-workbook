@@ -44,7 +44,7 @@ In fact, we can numerically determine the energy eigenvalues{cite}`Aspuru-Guzik1
 
 +++
 
-## ハイゼンベルグモデル再考
+## Reconsideration of Heisenberg Model
 
 The Hamiltonian of the Heisenberg model, introduced in the previous section, is as follows.
 
@@ -120,10 +120,9 @@ In the last part, the [`show_state` function](https://github.com/UTokyo-ICEPP/qc
 
 +++
 
-## 位相推定によるスペクトル分解
+## Spectral Decomposition with Phase Estimation
 
-それでは本題に入りましょう。{doc}`shor`で登場した下の図において、$U$が何らかのハミルトニアン$H$による適当な時間$\tau$の時間発展演算子$U_H(-\tau)$である場合、何が言えるでしょうか。
-Let's now begin the main part of this exercise. In the figure below, which you saw in "Learning about the prime factorization algorithm," what can you conclude when $U$ is the time evolution operator $U_H(-\tau)$ for a time $\tau$ for Hamiltonian $H$?
+Let's now begin the main part of this exercise. In the figure shown below at {doc}`shor`, what can you conclude when $U$ is a time evolution operator $U_H(-\tau)$ for a certain time $\tau$ for a Hamiltonian $H$?
 
 ```{image} figs/qpe_wo_iqft.png
 :alt: qpe_wo_iqft
@@ -131,54 +130,46 @@ Let's now begin the main part of this exercise. In the figure below, which you s
 :align: center
 ```
 
-以下では、図中上のレジスタ（初期状態$\ket{0}$）を読み出し(readout)レジスタR、下のレジスタ（初期状態$\ket{\psi}$）を状態(state)レジスタSと呼びます。RとSのビット数をそれぞれ$n_R$, $n_S$とします。また、図では読み出しレジスタの最低位（1の位）に対応するビットが一番下に描かれており、Qiskitでの描画法と逆になっていることに注意してください。
-Below, we will refer to the upper register in the figure above (initial state $\ket{0}$) as register R (for "readout"), and the lower register (initial state $\ket{\psi}$) as register S (for "state"). The number of bits for registers R and S are, respectively, $n_R$ and $n_S$. Furthermore, note that the bit that corresponds to the lowest place in the readout register in the figure (the 1s place) is written at bottom, the opposite of Qiskit's notation approach.
+Below, we will refer to the upper register in the figure above (initial state $\ket{0}$) as "readout" register R, and the lower register (initial state $\ket{\psi}$) as "state" register S. The number of bits for the registers R and S are $n_R$ and $n_S$, respectively. Furthermore, note that the bit corresponding to the lowest order in the readout register is written at the bottom of the figure, and this is opposite to the notation used in Qiskit.
 
-さて、ハミルトニアン$H$を、エネルギーの次元を持つ定数$\hbar \omega$と無次元のエルミート演算子$\Theta$とに分解します。
-Now, let's break the Hamiltonian $H$ into the dimensional energy constant $\hbar \omega$ and the dimensionless Hermitian operator $\Theta$.
+Now, we will break the Hamiltonian $H$ into a constant $\hbar \omega$ (in energy dimension) and the dimensionless Hermitian operator $\Theta$.
 
 $$
 H = \hbar \omega \Theta.
 $$
 
-ここで$\omega$はどう選んでも構いません。$\omega$を$x$倍大きく取れば、その分$\Theta$に$1/x$の係数をかけるだけです。実際には、後述するように$\Theta$の固有値の絶対値が1より少しだけ小さくなるように$\omega$を決めます。この書き換えにより
-Here, we can select anything for $\omega$. If we increase $\omega$ $x$-fold, we can simply multiply $\Theta$ by $1/x$. In reality, as we see later, we will choose a $\omega$ such that the absolute value of $\Theta$'s eigenvalue is slightly greater than 1. The formula can thus be rewritten as follows.
+Here, the $\omega$ can be chosen arbitrary. If the $\omega$ is selected to be $x$-times larger, we can simply multiply the $\Theta$ by $1/x$. In practice, as we see later, we will choose tge $\omega$ such that the absolute value of $\Theta$'s eigenvalue is slightly smaller than 1. The formula can thus be rewritten as follows.
 
 $$
 U_H(-\tau) \ket{\psi} = \exp\left(i\omega \tau \Theta\right) \ket{\psi}
 $$
 
-なので、図の回路に対応する演算子を$\Gamma$とおくと、
-If we indicate the operator for the circuit in the figure as $\Gamma$, we arrive at the following.
+If the operator correspondting to the circuit in the figure is denoted by $\Gamma$, we arrive at the following.
 
 $$
 \Gamma \ket{0}_R \ket{\psi}_S = \frac{1}{\sqrt{2^{n_R}}} \sum_{j=0}^{2^{n_R} - 1} \exp\left(i j \omega \tau \Theta\right) \ket{j}_R \ket{\psi}_S
 $$
 
-です。この状態に対して、実習と同じように逆フーリエ変換を施します。
-Then, as in the exercise, we apply an inverse Fourier transform.
+Then, we apply an inverse Fourier transform to this state, as done in the exercise,
 
 $$
 \text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S = \frac{1}{2^{n_R}} \sum_{k=0}^{2^{n_R} - 1} \sum_{j=0}^{2^{n_R} - 1} \exp(i j \omega \tau \Theta) \exp\left(-\frac{2 \pi i j k}{2^{n_R}}\right) \ket{k}_R \ket{\psi}_S.
 $$
 
-さて、ここまで$\tau$は「適当な時間」としか決めて来ませんでしたが、実際にどんな値をとってもいいので、$\omega \tau = 2 \pi$となるように決めてしまいましょう。すると
-So far, we have simply stated that $\tau$ is "a time," but it can actually have any value, so let us select a value for $\tau$ such that $\omega \tau = 2 \pi$. This produces the following.
+So far we have simply stated that $\tau$ is a certain time, but actually it can take any value. Now let us fix the $\tau$ value to be $\omega \tau = 2 \pi$. This leads to the following.
 
 $$
 \text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S = \frac{1}{2^{n_R}} \sum_{k=0}^{2^{n_R} - 1} \sum_{j=0}^{2^{n_R} - 1} \exp\left[\frac{2 \pi i j}{2^{n_R}} \left(2^{n_R} \Theta - k\right)\right] \ket{k}_R \ket{\psi}_S
 $$
 
-となります。したがって、$\Theta$の固有ベクトル$\{\ket{\phi_m}\}$で$\ket{\psi}$が
-Therefore, using $\Theta$'s eigenvector $\{\ket{\phi_m}\}$, $\ket{\psi}$ can be written as shown below.
+Therefore, if $\ket{\psi}$ can be written as
 
 ```{math}
 :label: spectral_decomposition
 \ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}
 ```
 
-と書けるなら、対応する固有値を$\{\theta_m\}$とし、$\kappa_m = 2^{n_R} \theta_m$を用いて
-Thus, using $\{\theta_m\}$ as the corresponding eigenvalue, we can use $\kappa_m = 2^{n_R} \theta_m$ to arrive at the following.
+using the eigenvectors of $\Theta$ $\{\ket{\phi_m}\}$, then the $\text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S$ can be written with the corresponding eigenvalues $\{\theta_m\}$ as  
 
 ```{math}
 :label: spectrum_estimation_final
@@ -188,64 +179,47 @@ Thus, using $\{\theta_m\}$ as the corresponding eigenvalue, we can use $\kappa_m
 \end{align}
 ```
 
-ただし、二つめの等号で、$f(\kappa_m - k) := \frac{1}{2^{n_R}} \sum_{j} \exp \left[2 \pi i j (\kappa_m - k) / 2^{n_R}\right]$と定義しました。
-Here, the second equation operator is defined as $f(\kappa_m - k) := \frac{1}{2^{n_R}} \sum_{j} \exp \left[2 \pi i j (\kappa_m - k) / 2^{n_R}\right]$.
+Here, the second equation is written using the function $f(\kappa_m - k)$ defined as $f(\kappa_m - k) := \frac{1}{2^{n_R}} \sum_{j} \exp \left[2 \pi i j (\kappa_m - k) / 2^{n_R}\right]$.
 
-最後にこの状態を測定し、Rに現れるビット列から推定される$\theta_m = 2^{-n_R} \kappa_m$に$\hbar \omega$をかければ、$H$のエネルギー固有値がわかります。
-Finally, we measure the state and multiply $\theta_m = 2^{-n_R} \kappa_m$, estimated from the bit sequence that appears in R, by $\hbar \omega$ to determine the energy eigenvalue of $H$.
+Finally we are going to measure the state, and then multiply $\theta_m = 2^{-n_R} \kappa_m$, estimated from the measured bitstrings in the R register, by $\hbar \omega$ to determine the energy eigenvalue of $H$.
 
-なんだか掴みどころのない$\omega$や$\tau$といったパラメータが登場して、結局何をしたのか分かりにくいという方のために、別の見方で問題を整理しましょう。結局上で行ったことは、ハミルトニアン$H$を与えられたときに、
-These $\omega$ and $\tau$ parameters may seem a bit slippery, and it may be hard to figure out what exactly we did, so let's look at the problem again from another perspective. Ultimately, what we did above was perform the following when given Hamiltonian $H$.
+You might find it difficult to digest what we actually did because some new *ad-hoc* parameters $\omega$ and $\tau$ were introduced. Let us now look at the problem from different perspective. Eventually, what we did above was the following when a Hamiltonian $H$ was provided:
 
-1. 固有値が$\lesssim 1$（負の値があり得る場合は、その絶対値が$\lesssim \frac{1}{2}$）になるように$H$を規格化する（規格化の定数は記録しておく）
-2. 規格化した結果の演算子を$\Theta$として、$U = \exp(-2 \pi i \Theta)$の位相推定をする
-3. 位相推定から得られた$\Theta$の固有値に、1.の規格化定数をかけてエネルギー固有値を得る
+1. Normalize $H$ such that the eigenvalue is $\lesssim 1$, or the absolute value is $\lesssim \frac{1}{2}$ if the eigenvalue could be negative (record the normalization constant). 
+2. Perform phase estimation of $U = \exp(-2 \pi i \Theta)$ with the normalized operator as $\Theta$. 
+3. Obtain the energy eigenvalue by multiplying the eigenvalues of $\Theta$ obtained from phase estimation by the normalization constant in Step 1.
 
-4. Standardize $H$ such that the eigenvalue is $\lesssim 1$ (when the value could be negative, such that the absolute value is $\lesssim \frac{1}{2}$) (record the constant when normalizing $H$).
-5. Given $\Theta$ as the operator of the normalized results, perform phase estimation of $U = \exp(-2 \pi i \Theta)$. 
-6. Multiply the eigenvalue of $\Theta$ determined through phase estimation by the normalization constant from step 1 to arrive at the energy eigenvalue.
+By doing above, we determine the eigenvalues of $\Theta$ so that the eigenvalues from the readout register will not cause any {ref}`overflow <signed_binary>`.
 
-という操作でした。ここで、$\Theta$の固有値を上のように決めるのは、読み出しレジスタに現れる固有値の数値が{ref}`オーバーフロー <signed_binary>`を起こさないようにするためです。
-Here, we define the eigenvalue of $\Theta$ as above to prevent the value of the eigenvalue that appears in the readout register from {ref}`overflowing<signed_binary>`.
-
-固有値を求める問題なのに固有値が具体的な値になるように規格化定数を選ぶというのは一見矛盾しているように聞こえます。しかし、{doc}`dynamics_simulation`で触れたように、量子コンピューティングで表現されるハミルトニアンは全て基底演算子${I, \sigma^X, \sigma^Y, \sigma^Z}$の積の線形和に分解できます。個々の基底演算子の積の固有値は$\pm 1$なので、ハミルトニアン$H$が基底演算子の積$\sigma_k$とエネルギー係数$h_k$で
-Because we are trying to determine the eigenvalue in this problem, it might appear contradictory to select a normalization constant such that the eigenvalue is a specific value. However, as we touched on in {doc}`dynamics_simulation`, the Hamiltonians described by quantum computing can all be broken down into the linear sum of the products of basis state operators ${I, \sigma^X, \sigma^Y, \sigma^Z}$. The eigenvalue of the products of the individual basis state operators is $\pm 1$, so if we can break down Hamiltonian $H$ into the product of the basis state operators, $\sigma_k$, and the energy coefficient $h_k$, as follows:
+It might look contradictory to select a normalization constant so that the eigenvalue can take a specific value in the problem of eigenvalue determination. However, as we touched on in {doc}`dynamics_simulation`, the Hamiltonian expressed in quantum computing can all be decomposed into a linear combination of products of basis state operators ${I, \sigma^X, \sigma^Y, \sigma^Z}$. Since the eigenvalues of products of individual basis state operators are $\pm 1$, if the Hamiltonian $H$ is decomposed into the product of the basis state operators $\sigma_k$ and the energy coefficient $h_k$, as follows:
 
 $$
 H = \sum_{k} h_k \sigma_k
 $$
 
-と分解できるとすれば、$H$の固有値の絶対値は最大で$\sum_{k} |h_k|$です。したがって、全く未知のハミルトニアンに対しても、まず規格化定数を$\hbar \omega = 2 \sum_{k} |h_k|$と取ればいいことがわかります。スペクトル推定の結果、最大固有値がもっと小さい値であれば、規格化定数を調節して再度計算を行えばいいだけです。
-...then the absolute value of the eigenvalue of $H$ has a maximum value of $\sum_{k} |h_k|$. Therefore, as we can see, even for a completely unknown Hamiltonian, we can set $\hbar \omega = 2 \sum_{k} |h_k|$ as the normalization constant. If, as the result of spectral estimation, the maximum eigenvalue is a smaller value, we can simply adjust the normalization constant and perform the calculation again.
+then the absolute value of the eigenvalue of $H$ is at most $\sum_{k} |h_k|$. Therefore, even for a completely unknown Hamiltonian, we can take $\hbar \omega = 2 \sum_{k} |h_k|$ as the normalization constant. If it turns out that the maximum eigenvalue is smaller from the spectral estimation, we can simply adjust the normalization constant and perform the calculation again.
 
-同じ理屈で読み出しレジスタRのビット数も決めることができます。今度は非ゼロで最も小さい固有値の絶対値を考えます。最小値は
-The same logic is used in deciding the number of bits of readout register R. Now let's think about the smallest non-zero absolute eigenvalue. The smallest value is equal to or greater than the following.
+The same logic can be used to decide the number of bits of the readout register R. Now let us think about an absolute value of the smallest non-zero eigenvalue. The smallest value is equal to or greater than:
 
 $$
 \mu = \min_{s_k = \pm 1} \left| \sum_{k} s_k h_k \right|
 $$
 
-以上です。この値を求めるには原理的には$2^{L}$（$L$はハミルトニアンの項数）通りの組み合わせを調べる必要がありますが、実際のハミルトニアンは通常そこまで複雑な形をしていないので、これも難しくないと考えられます。レジスタRのビット数$n_R$は$2^{n_R}\mu/(\hbar \omega)$が読みだせるように設定します。
-Theoretically, we would have to investigate $2^{L}$ ($L$ here is the number of Hamiltonian terms) combinations to determine this value. However, actual Hamiltonians aren't normally that complex, so this is unlikely to be difficult. Let us set $n_R$, the number of bits in register R, so that $2^{n_R}\mu/(\hbar \omega)$ can be read from it.
+In principle, we will have to examine $2^{L}$ combinations (where $L$ is the number of Hamiltonian terms) to determine this value. But, since practical Hamiltonians do not have too many terms, it is likely that this can be handled with a reasonable amount of computation. Let us set the number of bits in register R, $n_R$, to be able to read out $2^{n_R}\mu/(\hbar \omega)$. 
 
-これで規格化定数と読み出しレジスタの大きさが簡単に決められることがわかりましたが、問題は演算子$U$を作用させる対象の状態$\ket{\psi}$です。第$m$準位のエネルギー固有値を知りたい場合、式{eq}`spectral_decomposition`で$\psi_m \neq 0$でなければいけません。特殊なケースではスペクトル推定の前から固有ベクトルの「当たり」がついていることがあるかもしれませんが、当然、一般のハミルトニアンに対して、任意の$m$についてそのような状態を準備することはできません。
-This has made it easy to decide the normalization constant and the size of the readout register. The problem is the state $\ket{\psi}$ on which to use operator $U$. If we wish to know the $m$-th level energy eigenvalue, in Formula{eq}`spectral_decomposition`, $\psi_m \neq 0$ must be true. In special cases, we may have an idea of the eigenvector before even performing spectral estimation, but, needless to say, for typical Hamiltonians, we cannot prepare those states for arbitrary values of $m$.
+We have seen so far that the normalization constant and the size of the readout register can be determined easily. A problem resides in the state $\ket{\psi}$ which the operator $U$ is applied to. If we want to know the $m$-th excited energy of eigenvalues, $\psi_m \neq 0$ must be true in Equation {eq}`spectral_decomposition`. In special cases we may have an idea of the eigenvector before performing spectral estimation, but it is obvious that for general Hamiltonians we cannot prepare such states for an arbitrary value of $m$. 
 
-一方、系の最低エネルギー$\hbar \omega \theta_0$なら、{doc}`vqe`の手法などを用いて最低エネルギー状態の近似を実現し、それをSの初期状態とすることで、比較的に安定して求めることは可能です。そのため、上の手法は原理的にはスペクトルの完全な分解に使えますが、実際には最低エネルギーとその固有ベクトルを正確に求めるために利用することが多いと考えられます。
-On the other hand, for the minimum system energy, $\hbar \omega \theta_0$, methods such as those presented in {doc}`vqe` can be used to approximate the minimum energy state. If this were set as the initial state of S, it would be possible to determine the value with a relatively high level of stability. Therefore, the above method can, in principle, be used to completely break down spectra, but in reality it is most commonly used to accurately determine the minimum energy and its eigenvector.
+On the other hand, for the lowest energy $\hbar \omega \theta_0$, we can evaluate it at relatively good precision by approximating the lowest energy state by using techniques in {doc}`vqe` and setting the obtained state as the input to the S register. Therefore, the above method can, in principle, be used to completely decompose the energy spectra, but in practice it is most commonly used to determine the lowest energy and its eigenvector accurately.
 
 +++
 
-## 問題1: スペクトル推定を実装し、厳密解と照らし合わせる
+## Exercise 1: Implement Spectrum Estimation and Comparison with Exact Solutions
 
-それでは、位相推定を利用してハイゼンベルグモデルのハミルトニアンのスペクトルを求めてみましょう。
-Let us now use phase estimation to determine the spectrum of the Hamiltonian of the Heisenberg model.
+Let us now derive the energy spectra of the Hamiltonian for the Heisenberg model using phase estimation.  
 
-$U_H(-\tau)$を量子コンピュータ上で計算するために、鈴木・トロッター分解を使います。$ZZ, XX, YY$回転ゲートの実装法は{doc}`dynamics_simulation`を参照してください。
-We will use Suzuki-trotter transformation to calculate $U_H(-\tau)$ on a quantum computer. Refer to {doc}`dynamics_simulation` for information on how to implement rotation gates $ZZ$, $XX$, and $YY$.
+We will use Suzuki-Trotter decomposition to calculate $U_H(-\tau)$ on a quantum computer. Refer to {doc}`dynamics_simulation` to implement the rotation gates of $ZZ$, $XX$ and $YY$.
 
-次のセルでは$U_H(-2\pi/\omega)$を鈴木・トロッター分解した量子回路を返す関数を定義しています。引数`num_steps`で分解の細かさを指定できます。
-The next cell defines a function that returns a function that corresponds to one step of the Suzuki-trotter transformation (called a "Trotter step"). The structure is a bit complex, but by using this approach, each returned function can take the phase for one step as an argument, which makes it possible to think of the physics of the Heisenberg model separately from the spectral estimation algorithm. The arguments of the outer function, n, g, and hbar_omega can also be used in the inner function.
+The next cell defines a function that returns a quantum circuit composed of Suzuki-Trotter steps of the Hamiltonian evolution. The argument `num_steps` specifies the number of Suzuki-Trotter steps. 
 
 ```{code-cell} ipython3
 ---
@@ -303,8 +277,7 @@ def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     return circuit
 ```
 
-次のセルでスペクトル推定のアルゴリズムを実装しています。この関数は状態レジスタ、読み出しレジスタ、時間発展回路を引数に取り、スペクトル推定の量子回路を返します。
-In the next cell, we implement the spectral estimation algorithm. We define the function propagator, which returns the gate that corresponds to a power of U and uses as its arguments the function that implements the Trotter step (the function returned by the function above) and two integers. The spectrum_estimation function uses propagator to perform spectral estimation, taking as its arguments the circuit object and the Trotter step function.
+In the next cell, the algorithm of spectral estimation is implemented. This function returns a quantum circuit that takes state register, readout register and the time-evolution circuit as arguments and performs phase estimation.  
 
 ```{code-cell} ipython3
 ---
@@ -358,10 +331,9 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
     return circuit
 ```
 
-この問題では、上で厳密解を求めた$n=2, g=0$のケースを調べます。今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を$\hbar \omega = 16J$として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が$2^{n_R} (6/16)$なので、$n_R = 1 + 3$とすればオーバーフローを回避できます。
-First, let's look at the $n=2$, $g=0$ case, for which we determined the exact solution above. 
+In this exercise, we examine the case of $n=3$ and $g=0$ for which the exact solutions were derived above. Since we already know the energy eigenvalues this time, the normalization constant of the Hamiltonian is set $\hbar \omega = 16J$ so that the output state from the readout register becomes simple. In this case, the readout result has sign and the maximum absolute value is $2^{n_R} (6/16)$, therefore the overflow can be avoided by taking $n_R = 1 + 3$.
 
-次のセルでシミュレーションとスペクトル推定のパラメータを設定します。
+In the next cell, the parameters of the simulation and phase estimation are set. 
 
 ```{code-cell} ipython3
 ## Physics model parameter
@@ -382,7 +354,7 @@ state_register = QuantumRegister(n_state, 'state')
 readout_register = QuantumRegister(n_readout, 'readout')
 ```
 
-上で正しく関数をかけているか確認しておきましょう。
+Let us check whether the function is properly defined above.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -398,16 +370,14 @@ se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
 se_circuit.draw('mpl')
 ```
 
-状態レジスタの初期状態を
-Let us begin with the following initial state for the state register.
+Let us prepare a function that sets the following state:
 
 ```{math}
 :label: two_qubit_init
 \frac{1}{2}\ket{00} - \frac{1}{\sqrt{2}}\ket{01} + \frac{1}{2} \ket{11} = \frac{1}{2} \ket{\phi_0} + \frac{1}{2} \ket{\phi_1} + \frac{1}{2} \ket{\phi_2} + \frac{1}{2} \ket{\phi_3}
 ```
 
-とする関数を書きます。ここで$\ket{\phi_i}$は最初に求めた固有ベクトルの4つの厳密解です。
-Here, $\ket{\phi_i}$ are the four exact solutions for the eigenvectors we initially determined.
+as the initial state of the state register. Here the $\ket{\phi_i}$ are four exact solutions of the eigenvectors we initially determined.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -433,7 +403,7 @@ init_circuit = make_initial_state(state_register, readout_register)
 init_circuit.draw('mpl')
 ```
 
-最後に全てを組み合わせます。
+Finally, everything is combined.
 
 ```{code-cell} ipython3
 ---
@@ -454,7 +424,7 @@ circuit.measure_all()
 circuit.draw('mpl')
 ```
 
-シミュレータで実行してヒストグラムを得ます。
+Execute the circuit with simulator and get the output histogram.
 
 ```{code-cell} ipython3
 ---
@@ -475,82 +445,67 @@ counts = result.get_counts(circuit)
 plot_histogram(counts)
 ```
 
-状態レジスタの初期状態が式{eq}`two_qubit_init`なので、回路の終状態は
-The initial state of the state register is shown in Formula{eq}`two_qubit_init`, so the final state of the circuit should be as follows.
+Since the initial state of the state register is given in Equation {eq}`two_qubit_init`, the final state of the circuit should be:
 
 $$
 \frac{1}{2} \ket{-2}_{R} \ket{00}_{S} - \frac{1}{2\sqrt{2}} \ket{-2}_{R} \left( \ket{01}_{S} + \ket{10}_{S} \right) + \frac{1}{2} \ket{-2}_{R} \ket{11}_{S} - \frac{1}{2\sqrt{2}} \ket{6}_{R} \left( \ket{01}_{S} - \ket{10}_{S} \right)
 $$
 
-となるはずです。得られたヒストグラムはこの状態と無矛盾でしょうか？
-Does the histogram that is produced conflict with this?
-
-**提出するもの**
-
-- 完成した`make_trotter_step_heisenberg`関数
-- 完成した状態レジスタの初期化回路
-- スペクトル推定の結果のヒストグラムと、その解釈
+Is the output histogram consistent with this state?
 
 **Items to submit**:
 
-- Completed make_trotter_step_heisenberg function 
-- Completed state register initialization circuit 
-- Histogram and explanation of spectral estimation results
+- Completed `make_trotter_step_heisenberg` function 
+- Completed quantum circuit to initialize the state register 
+- Histogram of the results of spectrum esimation and its explanation
 
 +++
 
-## 問題2: 非自明な系の振る舞いを調べる
+## Exercise 2: Examine the Behaviour of Non-trivial States
 
-今度は$n=4$のハイゼンベルグモデルで、全エネルギースペクトルを$g$の関数として求めてみましょう。$n=4$なので最初にやったような対角化もまだ簡単にできますが、ここではあえて量子計算のみに頼ってみます。
-Next, let's determine all of the energy spectra of an $n=4$ Heisenberg model as a function of $g$. $n=4$, so as before, diagonalization is still easy, but this time, let's try relying on quantum calculation alone.
+Next, let's determine all energy spectra of the Heisenberg model with $n=4$ as a function of $g$. We can do an exact diagonalization, as done above, because $n=4$, but we will solely rely on quantum computation here. 
 
-全てのエネルギー固有値を知るためにはSの初期状態を工夫しなければいけませんが、今回は事前の情報がないので、しらみつぶし戦略をとります。つまり、計算基底$\ket{0}$から$\ket{15}$までをそれぞれ初期状態としてスペクトル推定を繰り返し、得られる情報をつなぎ合わせて全体のスペクトルを求めます。
-To discover all of the energy eigenvalues, we need to apply some ingenuity to the initial state of $S$. This time, we don't have any preliminary information, so we'll use an exhaustive search strategy. That is, we will use computational basis states $\ket{0}$ to $\ket{15}$ as initial states and perform spectral estimation for each. We will then link the resulting information to determine the overall spectrum.
+In order to know all the energy eignvalues, we will need to elaborate on the initial states of $S$. But, since we do not have any prior knowledge, we will take a strategy of exhausitve search. That is, we will repeat spectral estimation for each of the computational basis states $\ket{0}$ to $\ket{15}$ as input, and determine the entire spectrum by combining all the results.
 
-全ての計算基底についてスペクトル推定をすると、どんな情報が得られるでしょうか。式{eq}`spectrum_estimation_final`で$\ket{\psi} = \ket{l}$ $(l=0,\dots,2^{n_S} - 1)$とおき、
-If we perform spectral estimation for every computational basis, what kind of information will we produce? In Formula{eq}`spectrum_estimation_final`, let us set $\ket{\psi} = \ket{l}$ $(l=0,\dots,2^{n_S} - 1)$.
+What kind of information can we get if the spectrum estimation is performed for all the computational basis states? In Equation {eq}`spectrum_estimation_final`, if $\ket{\psi} = \ket{l}$ $(l=0,\dots,2^{n_S} - 1)$ and
 
 ```{math}
 :label: phim_decomposition
 \ket{l} = \sum_{m=0}^{2^{n_S} - 1} c^l_m \ket{\phi_m}
 ```
 
-とします。すると回路の終状態は
-The final state of this circuit will then be as follows.
+then, fhe final state of this circuit will be:
 
 $$
 \sum_{k=0}^{2^{n_R} - 1} \sum_{m=0}^{2^{n_S} - 1} c^l_m f(\kappa_m - k) \ket{k}_R \ket{\phi_m}_S
 $$
 
-となります。実は式{eq}`phim_decomposition`が成り立つとき
-When Formula{eq}`phim_decomposition` is true, the following will also be true[^unitarity].
+When Eqaation {eq}`phim_decomposition` holds, the following Equation also holds[^unitarity].
 
 ```{math}
 :label: l_decomposition
 \ket{\phi_m} = \sum_{l=0}^{2^{n_S} - 1} c^{l*}_m \ket{l}
 ```
 
-も成り立つ[^unitarity]ので、終状態の回路をRとSの計算基底で測定し、$k, h$を得る確率を$P_l(k, h)$とすると
-If we measure the computational basis of R and S for the circuit in its final state, if we define $P_l(k, h)$ as the probabilities of $k$ and $h$, we arrive at the following.
+Therefore, if we measure the final state of the circuit in the computational basis states of R and S, the resulting probability of obtaining $k, h$, denoted as $P_l(k, h)$, is
 
 $$
 P_l(k, h) = \left| \sum_{m=0}^{2^{n_S} - 1} c^l_m c^{h*}_m f(\kappa_m - k) \right|^2
 $$
 
 となります。$c^l_m$の値がわからなくても、これらの分布から
-Even if we do not know the value of $c_m^l$, from this distribution, let us think of a method for producing the following.
+Let's think how we can obtain: 
 
 $$
 P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
 $$
 
-を得る方法を考えてみてください。
+from these distributions, even if we do not know the value of $c_m^l$.
 
-$|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので、$P(k)$を$k$に対してプロットすれば、$m$個の（部分的に重なり合っている可能性のある）ピークが見られ、そこからエネルギー固有値が算出できます。
-The distribution of $|f(\kappa_m - k)|$ has a sharp peak near $\kappa_m$, so if $P(k)$ is plotted with respect to $k$, we will observe $m$ peaks (with the possibility of partial overlaps). We can then calculate the energy eigenvalues from this.
+Since the distribution of $|f(\kappa_m - k)|$ has a sharp peak near $\kappa_m$, we will be able to observe $m$ peaks (though they could be partially overlapped) by making plots of $P(k)$ with respect to $k$. From these peaks, we can calculate the energy eigenvalues.
 
-試しに$n=2, g=0, \hbar \omega = 20J, n_R=4$で$P(k)$をプロットすると以下のようになります（問題1と異なり$\hbar \omega = 20J$なので、$\kappa_m$が整数ではありません）。ただし、負の固有値がわかりやすいように、$P(k - 2^{n_R}) = P(k)$として、$-2^{n_R - 1} \leq k < 2^{n_R - 1}$の範囲を表示しています。
-Plotting $P(k)$ for $n=2$, $g=0$, $\hbar \omega = 20J$,$n_R=4$ would produce the following (unlike task 1, $\hbar \omega = 20J$な, so $\kappa_m$ is not an integer. To make it easy to determine negative eigenvalues, we set $P(k - 2^{n_R}) = P(k)$ and show the range of $-2^{n_R - 1} \leq k < 2^{n_R - 1}$.
+For example, the $P(k)$ distribution for $n=2$, $g=0$, $\hbar \omega = 20J and $n_R=4$ is as follows (Note that unlike exercise 1, $\kappa_m$ is not an integer because $\hbar \omega = 20J$). In this plot, we set $P(k - 2^{n_R}) = P(k)$ and show the range of $-2^{n_R - 1} \leq k < 2^{n_R - 1}$ to visualize the negative eigenvalues. 
+
 
 ```{image} figs/spectrum_estimation_example.png
 :alt: spectrum_estimation_example
@@ -558,14 +513,11 @@ Plotting $P(k)$ for $n=2$, $g=0$, $\hbar \omega = 20J$,$n_R=4$ would produce the
 :align: center
 ```
 
-このようなプロットを$n=4$で$g$の値を0から0.5まで0.1刻みに変えながら作ってみましょう。
-Let's create plots like this with $n=4$ and $g$ values in 0.1 increments, from 0 to 0.5.
+Let's create plots like this by taking $n=4$ and incrementing the $g$ value by 0.1 from 0 to 0.5.
 
-まずは計算基底と$g$の値を引数に取り、終状態の確率分布を返す関数を定義します。通常のショットベースのシミュレータでは統計誤差の影響が乗るので、デフォルトでは状態ベクトルシミュレーションを使うことにします。
-First, we define a function for returning the probability distribution of the final state, using the computational basis and value of $g$ as its arguments. Using the qasm_simulator would be a closer approximation to actual usage, but due to problems with running time and statistical error, we'll use the default statevector_simulator.
+First, a function that takes computational bases and the $g$ values as arguments and returns the probability distribution of the final state is defined. We will use state vector simulator by default to avoid statistical errors due to finite sampling caused by using an ordinary shot-based simulator.
 
-[^unitarity]: これは$\{\ket{l}\}$と$\{\ket{\phi_m}\}$がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。
-[^unitarity]: This is because both $\{\ket{l}\}$ and $\{\ket{\phi_m}\}$ have orthonormal state register basis states (unitary transformation matrices).
+[^unitarity]: This is because both $\{\ket{l}\}$ and $\{\ket{\phi_m}\}$ span orthonormal basis states for the state register (transformation matrices are unitary).
 
 ```{code-cell} ipython3
 def get_spectrum_for_comp_basis(
@@ -641,11 +593,10 @@ def get_spectrum_for_comp_basis(
     return probs
 ```
 
-読み出しレジスタのビット数を決めます。スピンの数が4なので、$\hbar \omega = 8(3 + |g|)J$と取ります。すると、$g=0$のとき、上の議論によると$\Theta$の固有値の予想される最小絶対値は$1/24$ですが、実は系の対称性からその$n=4$倍の$1/6$が最小値になると予測できます。$|g| \ll 1$しか考えないので、外部磁場を摂動として考えて、結局$2^{n_R} / 6$が1より十分大きくなるように$n_R=5$とします。
-Let's decide the number of bits in the readout register. The number of spins is 4, so we will use $\hbar \omega = 8(3 + |g|)J$. When $g=0$, based on the above theory, the smallest absolute value that we can expect the $\Theta$ eigenvalue to have is $1/24$, but in reality, due to the symmetry of the system, we predict the smallest value to be four times that, so $n=1/6$. $|g| \ll 1$ must be true, so if we think of the external magnetic field as a perturbation, ultimately $n_R=5$ so that $2^{n_R} / 6$ is sufficiently greater than 1.
+We decide the number of bits in the readout register here. We take $\hbar \omega = 8(3 + |g|)J$ because the number of spins is 4. When $g=0$, the expected smallest absolute value of the eigenvalues of $\Theta$ is $1/24$. But, in fact the smallest value is expected to be $n=4$ times that value, that is, $1/6$, due to the symmetry of the system. Since we only consider $|g| \ll 1$, the external magnetic field is treated as a perturbation, and $n_R=5$ is chosen so that $2^{n_R} / 6$ is sufficiently greater than 1. 
 
-回路のパラメータが決まったので、$g$を引数として$2^{n}$通りの計算基底に対して`get_spectrum_for_comp_basis`関数を呼ぶ関数を定義し、$g=0$について実行します（時間がかかります）。
-Now that we have decided on the circuit's parameters, we define a function that calls the function `get_spectrum_for_comp_basis` for $2^n$ computational basis states, using $g$ as an argument, and we execute the function for $g=0$ (this will take some time).
+Now we have decided the circuit parameters. We will then define a function that calls the `get_spectrum_for_comp_basis` function with $g$ as an argument for $2^n$ computational basis states, and the function is executed for $g=0$ (this will take some time).
+
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -682,8 +633,7 @@ def get_full_spectrum(g):
 spectra[0] = np.roll(get_full_spectrum(0.), 2 ** (n_readout - 1))
 ```
 
-得られた$P(k)$分布を、$k$をエネルギーに換算してプロットしてみましょう。
-Now let's convert $k$ into energy and plot the resulting $P(k)$ distribution.
+Let's make a plot of the resulting $P(k)$ distribution by converting $k$ to the energy.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -693,8 +643,7 @@ plt.xlabel('E/J')
 plt.ylabel('P(E)')
 ```
 
-続いて、同じ関数を$g=0.1, 0.2, 0.3, 0.4, 0.5$について実行して、それぞれのスペクトルから系のエネルギー固有値と$g$の関係をプロットしてください。
-Next, let's execute the same function for $g=0.1$, 0.2, 0.3, 0.4, and 0.5, and plot the relationships between the system's energy eigenvalues and $g$ based on each spectrum.
+Next, we will execute the same function for $g=0.1$, 0.2, 0.3, 0.4 and 0.5, and make plot for the relation between the energy eigenvalues of the system and $g$ from each spectrum.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -722,28 +671,19 @@ energy_eigenvalues = np.empty((g_values.shape[0], 2 ** n_state))
 plt.plot(g_values, energy_eigenvalues)
 ```
 
-**提出するもの**
-
-- $P_l(k, h)$から$P(k)$を導出する方法の説明と、`get_full_spectrum`関数への実装
-- $P(k)$からエネルギー固有値を抽出する方法を考案し、実装したコード（エネルギー固有値を求める全く別の方法を考えつけば、それでもよい）
-- 16個のエネルギー固有値と$g$の関係のプロット
-
 **Items to submit**:
 
-- An explanation of how to derive $P(k)$ from $P_l(k, h)$ and its implementation in the `get_full_spectrum` function
-- Implementation code for extracting energy eigenvalues from $P(k)$ (if you can think of a totally different method for determining energy eigenvalues, you may submit that instead)
-- A plot of the relationship between the 16 energy eigenvalues and $g$
+- Explanation of how to derive $P(k)$ from $P_l(k, h)$ and its implementation into the `get_full_spectrum` function
+- Work out how to extract energy eigenvalues from $P(k)$ and the code to implement the method (if you come up with completely different method for extracting the energy eigenvalues, it's fine to submit that as well)
+- Plot of the relation between 16 energy eigenvalues and $g$
 
 
 **HInt**:
 
-（$P(k)$の導出に関して）
-式{eq}`phim_decomposition`と{eq}`l_decomposition`を眺めると、
-(With regard to deriving $P(k)$) If you look at Formulas{eq}`phim_decomposition` and {eq}`l_decomposition`, you will see that the following is true.
+(Regarding the derivation of $P(k)$) If you look at Equations {eq}`phim_decomposition` and {eq}`l_decomposition`, you will see that the following equation holds.
 
 $$
 \sum_{l=0}^{2^{n_S} - 1} c^l_m c^{l*}_n = \delta_{mn}
 $$
 
-が成り立つことがわかります。ここで$\delta_{mn}$はクロネッカーの$\delta$記号で、$m=n$のとき1、それ以外では0の値を持つ因子です。
-Here, $\delta_{mn}$ is a factor using Kronecker's $\delta$ symbol which is 1 when $m=n$ is true and 0 when it is not.
+Here $\delta_{mn}$ is a Kronecker's $\delta$, which is 1 for $m=n$ and 0 otherwise.
