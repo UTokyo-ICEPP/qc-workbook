@@ -24,12 +24,11 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-# データベース検索を行う
+# Performing Database Search 
 
 +++
 
-ここでは、**グローバーのアルゴリズム**{cite}`grover_search,nielsen_chuang_search`の紹介と、そのアルゴリズムを使用して構造化されていないデータベースを検索する問題を考えます。アルゴリズムを説明した後に、Qiskitを使用してグローバーのアルゴリズムを実装します。
-In this unit, we'll introduce **Grover's algorithm**{cite}`grover_search,nielsen_chuang_search` and consider the question of how to search an unstructured database using this algorithm. After the algorithm explanation, we will use Qiskit to implement Grover's algorithm. 
+In this unit, we'll introduce **Grover's algorithm**{cite}`grover_search,nielsen_chuang_search` and consider the problem of searching for an answer in an unstructured database using this algorithm. After that, We will implement Grover's algorithm using Qiskit. 
 
 ```{contents} 目次
 ---
@@ -43,34 +42,30 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 +++
 
-## はじめに
+## Introduction
 
-量子コンピュータが古典コンピュータの計算能力を優位に上回る性能を発揮するためには、量子計算の特徴をうまく活用するアルゴリズムを考える必要があります。そのような量子アルゴリズムの一つとして知られているのが、グローバーのアルゴリズムです。このアルゴリズムは**構造化されていないデータベースの検索**に適しており、古典計算より少ない計算量で答えを得られることが証明されています。このアルゴリズムは**振幅増幅**と呼ばれる手法をベースにしており、量子アルゴリズムのサブルーチンとしても幅広く活用されています。
-To leverage the calculation capability advantages quantum computers have over classical computers requires the use of algorithms that make good use of the features of quantum calculations. One example of this kind of quantum algorithm is Grover's algorithm. Grover's algorithm is suited for **searching unstructured databases**. It has been proven to be able to produce results using fewer computational resources than are required by classical computers. This algorithm is based on a method known as **amplitude amplification**. It is widely used as a subroutine in quantum algorithms. 
+In order to realize quantum advantage over classical computation, one has to exploit quantum algorithm that can take advantage of quantum properties. One example of such algorithms is Grover's algorithm. Grover's algorithm is suited for **searching in unstructured database**, and it has been proven that Grover's algorithm can find solutions with fewer computational resources than those required for classical counterparts. This algorithm is based on a method known as **amplitude amplification** and is widely used as a subroutine in various quantum algorithms. 
 
 +++
 
 (database)=
-## 非構造化データの検索
+## Searching for Unstructured Data 
 
-$N$個の要素からなるリストがあり、その中の一つの要素$w$を見つけたいとします。求める要素$w$を見つけるためには、古典計算では最悪の場合$N$回、平均では$N/2$回リストを調べる必要があります。グローバーのアルゴリズムでは、おおよそ$\sqrt{N}$回の検索で$w$を見つけることができることが知られています。つまり、**古典計算に対して二次の高速化が可能**というわけです。
-Assume that we have a list consisting of $N$ elements, and we want to find one element, element $w$, in that list. To find element $w$ using a classical computer could take, in a worst case scenario, $N$ searches. On average, it would take $N/2$ searches. With Grover's algorithm, w can be found with an average of roughly $\sqrt{N}$ searches. In other words, it can speed up the process **quadratically** compared to classical computing. 
+Let us consider that there is a list consisting of $N$ elements, and we want to find one element $w$ in that list. To find $w$ using a classical computer, out would have to query the list $N$ times in a worst case, or on average $N/2$ times. With Grover's algorithm, it is known that $w$ can be found by querying about $\sqrt{N}$ times. That it, Glover's algorithm allows one to search for unstructured data quadratically faster than the classical calculation.
 
 +++
 
 (grover)=
-## グローバーのアルゴリズム
+## Grover's Algorithm
 
-ここでは$n$個の量子ビットを考え、その量子ビットが表現できる可能性のある全ての計算基底でリストが構成されているものとします。つまり$N=2^n$として、リストは$\ket{00\cdots00}$, $\ket{00\cdots01}$, $\ket{00\cdots10}$, $\cdots$, $\ket{11\cdots11}$までの$N$個の要素（10進数表記だと$\ket{0}$, $\ket{1}$, $\cdots$, $\ket{N-1}$）を含んでいます。
-Here, we will consider a list of every possible computational basis that can be expressed with $n$ quantum bits. In other words, $N=2^n$ and the list consists of $N$ elements, in the form of $\ket{00\cdots00}$, $\ket{00\cdots01}$, $\cdots$, $\ket{11\cdots11}$ (written in decimal form, this would be $\ket{0}$, $\ket{1}$, $\cdots$, $\ket{N-1}$). 
+Here we will consider $n$ qubits, and the list composed of every possible computational basis states. In other words, the list contains $N=2^n$ elements, composed of $\ket{00\cdots00}$, $\ket{00\cdots01}$, $\cdots$, $\ket{11\cdots11}$ ($\ket{0}$, $\ket{1}$, $\cdots$, $\ket{N-1}$ in decimal form).
 
 +++
 
 (grover_phaseoracle)=
-### 位相オラクルの導入
+### Introduction of Phase Oracle
 
-グローバーのアルゴリズムで重要になるのは、特定の状態の位相を変える位相オラクルです。まず、$U\ket{x}=(-1)^{f(x)}\ket{x}$で与えられる位相オラクルを考えます。つまりある状態$\ket{x}$に作用すると、その状態の位相をある関数$f(x)$に応じて$-1^{f(x)}$だけシフトさせるような演算です。ここで$f(x)$として
-An important part of Grover's algorithm is the phase oracle, which changes the phase of certain states. First, let us consider a phase oracle defined as $U\ket{x}=(-1)^{f(x)}\ket{x}$. In other words, when it acts on state $\ket{x}$, it shifts the phase of the state, using function $f(x)$, by $-1^{f(x)}$. Here, let us consider $f(x)$ to be a function like that shown below. 
+The Grover's algorithm is characterized by the existence of phase oracle, which changes phase of a certain state. First, let us consider a phase oracle $U$ defined as $U\ket{x}=(-1)^{f(x)}\ket{x}$, that is, when acting on the state $\ket{x}$, it shifts the phase by $-1^{f(x)}$ with a certain function $f(x)$. If we consider the function $f(x)$ to be like below:
 
 $$
 f(x) = \bigg\{
@@ -80,8 +75,7 @@ f(x) = \bigg\{
 \end{aligned}
 $$
 
-のような関数を考えると、求める解$w$の位相を反転するオラクル$U_w$
-This produces oracle $U_w$, which reverses the phase of the answer we are searching for, $w$. 
+this leads to the oracle (denoted as $U_w$) which inverts the phase for the answer $w$ that we want: 
 
 $$
 U_w:\begin{aligned}
@@ -90,8 +84,7 @@ U_w:\begin{aligned}
 \end{aligned}
 $$
 
-が得られます。この時、$U_w$は$U_w=I-2\ket{w}\bra{ w}$と表現できることが分かります。また、関数$f_0(x)$として
-As you can see, we can write $U_w$ as $U_w=I-2\ket{w}\bra{w}$. Furthermore, if we think of function $f_0(x)$ as follows: 
+If we use a matrix form, the $U_w$ can be written as as $U_w=I-2\ket{w}\bra{w}$. Furthermore, if we think of another function $f_0(x)$: 
 
 $$
 f_0(x) = \bigg\{
@@ -101,8 +94,7 @@ f_0(x) = \bigg\{
 \end{aligned}
 $$
 
-を考えると、0以外の位相を反転するユニタリー$U_0$
-...then we can produce unitary $U_0$, which reverses phases other than 0. 
+then we can get unitary $U_0$ that inverts phases for all the states except 0. 
 
 $$
 U_0:\begin{aligned}
@@ -111,16 +103,14 @@ U_0:\begin{aligned}
 \end{aligned}
 $$
 
-を得ることができます。この時、$U_0$は$U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$になります。
-Here, $U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$. 
+Here the matrix form of $U_0$ is given as $U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$. 
 
 +++
 
 (grover_circuit)=
-### 量子回路の構成
+### Structure of Quantum Circuit
 
-グローバーアルゴリズムを実装する量子回路の構造は、下図のようになっています。$n$量子ビットの回路を$\ket{0}$の初期状態から出発し、Hadamard演算を適用して重ね合わせ状態を作ります。その後、$G$と書かれている演算を繰り返し適用します。
-The structure of the circuit used to implement Grover's algorithm is shown below. It is an $n$-quantum bit circuit whose initial state is $\ket{0}$. It then applies a Hadamard operator to create a superposition. It then repeatedly performs the calculations indicated with a $G$. 
+The structure of the circuit used to implement Grover's algorithm is shown below. Starting with the $n$-qubit initial state $\ket{0}$, an equal superposition state is created first by applying Hadamard gates to every qubits. Then, the operator denoted as $G$ is applied repeatedly.
 
 ```{image} figs/grover.png
 :alt: grover
@@ -128,8 +118,7 @@ The structure of the circuit used to implement Grover's algorithm is shown below
 :align: center
 ```
 
-$G$は「**グローバーの反復**」とも呼ばれるユニタリー演算で、以下のような4つのステップから構成されています。
-$G$ is a unitary operation known as a "Grover iteration." It consists of the following four steps. 
+$G$ is a unitary operator called **Grover Iieration** and consists of the following four steps. 
 
 ```{image} figs/grover_iter.png
 :alt: grover_iter
@@ -137,11 +126,9 @@ $G$ is a unitary operation known as a "Grover iteration." It consists of the fol
 :align: center
 ```
 
-$U_w$と$U_0$は、それぞれ上で説明した解$w$の位相を反転するオラクルと0以外の位相を反転するオラクルです。
-$U_w$ and $U_0$ are the oracle that reverses the phase of answer $w$ and the oracle that reverses phases other than 0, as indicated above. 
+The $U_w$ and $U_0$ are oracles that invert the phase of an answer $w$ and the phase of all states other than 0, respectively, as introduced above. 
 
-回路の最初にあるHadamard演算と合わせて、グローバーの反復を1回実行するまでのステップ
-Together with the Hadamard operator at the start of the circuit, the steps involved in a single Grover iteration are shown below. 
+Together with the Hadamard operator at the beginning of the circuit, we will look at steps involved in a single Grover iteration in detail below.
 
 ```{image} figs/grover_iter1.png
 :alt: grover_iter1
@@ -149,33 +136,28 @@ Together with the Hadamard operator at the start of the circuit, the steps invol
 :align: center
 ```
 
-を細かく見ていきます。
-Let's look at this in detail. 
-
 +++
 
 (grover_superposition)=
-### 重ね合わせ状態の生成
-まず、$n$量子ビット回路の初期状態$\ket{0}^{\otimes n}$にHadamard演算を適用し、一様に重ね合わされた状態を生成します。
-First, let's apply a Hadamard operator on an $n$-quantum bit circuit with initial state $\ket{0}^{\otimes n}$ to create a uniform superposition. 
+### Creation of Superposition State
+
+First, an equal superposition state is produced by applying Hadamard gates to initial state $\ket{0}^{\otimes n}$ of the $n$-qubit circuit.
 
 $$
 \ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}
 $$
 
-この状態を$\ket{s}$とします。
-We'll indicate this state as $\ket{s}$. 
+This state is denoted as $\ket{s}$. 
 
 +++
 
 (grover_geometry)=
-### 幾何学的な表現
-この$\ket{s}$の状態を幾何学的に表現してみましょう。まず、重ね合わせ状態$\ket{s}$と求める状態$\ket{w}$が張る2次元平面を考えます。$\ket{w}$に直交する状態$\ket{w^{\perp}}$は$\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}$と表現できるため、この平面上では$\ket{w}$に直交する軸に相当します。簡易的に、この平面では$\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$と$\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$と書くことにします。
-Let's depict this $\ket{s}$ state geometrically. First, consider a two-dimensional plane created by the superposition state $\ket{s}$ and state $\ket{w}$, which is what we are trying to find. State $\ket{w^{\perp}}$, which is orthogonal to $\ket{w}$, can be expressed as $\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}$, so on this plane it is equivalent to an axis orthogonal to $\ket{w}$. This plane can be simply represented as $\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$ and $\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$.
+### Geometrical Representation
+
+Let's view this $\ket{s}$ state geometrically. First, consider a two-dimensional plane created by the superposition state $\ket{s}$ and the state $\ket{w}$, which is what we are trying to find. Since the state $\ket{w^{\perp}}$, which is orthogonal to $\ket{w}$, can be expressed as $\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}$, it corresponds to the axis orthogonal to $\ket{w}$ in this 2D plane. Therefore, $\ket{w^{\perp}}$ and $\ket{w}$ can be regarded as orthonormal basis states, i.e, $\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$, $\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$.
 
 まとめると、この2次元平面では$\ket{s}$は($\ket{w^{\perp}}$, $\ket{w}$)という二つのベクトルの線形和として書くことができます。
-In short, on this two-dimensional plane, $\ket{s}$ can be represented as the linear sum of the two vectors ($\ket{w^{\perp}}$, $\ket{w}$). 
-
+In short, $\ket{s}$ can be expressed as a linear combination of the two vectors ($\ket{w^{\perp}}$, $\ket{w}$) on this 2D plane. 
 $$
 \begin{aligned}
 \ket{s}&=\sqrt{\frac{N-1}{N}}\ket{w^{\perp}}+\frac1{\sqrt{N}}\ket{w}\\
@@ -185,14 +167,15 @@ $$
 $$
 
 答えが一つであるため、$\ket{w}$の振幅は$\frac1{\sqrt{N}}$、$\ket{w^{\perp}}$の振幅は$\sqrt{\frac{N-1}{N}}$になります。$\sin\frac\theta2=\frac1{\sqrt{N}}$なる$\theta$を定義すると、
-There is only one answer, so the amplitude of $\ket{w}$ is $\frac1{\sqrt{N}}$ and the amplitude of $\ket{w^{\perp}}$ is $\sqrt{\frac{N-1}{N}}$. For $\sin\frac\theta2=\frac1{\sqrt{N}}$, we can define $\theta$ as follows.
+In above equations, the amplitude of $\ket{w}$ is $\frac1{\sqrt{N}}$ and the amplitude of $\ket{w^{\perp}}$ is $\sqrt{\frac{N-1}{N}}$ because we want to find only one answer.
+If we define $\theta$ to fulfill $\sin\frac\theta2=\frac1{\sqrt{N}}$, then the $\theta$ is expressed as
 
 $$
 \theta=2\arcsin\frac{1}{\sqrt{N}}
 $$
 
 になります。($\ket{w^{\perp}}$, $\ket{w}$)平面での$\ket{s}$を図示すると、以下のようになります。
-Plotting $\ket{s}$ on the ($\ket{w^{\perp}}$, $\ket{w}$) plane produces the following figure. 
+The $\ket{s}$ state on ($\ket{w^{\perp}}$, $\ket{w}$) plane is depicted as follows.
 
 ```{image} figs/grover_rot1.png
 :alt: grover_rot1
