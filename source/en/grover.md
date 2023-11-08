@@ -156,7 +156,6 @@ This state is denoted as $\ket{s}$.
 
 Let's view this $\ket{s}$ state geometrically. First, consider a two-dimensional plane created by the superposition state $\ket{s}$ and the state $\ket{w}$, which is what we are trying to find. Since the state $\ket{w^{\perp}}$, which is orthogonal to $\ket{w}$, can be expressed as $\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}$, it corresponds to the axis orthogonal to $\ket{w}$ in this 2D plane. Therefore, $\ket{w^{\perp}}$ and $\ket{w}$ can be regarded as orthonormal basis states, i.e, $\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$, $\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$.
 
-まとめると、この2次元平面では$\ket{s}$は($\ket{w^{\perp}}$, $\ket{w}$)という二つのベクトルの線形和として書くことができます。
 In short, $\ket{s}$ can be expressed as a linear combination of the two vectors ($\ket{w^{\perp}}$, $\ket{w}$) on this 2D plane. 
 $$
 \begin{aligned}
@@ -166,15 +165,12 @@ $$
 \end{aligned}
 $$
 
-答えが一つであるため、$\ket{w}$の振幅は$\frac1{\sqrt{N}}$、$\ket{w^{\perp}}$の振幅は$\sqrt{\frac{N-1}{N}}$になります。$\sin\frac\theta2=\frac1{\sqrt{N}}$なる$\theta$を定義すると、
-In above equations, the amplitude of $\ket{w}$ is $\frac1{\sqrt{N}}$ and the amplitude of $\ket{w^{\perp}}$ is $\sqrt{\frac{N-1}{N}}$ because we want to find only one answer.
-If we define $\theta$ to fulfill $\sin\frac\theta2=\frac1{\sqrt{N}}$, then the $\theta$ is expressed as
+In above equations, the amplitude of $\ket{w}$ is $\frac1{\sqrt{N}}$ and the amplitude of $\ket{w^{\perp}}$ is $\sqrt{\frac{N-1}{N}}$ because we want to find only one answer. If we define $\theta$ to fulfill $\sin\frac\theta2=\frac1{\sqrt{N}}$, then the $\theta$ is expressed as
 
 $$
 \theta=2\arcsin\frac{1}{\sqrt{N}}
 $$
 
-になります。($\ket{w^{\perp}}$, $\ket{w}$)平面での$\ket{s}$を図示すると、以下のようになります。
 The $\ket{s}$ state on ($\ket{w^{\perp}}$, $\ket{w}$) plane is depicted as follows.
 
 ```{image} figs/grover_rot1.png
@@ -186,9 +182,9 @@ The $\ket{s}$ state on ($\ket{w^{\perp}}$, $\ket{w}$) plane is depicted as follo
 +++
 
 (grover_oracle)=
-### オラクルの適用
-次に、$\ket{s}$にオラクル$U_w$を適用します。このオラクルは、この平面上では$U_w=I-2\ket{w}\bra{ w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$と表現することが可能です。つまり、$U_w$は$\ket{w^{\perp}}$軸に関して$\ket{s}$を折り返す操作（下図）に対応しており、この操作で$\ket{w}$の位相が反転します。
-Next, we will apply the $U_w$ oracle to $\ket{s}$. This oracle can be expressed on this plane as $U_w=I-2\ket{w}\bra{ w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$. In other words, $U_w$ flips $\ket{s}$ over the $\ket{w^{\perp}}$ axis (see figure below). This action reverses the phase of $\ket{w}$. 
+### Application of Oracle
+
+Next, we will apply the oracle $U_w$ oracle to $\ket{s}$. This oracle can be expressed on this plane as $U_w=I-2\ket{w}\bra{ w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$. This indicates that the action of $U_w$ is equivalent to the inversion of $\ket{s}$ with respect to the $\ket{w^{\perp}}$ axis (see figure below), hence reversing the phase of $\ket{w}$.
 
 ```{image} figs/grover_rot2.png
 :alt: grover_rot2
@@ -199,9 +195,9 @@ Next, we will apply the $U_w$ oracle to $\ket{s}$. This oracle can be expressed 
 +++
 
 (grover_diffuser)=
-### Diffuserの適用
-次は$H^{\otimes n}U_0H^{\otimes n}$の適用で、この演算はDiffuserと呼ばれます。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、$U_s \equiv H^{\otimes n}U_0H^{\otimes n}$と定義すると
-Next, we'll apply $H^{\otimes n}U_0H^{\otimes n}$. This operator is called the Diffuser. $U_0=2\ket{0}\bra{0}^{\otimes n}-I$, so if we define $U_s$ as $U_s \equiv H^{\otimes n}U_0H^{\otimes n}$, we arrive at the following. 
+### Application of Diffuser
+
+Next is the application of $H^{\otimes n}U_0H^{\otimes n}$, and this operation is called Diffuser. Since $U_0=2\ket{0}\bra{0}^{\otimes n}-I$, if we define $U_s$ to be $U_s \equiv H^{\otimes n}U_0H^{\otimes n}$, then it is expressed as
 
 $$
 \begin{aligned}
@@ -212,8 +208,7 @@ U_s &\equiv H^{\otimes n}U_0H^{\otimes n}\\
 \end{aligned}
 $$
 
-になります。つまり、Diffuser$U_s$は$U_w\ket{s}$を$\ket{s}$に関して折り返す操作に対応します（下図）。
-In other words, the diffuser $U_s$ is an operator that flips $U_w\ket{s}$ over the $\ket{s}$ axis (see figure below). 
+This means that the diffuser $U_s$ is an operator that inverts $U_w\ket{s}$ with respect to $\ket{s}$ (see figure below). 
 
 ```{image} figs/grover_rot3.png
 :alt: grover_rot3
@@ -221,8 +216,7 @@ In other words, the diffuser $U_s$ is an operator that flips $U_w\ket{s}$ over t
 :align: center
 ```
 
-まとめると、グローバーの反復$G=U_sU_w$は
-In summary, the Grover iteration $G=U_sU_w$ is as follows. 
+In summary, the Grover iteration $G=U_sU_w$ is written as
 
 $$
 \begin{aligned}
@@ -231,8 +225,7 @@ G&=U_sU_w\\
 \end{aligned}
 $$
 
-であるため、$\ket{s}$を$\ket{w}$に向けて角度$\theta$だけ回転する操作を表していることが分かります（下図）。
-Therefore, it rotates $\ket{s}$ towards $\ket{w}$ by $\theta$ degrees (see figure below). 
+and is equivalent to rotating the $\ket{s}$ towards $\ket{w}$ by the angle $\theta$ (figure below). 
 
 ```{image} figs/grover_rot4.png
 :alt: grover_rot4
@@ -240,18 +233,15 @@ Therefore, it rotates $\ket{s}$ towards $\ket{w}$ by $\theta$ degrees (see figur
 :align: center
 ```
 
-$G$を1回適用すれば$\theta$だけ回転するということは、$G$を$r$回繰り返せば$r\theta$回転することになります。その時の$\ket{s}$の状態は
-If $G$ is applied once, it rotates $\ket{s}$ by $\theta$ degrees. Therefore, if $G$ is repeated $r$ times, $\ket{s}$ will be rotated $r\theta$ degrees. In this case, the state of $\ket{s}$ is given by the following. 
+This correspondence between $G$ and the $\theta$ rotation means that if $G$ is applied $r$ times, $\ket{s}$ is rotated by $r\theta$. After that, the state of $\ket{s}$ becomes
 
 $$
 G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end{bmatrix}
 $$
 
-で与えられます。つまり、求める答え$\ket{w}$に到達するためには、$\frac{2r+1}2\theta\approx\frac{\pi}2$となる$r$の回数だけ回転すれば良いことになります。1回の回転角$\theta$が十分小さいとして、$\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2$とすると、$r\approx\frac\pi4\sqrt{N}$が得られます。つまり${\cal O}(\sqrt{N})$の操作で答え$\ket{w}$に到達することが示せたわけであり、古典計算に対する2次の高速化が得られることが分かりました。
-In other words, to reach our desired answer, $\ket{s}$ we merely need to perform r rotations such that $\frac{2r+1}2\theta\approx\frac{\pi}2$. If each rotation angle $\theta$ is small enough, if we set $\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2$, then $r\approx\frac\pi4\sqrt{N}$. We have therefore shown that we can arrive at answer $\ket{w}$ with {\cal O}(\sqrt{N})$ operations, significantly faster than we could with a classical computer. 
+This indicates that $\ket{s}$ would need to be rotated $r$ times so that $\frac{2r+1}2\theta\approx\frac{\pi}2$ to reach the desired answer of $\ket{w}$. If each rotation angle $\theta$ is small enough, then $\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2$, hence $r\approx\frac\pi4\sqrt{N}$. Now we have shown that {\cal O}(\sqrt{N})$ operations would allow us to reach the desired answer $\ket{w}$, meaning that it is quadratically faster than the classical calculation. 
 
-Diffuserの役割をもう少し見てみましょう。ある状態$\ket{\psi}$が、$\ket{\psi}:=\sum_k a_k\ket{k}$という振幅$a_k$を持つ$\ket{k}$の重ね合わせ状態として書かれるとしましょう。この状態にDiffuserを適用すると
-Let's look at the role played by the diffuser in greater detail. Let us assume that a certain state, $\ket{\psi}$, can be written as a superposition of $\ket{k}$ with amplitude $a_k$ such that $\ket{\psi}:=\sum_k a_k\ket{k}$. If we apply the diffuser to this state, we get the following. 
+Let's look at the diffuser's role a bit more. We can think of a certain state $\ket{\psi}$ and assume that it is written as a superposition of some bases $\ket{k}$ with amplitude $a_k$, $\ket{\psi}:=\sum_k a_k\ket{k}$. When we apply the diffuser to this state,
 
 $$
 \begin{aligned}
@@ -261,8 +251,8 @@ $$
 \end{aligned}
 $$
 
-となります。$\langle a \rangle\equiv\frac{\sum_i a_i}{N}$は振幅の平均です。この式が意味するところは、ある状態$\ket{k}$の振幅$a_k$が、平均に対する摂動の形$a_k=\langle a \rangle-\Delta$で表現できると考えると理解しやすくなります。つまり、Diffuserを適用した後の振幅が$2\langle a \rangle-a_k=\langle a \rangle+\Delta$になることから、Diffuserは平均$\langle a \rangle$に関して振幅を反転する操作を表していると考えることができるわけです。
-$\langle a \rangle\equiv\frac{\sum_i a_i}{N}$ is the average amplitude. You can think of this formula as stating that the amplitude, $a_k$, of state $\ket{k}$ as expressing the perturbation with respect to the average, in the form $a_k=\langle a \rangle-\Delta$. That is, after the diffuser is applied, the amplitude becomes $2\langle a \rangle-a_k=\langle a \rangle+\Delta$, so we can think of the diffuser as inverting the amplitude with respect to the average $\langle a \rangle$. 
+$\langle a \rangle\equiv\frac{\sum_i a_i}{N}$ is an average of the amplitudes. If you consider the amplitude $a_k$ of the state $\ket{k}$ to be expressed in the form of deviation from the average, $a_k=\langle a \rangle-\Delta$, then this equation could be better understood. That is, the amplitude will become $2\langle a \rangle-a_k=\langle a \rangle+\Delta$ after applying the diffuser. This means that the action of diffuser corresponds to the inversion of the amplitudes with respect to the average $\langle a \rangle$.
+
 
 +++
 
