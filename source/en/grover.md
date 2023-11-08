@@ -110,7 +110,7 @@ Here the matrix form of $U_0$ is given as $U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$.
 (grover_circuit)=
 ### Structure of Quantum Circuit
 
-The structure of the circuit used to implement Grover's algorithm is shown below. Starting with the $n$-qubit initial state $\ket{0}$, an equal superposition state is created first by applying Hadamard gates to every qubits. Then, the operator denoted as $G$ is applied repeatedly.
+The structure of the circuit used to implement Grover's algorithm is shown below. Starting with the $n$-qubit initial state $\ket{0}$, a uniform superposition state is created first by applying Hadamard gates to every qubits. Then, the operator denoted as $G$ is applied repeatedly.
 
 ```{image} figs/grover.png
 :alt: grover
@@ -141,7 +141,7 @@ Together with the Hadamard operator at the beginning of the circuit, we will loo
 (grover_superposition)=
 ### Creation of Superposition State
 
-First, an equal superposition state is produced by applying Hadamard gates to initial state $\ket{0}^{\otimes n}$ of the $n$-qubit circuit.
+First, a uniform superposition state is produced by applying Hadamard gates to initial state $\ket{0}^{\otimes n}$ of the $n$-qubit circuit.
 
 $$
 \ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}
@@ -253,22 +253,18 @@ $$
 
 $\langle a \rangle\equiv\frac{\sum_i a_i}{N}$ is an average of the amplitudes. If you consider the amplitude $a_k$ of the state $\ket{k}$ to be expressed in the form of deviation from the average, $a_k=\langle a \rangle-\Delta$, then this equation could be better understood. That is, the amplitude will become $2\langle a \rangle-a_k=\langle a \rangle+\Delta$ after applying the diffuser. This means that the action of diffuser corresponds to the inversion of the amplitudes with respect to the average $\langle a \rangle$.
 
-
 +++
 
 (grover_amp)=
-### 振幅増幅を可視化する
-グローバーアルゴリズムで振幅がどのように増幅されるのか、実際目で見てみることにします。
-Let's see how the Grover algorithm amplifies the amplitude with our own eyes.
+### Visualize Amplitude Amplification
 
-まず最初のHadamard変換で、全ての計算基底が等しい振幅を持つ重ね合わせ状態を生成します（下図の1）。横軸は$N$個の計算基底、縦軸は各基底の振幅の大きさを表しており、全ての基底が$\frac{1}{\sqrt{N}}$の大きさの振幅を持っています（振幅の平均を赤破線で表示）。
-First, the initial Hadamard conversion creates a superposition of computational basis states, all with equal amplitudes (no. 1 in the figure below). The horizontal axis shows $N$ computational basis states and the vertical axis shows the size of the amplitude for each basis state. All of the basis states have an amplitude of $\frac{1}{\sqrt{N}}$ (the average of the amplitudes is shown with a dotted red line). 
+Let us visualize how the amplitude of the state corresponding to correct answer is amplified. 
 
-次にオラクル$U_w$を適用すると、$\ket{w}$の位相が反転し、振幅が$-\frac{1}{\sqrt{N}}$になります（下図の2）。この状態での振幅の平均は$\frac{1}{\sqrt{N}}(1-\frac2N)$になり、(1)の状態より低くなります。
-Next, if we apply oracle $U_w$, the phase of $\ket{w}$ is reversed and the amplitude becomes $-\frac{1}{\sqrt{N}}$ (no. 2 in the figure below). In this state, the average amplitude is $\frac{1}{\sqrt{N}}(1-\frac2N)$, which is lower than it was in state (1). 
+First, the Hadamard gates applied at the beginning of the circut create a superposition of all the computational basis states with equal amplitudes ((1) in the figure below). The horizontal axis shows $N$ computational basis states, and the vertical axis shows the magnitude of the amplitude for each basis state and it is $\frac{1}{\sqrt{N}}$ for all the states (the average is shown by a dotted red line). 
 
-最後にDiffuserを適用すると、平均に関して振幅を反転します（下図の3）。その結果、$\ket{w}$の振幅が増幅され、$\ket{w}$以外の基底の振幅は減少します。1回のグローバーの反復操作で、$\ket{w}$の振幅が約3倍程度増幅することも図から見てとれます。この操作を繰り返し実行すれば$\ket{w}$の振幅がさらに増幅されるため、正しい答えを得る確率が増加していくだろうということも予想できますね。
-Last, when we apply the diffuser, the amplitude is reversed with respect to the average (no. 3 in the figure below). This amplifies the amplitude of $\ket{w}$ and decreases the amplitude of basis states other than $\ket{w}$. As the figure shows, a single Grover iteration amplified the amplitude of $\ket{w}$ roughly three-fold. Repeating this process will amplify the amplitude of $\ket{w}$ even further, so we can expect a greater likelihood of the correct answer being produced. 
+Next, applying the oracle $U_w$ inverts the phase of $\ket{w}$, making the amplitude to $-\frac{1}{\sqrt{N}}$ ((2) of the figure). In this state, the average amplitude is $\frac{1}{\sqrt{N}}(1-\frac2N)$, which is lower than that in state (1). 
+
+Last, the diffuser is applied to the state and all the amplitudes are reversed with respect to the average ((3) of the figure). This increases the amplitude of $\ket{w}$ and decreases the amplitudes of all other basis states. As seen in the figure, the amplitude of $\ket{w}$ state is amplified roughly three times. Repeating this process will further increase the amplitude of $\ket{w}$, so we can expect that we will have higher chance of getting the correct answer.
 
 ```{image} figs/grover_amp.png
 :alt: grover_amp
@@ -279,9 +275,9 @@ Last, when we apply the diffuser, the amplitude is reversed with respect to the 
 +++
 
 (grover_multidata)=
-### 複数データの検索
-今までは検索するデータが一つだけの場合を考えてきましたが、このセクションの最後に複数のデータを検索する場合を考察してみましょう。例えば、$N=2^n$個のデータから$M$個のデータ$\{w_i\}\;(i=0,1,\cdots,M-1)$を探すケースです。これまでと同様に、求める状態$\ket{w}$とそれに直行する状態$\ket{w^{\perp}}$
-So far, we have only thought about searching for a single item of data. At the end of this section, we will consider finding several items of data. For example, this would include finding $M$ items of data $\{w_i\}\;(i=0,1,\cdots,M-1)$ from $N=2^n$ items of data. Just as before, we will discuss this in terms of a plane formed by the state we seek to discover, $\ket{w}$, and an orthogonal state, $\ket{w^{\perp}}$. 
+### Searching for Multiple Data
+
+We have only considered so far searching for a single data. What if we consider finding multiple data? For example, we want to find $M$ data $\{w_i\}\;(i=0,1,\cdots,M-1)$ from a sample of $N=2^n$ data. Just as before, we can discuss this situation on a two-dimensional plance with the state we want to find, $\ket{w}$, and its orthogonal state, $\ket{w^{\perp}}$. 
 
 $$
 \begin{aligned}
@@ -290,8 +286,7 @@ $$
 \end{aligned}
 $$
 
-が張る2次元平面の上で、同様の議論を進めることができます。$\ket{s}$はこの平面上で
-$\ket{s}$ can be expressed on this plane by the following. 
+$\ket{s}$ can be expressed on this plane as follows:
 
 $$
 \begin{aligned}
@@ -300,26 +295,23 @@ $$
 \end{aligned}
 $$
 
-と表現でき、$\ket{w}$の振幅$\sqrt{\frac{M}{N}}$を$\sin\frac\theta2$と定義すると、角度$\theta$は$\theta=2\arcsin\sqrt{\frac{M}{N}}$になります。答えが一つのケースと比べて、角度は$\sqrt{M}$倍大きく、1回のグローバーの反復操作でより大きく回転することになります。その結果、より少ない$r\approx\frac\pi4\sqrt{\frac{N}{M}}$回の回転操作で答えに到達することが可能になることが分かります。
-If we define the amplitude $\sqrt{\frac{M}{N}}$ of $\ket{w}$ as $\sin\frac\theta2$, then angle $\theta$ is $\theta=2\arcsin\sqrt{\frac{M}{N}}$. Compared to the case in which there was only one answer, the angle is $\sqrt{M}$ times larger, and the rotation of a single Grover iteration is larger. As a result, as you can see, we can arrive at the answer with a shorter rotation process, performing $r\approx\frac\pi4\sqrt{\frac{N}{M}}$ rotations. 
+If the amplitude $\sqrt{\frac{M}{N}}$ of the state $\ket{w}$ is defined as $\sin\frac\theta2$, then the angle $\theta$ is $\theta=2\arcsin\sqrt{\frac{M}{N}}$. Compared to the case of finding a single data, the angle rorated by the single Grover iteration is $\sqrt{M}$ times larger. As a result, we can reach the answer by a smaller number of rotations, $r\approx\frac\pi4\sqrt{\frac{N}{M}}$, than the single-data case.  
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (imp)=
-## アルゴリズムの実装（$N=2^6$の場合）
-ではここから、実際にグローバーアルゴリズムを実装してデータベースの検索問題に取り掛かってみましょう。
-Now, let's actually implement Grover's algorithm to solve a database search problem. 
+## Implementation of Grover's Algorithm（Case of $N=2^6$）
 
-ここで考える問題は、$N=2^6$個の要素を持つリスト（$=[0,1,2,\cdots,63]$）から、一つの答え"45"を見つけるグローバーアルゴリズムの実装です（もちろんこの数はなんでも良いので、後で自由に変更して遊んでみてください）。つまり6量子ビットの量子回路を使って、$\ket{45}=\ket{101101}$を探す問題です。
-In this problem, we're going to use Grover's algorithm to find the number "45" in a list containing $N=2^6$ elements ($=[0,1,2,\cdots,63]$) (of course, we could look for any number, so feel free later to try it out with other numbers). In other words, we will use a 6-quantum bit quantum circuit to find $\ket{45}=\ket{101101}$. 
+Now let's try to solve database search problem by implementing Grover's algorithm.
+
+This exercise is to find a single answer "45" in a list containing $N=2^6$ elements of $[0,1,2,\cdots,63]$ (Of course, you could look for another number and feel free to do that later if you like). That is, we try to find $\ket{45}=\ket{101101}$ using a 6-qubit quantum circuit.  
 
 +++
 
 (imp_qiskit)=
-### Qiskitでの実装
+### Qiskit Implementation
 
-まず必要な環境をセットアップします。
-Always set up the environment first. 
+Set up the environment first. 
 
 ```{code-cell} ipython3
 ---
@@ -343,15 +335,13 @@ from qiskit_aer import AerSimulator
 from qiskit_ibm_provider import IBMProvider, least_busy
 from qiskit_ibm_provider.accounts import AccountNotFoundError
 
-# ワークブック独自のモジュール
+# Modules necessary for this workbook
 from qc_workbook.utils import operational_backend
 ```
 
-6量子ビットの回路`grover_circuit`を準備します。
-Let's prepare a 6-quantum bit `grover_circuit` circuit. 
+Prepare a 6-qubit circuit `grover_circuit`. 
 
-グローバー反復を一回実行する量子回路は以下のような構成になりますが、赤枠で囲んだ部分（オラクルとDiffuserの中の$2\ket{0}\bra{0}-I$の部分）を実装する量子回路を書いてください。
-Below is a quantum circuit that performs a single Grover iteration. Draw the quantum circuits used in the areas outlined in red (the oracle and the $2\ket{0}\bra{0}-I$ portion of the diffuser). 
+A quantum circuit to perform a single Grover iteration will be something like below, and please write a quantum circuit that implements gates outlined in red (phase oracle and the unitary corresponding to $2\ket{0}\bra{0}-I$ of the diffuser).
 
 ```{image} figs/grover_6bits_45.png
 :alt: grover_6bits_45
@@ -359,8 +349,7 @@ Below is a quantum circuit that performs a single Grover iteration. Draw the qua
 :align: center
 ```
 
-一様な重ね合わせ状態$\ket{s}$を生成した後に、オラクルを実装します。
-Implement the oracle after a uniform superposition state $\ket{s}$ is generated. 
+Implement the oracle after generating a uniform superposition state $\ket{s}$. 
 
 ```{code-cell} ipython3
 ---
@@ -400,7 +389,7 @@ grover_circuit.append(oracle_gate, list(range(n)))
 grover_circuit.barrier()
 ```
 
-**解答**
+**Answer**
 
 ````{toggle}
 
@@ -425,7 +414,6 @@ oracle.x(4)
 
 ````
 
-次に、Diffuser用の回路を実装します。
 Next, implement the diffuser circuit. 
 
 ```{code-cell} ipython3
@@ -464,7 +452,7 @@ grover_circuit.measure_all()
 grover_circuit.decompose().draw('mpl')
 ```
 
-**解答**
+**Answer**
 
 ````{toggle}
 
@@ -504,10 +492,9 @@ def diffuser(n):
 
 
 (imp_simulator)=
-### シミュレータでの実験
+### Experiment with Simulator
 
-回路の実装ができたら、シミュレータで実行して結果をプロットしてみます。結果が分かりやすくなるように、測定したビット列を整数にしてからプロットするようにしてみます。
-Once you have implemented the circuit, run the simulator and plot the results. To make the results easy to understand, convert the measured bit sequences into integers before plotting them. 
+Once you have implemented the circuit, run the simulator and make a plot of the results. To make the results easy to understand, the measured bitstring is converted to integers before making the plot.
 
 ```{code-cell} ipython3
 ---
@@ -546,16 +533,14 @@ def show_distribution(answer):
 show_distribution(answer)
 ```
 
-正しく回路が実装できていれば、$\ket{101101}=\ket{45}$の状態を高い確率で測定できる様子を見ることができるでしょう。
-If you implement the circuit correctly, you will see that you can measure the state $\ket{101101}=\ket{45}$ with a high probability of success. 
+If the circuit is implemented correctly, you will see that the state $\ket{101101}=\ket{45}$ is measured with high probability. 
 
-しかし、上での議論からも分かるように、$N=2^6$の探索では、一回のグローバー反復では正しくない答えも無視できない確率で現れてきます。グローバーの反復を複数回繰り返すことで、正しい答えがより高い確率で得られることをこの後見ていきます。
-However, as you saw in the discussion above, in searches of $N=2^6$ sequences, Grover iterations also produce incorrect answers with a probability that cannot be ignored. In the assignment, we will look at repeating Grover iterations multiple times to produce the correct answer with a greater probability of success. 
+However, as discussed above, a single Grover iteration will produce incorrect answers with non-negligible probabilities in the search of $N=2^6$ elements. Later we will see if repeating Grover iteration can produce correct answers with higher probabilities.
 
 +++
 
 (imp_qc)=
-### 量子コンピュータでの実験
+### Experiment with Quantum Computer
 
 反復を繰り返す前に、まずは一回のグローバー反復を量子コンピュータで実行してみましょう。
 
