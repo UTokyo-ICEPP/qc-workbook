@@ -535,14 +535,14 @@ show_distribution(answer)
 
 If the circuit is implemented correctly, you will see that the state $\ket{101101}=\ket{45}$ is measured with high probability. 
 
-However, as discussed above, a single Grover iteration will produce incorrect answers with non-negligible probabilities in the search of $N=2^6$ elements. Later we will see if repeating Grover iteration can produce correct answers with higher probabilities.
+However, as discussed above, a single Grover iteration will produce incorrect answers with non-negligible probabilities in the search of $N=2^6$ elements. Later, we will see if repeating Grover iteration can produce correct answers with higher probabilities.
 
 +++
 
 (imp_qc)=
 ### Experiment with Quantum Computer
 
-反復を繰り返す前に、まずは一回のグローバー反復を量子コンピュータで実行してみましょう。
+Before attempting multiple Grover iterations, let us first run a single Grover iteration on a quantum computer.
 
 ```{code-cell} ipython3
 ---
@@ -600,17 +600,16 @@ answer = results.get_counts(grover_circuit)
 show_distribution(answer)
 ```
 
-シミュレータに比べると結果は非常に悪いですね。。。残念ながら、今の量子コンピュータをそのまま使うとこういう結果になってしまいます。しかし、{ref}`エラー緩和 <measurement_error_mitigation>`等のテクニックを使うことである程度改善することはできます。
-As you can see, the results are far worse than those produced by the simulator. Unfortunately, these are the results that are produced when we run the circuit as-is on a modern quantum computer. However, we can improve these results somewhat by using techniques such as {ref}`error mitigation<measurement_error_mitigation>`.  
+As you can see, the results are much worse than what we got with the simulator. Unfortunately, this is a typical result of running a quantum circuit of Grover's search algorithm on the present quantum computer as it is. We can however expect that the quality of the results will be improved by employing {ref}`error mitigation <measurement_error_mitigation>` techniques. 
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (imp_simulator_amp)=
-### 振幅増幅を確認する
+### Confirm Amplitude Amplification
 
-では次に、グローバーのアルゴリズムを繰り返し使うことで、振幅が増幅していく様子をシミュレータを使って見てみましょう。
+Here we will see how the amplitude is amplified by running the Grover's iteration multiple times using simulator. 
 
-例として、上で作ったグローバー反復を3回実行する量子回路を作って実行してみます。
+For example, the circuit to execute the Grover's iteration three times is prepared and executed.
 
 ```{code-cell} ipython3
 ---
@@ -619,7 +618,7 @@ pycharm:
 
     '
 ---
-# 繰り返しの回数
+# Repetition of Grover's iteration
 Niter = 3
 
 grover_circuit_iterN = QuantumCircuit(n)
@@ -646,9 +645,9 @@ show_distribution(answer)
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-正しい答え$\ket{45}$をより高い確率で測定できていることが分かりますね。
+You will see that the correct answer of $\ket{45}$ appears with higher probability.
 
-では次に、実装した回路を繰り返し実行して、求める解を観測した回数と反復した回数との相関関係を図にしてみます。
+Next, we make a plot of showing the correlation between the number of Grover's iterations and how many times we observe the correct answer. Here the Grover's iteration is repated 10 times.
 
 ```{code-cell} ipython3
 ---
@@ -660,7 +659,7 @@ pycharm:
 x = []
 y = []
 
-# 例えば10回繰り返す
+# Repeating Grover's iteration 10 times
 for Niter in range(1,11):
     grover_circuit_iterN = QuantumCircuit(n)
     grover_circuit_iterN.h(range(n))
@@ -685,20 +684,20 @@ plt.show()
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-この図から、グローバー反復を5~6回程度繰り返すことで、正しい答えを最も高い確率で測定できることが分かりますね。計算で求めた検索に必要な反復回数と一致しているかどうか、確認してみてください。
+The result will show that the correct answer is observed with the highest probability when repeating the Grover's iteration $5\sim6$ times. Please check if this is consistent with what we analytically obtained above as the most probable number of iterations to get a correct answer.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-問題：解が一つの場合で、探索リストのサイズを$N=2^4$から$N=2^{10}$まで変えた時に、測定で求めた最適な反復回数が$N$とどういう関係になっているのか調べてください。
+Exercise : Consider the case of a single answer. Examine the most probable number of iterations obtained using simulator and the size of the list, $N$, when $N$ varies from $N=2^4$ to $N=2^{10}$.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (imp_simulator_multi)=
-### 複数解の探索の場合
+### Case of Searching for Multiple Data
 
-では次に、複数の解を探索する問題に進んでみましょう。2つの整数$x_1$と$x_2$を見つける問題へ量子回路を拡張して、求める解を観測した回数と反復した回数との相関関係を図にしてみます。
+Now we consider searching for multiple data from the list. Let us modify the circuit to be able to find two integers $x_1$ and $x_2$, and make a plot of the number of Grover's iterations versus how many times we observe the correct answer.
 
-例えば、$x_1=45$と$x_2=26$の場合は
+For example, $x_1=45$ and $x_2=26$,
 
 ```{code-cell} ipython3
 ---
@@ -765,4 +764,4 @@ plt.show()
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？
+In this case, the number of iterations to have the highest probability is smaller than that in the case of single answer. Is this what you expected, right?
