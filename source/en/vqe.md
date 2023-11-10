@@ -22,12 +22,11 @@ language_info:
   version: 3.10.6
 ---
 
-# 変分法と変分量子固有値ソルバー法を学習する
+# Variational Principle and Variational Quantum Eigensolver
 
 +++
 
-この実習では、変分法の基本的な考え方と、その方法に基づいた変分量子アルゴリズムと呼ばれる量子計算の手法を学びます。特に、量子計算と古典計算を組み合わせた「**量子・古典ハイブリッドアルゴリズム**」としての変分量子アルゴリズムに着目します。この手法を用いて、近似的な固有値計算を可能にする**変分量子固有値ソルバー法**と呼ばれる方法へ拡張していきます。
-In this exercise, we will learn the basic concepts of the variational method and about variational quantum circuits, which are based on this method and used to perform quantum calculation. In particular, we will focus on variational quantum circuits that use **hybrid quantum-classical algorithms** that combine quantum calculation and classical calculation. We will then apply these methods, expanding our approach to include the variational quantum eigensolver method, which makes it possible to perform approximate eigenvalue calculation. 
+In this exercise, we will learn the basic concepts of variational method and the computation based on variational quantum algorithm. In particular, we will focus on **quantum-classical hybrid** approach of variational quantum algorithm where quantum and classical computations are combined. As a concrete implementation of such hybrid algorithm, we discuss an algorithm called **variational quantum eigensolver**, that enables us to approximately calculate eigenvalues of a physical system. 
 
 ```{contents} 目次
 ---
