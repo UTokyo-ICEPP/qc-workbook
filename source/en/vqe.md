@@ -41,45 +41,40 @@ $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 
 +++
 
-## はじめに
-行列で表現されるある物理系に対して、その最も小さい固有値を見つけるという操作は、多くのアプリケーションで必要となる重要な技術です。例えば化学の計算では、分子を特徴づけるエルミート行列の最小固有値はそのシステムの最もエネルギーの低い状態（基底状態）のエネルギーになります。最小固有値を見つけるには「**量子位相推定**」と呼ばれる手法（この{doc}`課題 <spectrum_estimation>`を参照）を使うことができますが、この手法を使って実用的な問題を解こうとすると、そのために必要な量子回路はNISQコンピュータでは実現できないほど長くなることが知られています。そのために、短い量子回路を利用して分子の基底状態エネルギーを推定する手法として、**変分量子固有値ソルバー法**（*Variational Quantum Eigensolver*, VQE）が提案されました {cite}`vqe`。
-For physical systems which are represented with matrices, in many applications it is important to find the minimum eigenvalue. For example, in chemistry, the minimum eigenvalue of a Hermitian matrix characterizing a molecule is the lowest energy state (basis state) of that system. A method called **"quantum phase estimation"** can be used to find the minimum eigenvalue (see this {doc}`assignment<spectrum_estimation>`). However, using it to solve useful problems requires circuit depths exceeding the limits of hardware available in NISQ computers. Thus, the **variational quantum eigensolver** (VQE) was proposed to estimate the basis state energy of a molecule using much shorter quantum circuits{cite}`vqe`. 
+## Introduction
+For physical systems described by a Hermitian matrix, finding the smallest eigenvalue of the matrix is an important technique for many applications. For example, in chemistry calculation the smallest eigenvalue of a Hamiltonian that characterizes the system of, e.g, a molecule is the ground state energy of the molecule. A method called **"Quantum Phase Estimation"** (QPE) can be used to find the smallest eigenvalue (see this {doc}`exercise<spectrum_estimation>`), but it is generally known that the QPE requires a deep quantum circuit to solve pratical problems, preventing it from using it on NISQ machines. Therefore, the **Variational Quantum Eigensolver** (VQE) was proposed insteadd to estimate the ground state energy of a molecule with much shallower circuits{cite}`vqe`. 
 
-まず、VQEの元になる関係を形式的に表現してみましょう。何か分からない最小固有値$\lambda_{min}$とその固有状態$\ket{\psi_{min}}$をもったエルミート行列$H$が与えられたとして、VQEはその系のエネルギーの下限である$\lambda_{min}$の近似解$\lambda_{\theta}$を求める手法です。つまり
-First, let's formally express the relationship at the base of the VQE. Given a Hermitian matrix $H$ with an unknown minimum eigenvalue $\lambda_{min}$, associated with the eigenstate $\ket{\psi_{min}}$, VQE is a method for determining approximate solution $\lambda_{\theta}$ for the lower energy boundary of the system, $\lambda_{min}$. In other words, it is used to determine the smallest $\lambda_{\theta}$ that satisfies the following.
+First, let's formally express the relation that forms the basis of VQE. Given a Hermitian matrix $H$ with an unknown minimum eigenvalue $\lambda_{min}$ associated with the eigenstate $\ket{\psi_{min}}$, VQE allows us to determine an approximated value $\lambda_{\theta}$ of the lowest energy bound $\lambda_{min}$ of the system.
+
+In other words, it corresponds to determining the smallest $\lambda_{\theta}$ value that satisfies the following:
 
 $$
 \lambda_{min} \le \lambda_{\theta} \equiv \expval{ \psi(\theta)}{H}{\psi(\theta) }
 $$
 
-を満たす、できるだけ小さい$\lambda_{\theta}$を求めることに対応します。ここで$\ket{\psi(\theta)}$は近似解$\lambda_{\theta}$に対応する状態で、$\theta$はパラメータです。つまり、適当な初期状態$\ket{\psi}$にユニタリー$U(\theta)$で表現されるパラメータ化された回路を適用することで、$\ket{\psi_{min}}$を近似する状態$\ket{\psi(\theta)} \equiv U(\theta)\ket{\psi}$を得ようというアイデアです。最適なパラメータ$\theta$の値は、期待値 $\expval{\psi(\theta)}{H}{\psi(\theta)}$が最小になるように古典計算を繰り返しながら求めていくことになります。
-Here, $\ket{\psi(\theta)}$ is the eigenstate associated with approximation \lambda_{\theta}$, and $\theta$ is a parameter. The idea is to apply a parameterized circuit, represented by $U(\theta)$, to some arbitrary initial state $\ket{\psi}$, thereby obtaining the state $\ket{\psi(\theta)} \equiv U(\theta)\ket{\psi}$, which is an approximation of $\ket{\psi_{min}}$. The value of the optimized parameter $\theta$ is determined by iterating with a classical controller such that the expectation value $\expval{\psi(\theta)}{H}{\psi(\theta)}$ is minimized. 
+where $\ket{\psi(\theta)}$ is an eigenstate associated with the eigenvalue \lambda_{\theta}$, and $\theta$ is a parameter. The idea is to obtain the state $\ket{\psi(\theta)} \equiv U(\theta)\ket{\psi}$ that approximates $\ket{\psi_{min}}$ by applying a parameterized unitary $U(\theta)$ to a certain initial state $\ket{\psi}$. The optimized value of the parameter $\theta$ is determined by iterating classical calculation such that the expectation value $\expval{\psi(\theta)}{H}{\psi(\theta)}$ is minimized. 
 
 +++
 
-## 量子力学における変分法
+## Variational Method in Quantum Mechanics
 
-### 背景
+### Background
 
-VQEは量子力学の**変分法**を応用した手法です。変分法をより良く理解するために、基礎的な数学的背景を見てみましょう。
-VQE is an application of the **variational method** of quantum mechanics. To better understand the variational method, some preliminary mathematical background is provided. 
+VQE is based on **variational method** in quantum mechanics. To better understand the variational method, a fundamental mathematical background is provided first. 
 
-行列$A$の固有ベクトル$\ket{\psi_i}$とその固有値$\lambda_i$は、$A \ket{\psi_i} = \lambda_i \ket{\psi_i}$という関係を持っていますね。行列$H$がエルミート行列$H = H^{\dagger}$の場合、スペクトル定理から$H$の固有値は実数になります（$\lambda_i = \lambda_i^*$）。実際に実験で測定できる量は実数である必要があるため、量子系のハミルトニアンを記述するためにはエルミート行列が適切です。さらに、$H$は以下のように表現することもできます。
-The relationship between the eigenvector, $\ket{\psi_i}$, of a matrix $A$ and its eigenvalue, $\lambda_i$ is $A \ket{\psi_i} = \lambda_i \ket{\psi_i}$. When a matrix $H$ is equal to its Hermitian matrix, such that $H = H^{\dagger}$, the spectral theorem states that the eigenvalue of $H$ must be a real number ($\lambda_i = \lambda_i^*$). As any quantity that can be measured experimentally must be real, Hermitian matrices are suitable for describing the Hamiltonians of quantum systems. Moreover, $H$ may be expressed as follows. 
+An eigenvector $\ket{\psi_i}$ of a matrix $A$ and its eigenvalue $\lambda_i$ satisfies $A \ket{\psi_i} = \lambda_i \ket{\psi_i}$. When the $H$ is an Hermitian ($H = H^{\dagger}$), the eigenvalue of $H$ is a real number ($\lambda_i = \lambda_i^*$) according to the spectral theorem. As any experimentally measured quantity is real number, we usually consider a Hermitian matrix to form the Hamiltonian of a physical system. Moreover, $H$ may be expressed as follows: 
 
 $$
 H = \sum_{i = 1}^{N} \lambda_i \ket{\psi_i} \bra{ \psi_i }
 $$
 
-ここで、各$\lambda_i$は固有ベクトル$\ket{\psi_i}$に対応する固有値です。任意の量子状態$\ket{\psi}$に対して観測量$H$を測定した時の期待値は、以下の式で与えられます。
-Here, each $\lambda_i$ is the eigenvalue corresponding to the eigenvector $\ket{\psi_i}$. Furthermore, the expectation value of the observable $H$ on an arbitrary quantum state $\ket{\psi}$ is given by the following formula. 
+where $\lambda_i$ is the eigenvalue associated with eigenvector $\ket{\psi_i}$. Since the expectation value of an observable $H$ for a quantum state $\ket{\psi}$ is given by
 
 $$
-\langle H \rangle_{\psi} \equiv \expval{ \psi }{ H }{ \psi }
+\langle H \rangle_{\psi} \equiv \expval{ \psi }{ H }{ \psi },
 $$
 
-上式の$H$を期待値の式に代入すると
-Substituting $H$ above into the expectation value formula gives us the following. 
+substituting the $H$ above into this equation results in the following. 
 
 $$
 \begin{aligned}
@@ -89,15 +84,13 @@ $$
 \end{aligned}
 $$
 
-になります。最後の式は、任意の状態$\ket{\psi}$に対する$H$の期待値は、$\lambda_i$を重みとした固有ベクトル$\ket{\psi_i}$と$\ket{\psi}$の内積（の絶対値二乗）の線形結合として与えられることを示しています。この式から、$| \braket{ \psi_i }{ \psi} |^2 \ge 0$ であるために
-The last equation demonstrates that the expectation value $H$ of an observable of any given state $\ket{\psi}$ can be expressed as a linear combination of (the absolute value square of) the inner products of eigenvector $\ket{\psi_i}$ and $\ket{\psi}$, weighted by $\lambda_i$. From this formula, we know that $| \braket{ \psi_i }{ \psi} |^2 \ge 0$, and so it is clear that the following is true. 
+The last equation shows that the expectation value of $H$ in a given state $\ket{\psi}$ can be expressed as a linear combination of (the squared absolute value of) the inner products of the eigenvector $\ket{\psi_i}$ and $\ket{\psi}$, weighted by the eigenvalue $\lambda_i$. Since $| \braket{ \psi_i }{ \psi} |^2 \ge 0$, it is obvious that the following holds:
 
 $$
 \lambda_{min} \le \langle H \rangle_{\psi} = \expval{ \psi }{ H }{ \psi } = \sum_{i = 1}^{N} \lambda_i | \braket{ \psi_i }{ \psi} |^2
 $$
 
-が成り立つことは明らかです。上記の式が**変分法**と呼ばれるもの（テキストによっては**変分原理**と呼ぶ）で、波動関数を「うまく取る」ことで、ハミルトニアン$H$の期待値の下限として最小固有値を近似的に求めることができることを表しています。この式から、$\ket{\psi_{min}}$状態の期待値は$\expval{ \psi_{min}}{H}{\psi_{min}} = \expval{ \psi_{min}}{\lambda_{min}}{\psi_{min}} = \lambda_{min}$になることも分かるでしょう。
-The above equation is known as the **variational method** (in some texts it is also known as the **variational principle**). It shows that by skillfully using the wave function, we can approximate the minimum eigenvalue that is the lower bound of the expectation value of Hamiltonian $H$. Moreover, the expectation value of the eigenstate $\ket{\psi_{min}}$ is given by $\expval{ \psi_{min}}{H}{\psi_{min}} = \expval{ \psi_{min}}{\lambda_{min}}{\psi_{min}} = \lambda_{min}$. 
+The above equation is known as **variational method** (also referred to as **variational principle**). It shows that if we can take an *appropriate* wavefunction, the smallest eigenvalue can be apprroximately obtained as the lower bound to the expectation value of the Hamiltonian $H$ (though how we can take such wavefunction is unknown at this point). Moreover, the expectation value of the eigenstate $\ket{\psi_{min}}$ is given by $\expval{ \psi_{min}}{H}{\psi_{min}} = \expval{ \psi_{min}}{\lambda_{min}}{\psi_{min}} = \lambda_{min}$.
 
 ### 基底状態の近似
 系のハミルトニアンがエルミート行列$H$で表現されている場合、系の基底状態のエネルギーは$H$の最小固有値になります。まず$\ket{\psi_{min}}$の初期推定としてある波動関数$\ket{\psi}$（*Ansatz*と呼ばれる）を選び、その状態での期待値$\langle H \rangle_{\psi}$を計算します。変分法の鍵は、この期待値が小さくなるように波動関数を更新しながら計算を繰り返し、ハミルトニアンの基底状態エネルギーに近づけていくところにあります。
