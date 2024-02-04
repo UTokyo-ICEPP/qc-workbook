@@ -30,7 +30,7 @@ language_info:
 
 In this unit, we'll introduce **Grover's algorithm**{cite}`grover_search,nielsen_chuang_search` and consider the problem of searching for an answer in an unstructured database using this algorithm. After that, We will implement Grover's algorithm using Qiskit. 
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---

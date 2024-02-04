@@ -30,7 +30,7 @@ language_info:
 
 In this exercise, you will be learning about **Shor's algorithm**. You may have heard this name before, as Shor's algorithm{cite}`shor,nielsen_chuang_qft_app` is one of the most famous quantum algorithms. After learning the method called **quantum phase estimation**, on which Shor's algorithm is based, we will then introduce each step of Shor's algorithm, together with actual examples. Lastly, we will use Qiskit to implement Shor's algorithm and exercise integer factoring.
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---
@@ -54,7 +54,6 @@ The difficulty involved in performing integer factoring with classical calculati
 
 First, let's learn about **quantum phase estimation** or QPE, on which Shor's algorithm is based. If you understand Shor's algorithm, you will realize that the heart of the algorithm is basically QPE itself. To understand QPE, it is essential that you understand the **quantum Fourier transform** or QFT. For more information about QFT, please refer to task 7 of [this exercise](circuit_from_scratch.ipynb) or to reference material[1].
 
-%（モンテカルロサンプラーの[実習](mc_sampler.ipynb)でも出てきます）。
 Since the QPE is a very important technique, it is widely used, not only in Shor's algorithm but also in various algorithms as a subroutine. 
 
 The question QPE seeks to address is
@@ -131,7 +130,7 @@ However, generally speaking, there is not guarantee that $2^n \theta$ will be an
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (qpe_imp)=
-## QPEの簡単な例を実装する
+## Implementation of Example QPE Problem
 
 Next, let's try to implement QPE using a simple quantum circuit.
 

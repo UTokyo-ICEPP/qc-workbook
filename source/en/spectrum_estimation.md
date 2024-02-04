@@ -24,7 +24,7 @@ language_info:
 
 # 【Exercise】Spectral Decomposition with Phase Estimation
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---

@@ -22,14 +22,13 @@ language_info:
   version: 3.10.6
 ---
 
-# 【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
+# 【Exercise】Find Tracks of Charged Particles Produced in High-Energy Physics Experiment 
 
 +++
 
-この課題では、変分量子固有値ソルバー法を物理実験に応用することを考えてみます。特に高エネルギー物理の実験に着目し、その必須技術である「**荷電粒子飛跡の再構成**」を変分量子固有値ソルバー法を使って実現することを目指します。
-In this assignment, you will think about how to apply the variational quantum eigensolver method to physics experiments. Specifically, this assignment focuses on high energy physics experiments and using the variational quantum eigensolver method to **reconstruct the tracks of charged particles**, an essential technology in this experiments.
+In this assignment, you will think about how to apply the variational quantum eigensolver to physics experiment. Specifically, we focuse on high-energy physics (HEP) experiment and attempt to **reconstruct tracks of charged particles**, which is essential for HEP experiments, using variational quantum eigensolver. 
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---
@@ -37,19 +36,17 @@ local: true
 
 +++
 
-## はじめに
-**変分量子固有値ソルバー法**（*Variational Quantum Eigensolver*, VQE）を紹介した{doc}`ノートブック <vqe>`で、VQEの考え方と変分量子回路の基本的な実装の方法を学びました。ここでは、VQEの高エネルギー物理への応用を考えてみます。
-In the {doc}`notebook<vqe>` that introduced the **Variational Quantum Eigensolver** (VQE), we learned about VQE and the basic method of implementing a variational quantum circuit. In this section, we will think about how to apply VQE to high energy physics.
+## Introduction
+In the {doc}`notebook<vqe>` that introduced **Variational Quantum Eigensolver** (VQE), we learned about the VQE and the basic method to implement a variational quantum circuit. In this section, we consider how we can apply VQE to high-energy physics.
 
-高エネルギー実験では、高いエネルギーに加速した粒子（例えば陽子）を人工的に衝突させ、生成された多数の二次粒子を検出器で測定することで、その生成過程をつかさどる基礎物理反応を理解していきます。そのためには、検出器で測定された信号から生成粒子を同定し、そのエネルギーや運動量を正しく再構成することがとても重要です。この実習では、生成した物理反応を再構成するための最初のステップとして、「**荷電粒子飛跡の再構成**」をVQEで実現する方法について学んでいきます。
-In high energy experiments, particles (such as protons) accelerated to high energies are made to artificially collide with each other. This produces numerous secondary particles, which are measured with a detector. Through these experiments, we seek to gain an understanding of fundamental physics reactions that govern the generation of these particles. To do this, signals measured by the detector are used to identify the generated particles. It is very important to accurately reconstruct the energies and kinetic momentum of these particles. In this exercise, you will take the first steps in reconstructing the physical reactions that are produced by using VQE to perform **charged particle track reconstruction**.
+In HEP experiments, particles with electric charges (such as protons) are accelerated through magnetic field to high energy and collide with each other. The collision produces a numerous number of secondary particles, which are measured using a detector surrounding a collision point. Through these experiments, we invetigate the fundamental properties of the particles and their underlying interaction mechanism. To do this, the detector signals are processed to identify the secondary particles and measure their energies and momenta precisely. In this exercise, you will learn if we can use VQE to **reconstruct tracks of charged particles** (generally called **tracking**) as the important first step to identify the particles.
 
 +++
 
 (hep)=
-## 高エネルギー実験
+## High-Energy Physics Experiment
 (hep_LHC)=
-### LHC実験の概要
+### Overview of LHC Experiment
 
 ```{image} figs/LHC_ATLAS.png
 :alt: LHC_ATLAS
@@ -57,23 +54,18 @@ In high energy experiments, particles (such as protons) accelerated to high ener
 :align: center
 ```
 
+The Large Hadron Collider (LHC) is a circular collider that lies at the border of Switzerland and France, operated by European Organization for Nuclear Research (CERN). It is placed inside a tunnel, located about 100 meters underground, with a 27 kilometer circumference. Currently the LHC can accelerate protons up to 6.5 TeV in energy (1 TeV is $10^12$ eV). The accelerated protons collide head-on at the world's highest energy of 13.6 TeV (see the picture at the upper left). The picture at the upper right shows the LHC in the underground tunnel.
 
-LHC（大型ハドロン加速器 Large Hadron Collider）は、スイスとフランスの国境に位置する欧州原子核研究機構（CERN）で運転されている円形の加速器です。地下約100 mに掘られた周長27 kmのトンネルの中に置かれ、6.8 TeVのエネルギーまで陽子を加速することができます（1 TeV = $10^{12}$ eV = $1.602 \times 10^{-7}$ J）。その加速された陽子を正面衝突させることで、世界最高エネルギーである13.6 TeV での陽子衝突実験を実現しています（左上の写真）。右上の写真は、地下トンネルに設置されたLHCの写真です。
-The Large Hadron Collider, or LHC, is a circular accelerator that lies on the border of Switzerland and France. It is operated by European Organization for Nuclear Research (CERN). It occupies a tunnel, roughly 100 meters underground, with a 27 kilometer circumference. The collider accelerates protons to energies of up to 6.5 TeV (1 TeV is $10^12$ eV). The accelerated protons collide head-on in proton collision tests with the world's highest energy levels, 13 TeV (see the photo at upper left). The photo at upper right shows the LHC within the underground tunnel.
-
-LHCでは4つの実験（ATLAS, CMS, ALICE, LHCb）が進行中ですが、その中でもATLASとCMSは大型の汎用検出器を備えた実験です（左下の写真が実際のATLAS検出器）。陽子衝突で発生した二次粒子を周囲に設置した高精度の検出器で観測することで、さまざまな素粒子反応の観測や新しい現象の探索などを行っています。右下の絵はATLAS検出器で実際に記録した粒子生成反応の一つで、これは2012年にATLASとCMSで発見されたヒッグス粒子の候補を示したものです（ヒッグス粒子は単体で測定されるわけではなく、その崩壊の結果出てきた多数の粒子を観測するのでこのように見えます）。
-Four experiments are currently in progress at the LHC (ATLAS, CMS, ALICE, and LHCb). Of these, ATLAS and CMS use large general-purpose detectors (the photo at bottom left shows ATLAS's detectors). Secondary particles generated by proton collisions are observed by highly accurate detectors arranged around the periphery. This makes it possible to observe reactions between elementary particles and explore new phenomena. The illustration at bottom right shows the formation reactions of particles that were recorded using ATLAS's detectors in an actual experiment. The particles were candidate Higgs bosons detected in 2012 by ATLAS and CMS (Higgs bosons are not detected on their own, but can be found by observing numerous particles that are produced by their decay).
+Four experiments, ATLAS, CMS, ALICE, and LHCb, are carried out at the LHC. Of these, the ATLAS and CMS experiments use large general-purpose detectors (the ATLAS detector is shown at the bottom left). In ATLAS and CMS, secondary particles generated by proton collisions are observed by high-precision detectors arranged surrounding the collision point, making it possible to observe various reactions and explore new phenomena. The bottom right figure shows an actual event observed with ATLAS detector, and it is a candidate of Higgs boson which was first observed in 2012 by the ATLAS and CMS experiments. The Higgs boson itself is observed not as a single particle but as a collection of particles produced from the decay of Higgs boson.
 
 +++
 
 (hep_detect)=
-### 荷電粒子の測定
+### Measurement of Charged Particles
 
-ATLASやCMS実験の検出器は、異なる性質を持った検出器を内側から外側に階層的に配置しています。最内層の検出器は荷電粒子の再構成や識別に使われる検出器で、実験では最も重要な検出器の一つです。この検出器はそれ自体が約10層程度の層構造を持っており、一つの荷電粒子が通過したとき、複数の検出器信号を作ります。
-例えば、左下図にあるように一度の陽子衝突で無数の粒子が生成され、それらが検出器に「ヒット」と呼ばれる信号を作ります（図中の白、黄色、オレンジ等の点に相当）。このヒットの集合から「ある荷電粒子が作ったヒットの組み合わせ」を選び、その粒子の「飛跡」を再構成します。右下図のいろいろな色の曲線が飛跡に対応します。この**飛跡の再構成**（**トラッキング**と呼ぶ）は、ATLASやCMS実験に限らず、高エネルギー実験では最も重要な実験技術の一つと言えます。
-The detectors used in the ATLAS and CMS experiments consist of multiple detectors with differing characteristics, arranged in layers, from inside to outside. The innermost detector is used to reconstruct and identify charged particles. It is one of the most important detectors used in the experiments. The detector itself is made up of roughly 10 layers and sends multiple detector signals when a single charged particle passes through it. For example, as the figure at bottom left shows, a single proton collision will generate countless particles, and in response the detector will produce signals called "hits" (these are the white, yellow, orange, and other colored points in the figure). From the collection of hits, sets of hits corresponding to a single charged particle are selected and used to reconstruct the track of the particle. The multicolored lines in the figure at bottom right correspond to these tracks. The reconstruction of these tracks is one of the most important experimental technologies used in all high energy experiment, not just ATLAS and CMS.
+The detectors used in ATLAS and CMS experiments consist of multiple detectors with differing characteristics, arranged outward in concentric layers. The innermost detector is used to reconstruct and identify charged particles, and is one of the most important detectors in the experiments. The detector itself is made up of roughly 10 layers and sends multiple detector signals when a single charged particle passes through it. For example, as in the lefft figure, a single proton collision produces many secondary particles, and leave the detector signal called "hits" (corresponding to colored points in the figure). From the collection of these hits, a set of hits produced by a charged particle traversing the detector is selected to reconstruct the particle track. The colored lines in the right figure correspond to reconstructed tracks. The reconstruction of charged particle tracks, called tracking, is one of the most important experimental techniques in HEP experiment.
 
-飛跡の再構成は本質的にはいわゆる「組合せ最適化」問題であるため、問題のスケール（粒子数）について計算量が指数関数的に増えます。LHCでビーム強度（一度に加速する粒子の数）を上げたり、将来さらに高いエネルギーの衝突型加速器実験を行ったりする場合、現在の（古典）計算機では飛跡を完全に再構成することが困難になることが予想されています。そこで、量子コンピュータを利用して計算時間を短縮するなど、様々なアプローチが検討・研究されています。
+The charged particle tracking is essentially an optimization problem of detector hits to tracks, and the computational cost often grows exponentially in the number of particles produced in collisions. The LHC is expected to be upgraded to higher beam intensity (number of protons to be accelerated in a single beam) or higher beam energy, and the current reconstruction technique could suffer from increasing computational complexity. Various new techniques are being examined, including quantum computing, to reduce the computational time or resources required for future HEP experiments.
 
 ```{image} figs/tracking.png
 :alt: tracking
@@ -84,24 +76,22 @@ The detectors used in the ATLAS and CMS experiments consist of multiple detector
 +++
 
 (ML_challenge)=
-### TrackMLチャレンジ
+### TrackML challenge
 
-CERNでは、将来の加速器計画として「高輝度LHC」（2027年に開始予定）と呼ばれるLHCの増強計画を進めており、実際にLHCのビーム強度が大幅に増加することになっています。高輝度LHC では、陽子の衝突頻度が現在の10倍近くに上がることになっており、発生する2次粒子の数もそれに応じて増えるため、トラッキングの効率化は実は喫緊の課題です。
-For the data used in this assignment, we will use the open data provided as part of the 2018 TrackML Particle Tracking Challenge. CERN has plans to upgrade its accelerator, with the High-Luminosity LHC to be put into operation in 2027. The High-Luminosity LHC will increase the frequency of proton collisions almost 10-fold. The number of secondary particles that are produced will increase accordingly, so tracking is expected to become extremely challenging. To tackle this, a simulated High-Luminosity LHC experimental environment was created and the TrackML Challenge was held to develop effective tracking technologies using the simulation.
+CERN has plans to upgrade the LHC to "High-Luminosity LHC" or HL-LHC (expected to start operation in 2029), in which the beam intensity is significantly increased. The increased beam intensity will result in 10-fold increase in collision rate and hence produced particle density, making charged particle tracking even more challenging.
 
-2027年から量子コンピュータを実際の実験で利用する見通しは残念ながらありませんが、古典コンピュータでも最先端の機械学習手法の導入などでまだまだアルゴリズムを改良する余地があると考えた研究者らによって、2018年に<a href="https://www.kaggle.com/c/trackml-particle-identification" target="_blank">TrackML Particle Trackingチャレンジ</a>というコンペティションが開催されました。このコンペティションでは、高輝度LHCでの実験環境のシミュレーションから得られた検出器のヒット情報が公開データとして参加者（物理学者に限らず誰でも参加可能）に提供され、参加者は自身のアルゴリズムをこのデータに対して適用して、トラッキングの早さや精度を競い合いました。
+Unfortunately it is hard to imagine that quantum computing can be used in real experiments from 2029. However, some researchers thought that the capability of classical reconstruction algorithm can be enhanced using advanced machine learning techniques and held a competition called <a href="https://www.kaggle.com/c/trackml-particle-identification" target="_blank">TrackML Particle Tracking challenge</a> in 2018. In this competition, the public data composed of detector hits simulated in HL-LHC environment are provided and the participants attempted to apply their own algorithms to these data to compete with each other in speed and accuracy.
 
 +++
 
 (tracking)=
-## 問題：VQEによるトラッキング
+## Exercise: Tracking with VQE
 
-この課題では、上のTrackMLチャレンジの公開データを用いて、VQEを数理最適化アルゴリズムとして応用してトラッキングを行うことを目指します。ただし、現在の量子コンピュータでは大きなサイズの問題を解くことはまだ難しいため、サイズの小さい問題、つまり少数の生成粒子が生成された場合に絞って検討を行います。
-Our goal in this exercise is to reconstruct the tracks of charged particles produced by high energy particle collisions (this is called "tracking"). It is still difficult for today's quantum computers to solve large problems, so we will work on a small problem -- that is, one in which few particles have been generated.
+Our goal in this exercise is to perform charged particle tracking with VQE using this TrackML challenge dataset. Since it is still difficult to solve large-scale tracking problem, we only consider the case of small number of particles produced in collision.
 
 +++
 
-まず、必要なライブラリを最初にインポートします。
+Fisrt, import the necessary libraries.
 
 ```{code-cell} ipython3
 ---
@@ -129,20 +119,19 @@ from qiskit_aer import AerSimulator
 ```
 
 (hamiltonian_form)=
-### ハミルトニアンの構成とVQEの実行
+### Hamiltonian and VQE 
 
-VQEを一般の最適化アルゴリズムとして利用するには、問題を何らかのハミルトニアンとして表現する必要があります。問題の最適解がそのハミルトニアンの基底（最低エネルギー）状態に対応するように構成できれば、VQEがその最適解を近似してくれます。
+In order to use VQE for optimization, the problem will need to be formulated in the form of Hamiltonian. If the problem is formulated such that the solution corresponds to the lowest energy state of the Hamiltonian, the VQE could solve the problem by finding such state.
 
 +++
 
 (pre_processing)=
-#### 前準備
+#### Preparation
 
-この課題ではTrackMLチャレンジのデータを用いますが、元のデータは扱いが難しいため、量子計算に用いやすいように前処理を行なったデータを使います。ここでのデータの準備やこの後のハミルトニアンの構成は、{cite}`bapst2019pattern`に基づいています。
-This assignment will use data from the TrackML challenge, but because original data is difficult to work with, we will use data that has been preprocessed to make it easier to use in quantum calculation.
+This assignment will use data from the TrackML challenge, but because original data is difficult to work with, we will use data that has been preprocessed to make it easier to use in quantum calculation, based on {cite}`bapst2019pattern`.
 
-まず下図に示したように、検出器3層に渡って連続するヒットを選び出します（点線で囲まれた3層ヒットのことを、ここでは「セグメント」と呼ぶことにします）。色のついた点がヒットだと考えてください。これらのセグメントはただヒットを結んだだけなので、全て実際の粒子の飛跡に対応しているとは限りません。別々の粒子によるヒットを結びつけてしまっている場合もあれば、検出器の電気的ノイズをヒットとして記録してしまい、そこからセグメントを作ってしまっていることもあり得ます。ただし、そのような「フェイク」のセグメントはあらゆる方向を向き得るのに対し、実際に陽子衝突で生じた粒子由来のセグメントは検出器中心を向きます。そこで、各セグメントについて**どれだけ検出器中心の方を向いているか**に基づいてスコアをつけます。このスコアは後で説明する理由によって、セグメントが検出器中心を向いているほど値が小さくなるように設定します。また、明らかにフェイクなセグメントは最初から無視するので、以降はスコアが一定以下のもののみを考えます。
-As the figure below shows, we have selected strings of three hits from three sensor layers (the string of three layers of hits enclosed by a dotted line is called a "segment"). Think of the colored dots as hits. In order to prioritize the selection of particles that were issued from the center of the circle of detectors, we will select segments that point towards the center of the circle of detectors.
+First, three consecutive layer hits are selected as shown in the figure below (a set of three-layer hits surrounded by a dashed line is called 'segment' here). Think of colored dots as hits. These segments are constructd simply by connecting hits, therefore they do not necessarily originate from real particles. Some of them may arise from connecting hits from different particles or from misidentifying detector noise as hits and grouping them to form segments. However, those "fake" segments can point to any directions while "genuine" segments originating from real particles should point to the center of the detector where collisions occur. 
+Given this, each segment is assigned *score* depending on how well the direction of the segment is consistent with that from the detector center. As explained later, the score is assigned a smaller value with increasing consistency of the segment pointing to the detector center. The segments obviously identified as fakes are ignored from the first place, and only segments with scores less than certain threshold are considered below.
 
 ```{image} figs/track_segment.png
 :alt: track_segment
@@ -150,60 +139,57 @@ As the figure below shows, we have selected strings of three hits from three sen
 :align: center
 ```
 
-次に、選び出されたセグメントから総当りでペアを作り、それぞれのペアについて、二つのセグメントが**同一の荷電粒子が作る飛跡とどれぐらい無矛盾なのか**を表すスコアをつけます。
-このスコアは、セグメントのペアが同一飛跡に近くなるにつれ、値が-1に近づくように設定されています。
+Next, all pairings of selected segments are taken. For each pairing, a score is then assigned depending on how the paired segments are **consistent with track originating from a single particle**. This score is designed to have value closer to -1 as the paired segments get closer to forming an identical track.
 
-例えば、セグメントを構成する3つのヒットのうちの1つが2つのセグメントに共有されているケース（図中で赤で示した場合に相当）は、飛跡の候補としては適切でないのでスコアが+1になります。なぜかと言うと、赤で示したような「枝分かれ」あるいは「収束」したような飛跡というのは、今興味がある飛跡（検出器中心で発生した荷電粒子の軌道）とは矛盾しているからです。
-We then create a list of the segments we have created, select arbitrary pairs of segments in the list, and consider the strength of their mutual interaction. Do not think of this mutual reaction as a physical force, but as an indicator of the consistency of the tracks if both segments were created by a single charged particle. This indicator is defined such that the closer the pair of segments are to forming a single track, the closer the strength of mutual interaction is to -1. If one of the three hits in a segment is shared by two segments (such as in the segments in red in the figure), it is not considered an appropriate track candidate, so its mutual interaction is set to +1. This is because tracks that branch or merge, as shown in red in the figure, are not consistent with the kinds of tracks we are currently interested in (the tracks of charged particles generated in the center of the circle of detectors).
+For example, if one of three hits in a segment is shared by two segments (such as those two red segments in the figure), it is not considered a track candidate and the score becomes +1. This is because these tracks with branched or merged segments are not consistent with charged particles produced at the center of the detector.
 
-また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは言えないため、スコアは-1より大きな値に設定されます。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で同じ方向に粒子の軌道が曲がるからです。
-Furthermore, the segment shown in orange in the figure (in which one of the hits is missing) and the segment shown in brown (in which the track zigzags) are not tracks of interest to us, so we set their mutual interactions to a value greater than -1. The reason we aren't interested in tracks that zigzag is that if a charged particle enters a uniform magnetic field orthogonally, due to the Lorentz force, its track on the incident plane will curve with a constant amount of curvature.
+Furthermore, the segments shown in orange (one of the hits is missing in intermediate layer) and in brown (a zigzag pattern) are not tracks of our interest either, therefore the score is set value larger than -1. The reason why a zigzag pattern is not preferred is that if a charged particle enters perpendicularly into a uniform magnetic field, the trajectory of the particle is bent with a constant curvature on the incident plane due to Lorentz force. 
 
 +++
 
-#### QUBO
+#### QUBO Format
 
-以上のセットアップで、各セグメントを粒子飛跡の一部として採用するかフェイクとして棄却するかを考えます。具体的には、$N$個のセグメントのうち$i$番目の採用・棄却を二値変数$T_i$の値1と0に対応させ、目的関数
+Under this setup, the next step is whether a given segment is adopted as part of particle tracks or rejected as fake. In a sample of $N$ segments, the adoptation or rejection of $i$-th segment is associated to 1 or 0 of a binary variable $T_i$, and the variable $T_i$ is determined such that the objective function defined as
 
 $$
 O(b, T) = \sum_{i=1}^N a_{i} T_i + \sum_{i=1}^N \sum_{j<i}^N b_{ij} T_i T_j
 $$
 
-を最小化する$\{T_i\}$を求めます。ここで$a_i$は上で決めたセグメント$i$のスコア、$b_{ij}$はセグメント$i$と$j$のペアのスコアです。$a_i$の値が小さい（検出器中心を向いている）、かつ$b_{ij}$の値が小さい（正しい飛跡と無矛盾な）ペアを組んでいるセグメントを採用し、そうでないものを棄却するほど、$O$の値は小さくなります。採用すべきセグメントが決まれば、それに基づいてすべての粒子飛跡を再構成できるので、この最小化問題を解くことがトラッキングに対応します。
+is minimized. Here $a_i$ is the score of $i$-th segment and $b_{ij}$ is the score of the pair of $i$- and $j$-th segments. The objective function becomes smaller by selecting segments that have smaller $a_i$ values (pointing towards the detector center) and are paired with other segments with smaller $b_{ij}$ values (more consistent with a real track) and rejecting otherwise. Once correct segments are identified, the corresponding tracks can be reconstructed with high efficiency. Therefore, solving this minimization problem is the key to tracking.
 
-上のような形式の最適化問題を**QUBO**（*Quadratic Unconstrained Binary Optimization*、2次制約無し2値最適化）と呼びます。一見特殊な形式ですが、実は様々な最適化問題（例えば有名な巡回セールスマン問題なども）がQUBOの形に落とし込めることが知られています。また、ここでは直接関係しませんが、量子アニーリングマシンと呼ばれるタイプの量子コンピュータでは、QUBOを解くことが動作の基本です。
+The optimization problem of the form illustrated above is called **QUBO**（*Quadratic Unconstrained Binary Optimization*). The form looks unique at first glance, but it is known that various optimization problems (for example, the famous travelling salesman problem) can be converted to QUBO format. This exercise considers only gate-based quantum computer, but different type of quantum computer called quantum annealing is designed to solve QUBO problem primarily. 
 
-それでは、まずスコア$a_{i}$と$b_{ij}$を読み出しましょう。
+Let us first read out the scores $a_i$ and $b_{ij}$.
 
 ```{code-cell} ipython3
-# スコアの読み込み
+# Reading out scores
 with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
     a_score = source['a_score'][()]
     b_score = source['b_score'][()]
 
 print(f'Number of segments: {a_score.shape[0]}')
-# 最初の5x5をプリント
+# Print out the first 5x5
 print(a_score[:5])
 print(b_score[:5, :5])
 ```
 
-#### Ising形式
+#### Ising Format
 
-QUBOの目的関数はまだハミルトニアンの形になっていない（エルミート演算子でない）ので、VQEを使ってこの問題を解くにはさらに問題を変形する必要があります。ここで$T_i$が$\{0, 1\}$のバイナリー値を持つことに着目すると、
+The QUBO objective function is not the form of Hamiltonian (i.e, not Hermitian operator). Therefore, the objective function needs to be transformed before solving with VQE. Given that $T_i$ takes a binary value $\{0, 1\}$, a new variable $s_i$ with values of $\{+1, -1\}$ can be defined by 
 
 $$
-T_i = \frac{1}{2} (1 - s_i)
+T_i = \frac{1}{2} (1 - s_i).
 $$
 
-で値$\{+1, -1\}$を持つ変数$s_i$を定義できます。次に、$\{+1, -1\}$はパウリ演算子の固有値でもあるため、$s_i$を量子ビット$i$にかかるパウリ$Z$演算子で置き換えると、$N$量子ビット系の各計算基底がセグメントの採用・棄却をエンコードする固有状態となるような目的ハミルトニアン
+Note that $\{+1, -1\}$ is the eigenvalue of Pauli operator. By replacing $s_i$ with Pauli $Z$ operator acting on $i$-th qubit, the following objective Hamiltonian for which computational basis states in $N$-qubit system correspond to the eigenstates that encode adoptation or rejection of the segments is obtained.  
 
 $$
 H(h, J, s) = \sum_{i=1}^N h_i Z_i + \sum_{i=1}^N \sum_{j<i}^N J_{ij} Z_i Z_j + \text{(constant)}
 $$
 
-が得られます。これは物理を始め自然科学の様々な場面で登場するIsing模型のハミルトニアンと同じ形になっています。右辺の$\text{constant}$はハミルトニアンの定数項で、変分法において意味を持たないので以降は無視します。
+The form of this Hamiltonian is the same as Ising model Hamiltonian, which often appears in various fields of natural science. The $\text{constant}$ is constant and has no impact in variational method, hence is ignored in the rest of this exercise.
 
-以下のセルで、上の処方に従ってIsingハミルトニアンの係数$h_i$と$J_{ij}$を計算してください。
+By following the above prescription, please calculate the coefficients $h_i$ and $J_{ij}$ of the Hamiltonian in the next cell.
 
 ```{code-cell} ipython3
 num_qubits = a_score.shape[0]
@@ -215,26 +201,26 @@ coeff_J = np.zeros((num_qubits, num_qubits))
 ### EDIT BELOW ###
 ##################
 
-# coeff_hとcoeff_Jをb_ijから計算してください
+# Calculate coeff_h and coeff_J from b_ij
 
 ##################
 ### EDIT ABOVE ###
 ##################
 ```
 
-次に、この係数をもとに、VQEに渡すハミルトニアンをSparsePauliOpとして定義します。{ref}`vqe_imp`ではSparsePauliOpは単一のパウリ積$ZXY$を表現するのに使いましたが、実はパウリ積の和も同じクラスを使って表現できます。例えば
+Next, let us define the Hamiltonian used in VQE as a SparsePauliOp object. In {ref}`vqe_imp` the SparsePauliOp was used to define a single Pauli string $ZXY$, but the same class can be used for the sum of Pauli strings. For example, 
 
 $$
 H = 0.2 IIZ + 0.3 ZZI + 0.1 ZIZ
 $$
 
-は
+can be expressed as
 
 ```python
 H = SparsePauliOp(['IIZ', 'ZZI', 'ZIZ'], coeffs=[0.2, 0.3, 0.1])
 ```
 
-となります。このとき、通常のQiskitの約束に従って、量子ビットの順番が右から左（一番右が第0量子ビットにかかる演算子）であることに注意してください。
+Note that the qubits are ordered from right to left (the most right operator acts on the 0-th qubit) according to the rule in Qiskit. 
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
@@ -243,7 +229,7 @@ H = SparsePauliOp(['IIZ', 'ZZI', 'ZIZ'], coeffs=[0.2, 0.3, 0.1])
 ### EDIT BELOW ###
 ##################
 
-# 係数が0でないパウリ積をすべて拾い出し、対応する係数の配列を作成してください
+# Pick up all Pauli strings with non-zero coefficients and make the array of corresponding coefficients
 
 pauli_products = []
 coeffs = []
@@ -256,9 +242,9 @@ hamiltonian = SparsePauliOp(pauli_products, coeffs=coeffs)
 ```
 
 (tracking_vqe)=
-#### VQEの実行
+#### Executing VQE
 
-上で定義したハミルトニアンを元に、VQEを使ってエネルギーの最小固有値（の近似解）を求めていきます。ただその前に、このハミルトニアンの行列を対角化して、エネルギーの最小固有値とその固有ベクトルを厳密に計算した場合の答えを出してみましょう。
+Now we try to approximately obtain the lowest energy eigenvalues using VQE with the Hamiltonian defined above. But, before doing that, let us diagonalize the Hamiltonian matrix and calculate the exact energy eigenvalues and eigenstates. 
 
 ```{code-cell} ipython3
 ---
@@ -268,20 +254,20 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# ハミルトニアン行列を対角化して、エネルギーの最小固有値と固有ベクトルを求める
+# Diagonalize the Hamiltonian and calculate the energy eigenvalues and eigenstates
 ee = NumPyMinimumEigensolver()
 result_diag = ee.compute_minimum_eigenvalue(hamiltonian)
 
-# 最小エネルギーに対応する量子ビットの組み合わせを表示
+# Print out the combination of qubits corresponding to the lowest energy
 print(f'Minimum eigenvalue (diagonalization): {result_diag.eigenvalue.real}')
-# 解状態を計算基底で展開し、最も確率の高い計算基底を選ぶ
+# Expand the state with computational bases and select the one with the highest probability
 optimal_segments_diag = OptimizationApplication.sample_most_likely(result_diag.eigenstate)
 print(f'Optimal segments (diagonalization): {optimal_segments_diag}')
 ```
 
-`optimal_segments_diag`のリストで1になっている量子ビットが、目的関数を最小化するセグメントの選択に対応します。
+The qubits with 1 in `optimal_segments_diag` correspond to segments that make the value of the objective function smallest. 
 
-次に、VQEで最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。
+Next, the energy eigenvalues are obtained using VQE. The following code uses SPSA or COBYLA as optimizer. 
 
 ```{code-cell} ipython3
 ---
@@ -292,13 +278,13 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 backend = AerSimulator()
-# Estimatorインスタンスを作る
+# Create Estimator instance
 estimator = BackendEstimator(backend)
 
-# VQE用の変分フォームを定義。ここではTwoLocalという組み込み関数を使う
+# Define variational form of VQE using a built-in function called TwoLocal.   
 ansatz = TwoLocal(num_qubits, 'ry', 'cz', 'linear', reps=1)
 
-# オプティマイザーを選ぶ
+# Optimizer
 optimizer_name = 'SPSA'
 
 if optimizer_name == 'SPSA':
@@ -309,18 +295,18 @@ elif optimizer_name == 'COBYLA':
     optimizer = COBYLA(maxiter=500)
     grad = None
 
-# パラメータの初期値をランダムに設定
+# Initialize parameters
 rng = np.random.default_rng()
 init = rng.uniform(0., 2. * np.pi, size=len(ansatz.parameters))
 
-# VQEオブジェクトを作り、基底状態を探索する
+# Make VQE object and find the ground state
 vqe = VQE(estimator, ansatz, optimizer, gradient=grad, initial_point=init)
 result_vqe = vqe.compute_minimum_eigenvalue(hamiltonian)
 
-# 最適解のパラメータ値をansatzに代入し、状態ベクトルを計算する
+# Create state vector from ansatz using optimized parameters
 optimal_state = Statevector(ansatz.bind_parameters(result_vqe.optimal_parameters))
 
-# 最小エネルギーに対応する量子ビットの組み合わせを表示
+# Print out the combination of qubits with the lowest energy
 print(f'Minimum eigenvalue (VQE): {result_vqe.eigenvalue.real}')
 optimal_segments_vqe = OptimizationApplication.sample_most_likely(optimal_state)
 print(f'Optimal segments (VQE): {optimal_segments_vqe}')
@@ -329,13 +315,11 @@ print(f'Optimal segments (VQE): {optimal_segments_vqe}')
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (omake)=
-### おまけ
+### A Giveaway
 
-Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。
-Even if tracking is successful, expressing the answer as a string of 0s and 1s is a bit dry. Run the following code to visually confirm if the correct tracks were discovered.
+Even if the tracking works successfully, expressing the answer as a string of 0s and 1s is a bit dry. Run the following code to visually confirm if correct tracks are found.
 
-このコードは、QUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面でプロットして、どのヒットが選ばれたかを分かりやすく可視化したものです。緑の線が実際に見つかった飛跡で、青の線を含めたものが全体の飛跡の候補です。この実習では限られた数の量子ビットしか使っていないため、大部分の飛跡は見つけられていませんが、緑の線から計算に使った3点ヒットからは正しく飛跡が見つかっていることが分かると思います。
-This code plots the detector bit locations used when QUBO was defined on a plant perpendicular to the beam axis. It makes it easy to visualize which hits were selected. The green lines are the tracks that were actually discovered, and the blue lines together with the green lines represent all of the track candidates. In this exercise, you only used a limited number of quantum bits, so most of the tracks were not found, but looking at the green lines, you can see that the correct tracks were chosen for the sets of three hits used in the calculations.
+This code viualizes the detector hits used in QUBO by projecting them onto a plane perpendicular to the beam axis and shows which detector hits are selected after optimization. The green lines correspond to found tracks and the blue lines, altogether with the green ones, correspond to all track candidates. In this exercise, only small number of qubits are used and therefore most of tracks are not found. However, it shows that a correct track is successfully found from the presence of green line.
 
 ```{code-cell} ipython3
 ---
@@ -352,12 +336,12 @@ from hepqpr.qallse.utils import diff_rows
 optimal_segments = optimal_segments_vqe
 # optimal_segments = optimal_segments_diag
 
-# セグメントにはそれぞれIDがついているので、{ID: 0 or 1}の形でQallseにデータを渡す
-# まずはセグメントのIDの読み出し（バイナリ文字データで保存されているので、UTF-8にdecodeしている）
+# Since each segment has ID, the data is passed to Qallse in the form of {ID: 0 or 1}
+# Read out segment IDs (decode into UTF-8 because the data is stored in binary text data)
 with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
     triplet_keys = map(lambda key: key.decode('UTF-8'), source['triplet_keys'][()])
 
-# ここで {ID: 0 or 1} の辞書を作っている
+# Dictionary in {ID: 0 or 1}
 samples = dict(zip(triplet_keys, optimal_segments))
 
 # get the results
@@ -379,8 +363,5 @@ dout = 'plot-ising_found_tracks.html'
 iplot_results(dw, final_doublets, missings, dims=dims, filename=dout)
 ```
 
-**提出するもの**
-- ハミルトニアンを実装する部分のコード
 **Items to submit**:
 - Code used to implement the Hamiltonian 
-
