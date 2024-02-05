@@ -40,14 +40,13 @@ varInspector:
   window_display: false
 ---
 
-# 量子機械学習を使った新しい素粒子現象の探索
+# Search for New Physics with Quantum Machine Learning
 
 +++
 
-この実習では、**量子・古典ハイブリッドアルゴリズム**の応用である**量子機械学習**の基本的な実装を学んだのち、その活用例として、**素粒子実験での新粒子探索**への応用を考えます。ここで学ぶ量子機械学習の手法は、変分量子アルゴリズムの応用として提案された、**量子回路学習**と呼ばれる学習手法{cite}`quantum_circuit_learning`です。
-In this exercise, you will first learn the basics of implementing **quantum machine learning**, which applies hybrid quantum-classical algorithms. Then, as an application example, you will explore applying quantum machine learning to the **search for new particles in elementary particle experiments**. The quantum machine learning methods you will learn here are learning methods which use variational quantum circuits, proposed from the perspective of using quantum computers to improve the capabilities of classical machine learning{cite}`quantum_circuit_learning`.
+In this exercise, we will first learn the basics of **Quantum Machine Learning** (QML), which is a typical application of quantum-classical hybrid algorithm. After that, we will explore, as an example, application of quantum machine learning to **search for new particles in particle physics experiment**. The QML technique that we learn here is called **Quantum Circuit Learning** (QCL) {cite}`quantum_circuit_learning` developed as an extension of Variational Quantum Algorithm. 
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---
@@ -58,26 +57,21 @@ $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 
 +++
 
-## はじめに <a id='introduction'></a>
+## Introduction <a id='introduction'></a>
 
-近年、機械学習の分野において**深層学習**（**ディープラーニング**）が注目を浴びています。ディープラーニングは**ニューラルネットワーク**の隠れ層を多層にすることで、入力と出力の間の複雑な関係を学習することができます。その学習結果を使って、新しい入力データに対して出力を予測することが可能になります。ここで学習する量子機械学習アルゴリズムは、このニューラルネットワークの部分を変分量子回路に置き換えたものです。つまり、ニューラルネットワークでの各ニューロン層への重みを調節する代わりに、変分量子回路のパラメータ（例えば回転ゲートの回転角）を調整することで入力と出力の関係を学習しようという試みです。
-量子力学の重ね合わせの原理から、**指数関数的に増える多数の計算基底**を使って状態を表現できることが量子コンピュータの強みです。この強みを生かすことで、データ間の複雑な相関を学習できる可能性が生まれます。そこに量子機械学習の最も大きな強みがあると考えられています。
-In recent years, within the field of machine learning, particular attention has been turned to **deep learning**. Deep learning uses multiple hidden layers in **neural networks** to learn complex relationships between input and output. The results of this learning can be applied to new input data to predict output. The quantum machine learning algorithm you will study in this unit replaces the neural network portion with a variational quantum circuit. In other words, instead of adjusting the weighting of each neuron layer in the neural network, you will attempt to have the system learn the relationships between input and output by adjusting the parameters of the variational quantum circuit (such as the rotation angle of rotation gates). One of the strengths of quantum computers is that, due to the principles of quantum mechanical superposition, states can be expressed using exponentially increasing numbers of computational basis states. We can leverage this strength to learn complex mutual relationships between items of data. This is considered one of the greatest strengths of quantum machine learning.
+In recent years, **Deep Learning** (DL) has gained considerable attention in the field of machine learning (ML). A generic deep learning model uses multiple hidden layers in the architecture of **neural networks** (NN)) and attempts to learn complex relationship between 
+input and output. The successfully learned DL model is capable of predicting outout for unseen input data. The QML algorithm that we study in this unit is based on a variational quantum circuit that replaces neural network in a ML model. In other words, instead of adjusting trainable parameters for each neuron in neural networks, the QML model learns the input-output relation by adjusting the parameters of variational quantum circuit such as angles of rotation gates. 
+A strength of quantum computer lies in the fact that it can represent exponentially large Hilbert space using finite number of qubits. If we can leverage this strength, the QML might be able to learn complex, high-dimensional correlations between data, providing a unique strength compared to conventional classical ML. 
 
-多項式で与えられる数の量子ゲートを使って、指数関数的に増える関数を表現できる可能性があるところに量子機械学習の強みがありますが、誤り訂正機能を持たない中規模の量子コンピュータ (*Noisy Intermediate-Scale Quantum*デバイス, 略してNISQ）で、古典計算を上回る性能を発揮できるか確証はありません。しかしNISQデバイスでの動作に適したアルゴリズムであるため、2019年3月にはIBMの実験チームによる実機での実装がすでに行われ、結果も論文{cite}`quantum_svm`として出版されています。
-We can express an exponential growing number of functions using a polynomially-determined number of quantum gates. This is one of the strengths of quantum machine learning. Nonetheless, there is no guarantee that medium-sized quantum computers without error correction functions, called *Noisy Intermediate-Scale Quantum* devices (NISQ devices), can exceed the performance of classical computers. However, an experimental team in IBM already implemented quantum machine learning on an actual QC in March 2019, because the algorithms used were more appropriate for a NISQ device. The results of this project have been published in an academic paper{cite}`quantum_svm`.
+The QML model is in general capable of representing wide range of functions using a polynomial number of quantum gates if the circuit is sufficiently deep. However, the QML in quantum-classical hybrid architecture is essentially heuristic and has no mathematical guarantee that it is superior to classical ML in terms of computational complexity (except for specific cases). In particular, in the era of *Noisy Intermediate-Scale Quantum* (NISQ) computer with hardware noise, it is not clear whether the QML has any advantage over classical ML, and therefore it is an active area of research. Since the quantum-classical hybrid QML is suitable for NISQ computer, an early QCL algorithm was implemented into IBM Quantum hardware by IBM team in March 2019, and the result was published in a paper{cite}`quantum_svm`. 
 
 +++
 
-## 機械学習と深層学習 <a id='ml'></a>
+## Machine Learneing and Deep Learning <a id='ml'></a>
 
-機械学習を一言で（大雑把に）説明すると、与えられたデータを元に、ある予測を返すような機械を実現する工程だと言えます。例えば、2種類の変数$\mathbf{x}$と$\mathbf{y}$からなるデータ（$(x_i, y_i)$を要素とするベクトル、$i$は要素の添字）があったとして、その変数間の関係を求める問題として機械学習を考えてみましょう。つまり、変数$x_i$を引数とする関数$f$を考え、その出力$\tilde{y_i}=f(x_i)$が$\tilde{y}_i\simeq y_i$となるような関数$f$をデータから近似的に求めることに対応します。
-一般的に、この関数$f$は変数$x$以外のパラメータを持っているでしょう。なので、そのパラメータ$\mathbf{w}$をうまく調整して、$y_i\simeq\tilde{y}_i$となる関数$f=f(x,\mathbf{w}^*)$とパラメータ$\mathbf{w}^*$を求めることが機械学習の鍵になります。
+Machine learning could be (very broadly) described as a series of processes that is provided data and returns predictions from the data. For example, imagine that we have data consisting of two variables, $\mathbf{x}$ and $\mathbf{y}$ (both are vectors made of elements $(x_i, y_i)$ with $i$ as the element index), and consider machine learning for determining the relation between the variables. Let us think of a function $f$ which takes $x_i$ as an input variable. Then, this machine learning problem corresponds to determining the function $f$ from the data so that the output of the function $\tilde{y_i}=f(x_i)$ is as close to $\tilde{y}_i\simeq y_i$ as possible. In general, this function $f$ has parameters other than the input variable $x$, denoted by $\mathbf{w}$ here. Therefore, this ML problem is to determine the function $f=f(x,\mathbf{w}^*)$ and optimized parameter $\mathbf{w}^*$ by adjusting the $\mathbf{w}$ such that $y_i\simeq\tilde{y}_i$.
 
-Machine learning could be (very broadly) described as a series of processes that functions like a machine which returns predictions when given data. For example, imagine that you have data consisting of two variables, $x$ and $y$ (a vector made up of elements $(x_i, y_i)$ with $i$ as the subscript index). Let's look at machine learning for determining the relationship between these variables. Let us think of a function $f$ which uses variable $x_i$ as an argument. This function $f$ is approximated from the data such that output $\tilde{y_i}=f(x_i)$ is $\tilde{y}_i\simeq y_i$. Generally speaking, this function $f$ will have parameters other than variable $x$. For example, parameter $w$. The key, then, to machine learning is to properly adjust parameter $w$ and determine a parameter $\mathbf{w}^*$ and a function $f=f(x,\mathbf{w}^*)$ such that $y_i\simeq\tilde{y}_i$.
-
-関数$f$を近似する方法の一つとして、現在主流になっているのが脳のニューロン構造を模式化したニューラルネットワークです。下図に示しているのは、ニューラルネットの基本的な構造です。丸で示しているのが構成ユニット（ニューロン）で、ニューロンを繋ぐ情報の流れを矢印で表しています。ニューラルネットには様々な構造が考えられますが、基本になるのは図に示したような層構造で、前層にあるニューロンの出力が次の層にあるニューロンへの入力になります。入力データ$x$を受ける入力層と出力$\tilde{y}$を出す出力層に加え、中間に複数の「隠れ層」を持つものを総称して深層ニューラルネットワークと呼びます。
-The most common method currently being used to approximate $f$ is to use a neural network that simulates the neural structure of the brain. The figure below shows the basic structure of a neural network. The circles indicate structural units (neurons), and the arrows indicate the flow of information between connected neurons. Neural networks can have many different structures, but the basic structure is as shown below, with the output from neurons in one layer becoming the input for neurons in the next layer. In addition to the input layer, which accepts input data $x$, and the output layer, which outputs $\tilde{y}$, there are also so-called "hidden layers." Together, this structure is collectively referred to as a deep neural network.
+One of the most popular methods to approximate the function $f$ is to use artificial neural networks that model the neural structure of the brain. The basic structure of neural networks is shown below. The circles indicate structural units (neurons), and the arrows indicate the flow of information between connected neurons. Neural networks have many different structures, but shown in the figure is the basic one, with the output from neurons in a layer becoming input to neurons in the next layer. In addition to the input layer which accepts inputs $x$ and the output layer that outputs $\tilde{y}$, the intermediate layers called hidden layers are often considered. Such neural network model is collectively referred to as deep neural networks.
 
 ```{image} figs/neural_net.png
 :alt: var_circuit
@@ -85,15 +79,13 @@ The most common method currently being used to approximate $f$ is to use a neura
 :align: center
 ```
 
-では、もう少し数学的なモデルを見てみましょう。$l$層目にある$j$番目のユニット$u_j^l$に対して、前層（$l-1$番目）から$n$個の入力$o_k^{l-1}$ ($k=1,2,\cdots n$) がある場合、入力$o_k^{l-1}$への重みパラメータ$w_k^l$を使って
-Let's look at the mathematical model in a bit more depth. Let us consider a unit, unit $u_j^l$, where $l$ is the layer number and $j$ is the number of the unit. If, in the preceding layer (the $l-1$ layer), there are $n$ inputs of $o_k^{l-1}$ ($k=1, 2, \cdots, n$), then let us consider output $o_j^l$, applying weighting parameter $w_k^l$ to input $o_k^{l-1}$, such that the following is true.
+Let us look at the mathematical model of neural networks. Denoting the $j$-th unit in the $l$-th layer as $u_j^l$, if the $u_j^l$ takes $n$ inputs $o_k^{l-1}$ ($k=1,2,\cdots n$) from the units in the preceding $(l-1)$-th layer, the output from the unit $u_j^l$ is expressed as follows by applying weights $w_k^j$ to the inputs $o_k^{l-1}$: 
 
 $$
 o_j^l=g\left(\sum_{k=1}^n o_k^{l-1}w_k^l\right)
 $$
 
-となる出力$o_j^l$を考えます。図で示すと
-In a figure, this would be represented as follows.
+This can be shown in the figure below.
 
 ```{image} figs/neuron.png
 :alt: var_circuit
@@ -101,54 +93,38 @@ In a figure, this would be represented as follows.
 :align: center
 ```
 
-になります。関数$g$は活性化関数と呼ばれ、入力に対して非線形な出力を与えます。活性化関数としては、一般的にはシグモイド関数やReLU（Rectified Linear Unit）等の関数が用いられることが多いです。
-Function $g$ is called an activation function, and the output is nonlinear with respect to the input. Generally, functions such as sigmoid functions and ReLU (Rectified Linear Unit) functions are used as activation functions.
+The function $g$ is called activation function, and gives a non-linear output with respect to the input. Sigmoid function or ReLU (Rectified Linear Unit) is often used as activation function.
 
-関数$f(x,\mathbf{w}^*)$を求めるために、最適なパラメータ$\mathbf{w}^*$を決定するプロセス（学習と呼ばれる）が必要です。そのために、出力$\tilde{y}$とターゲットとなる変数$y$の差を測定する関数$L(\mathbf{w})$を考えます（一般に損失関数やコスト関数と呼ばれます）。
-
-To find function $f(x,\mathbf{w}^*)$, we need a process for determining the optimized parameter $\mathbf{w}^*$ (this is called "learning"). For this reason, we will consider a function $L(\mathbf{w})$ for measuring the difference between output $\tilde{y}$ and the target variable $y$ (this is generally called a "loss function" or a "cost function").
+To determine the function $f(x,\mathbf{w}^*)$, we need to optimize the parameter $\mathbf{w}$ and this process is called learning. For this reason, another function $L(\mathbf{w})$ to quantify the difference between the output $\tilde{y}$ and the target variable $y$, generally called "loss function" or "cost function", is necessary.
 
 $$
 L(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^N L(f(x_i,\mathbf{w}),y_i)
 $$
 
-$N$は$(x_i, y_i)$データの数です。この損失関数$L(\mathbf{w})$を最小化するパラメータ$\mathbf{w}^*$を求めたいわけですが、それには誤差逆伝搬法と呼ばれる手法を使うことができることが知られています。この手法は、$L(\mathbf{w})$の各$w$に対する微分係数$\Delta_w L(\mathbf{w})$を求めて、
-
-$N$ is the number of $(x_i,y_i)$ data. We want to find the parameter $\mathbf{w}^*$ that minimizes the loss function $L(\mathbf{w})$. One known way for doing so is the error back propagation method. This method seeks to determine the derivative $\Delta_w L(\mathbf{w})$ for each $w$ of $L(\mathbf{w})$ by updating $w$ as shown below.
+Here $N$ is the number of $(x_i, y_i)$ data points. We want to determine the parameter $\mathbf{w}^*$ that minimizes the loss function $L(\mathbf{w})$, and this can be done using the method called gradient descent. 
+In the gradient descent method, one attempts to calculate the partial derivative of the loss function, $\Delta_w L(\mathbf{w})$, for each parameter $w$ and update the parameter so that the loss function "decreases" as follows:
 
 $$
-w'=w-\epsilon\Delta_w L(\mathbf{w})
+w'=w-\epsilon\Delta_w L(\mathbf{w}),
 $$
 
-のように$w$を更新することで、$L(\mathbf{w})$を最小化するというものです（$w$と$w'$は更新前と更新後のパラメータ）。$\epsilon\:(>0)$は学習率と呼ばれるパラメータで、これは基本的には私たちが手で決めてやる必要があります。
-Through this process, it minimizes $L(\mathbf{w})$ ($w$ and $w'$ represent the parameter before and after updating). $\epsilon\:(>0)$ is a parameter known as the "learning rate," and we must essentially decide this by hand.
+where $w$ and $w'$ are parameters before and after being updated, respectively. The $\epsilon\:(>0)$ is a parameter known as a learning rate, and this typically needs to be given by hand.
 
 +++
 
-## 量子回路学習<a id='qml'></a>
+## Quantum Circuit Learning<a id='qml'></a>
 
-変分量子回路を用いた量子回路学習アルゴリズムは、一般的には以下のような順番で量子回路に実装され、計算が行われます。
-Generally speaking, with quantum machine learning algorithms that use variational quantum circuits, the quantum circuits are implemented using the procedure below and used to perform computation.
+The QML algorithm based on variational quantum circuit generally takes the following steps to construct learning model, implement it into a quantum circuit and execute: ed to perform computation.
 
-1. **学習データ**$\{(\mathbf{x}_i, y_i)\}$を用意する。$\mathbf{x}_i$は入力データのベクトル、$y_i$は入力データに対する真の値（教師データ）とする（$i$は学習データのサンプルを表す添字）。
-2. 入力$\mathbf{x}$から何らかの規則で決まる回路$U_{\text{in}}(\mathbf{x})$（**特徴量マップ**と呼ぶ）を用意し、$\mathbf{x}_i$の情報を埋め込んだ入力状態$\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}$を作る。
-3. 入力状態にパラメータ$\boldsymbol{\theta}$に依存したゲート$U(\boldsymbol{\theta})$（**変分フォーム**）を掛けたものを出力状態$\ket{\psi_{\text{out}}(\mathbf{x}_i,\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x}_i)}$とする。
-4. 出力状態のもとで何らかの**観測量**を測定し、測定値$O$を得る。例えば、最初の量子ビットで測定したパウリ$Z$演算子の期待値$\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}$などを考える。
-5. $F$を適当な関数として、$F(O)$をモデルの出力$y(\mathbf{x}_i,\boldsymbol{\theta})$とする。
-6. 真の値$y_i$と出力$y(\mathbf{x}_i,\boldsymbol{\theta})$の間の乖離を表す**コスト関数**$L(\boldsymbol{\theta})$を定義し、古典計算でコスト関数を計算する。
-7. $L(\boldsymbol{\theta})$が小さくなるように$\boldsymbol{\theta}$を更新する。
-8. 3-7のプロセスを繰り返すことで、コスト関数を最小化する$\boldsymbol{\theta}=\boldsymbol{\theta^*}$を求める。
-9. $y(\mathbf{x},\boldsymbol{\theta^*})$が学習によって得られた**予測モデル**になる。
-
-10. The learning data $\{(\mathbf{x}_i, y_i)\}$ is prepared. $\mathbf{x}_i$ represents the input data vector and $y_i$ represents the true value of the input data (teaching data) (the $i$ subscript indicates the learning data sample). 
-11. Input $\mathbf{x}$ is used to prepare a circuit $U_{\text{in}}(\mathbf{x})$ (the feature map), which is decided by applying various rules. The input state $\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}$, in which the $\mathbf{x}_i$ information is embedded, is created.
-12. Gate U(\boldsymbol{\theta})$ (the variational form), which is dependent on parameter $\boldsymbol{\theta}$, is applied to the input state to produce the output state $\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}$. 
-13. Some observable is measured based on the output state to obtain measurement value O. For example, consider the expectation value of a Pauli $Z$ operator measured for the first quantum bit, ⟨Z_1 ⟩=⟨ψ_out |Z_1 | ψ_out ⟩. 
-14. Assuming some function $F$, $F(O)$ is set to the output $y(\mathbf{x}_i,\boldsymbol{\theta})$ of the model. 
-15. A cost constant $L(\boldsymbol{\theta})$ is defined to express the gap between the true value $y_i$ and the output $y(\mathbf{x}_i,\boldsymbol{\theta})$. A classical computer is used to calculate the cost function. 
-16. $L(\boldsymbol{\theta})$ is updated to reduce the size of $\boldsymbol{\theta}$. 
-17. Steps 3 through 7 are repeated to minimize the cost constant such that $\boldsymbol{\theta}=\boldsymbol{\theta^*}$. 
-18. $y(\mathbf{x},\boldsymbol{\theta^*})$ is the predictive model obtained through learning.
+1. Prepare the training data $\{(\mathbf{x}_i, y_i)\}$. The $\mathbf{x}_i$ is the input data vector and $y_i$ is the true value of the input data (e.g, teacher label) ($i$ stands for the index of training data sample). 
+2. Create a circuit $U_{\text{in}}(\mathbf{x})$ (called **feature map**) to encode the input data $\mathbf{x}$, then producing the input state $\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}$, in which the $\mathbf{x}_i$ information is embedded. 
+3. Generate the output state $\ket{\psi_{\text{out}}(\mathbf{x}i,\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{\psi{\text{in}}(\mathbf{x}_i)}$ by applying a parametrized unitary $U(\boldsymbol{\theta})$ (**variational form**) with parameter $\boldsymbol{\theta}$. 
+4. Measure some **observable** under the output state and get the measurement outcome $O$. For example, consider the expectation value of a Pauli $Z$ operator for the first qubit, $\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}$. 
+5. Introduce some function $F$ and obtain $F(O)$ as the model output $y(\mathbf{x}_i,\boldsymbol{\theta})$. 
+6. Define a **cost function** $L(\boldsymbol{\theta})$ to quantify the gap between the true value $y_i$ and the output $y(\mathbf{x}_i,\boldsymbol{\theta})$ and calculate it using a classical computer.
+7. Update the parameter $\boldsymbol{\theta}$ so that the $L(\boldsymbol{\theta})$ gets smaller.
+8. Repeat steps 3 through 7 to minimize the cost function and obtain the optimized parameter $\boldsymbol{\theta^*}$. 
+9. Obtain the **prediction of the model** as $y(\mathbf{x},\boldsymbol{\theta^*})$ after training.
 
 ```{image} figs/var_circuit.png
 :alt: var_circuit
@@ -157,8 +133,7 @@ Generally speaking, with quantum machine learning algorithms that use variationa
 ```
 
 
-この順に量子回路学習アルゴリズムを実装していきましょう。まず、必要なライブラリを最初にインポートします。
-Let's implement the quantum machine learning algorithm using this process. First, let's import the required libraries.
+Let us implement the quantum machine learning algorithm by following these steps. First, the required libraries are imported.
 
 ```{code-cell} ipython3
 ---
@@ -187,7 +162,7 @@ from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 ```
 
-## 初歩的な例<a id='example'></a>
+## Simple Example<a id='example'></a>
 
 ある入力$\{x_i\}$と、既知の関数$f$による出力$y_i=f(x_i)$が学習データとして与えられた時に、そのデータから関数$f$を近似的に求める問題を考えてみます。例として、$f(x)=x^3$としてみます。
 Given an input, $\{x_i\}$ and learning data in the form of $y_i=f(x_i)$, output by known function $f$, think about how to approximate function $f$ using that data. In this example, let us define the function $f(x)=x^3$.
