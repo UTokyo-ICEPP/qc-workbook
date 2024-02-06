@@ -164,13 +164,11 @@ from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 ## Simple Example<a id='example'></a>
 
-ある入力$\{x_i\}$と、既知の関数$f$による出力$y_i=f(x_i)$が学習データとして与えられた時に、そのデータから関数$f$を近似的に求める問題を考えてみます。例として、$f(x)=x^3$としてみます。
-Given an input, $\{x_i\}$ and learning data in the form of $y_i=f(x_i)$, output by known function $f$, think about how to approximate function $f$ using that data. In this example, let us define the function $f(x)=x^3$.
+When an input $\{x_i\}$ and the output $y_i=f(x_i)$ of a known function $f$ are provided as data, we attempt to approximately obtain the function $f$ from the data. For the function $f$, let us consider $f(x)=x^3$.
 
-### 学習データの準備<a id='func_data'></a>
+### Preparation of Training Data<a id='func_data'></a>
 
-まず、学習データを準備します。$x_{\text{min}}$と$x_{\text{max}}$の範囲でデータを`num_x_train`個ランダムに取った後、正規分布に従うノイズを追加しておきます。`nqubit`が量子ビット数、`nlayer`が変分フォームのレイヤー数（後述）を表します。
-First, prepare the learning data. After randomly selecting `num_x_train` items of data in the range of $x_{\text{min}}$ to $x_{\text{max}}$, add noise, using a normal distribution. `nqubit` is the number of quantum bits and `c_depth` is the depth of the variational form circuit (explained later).
+First, let us prepare the training data. After randomly selecting `num_x_train` samples of data in the range between $x_{\text{min}}$ and $x_{\text{max}}$, a noise sampled from a normal distribution is added. The `nqubit` is the number of qubits and the `c_depth` is the number of layers in the variational form (explained later).
 
 ```{code-cell} ipython3
 ---
@@ -195,7 +193,7 @@ num_x_validation = 20
 # Define the function
 func_to_learn = lambda x: x ** 3
 
-# 学習用データセットの生成
+# Training data
 x_train = rng.uniform(x_min, x_max, size=num_x_train)
 y_train = func_to_learn(x_train)
 
@@ -203,22 +201,20 @@ y_train = func_to_learn(x_train)
 mag_noise = 0.05
 y_train_noise = y_train + rng.normal(0., mag_noise, size=num_x_train)
 
-# 検証用データセットの生成
+# Testing data
 x_validation = rng.uniform(x_min, x_max, size=num_x_validation)
 y_validation = func_to_learn(x_validation) + rng.normal(0., mag_noise, size=num_x_validation)
 ```
 
-### 量子状態の生成<a id='func_state_preparation'></a>
+### Embedding Input Data<a id='func_state_preparation'></a>
 
-次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`quantum_circuit_learning`に従い、回転ゲート$R_j^Y(\theta)=e^{-i\theta Y_j/2}$と$R_j^Z(\theta)=e^{-i\theta Z_j/2}$を使って
-Next, create a circuit $U_{\text{in}}(x_i)$ for embedding the initial state $\ket{0}^{\otimes n}$ in input $x_i$ (the feature map). First, as indicated in reference material{cite}`quantum_circuit_learning`, use rotation gates $R_j^Y(\theta)=e^{-i\theta Y_j/2}$ and $R_j^Z(\theta)=e^{-i\theta Z_j/2}$ to define the following.
+Next, we create a circuit $U_{\text{in}}(x_i)$ to embed the input data $x_i$ into the initial state $\ket{0}^{\otimes n}$ (feature map). First, by following the reference{cite}`quantum_circuit_learning`, the circuit $U_{\text{in}}(x_i)$ is defined using rotation gates around the $Y$ axis, $R_j^Y(\theta)=e^{-i\theta Y_j/2}$, and those around the $Z$ axis, $R_j^Z(\theta)=e^{-i\theta Z_j/2}$:
 
 $$
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 $$
 
-と定義します。この$U_{\text{in}}(x_i)$をゼロの標準状態に適用することで、入力$x_i$は$\ket{\psi_{\text{in}}(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$という量子状態に変換されることになります。
-Here, we will apply this $U_{\text{in}}(x_i)$ to the standard zero state to convert input $x_i$ to the quantum state $\ket{\psi_{\text{in}}(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$.
+By applying the $U_{\text{in}}(x_i)$ to the standard zero state, the input data $x_i$ is encoded into a quantum state $\ket{\psi_{\text{in}}(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$.
 
 ```{code-cell} ipython3
 ---
@@ -233,50 +229,41 @@ u_in = QuantumCircuit(nqubit, name='U_in')
 x = Parameter('x')
 
 for iq in range(nqubit):
-    # parameter.arcsin()はparameterに値vが代入された時にarcsin(v)になるパラメータ表現
+    # parameter.arcsin() returns arcsin(v) when the parameter is assigned a value v
     u_in.ry(x.arcsin(), iq)
-    # arccosも同様
+    # Similarly for arccos
     u_in.rz((x * x).arccos(), iq)
 
 u_in.bind_parameters({x: x_train[0]}).draw('mpl')
 ```
 
-### 変分フォームを使った状態変換<a id='func_variational_form'></a>
+### Tranforming State using Variational Form<a id='func_variational_form'></a>
 
-#### 変分量子回路$U(\boldsymbol{\theta})$の構成
-次に、最適化すべき変分量子回路$U(\boldsymbol{\theta})$を作っていきます。これは以下の3つの手順で行います。
-Next, we will create the variational quantum circuit $U(\boldsymbol{\theta})$ to be optimized. This is done using the following three steps.
+#### Creating Ansatz Circuit $U(\boldsymbol{\theta})$
+Next, we will create the variational quantum circuit $U(\boldsymbol{\theta})$ to be optimized. This is done in three steps as follows.
 
-1. 2量子ビットゲートの作成（$\to$ 量子ビットをエンタングルさせる）
-2. 回転ゲートの作成
-3. 1.と2.のゲートを交互に組み合わせ、1つの大きな変分量子回路$U(\boldsymbol{\theta})$を作る
-
-4. Create a 2-quantum bit gate (→ entangle the quantum bits)
-5. Creating the rotation gate 
-6. Mutually combine the gates from steps 1 and 2 to create a single large variational quantum circuit $U(\boldsymbol{\theta})$.
+1. Place 2-qubit gates to create entanglement
+2. Place single-qubit rotation gates
+3. Create a variational quantum circuit $U(\boldsymbol{\theta})$ by alternating single- and 2-qubit gates from 1 and 2
 
 
-#### 2量子ビットゲートの作成
-ここではControlled-$Z$ゲート（$CZ$）を使ってエンタングルさせ、モデルの表現能力を上げることを目指します。
-Here, we will use a Controlled-$Z$ gate ($CZ$) to entangle the quantum bits and aim to improve the descriptive capabilities of the model.
+#### 2-Qubit Gate
+We will use controlled-$Z$ gates ($CZ$) to entangle qubits, increasing the expressibility of the circuit model.
 
-#### 回転ゲートと$U(\boldsymbol{\theta})$の作成
-$CZ$ゲートを使ってエンタングルメントを生成する回路$U_{\text{ent}}$と、$j \:(=1,2,\cdots n)$番目の量子ビットに適用する回転ゲート
-We will combine the circuit that causes entanglement through the use of $CZ$ gates, $U_{\text{ent}}$, with the product of multiple rotation gates applied to quantum bit $j \:(=1,2,\cdots n)$ to create $U(\boldsymbol{\theta})$, as follows.
+#### Rotation Gate and $U(\boldsymbol{\theta})$
+Using entangling gates $U_{\text{ent}}$ of $CZ$ and single-qubit rotation gates on $j$-th qubit ($j \:(=1,2,\cdots n)$) in the $l$-th layer, 
 
 $$
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j3}^l)R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 $$
 
-を掛けたものを組み合わせて、変分量子回路$U(\boldsymbol{\theta})$を構成します。ここで$l$は量子回路の層を表していて、$U_{\text{ent}}$と上記の回転ゲートを合計$d$層繰り返すことを意味しています。実際は、この演習では最初に回転ゲート$U_{\text{rot}}$を一度適用してから$d$層繰り返す構造を使うため、全体としては
-Here, $l$ is the quantum circuit layer. This indicates that $U_{\text{ent}}$ and the above rotation gates will be repeatedly applied in a total of $d$ layers. In reality, in this exercise we will apply rotation gate $U_{\text{rot}}$ once, and then, to use the structure of $d$ levels of repetitions, we will use a variational quantum circuit with the following form.
+the $U(\boldsymbol{\theta})$ is constructed. In this exercise, we use the $U_{\text{rot}}$ first, then the combination of $U_{\text{ent}}$ and U_{\text{rot}}$ $d$ times. Therefore, the $U(\boldsymbol{\theta})$ takes the form of
 
 $$
 U\left(\{\theta_j^l\}\right) = \prod_{l=1}^d\left(\left(\prod_{j=1}^n U_{\text{rot}}(\theta_j^l)\right) \cdot U_{\text{ent}}\right)\cdot\prod_{j=1}^n U_{\text{rot}}(\theta_j^0)
 $$
 
-という形式の変分量子回路を用いることになります。つまり、変分量子回路は全体で$3n(d+1)$個のパラメータを含んでいます。$\boldsymbol{\theta}$の初期値ですが、$[0, 2\pi]$の範囲でランダムに設定するものとします。
-In other words, the overall variational quantum circuit contains $3n(d+1)$ parameters. The initial value of $\boldsymbol{\theta}$ will be set randomly in the $[0, 2\pi]$ range.
+The $U(\boldsymbol{\theta})$ contains $3n(d+1)$ parameters, and they are all randomly initialized within the range of $[0, 2\pi]$.
 
 ```{code-cell} ipython3
 ---
@@ -289,10 +276,10 @@ pycharm:
 ---
 u_out = QuantumCircuit(nqubit, name='U_out')
 
-# 長さ0のパラメータ配列
+# Parameters with 0 length
 theta = ParameterVector('θ', 0)
 
-# thetaに一つ要素を追加して最後のパラメータを返す関数
+# Fundtion to add new element to theta and return the last parameter
 def new_theta():
     theta.resize(len(theta) + 1)
     return theta[-1]
@@ -326,10 +313,11 @@ theta_vals = rng.uniform(0., 2. * np.pi, size=len(theta))
 u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
 ```
 
-### 測定とモデル出力<a id='func_measurement'></a>
+### Measurement and Model Output<a id='func_measurement'></a>
 
 モデルの出力（予測値）として、状態$\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$の元で最初の量子ビットを$Z$基底で測定した時の期待値を使うことにします。つまり$y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$です。
-For the model's output (predictions), let's use the expectation value when the first quantum bit is measured with the $Z$ basis state based on the state $\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$. In other words, y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$.
+As an output of the model (prediction value), we take the expectation value of Pauli $Z$ operator on the first qubit under the state $\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$. 
+That means y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$.
 
 ```{code-cell} ipython3
 ---
@@ -358,20 +346,19 @@ pycharm:
 
     '
 ---
-# 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
+# Use Estimator class
 estimator = Estimator()
 
-# 与えられたパラメータの値とxの値に対してyの値を計算する
+# Calculate y value from the given parameters and x value
 def yvals(param_vals, x_vals=x_train):
     circuits = list()
     for x_val in x_vals:
-        # xだけ数値が代入された変分回路
         circuits.append(model.bind_parameters({x: x_val}))
 
-    # 観測量はIIZ（右端が第0量子ビット）
+    # Observable = IIZ (the first qubit from right is 0-th qubit)
     observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
 
-    # shotsは関数の外で定義
+    # shots is defined outside the function
     job = estimator.run(circuits, [observable] * len(circuits), [param_vals] * len(circuits), shots=shots)
 
     return np.array(job.result().values)
@@ -380,18 +367,16 @@ def objective_function(param_vals):
     return np.sum(np.square(y_train_noise - yvals(param_vals)))
 
 def callback_function(param_vals):
-    # lossesは関数の外で定義
+    # losses is defined outside the function
     losses.append(objective_function(param_vals))
 
     if len(losses) % 10 == 0:
         print(f'COBYLA iteration {len(losses)}: cost={losses[-1]}')
 ```
 
-コスト関数$L$として、モデルの予測値$y(x_i, \theta)$と真の値$y_i$の平均2乗誤差の総和を使っています。
-For cost function $L$, we will use the sum of the mean squared error of the model's prediction values $y(x_i, \theta)$ and the true values, $y_i$.
+The mean squared error of the model prediction $y(x_i, \theta)$ and the true values $y_i$ is used as the cost function $L$.
 
-では、最後にこの回路を実行して、結果を見てみましょう。
-Last, let's implement this circuit and look at the results.
+Let us execute the circuit and check the results.
 
 ```{code-cell} ipython3
 ---
@@ -402,12 +387,13 @@ pycharm:
 
     '
 ---
-# COBYLAの最大ステップ数
+# Maximum number of steps in COBYLA
 maxiter = 50
-# COBYLAの収束条件（小さいほどよい近似を目指す）
+# Convergence threshold of COBYLA (the smaller the better approximation)
 tol = 0.05
-# バックエンドでのショット数
+# Number of shots in the backend
 shots = 1000
+
 
 optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 ```
@@ -415,7 +401,7 @@ optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-# テキスト作成用のセル - わざと次のセルでエラーを起こさせる
+# Cell for text
 import os
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
     del objective_function
@@ -440,7 +426,7 @@ min_result = optimizer.minimize(objective_function, initial_params)
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-# テキスト作成用のセルなので無視してよい
+# Cell for text
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
     import pickle
@@ -449,7 +435,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
         min_result, losses = pickle.load(source)
 ```
 
-コスト値の推移をプロットします。
+Make a plot of cost functon values.
 
 ```{code-cell} ipython3
 plt.plot(losses)
@@ -457,7 +443,7 @@ plt.plot(losses)
 
 +++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}}
 
-最適パラメータ値でのモデルの出力値をx_minからx_maxまで均一にとった100点で確認します。
+Check the output of the trained model with optimized parameters and the inputs taken uniformly between x_min and x_max. 
 
 ```{code-cell} ipython3
 ---
@@ -472,18 +458,16 @@ x_list = np.linspace(x_min, x_max, 100)
 
 y_pred = yvals(min_result.x, x_vals=x_list)
 
-# 結果を図示する
+# Results
 plt.plot(x_train, y_train_noise, "o", label='Training Data (w/ Noise)')
 plt.plot(x_list, func_to_learn(x_list), label='Original Function')
 plt.plot(x_list, np.array(y_pred), label='Predicted Function')
 plt.legend();
 ```
 
-生成された図を確認してください。ノイズを印加した学習データの分布から、元の関数$f(x)=x^3$をおおよそ導き出せていることが分かると思います。
-Let's check the figure that was generated. As you can see, we have largely derived the original function, $f(x)=x^3$, from the learning data, to which noise had been added.
+Please check the results. You will see that the original function $f(x)=x^3$ is approximately derived from the training data with noise.
 
-この実習では計算を早く収束させるために、COBYLAオプティマイザーをCallする回数の上限`maxiter`を50、計算をストップする精度の許容範囲`tol`を0.05とかなり粗くしています。`maxiter`を大きくするあるいは`tol`を小さくするなどして、関数を近似する精度がどう変わるか確かめてみてください（ただ同時に`maxiter`を大きくかつ`tol`を小さくしすぎると、計算に非常に時間がかかります）。
-In order to rapidly produce calculation results in this exercise, we set the maximum number of times the COBYLA optimizer would be called (`maxiter`) to 50, and set the accuracy tolerance range at which calculation would be stopped (`tol`) to 0.05. Check how the accuracy of the function approximation varies if maxiter is raised or tol is lowered (note that if you raise maxiter too much while lowering tol too much, calculation will take an extremely large amount of time).
+In order to converge optimization steps quickly, the maximum number of calls (`maxiter`) is set to 50 and the tolerance for the accuracy (`tol`) is set to 0.05 for COBYLA optimizer. Check how the accuracy if the `maxiter` is raised or `tol` is lowered. Note however that if the `maxiter` is taken too large and the `tol` too small, the calculation will take a very long time.
 
 +++
 
