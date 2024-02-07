@@ -24,13 +24,13 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-# 【課題】量子カーネルを使った新現象の分類
+# 【Exercise】Classification of New Physics with Quantum Kernel
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-これまで、量子・古典ハイブリッドアルゴリズムの一つである{doc}`量子回路学習 <vqc_machine_learning>`の手法を使って、素粒子物理での新粒子探索が可能かを見てきました。ここでは、**量子機械学習**の別の手法として、**量子カーネル**を用いた分類を考えてみます。特に、量子カーネルを活用した**サポートベクターマシン**の手法{cite}`quantum_svm`を使って、同じ新粒子探索の問題に取り組みます。
+We have so far looked at the possibility of using the {doc}`quantum circuit learning<vqc_machine_learning>` technique to search for new physics, which is a quantum-classical hybrid algorithm. Here in this exercise, we consider the method of utilizing **Quantum Kernels**, an alternative approach for quantum machine learning. In particular, we attempt to apply the **Support Vector Machine**{cite}`quantum_svm` based on quantum kernels to the same problem of new physics search.    
 
-```{contents} 目次
+```{contents} Contents
 ---
 local: true
 ---
@@ -42,28 +42,29 @@ $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (q_kernel)=
-## 量子カーネル
+## Quantum Kernel
 
-変分量子回路を使った量子回路学習では、
+For quantum circuit learning based on variational quantum algorithm, the following feature map $U_{\text{in}}(x_i)$ was considered.
 
 $$
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 $$
 
-と定義した特徴量マップ$U_{\text{in}}(x_i)$を考えました。それを初期状態$\ket{0}^{\otimes n}$に適用することで、入力データから$\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$という量子状態を作りました。**量子カーネル**とは、この状態の内積$\langle\phi(x_j)|\phi(x_i)\rangle$（の絶対値2乗）
+Applying the feature map to the initial state $\ket{0}^{\otimes n}$, the quantum state $\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$ is prepared from the input data. 
+The quantum kernel is defined as the (square of the absolute value of) inner product of this state $\langle\phi(x_j)|\phi(x_i)\rangle$:
 
 $$
 K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
 $$
 
-として定義される量です。量子カーネルの物理的な意味ですが、内積というものが表す通り、$\ket{\phi(x_i)}$と$\ket{\phi(x_j)}$の「近さ」あるいは「重なり具合」を表していると解釈できます。
+The quantum kernel provides a measure of how close the two states of $\ket{\phi(x_i)}$ and $\ket{\phi(x_j)}$, are or how much they are overlapped to each other. 
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (q_kernel_imp)=
-### 量子カーネルの評価
+### Estimation of Quantum Kernel
 
-量子カーネルを求めるためには、学習データの全てのペア$\{x_i,x_j\}$に対して、$K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2$を計算する必要があります。ここで「カーネルトリック」という言葉がよく使われますが、ヒルベルト空間での座標変数に明示的に依存しない形で$K(x_i,x_j)$を計算するために、以下のような量子回路を考えます。
+In order to evaluate quantum kernel, it is necessary to calculate $K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2$ for all the pairs of $\{x_i,x_j\}$ in the training dataset. For the calculation of quantum kernel, one could often hear the term *kernel trick*. In the context of quantum computation, this is generally referred to that the kernel function $K(x_i,x_j)$ is calculated without explicitly using the coordinate values in Hilbert space. One way of doing this is to construct the following circuit: 
 
 ```{image} figs/qke_circuit.png
 :alt: qke_circuit
@@ -71,7 +72,7 @@ $$
 :align: center
 ```
 
-この回路に入力データ$x_i$と$x_j$をエンコードして、回路の出力状態を$Z$基底で測定するとします。カーネルの定義式から明らかなように、その時に全ての量子ビットが0になる（$0^n$ビット列が出てくる）確率が$K(x_i,x_j)$の評価値を与えてくれます。これを全てのペアに対して繰り返し実行し、カーネル行列の要素を決めていくことになるわけです。$0^n$ビット列測定によってカーネルを決めるため、量子回路の測定回数$N$に対して${\cal O}(1/\sqrt{N})$程度の誤差がついてしまうのは仕方ないところです。
+Assume that the input data $x_i$ and $x_j$ are encoded into the circuit and the output state is measured in $Z$ basis. From the definition of quantum kernel, the probability of measuring 0 for all the qubits (i.e, obtaining $0^n$ bitstring after the measurement) provides the $K(x_i,x_j)$ value. By repeating this for all the pairings of input data, the elements of kernel function are determined. Since the kernel is determined from the measurement of $0^n$ bitstring, a statistical uncertainty of ${\cal O}(1/\sqrt{N})$ ($N$ is the number of measurements) is associated with the kernel function.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
