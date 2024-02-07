@@ -77,44 +77,45 @@ Assume that the input data $x_i$ and $x_j$ are encoded into the circuit and the 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (svm)=
-## サポートベクターマシン
+## Support Vector Machine
 
-上までのステップでカーネル行列が得られましたが、次にこのカーネル行列をサポートベクターマシンと呼ばれる手法に取り入れて、2クラスのデータ分類を行なってみます。
+Kernel matrix has been obtained in steps so far. Now the kernel matrix will be incorporated into support vector machine to perform a 2-class classification task.
 
-### 2クラス線形分離問題
+### Two-Class Linear Separation Problem
 
-まず、2クラスの線形分離問題とはどういうものかを見ていきます。サンプル数$N$の学習データを$\{(\mathbf{X}_i,y_i)\}\:(i=1,\ldots,N)$とし、$\mathbf{X}_i \in \mathbb{R}^d$をインプット、$y_i\in\{+1,-1\}$をラベルと呼びます。分離問題とは、インプットの分布する空間$\mathbb{R}^d$に境界を定義し、ラベルの値が$+1$であるデータ点が属する領域と$-1$であるデータ点が属する領域に分けることを指します。そして、その境界が超平面である場合を線形分離と呼びます。ここで超平面とは、ある$\mathbf{w}\in\mathbb{R}^d, b \in \mathbb{R}$に対して集合
+First, let us look at what the two-class linear separation problem is. Consider the training data $\{(\mathbf{X}_i,y_i)\}\:(i=1,\ldots,N)$ with $N$ samples, where $\mathbf{X}_i \in \mathbb{R}^d$ is an input and $y_i\in\{+1,-1\}$ is the label for the input. A separation problem means that what we aim at is to define a border in the space of input data $\mathbb{R}^d$ and separate the space into the region populated by data with label $+1$ and the region with label $-1$. When this border is a hyperplane, the problem is called linear separation problem. Here the hyperplane corresponds to, for a certain $\mathbf{w}\in\mathbb{R}^d, b \in \mathbb{R}$,
 
 $$
 \{\mathbf{X}| \mathbf{X} \in \mathbb{R}^d, \: \mathbf{w}\cdot\mathbf{X}+b=0\}
 $$
 
-を指します。ベクトル$\mathbf{w}$はこの超平面に直交し、そのノルムを$\lVert \mathbf{w} \rVert$と書くと、$b/\lVert \mathbf{w} \rVert$がこの超平面と原点との符号付き距離（$\mathbf{w}$の方向が正）に対応します。
+A vector $\mathbf{w}$ is orthogonal to this hyperplane. Defining the norm of this vector as $\lVert \mathbf{w} \rVert$, $b/\lVert \mathbf{w} \rVert$ corresponds to the signed distance between the hyperplane and the origin (taken to be positive towards $\mathbf{w}$).
 
-超平面というのはシンプルであるがゆえに特殊な集合なので、学習データの分布のしかたによっては、超平面では分離できないケースもあり得ます。そのような分離が可能であるということは、
+Since a hyperplane is simple and hence a special set of points, there is a case where the training data cannot be separated by the hyperplane, depending on the data distribution. Whether such separation is possible or not is equivalent to whether $(\mathbf{w},b)$ that satisfies 
 
 ```{math}
 :label: linear_separation
 S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=1,\ldots,N
 ```
+exists or not. This equation can be interpreted as follows: the $\mathbf{w} \cdot \mathbf{X}_i + b$ in parentheses is the signed distance between the data point $X_i$ and hyperplane $(\mathbf{w},b)$, multiplied by $\lVert \mathbf{w} \rVert$. When this quantity is multiplied by $y_i$ and it is larger than 1, this means the data points with $y_i=1(-1)$ are in the positive (negative) region with respect to the hyperplane, and every point in the space is at least $1/\lVert \mathbf{w} \rVert$ distant from the hyperplane. 
 
-を満たす$(\mathbf{w},b)$が存在することと等価です。この式の解釈ですが、括弧の中身$\mathbf{w} \cdot \mathbf{X}_i + b$はデータ点$X_i$と超平面$(\mathbf{w}, b)$との符号付き距離の$\lVert \mathbf{w} \rVert$倍で、それに$y_i$をかけた結果が1よりも大きいということは、$y_i=1$のデータ点が超平面について正の領域、$y_i=-1$のデータ点が負の領域にあり、かつどの点も超平面から$1/\lVert \mathbf{w} \rVert$以上離れているということを意味します。
-
-さて、機械学習の目的は、学習データを元に何らかのモデルを作り、それを使って未知のインプットについて予言をすることにあります。今の分離問題においては、$(\mathbf{w}, b)$がモデルにあたり、未知インプット$X$についてのラベル$y$の予言は
+The purpose of machine learning is to construct a model based on training data and predict for unseen data with the trained model. For the present separation problem, $(\mathbf{w}, b)$ corresponds to the model, and the label prediction for unseen input $X$ is given by
 
 ```{math}
 :label: test_data_label
 y = \mathrm{sgn}(\mathbf{w} \cdot \mathbf{X} + b)
 ```
 
-（$\mathrm{sgn}(z)$は$z \in \mathbb{R}$の符号）で与えられます。このとき、学習データを最も「強く」2分割するようなモデルが、未知データについて最も精度の高い予言をできると仮定します。「強く」2分割するというのは、超平面とすべての学習データ点との距離$1/\lVert \mathbf{w} \rVert$が大きいことに相当します。線形分離が可能な学習データについて式{eq}`linear_separation`を満たす$(\mathbf{w}, b)$は一意ではありませんが、その中で$\lVert \mathbf{w} \rVert$が最も小さくなるものが、最適なモデルということになります。
+where $\mathrm{sgn}(z)$ is the sign of $z \in \mathbb{R}$. In this setup, we assume that a model which separates the training data the most "strongly" can predict for unseen data the most accurately. "Strongly" separating means that the distance between the hyperplane and all training data points, $1/\lVert \mathbf{w} \rVert$, is large. For linearly separable training data, $(\mathbf{w}, b)$ that satisfies Eq.{eq}`linear_separation` is not unique, and the model with the smallest $\lVert \mathbf{w} \rVert$ is going to be the best one.
 
-線形分離ができないような学習データについても、これと同じような発想で「できる限り」分離するという問題を考えることができます。この場合、学習とは$\lVert \mathbf{w} \rVert$ができるだけ小さく、かつ$\sum_{i} S_i(\mathbf{w}, b)$ができるだけ大きくなるような$\mathbf{w}$と$b$を探すことに相当し、以下の目的関数
+For training data that cannot be separated linearly, we can also think of a problem where a model tries to separate "as much data as possible" in a similar fashion. In this case, the training corresponds to looking for $\mathbf{w}$ and $b$ that make $\lVert \mathbf{w} \rVert$ as small as possible and $\sum_{i} S_i(\mathbf{w}, b)$ as large as possible, and this can be achieved by minimizing the following objective function:
 
 ```{math}
 :label: primal_1
 f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)
 ```
+
+Here the coefficient $C>0$ is a hyperparameter that controls which of the two purposes is preferred and to what extent it is. The second term ignores the data points that have the $S_i$ value greater than 1 in $\mathrm{max}$ function (sufficiently distant from the hyperplane). The data points that are not ignored, i.e, the data near the separating hyperplane or wrongly separated data with $\{\mathbf{X}_i | S_i < 1\}$, are called "support vector". 
 
 の最小化で達成されます。ここで、係数$C>0$は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では$\mathrm{max}$関数で$S_i$の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット$\{\mathbf{X}_i | S_i < 1\}$のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは$\mathbf{w}$と$b$の値によりますが、一度$f$を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。
 
