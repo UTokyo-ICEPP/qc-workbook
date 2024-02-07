@@ -315,7 +315,6 @@ u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
 
 ### Measurement and Model Output<a id='func_measurement'></a>
 
-モデルの出力（予測値）として、状態$\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$の元で最初の量子ビットを$Z$基底で測定した時の期待値を使うことにします。つまり$y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$です。
 As an output of the model (prediction value), we take the expectation value of Pauli $Z$ operator on the first qubit under the state $\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$. 
 That means y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$.
 
@@ -471,13 +470,11 @@ In order to converge optimization steps quickly, the maximum number of calls (`m
 
 +++
 
-## 素粒子現象の探索への応用<a id='susy'></a>
+## Application to Search for New Phenomena<a id='susy'></a>
 
-次の実習課題では、素粒子物理の基本理論（**標準模型**と呼ばれる）を超える新しい理論の枠組みとして知られている「**超対称性理論**」（*Supersymmetry*、略してSUSY）で存在が予言されている新粒子の探索を考えてみます。
-In the next assignment, we will be considering the search for new particles whose existence is predicted by **Supersymmetry** (SUSY), a new theoretical framework which goes beyond the fundamental theory of particle physics (**Standard Model**).
+In the next exercise, we will be considering the search for new particles whose existence is predicted by **Supersymmetry** (SUSY), a new physics theory which goes beyond the fundamental theory of particle physics (**Standard Model**).
 
-左下の図は、グルーオン$g$が相互作用してヒッグス粒子$h$を作り、それが2つのSUSY粒子$\chi^+\chi^-$に崩壊する過程を示しています。$\chi^+$粒子はさらに崩壊し、最終的には$\ell^+\ell^-\nu\nu\chi^0\chi^0$という終状態に落ち着くとします。右下の図は標準模型で存在が知られている過程を表していて、クォーク$q$と反クォーク$\bar{q}$が相互作用して$W$ボソン対を作り、それが$\ell^+\ell^-\nu\nu$に崩壊しています。
-The figure at bottom left shows the process in which a gluon, $g$, creates a Higgs boson, $h$, through mutual interaction, which then breaks down into two SUSY particles, $\chi^+\chi^-$. The $\chi^+$ particle then breaks down further, ultimately producing a stable final state consisting of $\ell^+\ell^-\nu\nu\chi^0\chi^0$. The figure at bottom right shows a process known to exist under the Standard Model, in which a quark, $q$, and another quark, $\bar{q}$̅, mutually interact, creating $W$ bosons which break down into $\ell^+\ell^-\nu\nu$.
+The left figure below shows a gluon fusion process to create a Higgs boson $h$, which decays into two SUSY particles $\chi^+\chi^-$. The $\chi^+$ particle further decays, producing a final state consisting of $\ell^+\ell^-\nu\nu\chi^0\chi^0$ at the end. The right figure shows a well-known process in the Standard Model, in which a quark $q$ and an antiquark $\bar{q}$ interact and create a $W$-boson pair which decays into the final state of $\ell^+\ell^-\nu\nu$.
 
 ```{image} figs/susy_bg.png
 :alt: susy_bg
@@ -486,18 +483,15 @@ The figure at bottom left shows the process in which a gluon, $g$, creates a Hig
 ```
 (Figures courtesy of reference material{cite}`dl_susy`)
 
-左と右の過程を比べると、終状態の違いは$\chi^0\chi^0$が存在しているかどうかだけですね。この$\chi^0$という粒子は検出器と相互作用しないと考えられているので、この二つの過程の違いは（大雑把に言うと）実際の検出器では観測できないエネルギーの大きさにしかなく、探索することが難しい問題と考えることができます。以上のような状況で、この二つの物理過程を量子回路学習で分類できるかどうかを試みます。
-If you compare the processes in the left and right figures, you can see that the only difference in the end state is the presence or absence of the $\chi^0\chi^0$. This $\chi^0$ particle is not believed to interact with the detector, so (broadly speaking), the differences between these processes lie only in the amount of energy that cannot be observed by the detector, which makes it very difficult to find these $\chi^0$ particles. Let's see, based on these conditions, if we can distinguish between these physical processes using quantum machine learning.
+Comparing the processes in the left and right figures, you can see that the only difference in the final state is whether the $\chi^0\chi^0$ is present or not. The $\chi^0$ particle is expected not to interact with detector, so (broadly speaking) the differences between these two processes lie only in the magnitude of energy that cannot be observed by detector. This generally makes it difficult to discover the left process in large backgrounds of the right process. We will see if we can distinguish between these two processes using quantum machine learning.
 
 +++
 
-### 学習データの準備<a id='susy_data'></a>
+### Preparation of Training Data<a id='susy_data'></a>
 
-学習に用いるデータは、カリフォルニア大学アーバイン校（UC Irvine）の研究グループが提供する[機械学習レポジトリ](https://archive.ics.uci.edu/ml/index.php)の中の[SUSYデータセット](https://archive.ics.uci.edu/ml/datasets/SUSY)です。このデータセットの詳細は文献{cite}`dl_susy`に委ねますが、ある特定のSUSY粒子生成反応と、それに良く似た特徴を持つ背景事象を検出器で観測した時に予想される信号（運動学的変数）をシミュレートしたデータが含まれています。
-The data used in this section will be the [SUSY data set](https://archive.ics.uci.edu/ml/datasets/SUSY) contained in the [machine learning repository](https://archive.ics.uci.edu/ml/index.php) supplied by a research group in the University of California, Irvine (UC Irvine). We'll leave the details of this data set up to reference material{cite}`dl_susy`, but we will point out that the data includes simulated data of signals (kinematic variables) predicted when a detector observes specific SUSY particle generation reactions and background phenomena with similar characteristics.
+The dataset used for the training is the [SUSY data set](https://archive.ics.uci.edu/ml/datasets/SUSY) in the [machine learning repository](https://archive.ics.uci.edu/ml/index.php) provided by a group in the University of California, Irvine (UC Irvine). While we leave the details of the dataset to reference material{cite}`dl_susy`, the dataset includes simulated data of kinematic variables expected when the detector observes a specific SUSY particle production process and background process with similar characteristics to the SUSY signal.
 
-探索に役立つ運動学的変数をどう選ぶかはそれ自体が大事な研究トピックですが、ここでは簡単のため、前もって役立つことを経験上知っている変数を使います。以下で、学習に使う運動学的変数を選んで、その変数を指定したサンプルを訓練用とテスト用に準備します。
-Selecting the kinematic variables that assist in the search for particles is, itself, an important research topic, but here, for simplicity's sake, we will assume that this is a given which we have determined is useful through prior experience. Below, we will select the kinematic variables to use for learning and prepare samples which specify those variables, for use in training and testing.
+Selecting the input kinematic variables that are useful for search in machine learning task is important by itself. But here, for the sake of simplicity we use a set of variables that we already know are useful from the past experience. Below, the set of kinematic variables is chosen and the samples for the training and testing are prepared.
 
 ```{code-cell} ipython3
 ---
@@ -537,12 +531,12 @@ df_sig_train = df_sig.values[:train_size]
 df_bkg_train = df_bkg.values[:train_size]
 df_sig_test = df_sig.values[train_size:train_size + test_size]
 df_bkg_test = df_bkg.values[train_size:train_size + test_size]
-# 最初のtrain_size事象がSUSY粒子を含む信号事象、残りのtrain_size事象がSUSY粒子を含まない背景事象
+# The first (last) train_size events correspond to signal (background) events that (do not) contain SUSY particles 
 train_data = np.concatenate([df_sig_train, df_bkg_train])
-# 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象
+# The first (last) test_size events correspond to signal (background) events that (do not) contain SUSY particles 
 test_data = np.concatenate([df_sig_test, df_bkg_test])
 
-# one-hotベクトル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）
+# one-hot vector
 train_label_one_hot = np.zeros((train_size * 2, 2))
 train_label_one_hot[:train_size, 0] = 1
 train_label_one_hot[train_size:, 1] = 1
@@ -561,40 +555,37 @@ norm_test_data = mms.transform(test_data)
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-### 量子状態の生成<a id='susy_state_preparation'></a>
+### State Preparation<a id='susy_state_preparation'></a>
 
-次は特徴量マップ$U_{\text{in}}(\mathbf{x}_i)$の作成ですが、ここでは参考文献{cite}`quantum_svm`に従い、
-Next, we create the feature map, $U_{\text{in}}(\mathbf{x}_i)$. Here, as indicated in reference material{cite}`quantum_svm`, we set it as follows.
+Next step is to create the feature map $U_{\text{in}}(\mathbf{x}_i)$. We use the following unitaries as in the reference{cite}`quantum_svm`:
 
 $$
 U_{\phi_{\{k\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{k\}}(\mathbf{x}_i)Z_k\right)
 $$
 
-あるいは
-
 $$
 U_{\phi_{\{l,m\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{l,m\}}(\mathbf{x}_i)Z_lZ_m\right)
 $$
 
-とします（$k$、$l$、$m$は入力値$\mathbf{x}_i$のベクトル要素の添字）。この特徴量マップは、パウリZ演算子の形から前者をZ特徴量マップ、後者をZZ特徴量マップと呼ぶことがあります。ここで$\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}$（$x_i^{(k)}$は$\mathbf{x}_i$の$k$番目要素）、$\phi_{\{l,m\}}(\mathbf{x}_i)=(\pi-x_i^{(l)})(\pi-x_i^{(m)})$（$x_i^{(l,m)}$は$\mathbf{x}_i$の$l,m$番目要素）と決めて、入力値$\mathbf{x}_i$を量子ビットに埋め込みます。Z特徴量マップは入力データの各要素を直接量子ビットに埋め込みます（つまり$\phi_{\{k\}}(\mathbf{x}_i)$は1入力に対して1量子ビットを使う）。ZZ特徴量マップは実際はZ特徴量マップを含む形で使うことが多いため、$\phi_{\{l,m\}}(\mathbf{x}_i)$の場合も$\phi_{\{k\}}(\mathbf{x}_i)$と同数の量子ビットに対して$(l,m)$を循環的に指定して埋め込むことになります。ZZ特徴量マップでは量子ビット間にエンタングルメントを作っているため、古典計算では難しい特徴量空間へのマッピングになっていると考えられます。
+where $k$, $l$ and $m$ are the indices of elements of an input vector $\mathbf{x}_i$. 
+These feature maps are called Z feature map and ZZ feature map, respectively. Here $\phi_{\{k\}}$ and $\phi{\{l,m\}}$ are defined as $\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}$ and $\phi{\{l,m\}}(\mathbf{x}_i)=(\pi-x_i^{(l)})(\pi-x_i^{(m)})$, respectively, 
+with $x_i^{k(l,m)}$ being the $k$ ($l$, $m$)-th element of $\mathbf{x}_i$, and are used to encode input data. 
+The Z feature map embeds each element of the input data directly into qubits (i.e, $\phi_{\{k\}}(\mathbf{x}_i)$ uses one qubit per input). The ZZ feature map often includes Z feature map in practice, therefore the $\phi{\{l,m\}}(\mathbf{x}_i)$ embeds the input data in a cyclic manner by using the same number of qubits as used for the $\phi_{\{k\}}(\mathbf{x}_i)$.
+Since the ZZ feature map uses 2-qubit entangling gates, it is generally considered to be difficult to simulate the encoding of the ZZ feature map classically.
 
-($k$ indicates the vector element of input value $\mathbf{x}_i$) Here, $\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}$（$x_i^{(k)}$ ($x_i^k$ is the $k$-th element of $x_i$), and input value $\mathbf{x}_i$ is embedded in the $k$-th quantum bit. 
-
-この$U_\phi(\mathbf{x}_i)$にアダマール演算子を組み合わせることで、全体として、Z特徴量マップは
-
-This U_\phi(\mathbf{x}_i)$ can be combined with a Hadamard operator, producing the following.
+By combining U_\phi(\mathbf{x}_i)$ with Hadamard gates, the Z feature map is given as 
 
 $$
 U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
 $$
 
-ZZ特徴量マップは
+The ZZ feature map is 
 
 $$
 U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^n(\pi-x_i^{(k)})(\pi-x_i^{(k\%n+1)})Z_kZ_{k\%n+1}\right)\exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
 $$
 
-となります。$U_{\phi}(\mathbf{x}_i)H^{\otimes n}$を複数回繰り返すことでより複雑な特徴量マップを作ることができるのは、上の例の場合と同じです。
+Repeating the $U_{\phi}(\mathbf{x}_i)H^{\otimes n}$ multiple times will create more complex feature map, as seen above.
 
 ```{code-cell} ipython3
 ---
@@ -610,17 +601,15 @@ feature_map = ZZFeatureMap(feature_dimension=feature_dim, reps=1, entanglement='
 feature_map.decompose().draw('mpl')
 ```
 
-### 変分フォームを使った状態変換<a id='susy_variational_form'></a>
+### State Transformation with Variational Form<a id='susy_variational_form'></a>
 
-変分量子回路$U(\boldsymbol{\theta})$は上の初歩的な例で用いた回路とほぼ同じですが、回転ゲートとして
-Variational quantum circuit $U(\boldsymbol{\theta})$ is roughly the same as the circuit used in the basic example above, but it uses the following rotation gates.
+A variational form $U(\boldsymbol{\theta})$ is similar to the circuit used above for a simple example, but it uses the following rotation gates.
 
 $$
 U_{\text{rot}}(\theta_j^l) = R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
 $$
 
-を使います。上の例では$U(\boldsymbol{\theta})$を自分で組み立てましたが、Qiskitにはこの$U(\boldsymbol{\theta})$を実装するAPIがすでに準備されているので、ここではそれを使います。
-In the example above, we assembled $U(\boldsymbol{\theta})$を ourselves, but Qiskit includes as one of its standard API an API for implementing $U(\boldsymbol{\theta})$を, so we will use that here.
+In the example above, we construted the circuit of $U(\boldsymbol{\theta})$を ourselves, but here we will use $U(\boldsymbol{\theta})$ implemented in Qiskit as a standard API.
 
 ```{code-cell} ipython3
 ---
@@ -636,12 +625,12 @@ ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry', 'rz'], entangle
 ansatz.decompose().draw('mpl')
 ```
 
-### 測定とモデル出力<a id='susy_measurement'></a>
+### Measurement and Model Output<a id='susy_measurement'></a>
 
-測定やパラメータの最適化、コスト関数の定義も初歩的な例で用いたものとほぼ同じです。QiskitのVQCというクラスを用いるので、プログラムはかなり簡略化されています。
-The measurement and parameter optimization and the definition of the cost function are largely the same as those in the basic example above. We will use Qiskit's API, so the program itself will be greatly simplified.
+The measurement of quantum states, parameter optimization and the definition of the cost function are also largely the same as those used for the example above. Since we will use VQC class in Qiskit API, the program itself is greatly simplified.
 
-VQCクラスでは、特徴量マップと変分フォームを結合させ、入力特徴量とパラメータ値を代入し、測定を行い、目的関数を計算し、パラメータのアップデートを行う、という一連の操作を内部で行なってしまいます。測定を行うのに使用するのはSamplerというクラスで、これはEstimatorと同様の働きをしますが、後者が観測量の期待値を計算するのに対し、前者はすべての量子ビットをZ基底で測定した結果のビット列の確率分布を出力します。VQCではこの分布を利用して分類を行います。今回は2クラス分類なので、入力の各事象に対して、q0の測定値が0である確率が、それが信号事象である確率（モデルの予測）に対応します。
+In vhe VQC class, all the steps described above, i.e, creation of feature map and variational form, substituting input data and parameter values, measuring the generated state, calculating the objective function and updating the parameters, are done internally. The measurement is performed using the Sampler class. The function of this class is similar to the Estimator class, but there is a difference: the latter computes the expectation value of an observable, but the former calculates the probability distribution of bit-strings obtained by measuring all the qubits in $Z$ basis. The VQC uses htis distribution for the classification task. What we deal here is two class classification, so the probability of measuring 0 on the first qubit for each input event corresponds to the probability of this event to be signal (model prediction).
+
 
 ```{code-cell} ipython3
 ---
@@ -653,10 +642,10 @@ pycharm:
     '
 tags: [remove-output]
 ---
-# 上のEstimatorと同じく、バックエンドを使わずシミュレーションを簡略化したSampler
+# Use Sampler
 sampler = Sampler()
 
-# 実機で実行する場合
+# In case of using real hardware
 # instance = 'ibm-q/open/main'
 
 # try:
@@ -699,7 +688,7 @@ vqc = VQC(num_qubits=feature_dim,
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-# テキスト作成用のセル - わざと次のセルでエラーを起こさせる
+# Cell for text
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
     del objective_func_vals
 ```
@@ -716,14 +705,14 @@ tags: [raises-exception, remove-output]
 ---
 vqc.fit(norm_train_data, train_label_one_hot)
 
-# 実機で実行している（RuntimeSamplerを使っている）場合
+# In case of using real hardware (with RuntimeSampler)
 # session.close()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-# テキスト作成用のセルなので無視してよい
+# Cell for text
 with open('data/vqc_machine_learning_susycost.pkl', 'rb') as source:
     fig = pickle.load(source)
 
@@ -758,8 +747,6 @@ print(f'--- Classification Test score:  {test_score} ---')
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-この結果を見てどう思うでしょうか？機械学習を知っている方であれば、この結果はあまり良いようには見えませんね。。訓練用のデータでは学習ができている、つまり信号とバックグラウンドの選別ができていますが、テスト用のサンプルでは選別性能が悪くなっています。これは「過学習」を起こしている場合に見られる典型的な症状で、訓練データのサイズに対して学習パラメータの数が多すぎるときによく起こります。
-What do you think of these results? If you're familiar with machine learning, you would probably say that, even speaking charitably, there's no way that these results could be called "good." The training data has been learned -- in other words, the signal selection efficiency (True Positive Rate) is higher than the background selection efficiency (False Positive Rate). However, the ROC curve for the testing data sample is almost a diagonal line and shows no signs of learning whatsoever. This is typical of "overlearning," and often happens when the number of learning parameters is too large for the amount of training data.
+What do you think about these results? If you are familiar with machine learning, you would probably say that the results do not look good. The training looks good, that is, the classification between the signal and background is successful, but the performance is worse for the testing sample. This behavior often appears when the *overfitting* occurs in the training. The overfitting typically occurs when the number of trainable parameters is significantly more than the training data size.
 
-試しに、データサンプルの事象数を50や100に増やして実行し、結果を調べてみてください（処理時間は事象数に比例して長くなるので要注意）。
-Try increasing the number of data samples to 50 or 100 and compare the results (note that the processing time will increase proportionally with the number of data samples).
+As an exercise, try to increase the number of data samples to 50 or 100 and check the results (the processing time will increase proportionally to the number of data samples).
