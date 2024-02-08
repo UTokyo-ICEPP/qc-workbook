@@ -1,0 +1,58 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/usr/local/lib/python3.10/dist-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/usr/local/lib/python3.10/dist-packages/jupyter_core/utils/__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 646, in run_until_complete
+    return future.result()
+  File "/usr/local/lib/python3.10/dist-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/usr/local/lib/python3.10/dist-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/usr/local/lib/python3.10/dist-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る
+# フェイクバックエンドの場合、少し時間がかかるので気長に待ってください
+print('Transpiling the original circuit with standard settings')
+circuit_original_tr = transpile(circuit_original, backend=backend, optimization_level=3)
+
+# 効率化した回路をトランスパイルする。マシンのトポロジーに従い、最も合計エラー率の低い量子ビット列にマッピングする
+print('Transpiling the optimized circuit with trivial mapping onto a chain of qubits')
+initial_layout = find_best_chain(backend, n1 + n2 + n3)
+circuit_optimized_tr = transpile(circuit_optimized, backend=backend,
+                                 routing_method='basic', initial_layout=initial_layout,
+                                 optimization_level=3)
+
+# count_opsは回路に含まれる基本ゲートの数を辞書として返す
+nops_orig = circuit_original_tr.count_ops()
+nops_opt = circuit_optimized_tr.count_ops()
+
+print(f'Number of operations in the original circuit: {circuit_original_tr.size()}')
+print(f'  Breakdown: N(Rz)={nops_orig["rz"]}, N(X)={nops_orig["x"]}, N(SX)={nops_orig["sx"]}, N(CNOT)={nops_orig["cx"]}')
+print(f'Number of operations in the optimized circuit: {circuit_optimized_tr.size()}')
+print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(CNOT)={nops_opt["cx"]}')
+------------------
+
+----- stdout -----
+Transpiling the original circuit with standard settings
+----- stdout -----
+Transpiling the optimized circuit with trivial mapping onto a chain of qubits
+----- stdout -----
+Number of operations in the original circuit: 482
+  Breakdown: N(Rz)=199, N(X)=14, N(SX)=78, N(CNOT)=178
+Number of operations in the optimized circuit: 383
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mKeyError[0m                                  Traceback (most recent call last)
+Cell [0;32mIn[11], line 20[0m
+[1;32m     18[0m [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m'[39m[38;5;124m  Breakdown: N(Rz)=[39m[38;5;132;01m{[39;00mnops_orig[[38;5;124m"[39m[38;5;124mrz[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m, N(X)=[39m[38;5;132;01m{[39;00mnops_orig[[38;5;124m"[39m[38;5;124mx[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m, N(SX)=[39m[38;5;132;01m{[39;00mnops_orig[[38;5;124m"[39m[38;5;124msx[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m, N(CNOT)=[39m[38;5;132;01m{[39;00mnops_orig[[38;5;124m"[39m[38;5;124mcx[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m'[39m)
+[1;32m     19[0m [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m'[39m[38;5;124mNumber of operations in the optimized circuit: [39m[38;5;132;01m{[39;00mcircuit_optimized_tr[38;5;241m.[39msize()[38;5;132;01m}[39;00m[38;5;124m'[39m)
+[0;32m---> 20[0m [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m'[39m[38;5;124m  Breakdown: N(Rz)=[39m[38;5;132;01m{[39;00mnops_opt[[38;5;124m"[39m[38;5;124mrz[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m, N(X)=[39m[38;5;132;01m{[39;00m[43mnops_opt[49m[43m[[49m[38;5;124;43m"[39;49m[38;5;124;43mx[39;49m[38;5;124;43m"[39;49m[43m][49m[38;5;132;01m}[39;00m[38;5;124m, N(SX)=[39m[38;5;132;01m{[39;00mnops_opt[[38;5;124m"[39m[38;5;124msx[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m, N(CNOT)=[39m[38;5;132;01m{[39;00mnops_opt[[38;5;124m"[39m[38;5;124mcx[39m[38;5;124m"[39m][38;5;132;01m}[39;00m[38;5;124m'[39m)
+
+[0;31mKeyError[0m: 'x'
+
