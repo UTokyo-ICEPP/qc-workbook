@@ -1,13 +1,11 @@
 Bootstrap: docker-daemon
-From: yiiyama/jupyterbook-qiskit-packages:1.1.1
+From: yiiyama/jupyterbook-qiskit-packages:1.1.3
 
 %post
     apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get -y install wget git
 
     pip3 install --no-cache-dir jupyterlab jupytext
-
-    pip3 install dwave-qbsolv
 
     git clone https://github.com/LAL/trackml-library.git
     pip3 install ./trackml-library
