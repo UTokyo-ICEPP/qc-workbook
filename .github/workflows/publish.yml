@@ -10,25 +10,21 @@ jobs:
     - name: Checkout the latest
       uses: actions/checkout@v4
 
-    - name: Build the books (ja)
+    - name: Build the books
       run: |
         docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang ja
         docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang en
         mkdir _site
-        mv build/ja/_build/html _site/ja
-        mv build/en/_build/html _site/en
-        cp $GITHUB_WORKSPACE/source/common/redirect.html _site/index.html
+        cp -r build/ja/_build/html _site/ja
+        cp -r build/en/_build/html _site/en
+        cp $GITHUB_WORKSPACE/source/common/redirections/*.html _site/
 
-  upload:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v3
 
   deploy:
     # Add a dependency to the build job
-    needs: upload
+    needs: build
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
