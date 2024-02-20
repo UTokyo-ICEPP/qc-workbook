@@ -1,31 +1,31 @@
 ---
-jupytext:
-  formats: md:myst,ipynb
-  notebook_metadata_filter: all
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.14.5
-kernelspec:
-  display_name: Python 3 (ipykernel)
-  language: python
-  name: python3
-language_info:
-  codemirror_mode:
-    name: ipython
-    version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
-  pygments_lexer: ipython3
-  version: 3.10.6
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.16.1
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.10.12
 ---
 
+<!-- #region editable=true slideshow={"slide_type": ""} -->
 # 計算をする量子回路の実装
-
-+++
+<!-- #endregion -->
 
 量子計算をする回路の感覚がつかめてきたところで、量子計算をするとはどういうことかに話を移して行きましょう。
 
@@ -37,7 +37,6 @@ local: true
 
 $\newcommand{\ket}[1]{|#1\rangle}$
 
-+++
 
 ## 量子計算の特徴
 
@@ -60,7 +59,6 @@ SIMD (single instruction multiple data)とは並列計算パラダイムの一�
 
 [^and_you_dont_want_to]: そもそも、例えば65量子ビットの計算機からすべてのデータを保存しようと思うと、各振幅を128（古典）ビットの浮動小数点複素数で表現したとすれば512EiB (エクサバイト)のストレージが必要です。これはだいたい現在インターネットを行き来する情報二ヶ月分に相当するので、保存するファシリティを作るにはそれなりの投資が必要です。
 
-+++
 
 (QFT)=
 ## 量子フーリエ変換
@@ -88,18 +86,15 @@ $$
 
 例として$n=6$の時のQFT回路を載せておきます。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Math
 from qiskit import QuantumRegister, QuantumCircuit, transpile
-from qiskit.tools.monitor import job_monitor
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 from qc_workbook.show_state import statevector_expr
 from qc_workbook.optimized_additions import optimized_additions
 from qc_workbook.utils import operational_backend, find_best_chain
@@ -107,7 +102,7 @@ from qc_workbook.utils import operational_backend, find_best_chain
 print('notebook ready')
 ```
 
-```{code-cell} ipython3
+```python
 num_qubits = 6
 
 circuit = QuantumCircuit(num_qubits)
@@ -157,7 +152,7 @@ for i in range(num_qubits // 2):
 circuit.draw('mpl')
 ```
 
-```{code-cell} ipython3
+```python
 sqrt_2_to_n = 2 ** (num_qubits // 2)
 amp_norm = (1. / sqrt_2_to_n, r'\frac{1}{%d}' % sqrt_2_to_n)
 phase_norm = (2 * np.pi / (2 ** num_qubits), r'\frac{2 \pi i}{%d}' % (2 ** num_qubits))
@@ -260,7 +255,6 @@ $$
 が得られます。
 ```
 
-+++
 
 (fourier_addition)=
 ## 量子フーリエ変換による足し算
@@ -279,9 +273,7 @@ $$
 
 次のセルで定義された`setup_addition`関数がサブルーチンの実装です。コード中`circuit.h()`に量子ビット番号ではなくレジスタオブジェクトを渡しています。`setup_addition`のコード中にも説明がありますが、Qiskitでは便利のために、`QuantumObject`クラスの1量子ビットゲートのメソッドに量子ビット番号だけでなく、番号のリストやレジスタを渡して、含まれるすべての量子ビットに同じ操作をかけることができるようになっています。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 def setup_addition(circuit, reg1, reg2, reg3):
     # reg3にequal superpositionを生成
     # QuantumCircuitの1量子ビットゲートに対応するメソッド（circuit.hなど）に単一の量子ビットの代わりに
@@ -386,7 +378,7 @@ $$
 
 実際に`setup_addition`を使って足し算をしてみましょう。レジスタ1と2は4ビットとして、$a=9, b=13$を考えます。
 
-```{code-cell} ipython3
+```python
 a = 9
 b = 13
 
@@ -423,7 +415,7 @@ circuit.draw('mpl')
 
 再び`statevector_expr`関数を使って終状態を確認してみましょう。
 
-```{code-cell} ipython3
+```python
 expr = statevector_expr(circuit, register_sizes=(n1, n2, n3))
 Math(expr)
 ```
@@ -436,7 +428,6 @@ $$
 
 が実現しました。
 
-+++
 
 ## 足し算の並列化
 
@@ -448,7 +439,7 @@ $$
 
 を行うので、$\mathcal{O}\left((n_1 + n_2 + n_3) n_3\right)$個のゲートで$2^{n_1+n_2}$通りの足し算を並列に行います。実際にこれを確認してみましょう。
 
-```{code-cell} ipython3
+```python
 n1 = 4
 n2 = 4
 n3 = np.ceil(np.log2((2 ** n1) + (2 ** n2) - 1)).astype(int)
@@ -469,7 +460,7 @@ expr = statevector_expr(circuit, register_sizes=(n1, n2, n3), amp_norm=(1. / np.
 Math(expr)
 ```
 
-2022年4月現在、IBMの持つ最大の量子コンピュータは127量子ビットです。このマシンを最大限利用するならば、$n_1 = n_2 = 42, n_3 = 43$で$2^{84}$通り、つまり約$2 \times 10^{25}$（20𥝱）通りの足し算を同時に行うことができます。
+2024年2月現在、IBMの持つ最大の量子コンピュータは133量子ビットです。このマシンを最大限利用するならば、$n_1 = n_2 = 44, n_3 = 45$で$2^{88}$通り、つまり約$3 \times 10^{26}$（300𥝱）通りの足し算を同時に行うことができます。
 
 もちろん、上で書いたようにここには重要な但し書きがあって、実機でこの計算をして測定から答えを得ようとすると、毎回の測定でどの組み合わせが得られるかをコントロールできないので、これはあまり実用的とは言えない回路です。強いて言えば毎日ランダムに12桁＋12桁の正しい足し算を教えてくれる「日めくり足し算カレンダー」にくらいは使えます。$10^{23}$年程度使い続けられます。
 
@@ -477,9 +468,7 @@ Math(expr)
 
 上の足し算回路の結果がランダムに出る様子をシミュレーションで確認しましょう。{doc}`addition_on_ibmq`では実機でも実行します。その際、上の回路実装では非効率的でエラーが出すぎるので、[専用に効率化した等価回路](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/optimized_additions.py)を代わりに使用します。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # 元の回路に測定を加える
 circuit.measure_all()
 circuit_original = circuit
@@ -491,14 +480,13 @@ print('Constructed an optimized addition circuit')
 
 回路の効率化とは具体的にどういうことでしょうか。もともとの回路と効率化したものとを比べてみましょう。まずは、単純にオペレーションの数を比較します。ゲート一つ一つで一定の確率でエラーが起こるということは、同じことをする回路ならゲートの数が少ないほうがより正確な計算をしてくれます。
 
-```{code-cell} ipython3
+```python
 print('Number of operations in the original circuit:', circuit_original.size())
 print('Number of operations in the optimized circuit:', circuit_optimized.size())
 ```
 
 効率化したはずの回路のほうがはるかにゲート数が多いという結果になりました。なぜでしょうか。
 
-+++
 
 (transpilation)=
 ### トランスパイルと物理的回路
@@ -538,7 +526,6 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 [^physical]: 「物理的」な回路もまだ実は論理的な存在であり、本当にハードウェアが理解するインストラクションに変換するには、さらに基本ゲートを特定のマイクロ波パルス列に直す必要があります。
 
-+++
 
 ### 回路の比較
 
@@ -548,34 +535,27 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、`'ibm-q/open/main'`プロバイダを使っている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。
 
-```{code-cell} ipython3
-:tags: [remove-output]
+```python tags=["remove-output"]
+# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
-# よりアクセス権の広いプロバイダを使える場合は、下を書き換える
-instance = 'ibm-q/open/main'
+try:
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-if instance == 'ibm-q/open/main':
-    from qiskit.test.mock import FakeGuadalupe
+backend = service.least_busy(min_num_qubits=13, filters=operational_backend())
 
-    backend = FakeGuadalupe()
-
-else:
-    try:
-        provider = IBMProvider(instance=instance)
-    except AccountNotFoundError:
-        provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
-
-    backend_list = provider.backends(filters=operational_backend(min_qubits=13))
-    backend = least_busy(backend_list)
-
-print(f'Using backend {backend.name()}')
+print(f'Using backend {backend.name}')
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
+```python
+backend.gates[0].name
+```
 
+```python tags=["remove-output"]
 # オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る
-# フェイクバックエンドの場合、少し時間がかかるので気長に待ってください
 print('Transpiling the original circuit with standard settings')
 circuit_original_tr = transpile(circuit_original, backend=backend, optimization_level=3)
 
@@ -590,10 +570,13 @@ circuit_optimized_tr = transpile(circuit_optimized, backend=backend,
 nops_orig = circuit_original_tr.count_ops()
 nops_opt = circuit_optimized_tr.count_ops()
 
+# バックエンドによって2量子ビット基本ゲートが異なるので、調べておく
+entangling_gate = next(g.name for g in backend.gates if g.name in ['cx', 'ecr'])
+
 print(f'Number of operations in the original circuit: {circuit_original_tr.size()}')
-print(f'  Breakdown: N(Rz)={nops_orig["rz"]}, N(X)={nops_orig["x"]}, N(SX)={nops_orig["sx"]}, N(CNOT)={nops_orig["cx"]}')
+print(f'  Breakdown: N(Rz)={nops_orig["rz"]}, N(X)={nops_orig["x"]}, N(SX)={nops_orig["sx"]}, N(CNOT)={nops_orig[entangling_gate]}')
 print(f'Number of operations in the optimized circuit: {circuit_optimized_tr.size()}')
-print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(CNOT)={nops_opt["cx"]}')
+print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(CNOT)={nops_opt[entangling_gate]}')
 ```
 
 上のセルを実行すると、今度は効率化回路のオペレーションの全数が元の回路の8割、CNOTの数は6割という結果になることがわかります。
@@ -602,9 +585,7 @@ print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_o
 
 それでは、トランスパイルした回路を実行してみます。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 simulator = AerSimulator()
 
 job_original = simulator.run(circuit_original_tr, shots=20)

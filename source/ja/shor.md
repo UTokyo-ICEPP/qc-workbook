@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,14 +19,14 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 # 素因数分解アルゴリズムを学習する
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 この実習では**ショアのアルゴリズム**を学習します。名前を聞いたことがある人もいるかもしれませんが、ショアのアルゴリズム{cite}`shor,nielsen_chuang_qft_app`は最も有名な量子アルゴリズムと言っても良いでしょう。ショアのアルゴリズムの元になっている**量子位相推定**と呼ばれる手法を学んだ後、ショアのアルゴリズムの各ステップを実例とともに紹介します。最後に、Qiskitを使用してショアのアルゴリズムを実装し、実際に素因数分解を行ってみます。
 
@@ -48,15 +48,14 @@ $\newcommand{\modnequiv}[3]{#1 \not\equiv #2 \pmod{#3}}$
 
 古典計算での素因数分解の難しさは、現在広く使われている鍵暗号技術の元になっています。なので、指数関数的に高速なショアのアルゴリズムが量子コンピュータで実現されれば、秘密の情報が暴かれる可能性があります。ショアのアルゴリズムが大きく注目される理由はそこにあります。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 (qpe)=
 ## 量子位相推定
 
-まず、ショアのアルゴリズムの元になっている「**量子位相推定」**（*Quantum Phase Estimation*, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「**量子フーリエ変換**」（*Quantum Fourier Transform*, QFT）の理解が欠かせませんが、QFTについては、この[実習](circuit_from_scratch.ipynb)の問題7、もしくは参考文献[1]を参照してください。
+まず、ショアのアルゴリズムの元になっている「**量子位相推定」**（*Quantum Phase Estimation*, QPE）と呼ばれる手法について学びましょう。ショアのアルゴリズムを理解していけば、ショアのアルゴリズムの核心部分は、実はほぼQPEそのものであることが見えてくると思います。QPEの理解には「**量子フーリエ変換**」（*Quantum Fourier Transform*, QFT）の理解が欠かせませんが、QFTについては、この[実習](circuit_from_scratch)の問題7、もしくは参考文献[1]を参照してください。
 
 QPEはとても大事な計算手法で、ショアのアルゴリズムだけでなく、いろいろな量子アルゴリズムのサブルーチンとしても使われています。
-%（モンテカルロサンプラーの[実習](mc_sampler.ipynb)でも出てきます）。
 
 QPEが考える問題は、「あるユニタリー演算$U$に対して$U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$となる固有ベクトル$\ket{\psi}$が与えられるとして、その固有値$e^{2\pi i\theta}$の位相$\theta$を求めることができるか？」という問題です。
 
@@ -151,11 +150,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
 from qc_workbook.utils import operational_backend
@@ -375,30 +373,33 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # 量子コンピュータで実行する場合
-instance = 'ibm-q/open/main'
+# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=4))
-backend = least_busy(backend_list)
-print(f"least busy backend: {backend.name()}")
+backend = service.least_busy(min_num_qubits=4, filters=operational_backend())
+print(f"least busy backend: {backend.name}")
 ```
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 # 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。
 qc_tr = transpile(qc, backend=backend, optimization_level=3)
 job = backend.run(qc_tr, shots=shots)
-job_monitor(job, interval=2)
 ```
 
 ```{code-cell} ipython3
@@ -631,12 +632,15 @@ $N$を正の整数として、関数$f(x) = a^x \bmod N$の振る舞いを考え
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 N = 35
 a = 3
@@ -660,6 +664,8 @@ else:
     plt.annotate(text=f'$r={r}$', xy=(r / 3, 1.5))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 (shor_imp_oracle)=
 ### オラクルの実装
 
@@ -673,12 +679,15 @@ else:
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 def c_amod15(a, l):
     """mod 15による制御ゲート"""
@@ -714,7 +723,7 @@ def c_amod15(a, l):
     return c_gate
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 **解答**
 
@@ -839,12 +848,15 @@ am \bmod 15 = \sum_{j=0}^{3} (2^{j+\log_2 a} \bmod 15) m_j,
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-input, remove-output]
 ---
 # テキスト作成用のセル
@@ -875,7 +887,7 @@ def c_amod15(a, l):
     return c_gate
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (shor_imp_circuit)=
 ### 回路全体の実装
@@ -884,12 +896,15 @@ def c_amod15(a, l):
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # 15と互いに素な数
 a = 7
@@ -924,16 +939,21 @@ qc.measure(qreg_meas, creg_meas)
 qc.draw('mpl')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 シミュレータで実行して、結果を確認してみます。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 qc = transpile(qc, backend=simulator)
 results = simulator.run(qc, shots=2048).result()
@@ -942,7 +962,7 @@ answer = results.get_counts()
 show_distribution(answer)
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (shor_imp_ana)=
 ### 計算結果の解析
@@ -950,12 +970,15 @@ show_distribution(answer)
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 rows, measured_phases = [], []
 for output in answer:
@@ -973,16 +996,21 @@ for row in rows:
     print(row)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 得られた位相の情報から、連分数アルゴリズムを使用して$s$と$r$を見つけることができます。Pythonの組み込みの`fractions`(分数)モジュールを使用して、小数を`Fraction`オブジェクトに変換できます。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 rows = []
 for phase in measured_phases:
@@ -997,6 +1025,17 @@ for row in rows:
     print(row)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 `limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
 
 測定された結果のうち、2つ（64と192）が正しい答えである$r=4$を与えたことが分かります。
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+
+```

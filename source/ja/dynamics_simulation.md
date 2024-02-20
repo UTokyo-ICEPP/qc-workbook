@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # 物理系を表現する
@@ -447,10 +447,9 @@ circuit.draw('mpl')
 # まずは全てインポート
 import numpy as np
 from qiskit import QuantumCircuit, transpile
-from qiskit.tools.monitor import job_monitor
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
 from qc_workbook.utils import operational_backend
@@ -533,18 +532,18 @@ plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theo
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-# よりアクセス権の広いプロバイダを使える場合は、下を書き換える
-instance = 'ibm-q/open/main'
+# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=n_spins, min_qv=32))
-backend = least_busy(backend_list)
+backend = service.least_busy(min_num_qubits=n_spins, filters=operational_backend())
 
-print(f'Job will run on {backend.name()}')
+print(f'Job will run on {backend.name}')
 ```
 
 ```{code-cell} ipython3
@@ -554,8 +553,6 @@ circuits_ibmq = transpile(circuits, backend=backend)
 
 job = backend.run(circuits_ibmq, shots=8192)
 
-job_monitor(job, interval=2)
-
 counts_list = job.result().get_counts()
 ```
 
@@ -563,4 +560,8 @@ counts_list = job.result().get_counts()
 :tags: [raises-exception, remove-output]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
+```
+
+```{code-cell} ipython3
+
 ```

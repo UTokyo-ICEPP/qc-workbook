@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # ToffoliゲートとShorコード
 
@@ -66,8 +68,12 @@ IBMQをはじめ、私たちが現在利用できる量子コンピュータは 
 Shorコードやそのベースとなるビット反転・位相反転コードのデコーディングで欠かせないのがToffoliゲート(CCX)です。
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 from qiskit import QuantumCircuit
 
 circuit = QuantumCircuit(3)
@@ -75,11 +81,18 @@ circuit.ccx(0, 1, 2)
 circuit.draw('mpl')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 Toffoliゲートはエラー訂正だけでなく、多重制御ゲートの基本パーツとなるため、さまざまな場面で登場します。また理論的には、ToffoliゲートとHadamardゲートの組み合わせで全ての量子演算が実現できる（普遍ゲートセットとなる）ことから、Toffoliゲートは特別重要な存在です。
 
 一見単純そうに見えるToffoliゲートですが、超伝導量子回路などの実機で、基本ゲートが1量子ビットゲートと2量子ビットゲートのみからなる（IBMのケースでは$X$, $\sqrt{X}$, $R_z$, CX）場合、実装（基本ゲートへの分解）は非自明です。これから、Toffoliゲートの一つの分解方法をステップごとに導いてみましょう。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # まずは必要なモジュールをインポートする
 import numpy as np
 from qiskit import QuantumCircuit
@@ -91,6 +104,11 @@ from qc_workbook.show_state import show_state, statevector_expr
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 def show_circuit_op(circuit, global_phase=0.):
     """Compiles the LaTeX expression of the operation of the circuit on computational basis states."""
 
@@ -107,6 +125,8 @@ def show_circuit_op(circuit, global_phase=0.):
 
     return Latex(r'\begin{align} ' + r' \\ '.join(exprs) + r' \end{align}')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## CPゲート
 
@@ -143,8 +163,12 @@ $R_z$を$X$で挟むと、$R_z$のパラメータの符号を反転させたの�
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 cp_circuit = QuantumCircuit(2, name='CP')
 
 phi = Parameter('$\phi$')
@@ -165,12 +189,18 @@ cp_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 # phiに具体的な値を入れて、CPが実装されていることを確認
 phi_value = np.pi / 4.
-show_circuit_op(cp_circuit.bind_parameters({phi: phi_value}), global_phase=(-phi_value / 4.))
+show_circuit_op(cp_circuit.assign_parameters({phi: phi_value}, inplace=False), global_phase=(-phi_value / 4.))
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 $CP$は`QuantumCircuit`オブジェクトにもメソッド`cp`として備わっているので、以下では（回路図の見やすさを考慮して）標準メソッドを使うことにします。
 
@@ -186,8 +216,12 @@ $CP$は`QuantumCircuit`オブジェクトにもメソッド`cp`として備わ�
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 ccz_circuit = QuantumCircuit(3, name='CCZ')
 
 # ccz_circuit が CCZを実装するようにゲートを加えてください。
@@ -209,10 +243,16 @@ ccz_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 show_circuit_op(ccz_circuit)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## Hadamardゲート
 
@@ -230,8 +270,12 @@ show_circuit_op(ccz_circuit)
 $R_z(\phi)\ket{0}$や$R_z(\phi)\ket{1}$に$\sqrt{X}$をかけるとどうなるか、また$\sqrt{X}$をかけた後の状態に$R_z(\phi)$をかけたらどうなるか、計算してみましょう。今回も全体位相が生じます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 h_circuit = QuantumCircuit(1, name='H')
 
 # h_circuit が Hを実装するようにゲートを加えてください。
@@ -248,18 +292,28 @@ h_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 show_circuit_op(h_circuit, global_phase=(-1. / 4. * np.pi))
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## Toffoliゲート
 
 $Z$ゲートを$H$ゲートで挟むと$X$ゲートと等価になることを思い出して、CCZと$H$からCCXを作ってください。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 toffoli_circuit = QuantumCircuit(3, name='Toffoli')
 
 # toffoli_circuit が Toffoliを実装するようにゲートを加えてください。
@@ -278,16 +332,22 @@ toffoli_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 show_circuit_op(toffoli_circuit)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 量子エラーとエラー訂正
 
 冒頭で述べたように、量子エラーは有限個の量子演算子の作用として捉えることができます。特に、1量子ビットのエラーは、量子ビットに$X$、$Z$、$XZ$のどれかがかかることと等価です。$X$がかかるようなエラーをビット反転（bit flip）エラー、$Z$のケースを位相反転（phase flip）エラー、$XZ$のケースを複合（combined bit-phase flip）エラーと呼びます。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### ビット反転（$X$）エラー
 
@@ -305,8 +365,12 @@ Shorコードの元になるのはビット反転コードという、量子ビ�
 以下では、適当な状態に初期化した量子ビットをビット反転コードでエンコードし、論理量子ビットに論理$Z$ゲートをかける過程でどれかひとつの（物理）量子ビットにビット反転エラーが起きるというシナリオを考えます。デコーディングの際にToffoliゲートを使うと、エラーが補正されます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 bitflip_circuit = QuantumCircuit(3)
 
 # データ量子ビット（第0ビット）を適当な状態に初期化
@@ -351,14 +415,25 @@ bitflip_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 show_state(bitflip_circuit, binary=True);
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 第1と第2量子ビット（Qiskitの順番なので左二桁）の状態が同一である＝第3量子ビットとのエンタングルメントが切れていれば、正しくデコードされています。第0ビットの状態をエラーのない単一量子ビット回路のものと比較します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 ref_circuit = QuantumCircuit(1)
 
 ref_circuit.u(0.2, 0.7, 0., 0)
@@ -366,13 +441,19 @@ ref_circuit.z(0)
 show_state(ref_circuit, binary=True);
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 ### 位相反転（$Z$）エラー
 
 次に、位相反転に対してのみ耐性を持つ3量子ビットのエラー訂正コードを考えます。$Z$を$H$で挟むと$X$になることを思い出すと、ビット反転コードを転用できることがすぐにわかります。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 phaseflip_circuit = QuantumCircuit(3)
 
 phaseflip_circuit.u(0.2, 0.7, 0., 0)
@@ -414,18 +495,28 @@ phaseflip_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 show_state(phaseflip_circuit, binary=True);
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### Shorコード
 
 Shorコードは位相反転コードの物理量子ビットにビット反転コードの論理量子ビットを使って作ります。全部で9つの量子ビットを使い、全ての1量子ビットエラー（$X, Z, XZ$）に耐性を持ちます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 shor_circuit = QuantumCircuit(9)
 
 shor_circuit.u(0.2, 0.7, 0., 0)
@@ -479,12 +570,25 @@ shor_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 if error == 'xz':
     global_phase = -np.pi
 else:
     global_phase = 0.
 
 show_state(shor_circuit, global_phase=global_phase, binary=True);
+```
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+
 ```

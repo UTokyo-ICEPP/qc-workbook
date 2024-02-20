@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 【課題】位相推定によるスペクトル分解
 
@@ -65,8 +67,12 @@ $$
 このようなハミルトニアンの固有値や固有状態がどのような値を取るのか、具体例で確認しましょう。最も簡単な$n=2, g=0$というケースを考え、直接対角化して厳密解を求めます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 # まず必要なモジュールをインポートする
 import numpy as np
 import matplotlib.pyplot as plt
@@ -81,6 +87,11 @@ print('notebook ready')
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # Number of spins
 n_s = 2
 # Coupling parameter
@@ -116,9 +127,11 @@ for i in range(eigvals.shape[0]):
     show_state(eigvectors[:, i], binary=True, state_label=r'\phi_{} (E={}J)'.format(i, eigvals[i]))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最後の部分で、[`show_state`関数](https://github.com/UTokyo-ICEPP/qc-workbook/tree/master/source/qc_workbook/show_state.py)を利用して固有値と固有ベクトルを表示しました。最低エネルギー状態（固有値$-2J$）に対応する独立な固有ベクトルが3つあることがわかります。したがって、これらの固有ベクトルの任意の線形和もまた最低エネルギー状態です。励起状態（固有値$6J$）は$1/\sqrt{2} (-\ket{01} + \ket{10})$です。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 位相推定によるスペクトル分解
 
@@ -211,7 +224,7 @@ $$
 
 一方、系の最低エネルギー$\hbar \omega \theta_0$なら、{doc}`vqe`の手法などを用いて最低エネルギー状態の近似を実現し、それをSの初期状態とすることで、比較的に安定して求めることは可能です。そのため、上の手法は原理的にはスペクトルの完全な分解に使えますが、実際には最低エネルギーとその固有ベクトルを正確に求めるために利用することが多いと考えられます。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 問題1: スペクトル推定を実装し、厳密解と照らし合わせる
 
@@ -223,12 +236,15 @@ $U_H(-\tau)$を量子コンピュータ上で計算するために、鈴木・�
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     """Return a function that implements a single Trotter step for the Heisenberg model.
@@ -277,16 +293,21 @@ def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     return circuit
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 次のセルでスペクトル推定のアルゴリズムを実装しています。この関数は状態レジスタ、読み出しレジスタ、時間発展回路を引数に取り、スペクトル推定の量子回路を返します。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 def spectrum_estimation(state_register, readout_register, u_circuit):
     """Perform a spectrum estimation given a circuit containing state and readout registers and a callable implementing
@@ -331,11 +352,18 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
     return circuit
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 この問題では、上で厳密解を求めた$n=2, g=0$のケースを調べます。今回はすでにエネルギー固有値を知っているので、ハミルトニアンの規格化定数を$\hbar \omega = 16J$として、読み出しレジスタの終状態が単純になるようにします。このとき読み出しは符号付きで、最大絶対値が$2^{n_R} (6/16)$なので、$n_R = 1 + 3$とすればオーバーフローを回避できます。
 
 次のセルでシミュレーションとスペクトル推定のパラメータを設定します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 ## Physics model parameter
 g = 0.
 
@@ -354,21 +382,33 @@ state_register = QuantumRegister(n_state, 'state')
 readout_register = QuantumRegister(n_readout, 'readout')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 上で正しく関数をかけているか確認しておきましょう。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
 u_circuit.draw('mpl')
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 se_circuit = spectrum_estimation(state_register, readout_register, u_circuit)
 se_circuit.draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 状態レジスタの初期状態を
 
@@ -380,8 +420,12 @@ se_circuit.draw('mpl')
 とする関数を書きます。ここで$\ket{\phi_i}$は最初に求めた固有ベクトルの4つの厳密解です。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 def make_initial_state(state_register, readout_register):
     circuit = QuantumCircuit(state_register, readout_register)
 
@@ -403,16 +447,21 @@ init_circuit = make_initial_state(state_register, readout_register)
 init_circuit.draw('mpl')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最後に全てを組み合わせます。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-output]
 ---
 u_circuit = trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps)
@@ -424,16 +473,21 @@ circuit.measure_all()
 circuit.draw('mpl')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 シミュレータで実行してヒストグラムを得ます。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-output]
 ---
 # Run the circuit in simulator and plot the histogram
@@ -444,6 +498,8 @@ result = job.result()
 counts = result.get_counts(circuit)
 plot_histogram(counts)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 状態レジスタの初期状態が式{eq}`two_qubit_init`なので、回路の終状態は
 
@@ -459,7 +515,7 @@ $$
 - 完成した状態レジスタの初期化回路
 - スペクトル推定の結果のヒストグラムと、その解釈
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 問題2: 非自明な系の振る舞いを調べる
 
@@ -518,6 +574,11 @@ $|f(\kappa_m - k)|$は$\kappa_m$近傍で鋭いピークを持つ分布なので
 [^unitarity]: これは$\{\ket{l}\}$と$\{\ket{\phi_m}\}$がともに状態レジスタの正規直交基底を張る（変換行列がユニタリである）ことに起因します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 def get_spectrum_for_comp_basis(
     n_state: int,
     n_readout: int,
@@ -591,13 +652,19 @@ def get_spectrum_for_comp_basis(
     return probs
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 読み出しレジスタのビット数を決めます。スピンの数が4なので、$\hbar \omega = 8(3 + |g|)J$と取ります。すると、$g=0$のとき、上の議論によると$\Theta$の固有値の予想される最小絶対値は$1/24$ですが、実は系の対称性からその$n=4$倍の$1/6$が最小値になると予測できます。$|g| \ll 1$しか考えないので、外部磁場を摂動として考えて、結局$2^{n_R} / 6$が1より十分大きくなるように$n_R=5$とします。
 
 回路のパラメータが決まったので、$g$を引数として$2^{n}$通りの計算基底に対して`get_spectrum_for_comp_basis`関数を呼ぶ関数を定義し、$g=0$について実行します（時間がかかります）。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 n_state = 4
 n_readout = 5
 energy_norm = 1. / 24.
@@ -630,28 +697,44 @@ def get_full_spectrum(g):
 spectra[0] = np.roll(get_full_spectrum(0.), 2 ** (n_readout - 1))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 得られた$P(k)$分布を、$k$をエネルギーに換算してプロットしてみましょう。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 plt.plot(np.linspace(-0.5 / energy_norm, 0.5 / energy_norm, 2 ** n_readout), spectra[0], 'o')
 plt.xlabel('E/J')
 plt.ylabel('P(E)')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 続いて、同じ関数を$g=0.1, 0.2, 0.3, 0.4, 0.5$について実行して、それぞれのスペクトルから系のエネルギー固有値と$g$の関係をプロットしてください。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 for i in range(1, g_values.shape[0]):
     spectra[i] = np.roll(get_full_spectrum(g_values[i]), 2 ** (n_readout - 1))
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 energy_eigenvalues = np.empty((g_values.shape[0], 2 ** n_state))
 
 # Extract the energy eigenvalues from spectra and fill the array
@@ -667,6 +750,8 @@ energy_eigenvalues = np.empty((g_values.shape[0], 2 ** n_state))
 
 plt.plot(g_values, energy_eigenvalues)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 **提出するもの**
 
@@ -684,3 +769,12 @@ $$
 $$
 
 が成り立つことがわかります。ここで$\delta_{mn}$はクロネッカーの$\delta$記号で、$m=n$のとき1、それ以外では0の値を持つ因子です。
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+
+```

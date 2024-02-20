@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.16.1
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.8.5
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 量子コンピュータをモンテカルロサンプラーとして使う
 
@@ -176,8 +178,7 @@ $$
 
 状態生成の回路をまとめると、以下のようになります。
 
-
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 求める振幅の生成 <a id='algo_amplitude'></a>
 
@@ -215,8 +216,6 @@ R_y(2\phi_k)|\tilde{\lambda}_l\rangle_D|0\rangle_E&=\bigotimes_{k=0}^{d-1}|\tild
 $$
 
 この状態に$R_y(\phi)$を適用すると
-
-
 
 +++
 

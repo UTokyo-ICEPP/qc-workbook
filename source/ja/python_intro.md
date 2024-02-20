@@ -1,12 +1,11 @@
 ---
 jupytext:
-  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -20,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 予備知識：Python
 
@@ -73,8 +74,12 @@ print(b)
 あとで解説する関数やクラスの定義、`if`、`for`、`try`/`except`などの複合文では、全ての行を一定数の空白文字分（通常スペース4つ、流儀によっては2つ。タブ文字は使うべきでない）だけインデントさせます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 if b == 15:
     # bの値が15の時、インデントされている部分が実行される
     print('b is fifteen')
@@ -1159,6 +1164,11 @@ display(fig)
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # LaTeXで書いた数式をタイプセットする
 from IPython.display import Math
 

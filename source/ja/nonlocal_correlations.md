@@ -6,7 +6,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.14.5
+      jupytext_version: 1.16.1
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -20,7 +20,7 @@ jupyter:
     name: python
     nbconvert_exporter: python
     pygments_lexer: ipython3
-    version: 3.10.6
+    version: 3.10.12
 ---
 
 # 【課題】量子相関を調べる
@@ -71,7 +71,7 @@ print('notebook ready')
 
 ```python
 simulator = AerSimulator()
-print(simulator.name())
+print(simulator.name)
 ```
 
 実習の内容を再現してみましょう。

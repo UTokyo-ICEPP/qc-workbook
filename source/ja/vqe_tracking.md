@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
 
@@ -97,12 +99,15 @@ CERNでは、将来の加速器計画として「高輝度LHC」（2027年に開
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 import pprint
 import numpy as np
@@ -112,13 +117,15 @@ import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import TwoLocal
 from qiskit.primitives import BackendEstimator
-from qiskit.algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
-from qiskit.algorithms.optimizers import SPSA, COBYLA
-from qiskit.algorithms.gradients import ParamShiftEstimatorGradient
+from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
+from qiskit_algorithms.optimizers import SPSA, COBYLA
+from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 from qiskit.quantum_info import SparsePauliOp, Statevector
 from qiskit_optimization.applications import OptimizationApplication
 from qiskit_aer import AerSimulator
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 (hamiltonian_form)=
 ### ハミルトニアンの構成とVQEの実行
@@ -164,6 +171,11 @@ $$
 それでは、まずスコア$a_{i}$と$b_{ij}$を読み出しましょう。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # スコアの読み込み
 with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
     a_score = source['a_score'][()]
@@ -174,6 +186,8 @@ print(f'Number of segments: {a_score.shape[0]}')
 print(a_score[:5])
 print(b_score[:5, :5])
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 #### Ising形式
 
@@ -194,6 +208,11 @@ $$
 以下のセルで、上の処方に従ってIsingハミルトニアンの係数$h_i$と$J_{ij}$を計算してください。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 num_qubits = a_score.shape[0]
 
 coeff_h = np.zeros(num_qubits)
@@ -210,6 +229,8 @@ coeff_J = np.zeros((num_qubits, num_qubits))
 ##################
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 次に、この係数をもとに、VQEに渡すハミルトニアンをSparsePauliOpとして定義します。{ref}`vqe_imp`ではSparsePauliOpは単一のパウリ積$ZXY$を表現するのに使いましたが、実はパウリ積の和も同じクラスを使って表現できます。例えば
 
 $$
@@ -225,8 +246,12 @@ H = SparsePauliOp(['IIZ', 'ZZI', 'ZIZ'], coeffs=[0.2, 0.3, 0.1])
 となります。このとき、通常のQiskitの約束に従って、量子ビットの順番が右から左（一番右が第0量子ビットにかかる演算子）であることに注意してください。
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 ##################
 ### EDIT BELOW ###
 ##################
@@ -243,6 +268,8 @@ coeffs = []
 hamiltonian = SparsePauliOp(pauli_products, coeffs=coeffs)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 (tracking_vqe)=
 #### VQEの実行
 
@@ -250,10 +277,13 @@ hamiltonian = SparsePauliOp(pauli_products, coeffs=coeffs)
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 # ハミルトニアン行列を対角化して、エネルギーの最小固有値と固有ベクトルを求める
@@ -267,16 +297,21 @@ optimal_segments_diag = OptimizationApplication.sample_most_likely(result_diag.e
 print(f'Optimal segments (diagonalization): {optimal_segments_diag}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 `optimal_segments_diag`のリストで1になっている量子ビットが、目的関数を最小化するセグメントの選択に対応します。
 
 次に、VQEで最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 backend = AerSimulator()
@@ -306,7 +341,7 @@ vqe = VQE(estimator, ansatz, optimizer, gradient=grad, initial_point=init)
 result_vqe = vqe.compute_minimum_eigenvalue(hamiltonian)
 
 # 最適解のパラメータ値をansatzに代入し、状態ベクトルを計算する
-optimal_state = Statevector(ansatz.bind_parameters(result_vqe.optimal_parameters))
+optimal_state = Statevector(ansatz.assign_parameters(result_vqe.optimal_parameters, inplace=False))
 
 # 最小エネルギーに対応する量子ビットの組み合わせを表示
 print(f'Minimum eigenvalue (VQE): {result_vqe.eigenvalue.real}')
@@ -314,7 +349,7 @@ optimal_segments_vqe = OptimizationApplication.sample_most_likely(optimal_state)
 print(f'Optimal segments (VQE): {optimal_segments_vqe}')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (omake)=
 ### おまけ
@@ -325,10 +360,13 @@ Trackingがうまく行っても、この答えだと0と1が並んでいるだ�
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 from hepqpr.qallse import DataWrapper, Qallse, TrackRecreaterD

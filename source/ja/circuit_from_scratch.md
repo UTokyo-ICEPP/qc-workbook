@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # 単純な量子回路をゼロから書く
@@ -60,7 +60,7 @@ print('notebook ready')
 
 ```{code-cell} ipython3
 simulator = AerSimulator(method='statevector')
-print(simulator.name())
+print(simulator.name)
 ```
 
 シミュレートする回路を作ります。ここでは例として前半で登場した回路1を使います。測定以外のゲートをかけていきます。
@@ -1073,3 +1073,7 @@ Math(statevector_expr(circuit, register_sizes=(1, 1, 1)))
 ```
 
 上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが$\ket{\text{in}}$と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。
+
+```{code-cell} ipython3
+
+```
