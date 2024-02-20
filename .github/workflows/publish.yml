@@ -14,6 +14,7 @@ jobs:
       run: |
         docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang ja
         docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang en
+        mkdir _site
         mv build/ja/_build/html _site/ja
         mv build/en/_build/html _site/en
         cp $GITHUB_WORKSPACE/source/common/redirect.html _site/index.html
