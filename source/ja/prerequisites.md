@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 実習の準備
 
@@ -30,13 +32,13 @@ local: true
 ---
 ```
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## IBM Quantum
 
 ### IBMidを取得し、IBM Quantumにログインする
 
-IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
+IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum.ibm.com/" target="_blank">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
 
 (install_token)=
 ### （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
@@ -52,19 +54,25 @@ IBM Quantum Lab（IBM Quantumウェブサイト上のJupyter Lab）でプログ�
 アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。ローカルディスクに書き込める環境にある場合は、一度トークンを設定ファイルに保存することで、以降の認証を自動化できます。下のコードセルの`__paste_your_token_here__`のところにIBM Quantumからコピーしたトークンを貼り付け、実行してください。
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-from qiskit_ibm_provider import IBMProvider
-
-IBMProvider.save_account('__paste_your_token_here__')
+QiskitRuntimeService.save_account('__paste_your_token_here__')
 ```
 
-トークンを保存することで、プログラム中でのIBM Quantumへの認証（IBMProviderの取得）は
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
+トークンを保存することで、プログラム中でのIBM Quantumへの認証（QiskitRuntimeServiceの取得）は
 
 ```{code-block} python
-from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-provider = IBMProvider()
+service = QiskitRuntimeService(channel='ibm_quantum')
 ```
 
 のようになります。ちなみにIBM Quantum Labでは最初からトークンが保存されている状態なので、このコードで認証が行なえます。
@@ -72,9 +80,9 @@ provider = IBMProvider()
 ローカルディスクに書き込める環境でない場合（このワークブックをインタラクティブに使っている場合など）は、Pythonプログラムを実行するたびに（Jupyterのカーネルを再起動するたびに）手動で認証を行う必要があります。
 
 ```{code-block} python
-from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-provider = IBMProvider(token='__paste_your_token_here__')
+service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__')
 ```
 
 ## ワークブックの使い方
@@ -107,8 +115,8 @@ provider = IBMProvider(token='__paste_your_token_here__')
 
 インタラクティブHTMLのセキュリティの問題が気になったり、編集したコードを保存したいと考えたりする場合は、ページの元になったノートブックファイルをダウンロードし、自分のローカルの環境で実行することもできます。右上の<i class="fas fa-download"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">.ipynb</span></span>をクリックするか、もしくは<i class="fab fa-github"></i>のメニューの<span style="background-color:#5a5a5a; color:white; font-family:Lato, sans-serif; font-weight:400; font-size:15px;"><span style="margin: 0 .4em 0 .4em;">repository</span></span>からリンクされている<a href="https://github.com/UTokyo-ICEPP/qc-workbook" target="_blank">githubレポジトリ</a>をクローンしてください。
 
-ノートブックをローカルに実行するためには、Pythonバージョン3.8以上が必要です。また、`pip`を使って以下のパッケージをインストールする必要があります。
+ノートブックをローカルに実行するためには、Pythonバージョン3.10以上が必要です。また、`pip`を使って以下のパッケージをインストールする必要があります。
 
 ```{code-block}
-pip install qiskit qiskit-ibm-provider qiskit-ibm-runtime matplotlib pylatexenc tabulate
+pip install qiskit qiskit-aer qiskit-ibm-runtime qiskit-experiments qiskit-machine-learning qiskit-optimization matplotlib pylatexenc pandas tabulate
 ```

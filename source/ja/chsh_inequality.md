@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # CHSH不等式の破れを確認する
@@ -48,19 +48,19 @@ $\newcommand{\rmIV}{\mathrm{IV}}$
 
 QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## CHSH不等式
 
 量子力学的状態が実際に存在するかどうかを確かめる実験として、2022年のノーベル物理学賞でも取り上げられたCHSH不等式{cite}`chsh`の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。
 
-通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。
+通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum.ibm.com" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## Qiskitの基本構造
 
-IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://qiskit.org/" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は
+IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は
 
 1. 使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る
 1. 回路を実行して計算結果を得る。ここでは二通りのオプションがあり、
@@ -70,9 +70,9 @@ IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href
 
 です。以下でこの流れを一通り、重要な概念の説明を混ぜながら実行してみましょう。ただし、今回は実機のみ利用します。回路のシミュレーションに関しては{doc}`第一回の課題 <nonlocal_correlations>`を参照してください。
 
-Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a href="https://qiskit.org/documentation/" target="_blank">Qiskitのドキュメンテーション</a>をあたってみましょう。
+Qiskitの機能は上のような基本的な量子回路の設計・実行だけではなく、非常に多岐に渡ります。基本的な使い方に関しても多少複雑なところがあるので、わからないことがあれば<a href="https://docs.quantum.ibm.com/" target="_blank">Qiskitのドキュメンテーション</a>をあたってみましょう。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 量子ビット、量子レジスタ
 
@@ -252,11 +252,9 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
-from qiskit.providers.ibmq import least_busy
-from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
-from qiskit_ibm_provider import IBMProvider
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.utils import operational_backend
 
@@ -398,6 +396,11 @@ circuit.draw()
 ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。詳しい説明は{doc}`課題 <nonlocal_correlations>`に譲りますが、CHSH不等式の検証用の観測量を作るために、4つの回路I, II, III, IVを使います。回路IとIIIでは量子ビット1に対し測定の直前に$R_y(-\pi/4)$、IIとIVでは同様に$R_y(-3\pi/4)$を作用させます。また回路IIIとIVでは量子ビット0に$R_y(-\pi/2)$を同じく測定の直前に作用させます。4つの回路を一度にIBMQに送るので、`circuits`というリストに回路を足していきます。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 circuits = []
 
 # 回路I - H, CX[0, 1], Ry(-π/4)[1]をかける
@@ -445,6 +448,8 @@ for circuit, ax in zip(circuits, axs.reshape(-1)):
     circuit.draw('mpl', ax=ax)
     ax.set_title(circuit.name)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 それぞれの回路で2ビットレジスタの基底$\ket{00}, \ket{01}, \ket{10}, \ket{11}$が現れる確率を計算してみましょう。
 
@@ -538,38 +543,46 @@ $$
 
 それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から$S$の値を計算して確認してみましょう。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 回路を実機で実行する
 
-まずはIBMQに認証・接続します。IBM Quantum Experience (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに{ref}`認証設定が保存されている <install_token>`場合は`provider = IBMProvider()`で接続ができます。設定がない場合は`IBMProvider`のコンストラクタに{ref}`トークン <install_token>`を渡してIBMQに接続します。
+まずはIBM Quantumに認証・接続します。IBM Quantum Lab (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに{ref}`認証設定が保存されている <install_token>`場合は
+```{code-block} python
+service = QiskitRuntimeService(channel='ibm_quantum')
+```
+で接続ができます。設定がない場合は`QiskitRuntimeService`のコンストラクタに{ref}`トークン <install_token>`を渡してIBM Quantumに接続します。
 
 ```{code-cell} ipython3
-:tags: [remove-output, raises-exception]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output, raises-exception]
+---
 # 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
 # instance = 'hub-x/group-y/project-z'
 instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
 except AccountNotFoundError:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 ```
 
 認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
+# 現在稼働中のバックエンド（実機）の中から一番空いているものを選ぶ
+backend = service.least_busy(filters=operational_backend())
 
-# バックエンド（実機）のうち量子ビット数2個以上のもののリストをプロバイダから取得する
-# operational_backendはこのワークブック用にqc_workbook.utilsで定義された関数
-backend_list = provider.backends(filters=operational_backend(min_qubits=2))
-
-# リストの中から一番空いているものを選ぶ
-backend = least_busy(backend_list)
-
-print(f'Jobs will run on {backend.name()}')
+print(f'Jobs will run on {backend.name}')
 ```
 
 回路をバックエンドに送るには、`transpile`という関数とバックエンドの`run`というメソッドを使います。`transpile`については次回{ref}`transpilation`で説明するので、今は「おまじない」だと思ってください。`run`で回路を送るとき、前述したように同時にショット数を指定します。バックエンドごとに一度のジョブでの最大ショット数が決められており、8192、30000、100000などとさまざまです。回路をバックエンドに渡し、`shots`回実行させることをジョブと呼びます。
@@ -577,28 +590,23 @@ print(f'Jobs will run on {backend.name()}')
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-# バックエンドごとに決められている最大ショット数
-shots = backend.configuration().max_shots
+# max_shotsがバックエンドごとに決められている最大ショット数
+shots = min(backend.max_shots, 2000)
 print(f'Running four circuits, {shots} shots each')
 
 # transpileの説明は次回の実習にて
 circuits = transpile(circuits, backend=backend)
 # バックエンドで回路をshots回実行させ、測定結果を返させる
 job = backend.run(circuits, shots=shots)
-
-# ジョブが終了するまで状態を表示しながら待つ（正常に完了、エラーで停止、など終了する理由は一つではない）
-job_monitor(job, interval=2)
 ```
 
 これで回路がバックエンドに送られ、キューに入りました。ジョブの実行結果は`run`メソッドの返り値であるジョブオブジェクトから参照します。
 
 IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。
 
-バックエンドごとのキューの長さは<a href="https://quantum-computing.ibm.com/services?services=systems" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
+バックエンドごとのキューの長さは<a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
 
-また、自分の投じたジョブのステータスは<a href="https://quantum-computing.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。
-
-Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように`job_monitor`を使います。
+また、自分の投じたジョブのステータスは<a href="https://quantum.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。
 
 +++
 

@@ -8,7 +8,7 @@
 
 ## オンライン教材
 
-- [Qiskit textbook](https://qiskit.org/textbook/preface.html)
+- [IBM Quantum Learning](https://learning.quantum.ibm.com/)
 - [Quantum Native Dojo](https://dojo.qulacs.org/ja/latest/)
 - [PennyLane](https://pennylane.ai/qml/)
 

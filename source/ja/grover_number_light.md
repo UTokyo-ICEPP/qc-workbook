@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 【課題】ビット反転ボードの操作を見つける
 
@@ -76,12 +78,15 @@ language_info:
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
@@ -90,12 +95,15 @@ from qiskit_aer import AerSimulator
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # 6量子ビットの探索問題を考える
 n = 6  # 量子ビット数
@@ -110,16 +118,21 @@ oracle = QuantumRegister(1)   # ボード上の数字が欲しい答えの時に
 result = ClassicalRegister(n)   # 測定結果を保持する古典レジスタ
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 以下の回路の中身を書いてください。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 qc = QuantumCircuit(board, flip, oracle, result)
 
@@ -134,17 +147,22 @@ qc = QuantumCircuit(board, flip, oracle, result)
 ##################
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 コードをシミュレータで実行して、答えを確認する。
 Final scoreとして、得られた答え（ビット列）のうち、頻度が高いものから10個を出力しています。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 # シミュレータで実行
@@ -161,7 +179,7 @@ print('Final score:')
 print(final_score)
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 **提出するもの**
 - この問題を解く量子回路

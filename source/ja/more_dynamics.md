@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # 【課題】量子ダイナミクスシミュレーション・続
@@ -431,3 +431,7 @@ plt.plot(time_points, number_density(bit_exp), 'o')
 **提出するもの**
 
 - 完成した回路のコードとシミュレーション結果によるプロット
+
+```{code-cell} ipython3
+
+```

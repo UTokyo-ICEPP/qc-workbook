@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,12 +19,14 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 変分法と変分量子固有値ソルバー法を学習する
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 この実習では、変分法の基本的な考え方と、その方法に基づいた変分量子アルゴリズムと呼ばれる量子計算の手法を学びます。特に、量子計算と古典計算を組み合わせた「**量子・古典ハイブリッドアルゴリズム**」としての変分量子アルゴリズムに着目します。この手法を用いて、近似的な固有値計算を可能にする**変分量子固有値ソルバー法**と呼ばれる方法へ拡張していきます。
 
@@ -154,12 +156,15 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -167,20 +172,25 @@ from qiskit import QuantumCircuit, transpile
 from qiskit.circuit import Parameter, ParameterVector
 from qiskit.primitives import BackendEstimator
 from qiskit.quantum_info import Statevector, Operator, SparsePauliOp
-from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_algorithms.optimizers import SPSA, COBYLA
 from qiskit_aer import AerSimulator
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 最初に、ターゲットとなる量子状態ベクトルをランダムに生成する関数と、状態ベクトルから$X, Y, Z$の期待値を計算する関数を定義します。状態ベクトルはQiskitのStatevectorというクラスで表現し、パウリ演算子にはSparsePauliOpを使用します。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 rng = np.random.default_rng(999999)
 
@@ -200,11 +210,17 @@ for pauli in ['X', 'Y', 'Z']:
     print(f'<{pauli}> = {statevector.expectation_value(op).real}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 次に、変分フォーム回路を定義します。このとき、$U$ゲートの回転角として、具体的な数値を設定せず、QiskitのParameterというオブジェクトを利用します。Parameterはあとから数値を代入できる名前のついた箱として使えます。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 theta = Parameter('θ')
 phi = Parameter('φ')
 
@@ -212,21 +228,40 @@ ansatz_1q = QuantumCircuit(1)
 ansatz_1q.u(theta, phi, 0., 0)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 Parameterに値を代入するには、回路の`bind_parameters`メソッドを利用します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # Parameterの値は未定
 ansatz_1q.draw('mpl')
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # thetaとphiにπ/3とπ/6を代入
-ansatz_1q.bind_parameters({theta: np.pi / 3., phi: np.pi / 6.}).draw('mpl')
+ansatz_1q.assign_parameters({theta: np.pi / 3., phi: np.pi / 6.}, inplace=False).draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 変分フォーム回路が作る状態における$X, Y, Z$の期待値を測定するための回路を定義します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 circuits = dict()
 
 # <X>を測るにはHゲートで基底を変換する
@@ -245,13 +280,20 @@ circuits['Z'] = ansatz_1q.copy()
 circuits['Z'].measure_all()
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 それぞれの回路を通常通りバックエンドの`run()`メソッドで実行し、結果から期待値を計算する関数を定義します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 backend = AerSimulator()
 
 def circuit_expval(circuit, param_vals):
-    bound_circuit = circuit.bind_parameters({theta: param_vals[0], phi: param_vals[1]})
+    bound_circuit = circuit.assign_parameters({theta: param_vals[0], phi: param_vals[1]}, inplace=False)
 
     bound_circuit_tr = transpile(bound_circuit, backend=backend)
     # shotsは関数の外で定義する
@@ -267,9 +309,16 @@ for pauli in ['X', 'Y', 'Z']:
     print(f'<{pauli}> = {circuit_expval(circuits[pauli], param_vals)}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最小化する目的関数を定義します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 def objective_function(param_vals):
     loss = 0.
     for pauli in ['X', 'Y', 'Z']:
@@ -287,15 +336,22 @@ def callback_function(param_vals):
     losses.append(objective_function(param_vals))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最適化には使用しませんが、解を得たあとで変分フォームの終状態とターゲット状態とのフィデリティ$|\langle \psi_0 | \psi(\theta, \phi) \rangle|^2$を計算する関数も定義しておきます。厳密に最適化が成功すれば、この関数の返り値は1になります。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 def fidelity(ansatz, param_vals, target_state):
     # 量子回路のパラメータのリストはcircuit.parametersで取得できる
     parameters = ansatz.parameters
 
     param_binding = dict(zip(parameters, param_vals))
-    opt_ansatz = ansatz.bind_parameters(param_binding)
+    opt_ansatz = ansatz.assign_parameters(param_binding, inplace=False)
 
     # Statevectorは回路からも生成可能（回路を|0>に対して適用した終状態になる）
     circuit_state = Statevector(opt_ansatz)
@@ -303,9 +359,16 @@ def fidelity(ansatz, param_vals, target_state):
     return np.square(np.abs(target_state.inner(circuit_state)))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最後にCOBYLAオプティマイザーのインスタンスを作成し、アルゴリズムを実行します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # COBYLAの最大ステップ数
 maxiter = 500
 # COBYLAの収束条件（小さいほどよい近似を目指す）
@@ -318,8 +381,12 @@ optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 import os
@@ -328,8 +395,12 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 # ターゲット状態
 target_state_1q = random_statevector(1)
 
@@ -337,13 +408,17 @@ target_state_1q = random_statevector(1)
 init = [rng.uniform(0., np.pi), rng.uniform(0., 2. * np.pi)]
 
 # 最適化を実行
-losses = list()
+losses = []
 min_result = optimizer.minimize(objective_function, x0=init)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 import pickle
@@ -352,29 +427,60 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
         min_result, losses = pickle.load(source)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 最適化プロセスにおけるロス（目的関数の返り値）の推移をプロットします。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 plt.plot(losses);
 ```
 
 ```{raw-cell}
+---
+editable: true
+raw_mimetype: ''
+slideshow:
+  slide_type: ''
+---
 `optimizer.minimize()`の返り値の`min_result`から最適化過程の様々な情報（目的関数の呼び出し回数や最適化に要したステップ数など）にアクセスできます。特に、最適化されたパラメータ値が`min_result.x`から得られるので、それを使ってフィデリティを計算してみます。
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 fidelity(ansatz_1q, min_result.x, target_state_1q)
 ```
 
 ```{raw-cell}
+---
+editable: true
+raw_mimetype: ''
+slideshow:
+  slide_type: ''
+---
 ショット数が有限なので統計誤差の影響から最適パラメータは厳密解とは一致しません。ショット数やステップ数を変えて、解の一致具合を確認してみてください。
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 #### Estimatorの利用
 
 VQEを含む変分量子アルゴリズムでは、上のように変分フォームにパラメータ値を代入し複数の観測量の期待値を計算するという手順の繰り返しが頻出します。そのため、これを自動化し、かつ（今は利用しませんが）様々なエラー補正なども適応してくれるEstimatorというクラスを使用することが推奨されています。特に、ここではBackendEstimatorという、特定のバックエンドを利用して計算をするタイプのEstimatorを利用します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # BackendEstimatorインスタンスの生成
 estimator = BackendEstimator(backend)
 
@@ -390,9 +496,16 @@ result = job.result()
 result.values
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 Estimatorを使った目的関数を定義します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 observables_1q = [SparsePauliOp('X'), SparsePauliOp('Y'), SparsePauliOp('Z')]
 
 def objective_function_estimator(param_vals):
@@ -408,9 +521,16 @@ def callback_function_estimator(param_vals):
     losses.append(objective_function_estimator(param_vals))
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 上の目的関数を最適化します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # COBYLAの最大ステップ数
 maxiter = 500
 # COBYLAの収束条件（小さいほどよい近似を目指す）
@@ -423,8 +543,12 @@ optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function_estimato
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -432,8 +556,12 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 # ターゲット状態
 target_state_1q = random_statevector(1)
 
@@ -441,13 +569,17 @@ target_state_1q = random_statevector(1)
 init = [rng.uniform(0., np.pi), rng.uniform(0., 2. * np.pi)]
 
 # 最適化を実行
-losses = list()
+losses = []
 min_result = optimizer.minimize(objective_function_estimator, x0=init)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -456,8 +588,15 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 fidelity(ansatz_1q, min_result.x, target_state_1q)
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### エンタングルメントの導入
 
@@ -472,8 +611,12 @@ $$
 ターゲット状態に関する関数`random_statevector`と`pauli_expval`はそのまま利用できます。まず変分フォームとして2つの量子ビットに$U$ゲートが一つずつかかっているものを考えて、最小化すべき目的関数を定義します。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 # パラメータ数4なので、4要素のパラメータベクトルを作る
 params = ParameterVector('params', 4)
 
@@ -483,6 +626,11 @@ ansatz_2q.u(params[2], params[3], 0., 1)
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 paulis_1q = ['I', 'X', 'Y', 'Z']
 paulis_2q = list(f'{op1}{op2}' for op1 in paulis_1q for op2 in paulis_1q if (op1, op2) != ('I', 'I'))
 observables_2q = list(SparsePauliOp(pauli) for pauli in paulis_2q)
@@ -503,12 +651,15 @@ def callback_function_2q(param_vals):
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # COBYLAの最大ステップ数
 maxiter = 500
@@ -528,8 +679,12 @@ init = rng.uniform(0., 2. * np.pi, size=4)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -538,22 +693,29 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 # 最適化を実行
-losses = list()
+losses = []
 min_result = optimizer.minimize(objective_function_2q, x0=init)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -563,19 +725,24 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 fidelity(ansatz_2q, min_result.x, target_state_2q)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 やってみると分かりますが、結果は1量子ビットの場合と比べて良くないですね。どうすれば良くなるでしょうか？（やり方は複数あると思います）
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 **一つの解決策：変分フォームにエンタングルメントを導入する**
 
@@ -588,7 +755,7 @@ ansatz_2q.cx(0, 1)
 
 どうなるか確かめてください。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 2量子ビットの一般の状態では2つのビットがエンタングルしているので、変分フォームに2量子ビットゲートを入れると近似精度が良くなるのはある意味当然です。例えば、ベル状態（[CHSH不等式の破れを確認する](https://utokyo-icepp.github.io/qc-workbook/chsh_inequality.html#id14)を参照）を再現したいときにこの状況をクリアに見ることができます。上で
 
@@ -612,7 +779,7 @@ target_state_3q = Statevector(np.array([1.] + [0.] * 6 + [1.], dtype=complex) / 
 
 をターゲットにするなどして、遊んでみてください。
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (vqe)=
 ## 変分量子固有値ソルバー法
@@ -670,7 +837,7 @@ $$
 
 この式から、期待値$\langle M({\boldsymbol \theta})\rangle$のパラメータ$\theta_j$に対する勾配は、$\theta_j$を$\pm\pi/2$だけ増減させて求めた期待値の差として求めることができることが分かりました。これがパラメータシフト法と呼ばれるものです。
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (vqe_imp)=
 ### VQEの実装
@@ -683,12 +850,22 @@ $$
 最終的に、3通りのVQEを使って求めた最小エネルギーの近似解を、厳密対角化して求めた最小エネルギーの値と比較することにします。
 
 ```{code-cell} ipython3
-from qiskit.algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
-from qiskit.algorithms.optimizers import CG, GradientDescent
-from qiskit.algorithms.gradients import ParamShiftEstimatorGradient
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
+from qiskit_algorithms.optimizers import CG, GradientDescent
+from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # Ansatzの定義
 
 num_qubits = 3   # 量子ビット数
@@ -718,6 +895,11 @@ ansatz.draw('mpl')
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # 最小固有値を求める観測量
 obs = SparsePauliOp('ZXY')
 
@@ -744,8 +926,12 @@ ee = NumPyMinimumEigensolver()
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -753,8 +939,12 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 result_vqe_cg = vqe_cg.compute_minimum_eigenvalue(obs)
 result_vqe_gd = vqe_gd.compute_minimum_eigenvalue(obs)
 result_vqe_cobyla = vqe_cobyla.compute_minimum_eigenvalue(obs)
@@ -762,22 +952,30 @@ result_ee = ee.compute_minimum_eigenvalue(obs)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセルなので無視してよい
 
-with open('data/vqe_results.pkl', 'rb') as source:
-    result_ee, result_vqe_cobyla, result_vqe_cg, result_vqe_gd = pickle.load(source)
+if os.getenv('JUPYTERBOOK_BUILD') == '1':
+    with open('data/vqe_results.pkl', 'rb') as source:
+        result_ee, result_vqe_cobyla, result_vqe_cg, result_vqe_gd = pickle.load(source)
 ```
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 print('Result:')
 print(f'  Exact      = {result_ee.eigenvalue}')
@@ -786,7 +984,7 @@ print(f'  VQE(CG)    = {result_vqe_cg.optimal_value}')
 print(f'  VQE(GD)    = {result_vqe_gd.optimal_value}')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 COBYLAを使ってVQEで求めた答えは、厳密解(=-1.0)に近くなっていると思います。勾配計算を使ったVQEも多くの場合正しい答えに近い答えを返しますが、パラメータの初期値によってかなり悪い結果を返してしまう場合があります。
 

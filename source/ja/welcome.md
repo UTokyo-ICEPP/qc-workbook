@@ -6,7 +6,7 @@
 
 このワークブックは、<a href="http://qnec.jp" target="_blank">東京大学量子ネイティブ育成センター</a>による講義「IBM Qを使った量子コンピューター入門：ハードからソフトまで」の付属教材でもあります。教材の章立ては講義の時限に対応しており、各章の最後に実習課題が設けられています。受講者は課題ページ中で指定された内容をレポートとして提出してください。
 
-ワークブック全体を通じて、<a href="https://qiskit.org" target="_blank">Qiskit</a>というPythonライブラリでプログラムを書き、作成した量子回路を<a href="https://quantum-computing.ibm.com" target="_blank">IBM Quantum</a> (IBMQ)の量子コンピュータで実行します。IBMQを利用するにはアカウントを作成する必要があるので、実習を始める前に{doc}`prerequisites`を参考に準備をすることをおすすめします。
+ワークブック全体を通じて、<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリでプログラムを書き、作成した量子回路を<a href="https://quantum.ibm.com" target="_blank">IBM Quantum</a> (IBMQ)の量子コンピュータで実行します。IBMQを利用するにはアカウントを作成する必要があるので、実習を始める前に{doc}`prerequisites`を参考に準備をすることをおすすめします。
 
 **問い合わせ**
 
