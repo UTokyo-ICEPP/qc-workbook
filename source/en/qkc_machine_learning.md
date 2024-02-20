@@ -115,17 +115,15 @@ For training data that cannot be separated linearly, we can also think of a prob
 f(\mathbf{w}, b) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \mathrm{max}\left(0, 1 - S_i(\mathbf{w}, b)\right)
 ```
 
-Here the coefficient $C>0$ is a hyperparameter that controls which of the two purposes is preferred and to what extent it is. The second term ignores the data points that have the $S_i$ value greater than 1 in $\mathrm{max}$ function (sufficiently distant from the hyperplane). The data points that are not ignored, i.e, the data near the separating hyperplane or wrongly separated data with $\{\mathbf{X}_i | S_i < 1\}$, are called "support vector". 
-
-の最小化で達成されます。ここで、係数$C>0$は、二つの目的のうちどちらをどれだけ優先するかを調整する「ハイパーパラメータ」です。第二項では$\mathrm{max}$関数で$S_i$の値が1以上になる（超平面から十分離れている）データ点を無視しています。無視されていない、つまり分離超平面付近にあったり誤って分類されたりしたデータ点インプット$\{\mathbf{X}_i | S_i < 1\}$のことを「サポートベクター」と呼びます。どのデータ点がサポートベクターとなるかは$\mathbf{w}$と$b$の値によりますが、一度$f$を最小化するパラメータ値が決まれば、未知インプットについての予言には、対応するサポートベクターのみが使用されます（どのように使われるかは後述します）。このような機械学習モデルをサポートベクターマシンと呼びます。
+Here the coefficient $C>0$ is a hyperparameter that controls which of the two purposes is preferred and to what extent it is. The second term ignores the data points that have the $S_i$ value greater than 1 in $\mathrm{max}$ function (sufficiently distant from the hyperplane). The data points that are not ignored, i.e, the data near the separating hyperplane or wrongly separated data with $\{\mathbf{X}_i | S_i < 1\}$, are called "support vector". Which data point will be a support vector depends on the values of $\mathbf{w}$ and $b$, but once the parameters that minimize the function $f$ are determined, only the corresponding support vector is used to predict for unseen input data (more details of how it is used are discussed later). This machine learning model is called support vector machine.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-### 双対形式
+### Dual Formulation
 
-次に、この最適化問題（主形式）の「双対問題」を見てみましょう。双対は、最適化問題に拘束条件を導入したラグランジアンを定義し、その停留点での値を未定定数の関数として表現し直すことで得られます。拘束条件の導入にはラグランジュの未定乗数法の拡張であるところのKarush-Kuhn-Tucker (KKT)の手法を用います。未定乗数法は拘束条件が等式で表されるときのみ使えるのに対し、KKT条件は不等式拘束条件にも対応します。
+Next, we consider a "dual formulation" of this optimization problem. A dual form can be obtained by defining a Lagrangian with constraints in an optimization problem and representing the values at stationary points as a function of undetermined multipliers. The introduction of constraints is carried out using the method of Karush-Kuhn-Tucker (KKT) conditions, which is a generalization of the method of Lagrange multipliers. The Lagrange multiplier allows only equality constraints while the method of KKT conditions is generalized to allow inequality constraints.
 
-具体的には、まず式{eq}`primal_1`を$\mathrm{max}$関数を使わずに、パラメータ$\xi_i$を導入して次の形に書き換えます。
+Let us first re-write Eq.{eq}`primal_1` by introducing parameters $\xi_i$ instead of using the $\mathrm{max}$ function: 
 
 $$
 \begin{align}
@@ -134,16 +132,16 @@ F(\mathbf{w}, b, \{\xi_i\}) & = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_
 \end{align}
 $$
 
-下行の拘束条件に従って$F$を最小化する$\mathbf{w}, b, \{\xi_i\}$が見つかったとき、$f$も最小化されることを確かめてください。
+When the $\mathbf{w}$, $b$ and $\{\xi_i\}$ that minimize $F$ by using the constraints on the second line, please confirm if the function $f$ is also minimized.  
 
-この最適化問題のラグランジアンは、非負の未定定数$\{\alpha_i\}$と$\{\beta_i\}$を導入して
+The Lagrangian of this optimization problem is given as follows by introducing non-negative mutlipliers $\{\alpha_i\}$ and $\{\beta_i\}$:
 
 ```{math}
 :label: lagrangian
 L(\mathbf{w}, b, \{\xi_i\}; \{\alpha_i\}, \{\beta_i\}) = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_{i=1}^{N} \xi_i - \sum_{i=1}^{N} \alpha_i \left(\xi_i + S_i(\mathbf{w}, b) - 1\right) - \sum_{i=1}^{N} \beta_i \xi_i
 ```
 
-で与えられます。停留点では
+At stationary points, the following equations hold.
 
 ```{math}
 :label: stationarity
@@ -154,7 +152,7 @@ L(\mathbf{w}, b, \{\xi_i\}; \{\alpha_i\}, \{\beta_i\}) = \frac{1}{2} \lVert \mat
 \end{align}
 ```
 
-が成り立つので、式{eq}`lagrangian`にこれらの関係を代入すると、双対目的関数
+Therefore, by substituting these relations into Eq.{eq}`lagrangian`, the dual objection function 
 
 ```{math}
 :label: dual
@@ -164,7 +162,7 @@ G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j 
 \end{align}
 ```
 
-が得られます。双対問題は、この$G$を最大化する$\{\alpha_i\}$を見つける問題となります。また、主形式の最適解$\mathbf{w}^*, b^*, \{\xi^*_i\}$と双対問題の最適解$\{\alpha^*_i\}$との間に
+can be obtained. Therefore, the dual formulation of the problem is to find $\{\alpha_i\}$ that maximizes the $G$. In addition, the optimized solutions $\mathbf{w}^*$, $b^*$ and $\{\xi^*_i\}$ in the main formulation and the solutions \{\alpha^*_i\}$ in the dual formulation have the following relations (complementarity conditions):
 
 ```{math}
 :label: complementarity
@@ -174,19 +172,17 @@ G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j 
 \end{align}
 ```
 
-という関係（相補性条件）が成り立ちます。
-
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-### カーネル行列との関係
+### Relation with Kernel Matrix
 
-ここまで来てもカーネル行列とサポートベクターによる線形分離は一見無関係に思えますが、双対形式にヒントがあります。式{eq}`dual`に現れる$\mathbf{X}_i \cdot \mathbf{X}_j$はインプット空間を$\mathbb{R}^d$としたときのインプットベクトル同士の内積です。しかし、双対形式ではパラメータ$\mathbf{w}$が現れないので、$\mathbf{X}_i$が何か他の線形空間$V$の元であるとしても問題として成立します。さらに、実はそもそもこの部分がベクトルの内積である必要すらありません。インプットを何か（線形とは限らない）空間$D$の元$x_i$とし、$D$の二つの元$x_i$と$x_j$の間の何らかの「距離」を表す関数
+Even at this point, probably the relation between kernel matrix and the linear separation by support vector machine is not clear at first glance, but there is a hint in the dual formulation. The $\mathbf{X}_i \cdot \mathbf{X}_j$ in Eq.{eq}`dual` is the inner product of input vectors in the input space of $\mathbb{R}^d$. However, since the parameter $\mathbf{w}$ does not appear in the dual formulation, the problem is still valid even if $\mathbf{X}_i$ is taken to be an element in another linear space $V$. In fact, this part of Eq.{eq}`dual` is not even an inner product of vectors. Considering an element $x_i$ in some (not necessarily linear) space $D$, we can think of a function $K$ that represents a "distance" between two elements of $x_i$ and $x_j$:
 
 $$
 K: \: D \times D \to \mathbb{R}
 $$
 
-があるとします。すると、最も一般に、サポートベクターマシンとは、学習データ$\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)$について目的関数
+Then, most generally, the support vector machine can be defined as a problem to maximize the following objective function in terms of training data $\{(x_i, y_i) \in D \times \mathbb{R}\} \: (i=1,\ldots,N)$:
 
 ```{math}
 :label: dual_kernel
@@ -196,40 +192,38 @@ G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j 
 \end{align}
 ```
 
-を最大化する問題として定義できます。
+The kernel function defined above corresponds exactly to this distance function $K(x_i, x_j)$. Now it becomes clear how the kernel function is incorporated into the support vector machine. 
 
-上で定義したカーネル行列は、まさにこの距離関数$K(x_i, x_j)$に相当します。これでやっとカーネル行列をどうサポートベクターマシンに取り入れるのかが明らかになりました。
-
-さて、式{eq}`complementarity`の相補性条件をよく眺めると、$\alpha^*_i, \xi^*_i, S^*_i$ ($S^*_i := S_i(\mathbf{w}^*, b^*)$)について
+Looking further into the complementarity conditions of Eq.{eq}`complementarity`, it turns out that the optimized parameters $\alpha^*_i$, $\xi^*_i$ and $S^*_i$ ($S^*_i := S_i(\mathbf{w}^*, b^*)$) can have only values that satisfy either one of the following three conditions:
 
 - $\alpha^*_i = C, \xi^*_i = 1 - S^*_i \geq 0$
 - $\alpha^*_i = 0, \xi^*_i = 0$
 - $0 < \alpha^*_i < C, \xi^*_i = 0, S^*_i = 1$
 
-の3通りの値の組み合わせしかないことがわかります。特に、$S^*_i > 1$のとき$\alpha^*_i = 0$となります。すると、式{eq}`dual_kernel`における和はすべて$S^*_i \leq 1$であるような$i$、つまりサポートベクターについてのみ取ればいいことがわかります。
+In particular, when $S^*_i > 1$, $\alpha^*_i = 0$. This indicates that the summation in Eq.{eq}`dual_kernel` can be taken over all $i$'s with $S^*_i \leq 1$, that is, the points in the support vector. 
 
-最後に、カーネル形式で表したサポートベクターマシンで学習を行った（$G$を最大化する$\{\alpha_i\}$を見つけた）ときに、未知データ$x$に対するラベルの予言がどう与えられるかを考えます。元の形式（主形式と呼びます）ではラベルが式{eq}`test_data_label`で与えられますが、ここに式{eq}`stationarity`の第一式を代入すると、
+Finally, let us look at how the label of unseen data $x$ is predicted when the support vector machine represented in the kernel form is trained (i.e, when the $\{\alpha_i\}$ that maximizes $G$ are found). In the original main formulation of the problem, the label is given by Eq.{eq}`test_data_label`. When substituting the first equation of Eq.{eq}`stationarity` into it, 
 
 $$
 y = \mathrm{sgn}\left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x) + b^*\right)
 $$
 
-となります。ここで$\alpha^*_i$は$G$を最大化する最適パラメータで、$i$についての和はサポートベクターについてのみ取っています。パラメータ$b$の値の最適値$b^*$は、$S^*_j = 1$となるデータ点$j$について
+is obtained. Here $\alpha^*_i$ is the optimized parameter that maximizes $G$, and the summation is taken over $i$'s in the support vector. The optimized parameter $b^*$ can be obtained by solving 
 
 $$
 y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 $$
 
-を解くことで得られます。
+for data points $j$ that satisfy $S^*_j = 1$. 
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (qsvm_imp)=
-## 素粒子探索への応用
+## Application to New Physics Search
 
-それでは、{doc}`ここ <vqc_machine_learning>`で考えた素粒子現象の探索問題に、量子サポートベクターマシンを応用してみましょう。
+Let us now move onto the problem we considered {doc}`here <vqc_machine_learning>` and see how we can use the quantum support vector machine.
 
-データセットの準備は同じです。
+The preparation of the dataset is the same as before.
 
 ```{code-cell} ipython3
 import numpy as np
@@ -257,16 +251,16 @@ pycharm:
 
     '
 ---
-# ファイルから変数を読み出す
+# Read out variables from input file
 df = pd.read_csv("data/SUSY_1K.csv",
                  names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
                         'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
                         'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
 
-# 学習に使う変数の数
+# NUmber of input features used in the training
 feature_dim = 3  # dimension of each data point
 
-# 3, 5, 7変数の場合に使う変数のセット
+# Sets of 3, 5 and 7 input features
 if feature_dim == 3:
     selected_features = ['lep1_pt', 'lep2_pt', 'miss_ene']
 elif feature_dim == 5:
@@ -274,24 +268,24 @@ elif feature_dim == 5:
 elif feature_dim == 7:
     selected_features = ['lep1_pt', 'lep1_eta', 'lep2_pt', 'lep2_eta', 'miss_ene', 'M_TR_2', 'M_Delta_R']
 
-# 学習に使う事象数: trainは訓練用サンプル、testはテスト用サンプル
+# Number of events in the training and testing samples
 train_size = 20
 test_size = 20
 
 df_sig = df.loc[df.isSignal==1, selected_features]
 df_bkg = df.loc[df.isSignal==0, selected_features]
 
-# サンプルの生成
+# Creation of the samples
 df_sig_train = df_sig.values[:train_size]
 df_bkg_train = df_bkg.values[:train_size]
 df_sig_test = df_sig.values[train_size:train_size + test_size]
 df_bkg_test = df_bkg.values[train_size:train_size + test_size]
-# 最初のtrain_size事象がSUSY粒子を含む信号事象、残りのtrain_size事象がSUSY粒子を含まない背景事象
+# The first (last) train_size events are signal (background) events that (do not) contain SUSY particles
 train_data = np.concatenate([df_sig_train, df_bkg_train])
-# 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象
+# The first (last) test_size events are signal (background) events that (do not) contain SUSY particles
 test_data = np.concatenate([df_sig_test, df_bkg_test])
 
-# ラベル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）
+# Label
 train_label = np.zeros(train_size * 2, dtype=int)
 train_label[:train_size] = 1
 test_label = np.zeros(train_size * 2, dtype=int)
@@ -305,11 +299,11 @@ norm_test_data = mms.transform(test_data)
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (problem1)=
-### 問題1
+### Exercise 1
 
-各自特徴量マップを選び、`feature_map`という変数名の量子回路オブジェクトとして実装してください。{doc}`vqc_machine_learning`のように`ZFeatureMap`や`ZZFeatureMap`などのクラスを利用しても、自分で空の`QuantumCircuit`オブジェクトを作り、`Parameter`や`ParameterVector`を使って「手で」回路を書いても構いません。
+Select feature map and implement it as a quantum circuit object named `feature_map`. You could use the existing classes such as `ZFeatureMap` and `ZZFeatureMap` as done in {doc}`vqc_machine_learning`, or make an empty `QuantumCircuit` object and write a circuit by hand using `Parameter` and `ParameterVector`.    
 
-使用する量子ビットの数も原則自由ですが、後で利用する`FidelityQuantumKernel`クラスはインプットの変数の数と量子ビット数が等しいときに一番うまく動作するようです。
+You could choose any number of qubits, but the `FidelityQuantumKernel` class used later seems to work better when the number of qubits is equal to the number of input features.   
 
 ```{code-cell} ipython3
 ---
@@ -324,7 +318,7 @@ pycharm:
 ### EDIT BELOW ###
 ##################
 
-#回路をスクラッチから書く場合
+# In case of writing a circuit from scratch
 input_features = ParameterVector('x', feature_dim)
 num_qubits = feature_dim
 feature_map = QuantumCircuit(num_qubits)
@@ -338,27 +332,28 @@ feature_map = QuantumCircuit(num_qubits)
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (problem2)=
-### 問題2
+### Exercise 2
 
-問題1で決めた特徴量マップからカーネル行列要素を計算するための`manual_kernel`という変数名の量子回路を作ってください。Qiskitにはこれを自動でやってくれるAPI（`FidelityQuantumKernel`クラス）が準備されていますが、ここでは空の`QuantumCircuit`オブジェクトから始めて、上で決めた特徴量マップ回路からパラメータ付きの回路を作ってください。
+Create a circuit named with `manual_kernel` to calculate a kernel matrix from the feature map determined above. There is an API (`FidelityQuantumKernel` class) to do this automatically in Qiskit, but here please try to start with an empty `QuantumCircuit` object and write a parameterized circuit with the feature map.
 
-**ヒント1**
+**Hint 1**
 
-QuantumCircuitオブジェクトに別のQuantumCircuitを貼り付けるには
+A QuantumCircuit object ican be added into another QuantumCircuit by doing 
+
 ```python
 circuit.compose(another_circuit, inplace=True)
 ```
-とします。このとき`inplace=True`を忘れると、`compose`メソッドは`circuit`に`another_circuit`を貼り付ける代わりに新しい回路オブジェクトを返してしまいます。
+If `inplace=True` is omitted, the `compose` method just returns a new circuit object, instead of addint the `circuit` into `another_circuit`.  
 
-**ヒント2**
+**Hint 2**
 
-QuantumCircuitには`inverse()`という、逆回路を返すメソッドが備わっています。
+The QuantumCircuit class contains a method to return an inverse circuit called `inverse()`.
 
-**ヒント3**
+**Hint 3**
 
-`manual_kernel`のパラメータセットに注意してください。`feature_map`やその単純なコピーから`manual_kernel`を作っただけでは、後者は前者に使われるパラメータしか持ちません。
+Please be careful about the parameter set of `manual_kernel`. If we create a `manual_kernel` from the `feature_map` or a simple copy of the `feature_map`, the `manual_kernel` will contain only parameters used in the `feature_map`.
 
-回路のパラメータセットを別のパラメータセットに置き換える方法として、
+A parameter set in a circuit can be replaced with another parameter set by doing, for example,
 
 ```python
 current_parameters = circuit.parameters
@@ -367,7 +362,7 @@ bind_params = dict(zip(current_parameters, new_parameters))
 new_circuit = circuit.assign_parameters(bind_params, inplace=False)
 ```
 
-などがあります。この場合、`new_circuit`は`new_parameters`でパラメタライズされます。
+In this case, the `new_circuit` is parameterized with `new_parameters`.
 
 ```{code-cell} ipython3
 ---
@@ -393,7 +388,7 @@ manual_kernel.measure_all()
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率$|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_1)U_{\text{in}}(x_0)|0^{\otimes n}\rangle|^2$を計算します。
+Execute the created circuit with simulator to calculate the probability of measuring 0 for all qubits, $|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_1)U_{\text{in}}(x_0)|0^{\otimes n}\rangle|^2$.
 
 ```{code-cell} ipython3
 ---
@@ -415,7 +410,7 @@ fidelity = job.result().quasi_dists[0].get(0, 0.)
 print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
 ```
 
-次に同じことを`FidelityQuantumKernel`クラスを利用して行います。
+Let us do the same thing using the `FidelityQuantumKernel` class.
 
 ```{code-cell} ipython3
 ---
@@ -427,7 +422,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
+# FidelityQuantumKernel creates internally an instance of Sample class automatically.
 q_kernel = FidelityQuantumKernel(feature_map=feature_map)
 
 bind_params = dict(zip(feature_map.parameters, norm_train_data[0]))
@@ -441,7 +436,7 @@ qc_circuit.decompose().decompose().draw('mpl')
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-`FidelityQuantumKernel`を使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。
+We can easily visualize the contents of kernel matrix with the `FidelityQuantumKernel` class. Let us make plots of the kernel matrix obtained from the training data alone, and that from the training and testing data. 
 
 ```{code-cell} ipython3
 ---
@@ -466,7 +461,7 @@ plt.show()
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-最後に、sklearnパッケージに実装されているサポートベクターマシンを使って分類を行います。量子回路学習の場合と同様に、データサイズや特徴量マップを変えるなどして分類精度がどう変わるか調べてみてください。
+At the end, we attempt to perform classification with support vector machine implemented in sklearn package. Please check how the classification accuracy varies when changing the dataset size or feature maps.  
 
 ```{code-cell} ipython3
 ---
@@ -478,7 +473,7 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
+qc_svc = SVC(kernel='precomputed') # Default valuye of hyperparameter C is 1
 qc_svc.fit(matrix_train, train_label)
 
 train_score = qc_svc.score(matrix_train, train_label)
@@ -490,9 +485,9 @@ print(f'Precomputed kernel: Classification Test score:  {test_score*100}%')
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-**提出するもの**
-- 選んだ特徴量マップの説明とそのコード（問題１）
-- カーネル行列要素を計算するための量子回路のコードと、その回路を使って計算した$K(x_0, x_1)$の値（問題２）
-- この{doc}`ワークブック <vqc_machine_learning>`にある変分量子回路を使った量子機械学習との比較
-   - 二つの方法を同じ条件（特徴量の変数、データサンプルのサイズ、特徴量マップ）で比較した時に、分類性能に対して何か系統的な違いは見えるでしょうか。特徴量やサンプルサイズを変えて比較するなどして、その振る舞いを自分なりに考察してみてください。
-   - 一方が他方に比べて系統的に分類性能が悪くなっている場合、どうすれば悪い方を改善できるでしょうか。サンプルサイズが小さい時には、どちらの方法でも過学習（テストデータでの分類性能が訓練データでの分類性能より悪くなる）の傾向が見えていると思います。過学習をできるだけ抑えながら、分類性能を改善する方法がないか、考察してみてください。
+**Items to submit**
+- Explanation of the selected feature map and the code (Exercise 1).
+- Quantum circuit to calculate kernel matrix and the result of $K(x_0, x_1)$ obtained using the circuit (Exercise 2).
+- Comparison with results from quantum machine learning using variational quantum circuit in {doc}`this workboo <vqc_machine_learning>`. 
+   - Can we observe any systematic difference in classification accuracy when comparing the two methods in the same conditions (input features, dataset size, feature map)? Vary the conditions and discuss the observed behavior. 
+   - If one is systematically worse than the other, how can we improve the worse one? When the datasize is small, it is likely that the over-fitting occurs, i.e, the performance for the testing data is worse than that for the training data. Discuss if/how we can improve the classification performance for the testing data while reducing the effect of over-fitting.
