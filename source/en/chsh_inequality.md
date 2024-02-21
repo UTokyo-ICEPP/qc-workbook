@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # CHSH不等式の破れを確認する
@@ -78,7 +78,7 @@ IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href
 1. Decide on the number of quantum bits to use
 2. Apply quantum calculation operations (gates) to the quantum bits to create a quantum circuit
 3. Implement the circuit and produce calculation results. Here, there are two options:
-   - Send the circuit to the actual QC device and implement it. 
+   - Send the circuit to the actual QC device and implement it.
    - Simulate the circuit.
 4. Analyze the calculation results.
 
@@ -151,7 +151,7 @@ $$
 $$
 
 と
-and 
+and
 
 $$
 \alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11} \sim e^{i\theta} (\alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11})
@@ -184,7 +184,6 @@ These objects are initialized by specifying the number of quantum bits (in this 
 [^mixed_state] Strictly speaking, states can be expressed with kets only when this register is not entangled with other registers, but we'll skip the details here.
 [^basis] The "basis state" here is being used in its linear algebra sense, as the "minimum set in which any given vector in linear space can be expressed as the linear sum of its elements." It is called the basis state because it is the base quantum state. This is unrelated to the ground state, used in chemistry and quantum mechanics to refer to the lowest possible energy state.
 [^complexarray]] When actually performing quantum calculation simulations on computers, quantum register states are expressed using arrays of complex numbers, so this notation method corresponds closely.
-
 
 +++
 
@@ -373,7 +372,7 @@ Of the $X$, $Z$, $H$, $R_y$, and $R_z$ frequently used 1-bit gates introduced ab
   - Explanation
   - Qiskit code
 * - $C^i_j[X]$, CX, CNOT
-  - Performs the operation of gate $X$ on bit $j$ for a computational basis in which the value of bit $i$ is 1. 
+  - Performs the operation of gate $X$ on bit $j$ for a computational basis in which the value of bit $i$ is 1.
   - `circuit.cx(i, j)`
 * - $C^i_j[Z]$
   - Reverses the sign of the computational basis when the values of bits $i$ and $j$ are 1.
@@ -429,7 +428,7 @@ $$
 $$
 
 最初の行で、ビット0と1にかかる$R_y$ゲートをそれぞれ$R_{y0}, R_{y1}$と表しました。
-On the first line, the $R_y$ gates that are applied to bits 0 and 1 are denoted as $R_{y0}$ and $R_{y1}$. 
+On the first line, the $R_y$ gates that are applied to bits 0 and 1 are denoted as $R_{y0}$ and $R_{y1}$.
 
 最後に$C[Z]$をかけると、$\ket{11}$だけ符号が反転します。
 When $C[Z]$ is applied at the end, only the sign of $\ket{11}$ is reversed.
@@ -447,6 +446,7 @@ circuit.draw('mpl')
 
 　ここで`draw()`の引数`'mpl'`はmatplotlibライブラリを使ってカラーで描くことを指定しています。実行環境によっては対応していないこともあるので、その場合は引数なしの`draw()`を使います。結果は`mpl`の場合に比べて見劣りしますが、内容は同じです。
   Here, the `draw()` argument `'mpl'` is used to draw the circuit diagram in color, using the matplotlib library. Some operating environments may not support this. In those cases, use `draw()` by itself, with no argument. The result will not be as visually appealing as the circuit diagrams produced by `mpl`, but the content will be the same.
+
 ```{code-cell} ipython3
 circuit.draw()
 ```
@@ -688,7 +688,7 @@ The length of the queue for each backend can be seen at right on the IBM Quantum
 Use the <a href="https://quantum-computing.ibm.com/jobs" target="_blank">"job list page"</a> to see the status of jobs you have submitted.
 
 Qiskitプログラム中からもジョブのステータスを確認できます。いくつか方法がありますが、シンプルに一つのジョブをテキストベースでモニターするだけなら上のように`job_monitor`を使います。
-You can check the status of your jobs from within the Qiskit program. There are several methods for doing so. If you simply want to monitor the status of a single job, in text form, you can use `job_monitor`. 
+You can check the status of your jobs from within the Qiskit program. There are several methods for doing so. If you simply want to monitor the status of a single job, in text form, you can use `job_monitor`.
 
 +++
 

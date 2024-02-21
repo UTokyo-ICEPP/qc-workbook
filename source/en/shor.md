@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -52,9 +52,9 @@ The difficulty involved in performing integer factoring with classical calculati
 (qpe)=
 ## Quantum Phase Estimation
 
-First, let's learn about **quantum phase estimation** or QPE, on which Shor's algorithm is based. If you understand Shor's algorithm, you will realize that the heart of the algorithm is basically QPE itself. To understand QPE, it is essential that you understand the **quantum Fourier transform** or QFT. For more information about QFT, please refer to task 7 of [this exercise](circuit_from_scratch.ipynb) or to reference material[1].
+First, let's learn about **quantum phase estimation** or QPE, on which Shor's algorithm is based. If you understand Shor's algorithm, you will realize that the heart of the algorithm is basically QPE itself. To understand QPE, it is essential that you understand the **quantum Fourier transform** or QFT. For more information about QFT, please refer to task 7 of [this exercise](circuit_from_scratch) or to reference material[1].
 
-Since the QPE is a very important technique, it is widely used, not only in Shor's algorithm but also in various algorithms as a subroutine. 
+Since the QPE is a very important technique, it is widely used, not only in Shor's algorithm but also in various algorithms as a subroutine.
 
 The question QPE seeks to address is
 "Given a unitary operation $U$ and an eigenvector $\ket{\psi}$ that satisfies $U\ket{\psi}=e^{2\pi i\theta}\ket{\psi}$, what is the phase $\theta$ of the eigenvalue $e^{2\pi i\theta}$?"
@@ -143,17 +143,15 @@ pycharm:
 
     '
 ---
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 from fractions import Fraction
 import matplotlib.pyplot as plt
 import numpy as np
 
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 # Modules for this workbook
 from qc_workbook.utils import operational_backend
@@ -198,7 +196,7 @@ for x, ctrl in enumerate(qreg_meas):
 
 Then, we measure qubits after applying an inverse QFT to the register for phase estimation.
 
-Write an **inverse circuit of QFT** based on {ref}`this workbook <fourier_addition>`. The `qreg` argument is an object of the measurement register.  
+Write an **inverse circuit of QFT** based on {ref}`this workbook <fourier_addition>`. The `qreg` argument is an object of the measurement register.
 
 ```{code-cell} ipython3
 ---
@@ -350,7 +348,7 @@ show_distribution(answer)
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-Here the answer is 2 in decimal number. Since the measured result should be $\ket{2^n\theta}$, $\theta=2/2^3=1/4$, thus we successfully obtain the correct $\theta$. 
+Here the answer is 2 in decimal number. Since the measured result should be $\ket{2^n\theta}$, $\theta=2/2^3=1/4$, thus we successfully obtain the correct $\theta$.
 
 The quantum circuit used here is simple, but is a good staring point to explore the behaviour of QPE circuit. Please examine the followings, for example:
 - Here we examined the case of $S=P(\pi/2)$ (except global phase). What happens if we insted use $P(\phi)$ gate with the $\phi$ value varying within $0<\phi<\pi$?
@@ -362,7 +360,7 @@ The quantum circuit used here is simple, but is a good staring point to explore 
 (qpe_imp_real)=
 ### Experiment with Quantum Computer
 
-Finally, we will run the circuit on quantum computer and check results. We can use the least busy machine by using the following syntax. 
+Finally, we will run the circuit on quantum computer and check results. We can use the least busy machine by using the following syntax.
 
 ```{code-cell} ipython3
 ---
@@ -373,16 +371,17 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # Running on real IBM device
-instance = 'ibm-q/open/main'
+# Specify an instance here if you have access to multiple
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=4))
-backend = least_busy(backend_list)
-print(f"least busy backend: {backend.name()}")
+backend = service.least_busy(min_num_qubits=4, filters=operational_backend())
+print(f"least busy backend: {backend.name}")
 ```
 
 ```{code-cell} ipython3
@@ -396,7 +395,6 @@ tags: [raises-exception, remove-output]
 # Execute circuit on the least busy backend. Monitor jobs in the queue.
 qc_tr = transpile(qc, backend=backend, optimization_level=3)
 job = backend.run(qc_tr, shots=shots)
-job_monitor(job, interval=2)
 ```
 
 ```{code-cell} ipython3
@@ -514,8 +512,8 @@ $$
 Here, the key is that only the states $\ket{0}$, $\ket{4}$, $\ket{8}$ and $\ket{12}$ appear. Here the interference between quantum states is exploited to reduce the amplitudes of incorrect solutions.
 
 - Step 5 :Last, we measure the measurement bit, and find that 0, 4, 8, and 12 each occur with a 1/4 probability.
-- 
-You may have anticipated, but the signs of repetition is becoming apparent because $7^x \bmod 15$ is calculated in step 2. 
+-
+You may have anticipated, but the signs of repetition is becoming apparent because $7^x \bmod 15$ is calculated in step 2.
 
 +++
 
@@ -557,7 +555,7 @@ $$
 \ket{\psi_s} \equiv \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1}e^{-2\pi isk/r}\ket{a^k \bmod N}
 $$
 
-With this state $\ket{\psi_s}$, we can derive  
+With this state $\ket{\psi_s}$, we can derive
 
 $$
 \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}\ket{\psi_s}=\ket{1}.
@@ -625,7 +623,7 @@ We will now switch to code implementation of Shor's algorithm.
 
 First, let's look into the algorithm for determining the order (period) of repetitions.
 
-With a positive integer $N$, let's investigate the behavior of function $f(x) = a^x \bmod N$. In [Shor's algorithm](shor_algo_fig), $a$ is a positive integer that is smaller than $N$ and $a$ and $N$ are coprime. The order $r$ is the smallest non-zero integer that satisfies $\modequiv{a^r}{1}{N}$. 
+With a positive integer $N$, let's investigate the behavior of function $f(x) = a^x \bmod N$. In [Shor's algorithm](shor_algo_fig), $a$ is a positive integer that is smaller than $N$ and $a$ and $N$ are coprime. The order $r$ is the smallest non-zero integer that satisfies $\modequiv{a^r}{1}{N}$.
 The graph shown below is an example of this function. The arrow between the two points indicates the periodicity.
 
 ```{code-cell} ipython3
@@ -666,9 +664,9 @@ Below we aim at factoring $N=15$. As explained above, we implement the oracle $U
 
 For this practice task, please implement the function `c_amod15` that executes $C[U^{2^l}] \ket{z} \ket{m}=\ket{z} \ket{a^{z 2^{l}} m \bmod 15} \; (z=0,1)$ below (`c_amod15` returns the entire controlled gate, but here you should write $U$ that is applied to the target register).
 
-Consider the argument `a` which is an integer smaller than 15 and is coprime to 15. In general, when $a = N-1$, $r=2$ because $\modequiv{a^2}{1}{N}$. Therefore, $a^{r/2} = a$ and $\modequiv{a + 1}{0}{N}$, meaning that such `a` cannot be used for Shor's algorithm. This would require the value of `a` to be less than or equal to 13.  
+Consider the argument `a` which is an integer smaller than 15 and is coprime to 15. In general, when $a = N-1$, $r=2$ because $\modequiv{a^2}{1}{N}$. Therefore, $a^{r/2} = a$ and $\modequiv{a + 1}{0}{N}$, meaning that such `a` cannot be used for Shor's algorithm. This would require the value of `a` to be less than or equal to 13.
 
-Such unitary operation will need a complicated circuit if it should work for general values of $a$ and $N${cite}`shor_oracle`, but it can be implemented with a few lines of code if the problem is restricted to $N=15$.  
+Such unitary operation will need a complicated circuit if it should work for general values of $a$ and $N${cite}`shor_oracle`, but it can be implemented with a few lines of code if the problem is restricted to $N=15$.
 
 ```{code-cell} ipython3
 ---
@@ -735,7 +733,7 @@ Note $15 = 2^4 - 1$. In general, for nutaral numbers $n, m$ and the smallest nat
 2^n \bmod (2^m - 1) = 2^{n-pm}
 ```
 
-Therefore, $2^{j+\log_2 a} \bmod 15$ takes a value of $1, 2, 4, 8$ once and only once for $j=0, 1, 2, 3$. 
+Therefore, $2^{j+\log_2 a} \bmod 15$ takes a value of $1, 2, 4, 8$ once and only once for $j=0, 1, 2, 3$.
 
 For $m \leq 14$, since the sum of the modulo 15 of individual terms inside the parentheses on the righthand side of Equation {eq}`ammod15` never exceeds 15,
 
@@ -751,7 +749,7 @@ it turns out that we can multiply by $a$ and take a modulo 15 for each bit indep
 | $a=4$ | 4     |  8    | 1     | 2     |
 | $a=8$ | 8     |  1    | 2     | 4     |
 
-This action can be implemented using a cyclic bit shift. For example, `a=2` should be as follows: 
+This action can be implemented using a cyclic bit shift. For example, `a=2` should be as follows:
 
 ```{math}
 \begin{align}
@@ -775,7 +773,7 @@ We can implement this using SWAP gates into a quantum circuit.
         U.swap(2, 1)
         U.swap(1, 0)
     elif a == 4:
-        # Bit shift by skipping one bit 
+        # Bit shift by skipping one bit
         U.swap(3, 1)
         U.swap(2, 0)
     elif a == 8:
@@ -791,7 +789,7 @@ We can implement this using SWAP gates into a quantum circuit.
 
 A good thing about using SWAP gates in this way is that Equation {eq}`U_action` is correctly realized because the $U$ does not change state in the register for $m=15$. This is however not very crucial when using this function below, because $\ket{15}$ does not appear in the work register.
 
-How about `a=7, 11, 13`? Again, we can exploit some uniqueness of the number 15. Noting that $7 = 15 - 8$, $11 = 15 - 4 and $13 = 15 - 2$, 
+How about `a=7, 11, 13`? Again, we can exploit some uniqueness of the number 15. Noting that $7 = 15 - 8$, $11 = 15 - 4 and $13 = 15 - 2$,
 
 ```{math}
 \begin{align}
@@ -835,15 +833,18 @@ we can see that the circuit we want is the one that subtracts the results of `a=
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-input, remove-output]
 ---
-# Cell for text
+# Cell for textbook generation
 
 def c_amod15(a, l):
     U = QuantumCircuit(4, name='U')
@@ -992,6 +993,6 @@ for row in rows:
     print(row)
 ```
 
-Using the `limit_denominator` method, we obtain the fraction closest to the phase value, for which the denominator is smaller than a specific value (15 in this case). 
+Using the `limit_denominator` method, we obtain the fraction closest to the phase value, for which the denominator is smaller than a specific value (15 in this case).
 
 From the measurement results, you can see that the two values (64 and 192) provide the correct answer of $r=4$.

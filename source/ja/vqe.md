@@ -22,7 +22,7 @@ language_info:
   version: 3.10.12
 ---
 
-+++ {"editable": true, "slideshow": {"slide_type": ""}}
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 # 変分法と変分量子固有値ソルバー法を学習する
 
@@ -165,6 +165,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -176,7 +177,7 @@ from qiskit_algorithms.optimizers import SPSA, COBYLA
 from qiskit_aer import AerSimulator
 ```
 
-+++ {"editable": true, "slideshow": {"slide_type": ""}}
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 最初に、ターゲットとなる量子状態ベクトルをランダムに生成する関数と、状態ベクトルから$X, Y, Z$の期待値を計算する関数を定義します。状態ベクトルはQiskitのStatevectorというクラスで表現し、パウリ演算子にはSparsePauliOpを使用します。
 
@@ -230,13 +231,14 @@ ansatz_1q.u(theta, phi, 0., 0)
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-Parameterに値を代入するには、回路の`bind_parameters`メソッドを利用します。
+Parameterに値を代入するには、回路の`assign_parameters`メソッドを利用します。
 
 ```{code-cell} ipython3
 ---
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 # Parameterの値は未定
 ansatz_1q.draw('mpl')
@@ -261,8 +263,9 @@ ansatz_1q.assign_parameters({theta: np.pi / 3., phi: np.pi / 6.}, inplace=False)
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
-circuits = dict()
+circuits = {}
 
 # <X>を測るにはHゲートで基底を変換する
 circuits['X'] = ansatz_1q.copy()
@@ -289,6 +292,7 @@ circuits['Z'].measure_all()
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 backend = AerSimulator()
 
@@ -854,6 +858,7 @@ $$
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import CG, GradientDescent
@@ -865,6 +870,7 @@ from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 # Ansatzの定義
 

@@ -40,7 +40,7 @@ varInspector:
   window_display: false
 ---
 
-+++ {"editable": true, "slideshow": {"slide_type": ""}}
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 # 量子機械学習を使った新しい素粒子現象の探索
 
@@ -238,6 +238,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 u_in = QuantumCircuit(nqubit, name='U_in')
 x = Parameter('x')
@@ -291,6 +292,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 u_out = QuantumCircuit(nqubit, name='U_out')
 

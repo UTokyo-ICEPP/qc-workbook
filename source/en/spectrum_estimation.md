@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,8 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 # 【Exercise】Spectral Decomposition with Phase Estimation
 
@@ -52,7 +54,7 @@ $$
 H = -J \sum_{j=0}^{n-2} (\sigma^X_{j+1}\sigma^X_{j} + \sigma^Y_{j+1}\sigma^Y_{j} + \sigma^Z_{j+1} \sigma^Z_{j}) \quad (J > 0)
 $$
 
-This Hamiltonian represents a system composed of particles with spins, lined up in one dimensional space, that interact between adjacent particles. In this system, the interactions will lower the energy when the directions of the spins are aligned. Therefore, the lowest energy will be achived when all the spin directions are aligned. 
+This Hamiltonian represents a system composed of particles with spins, lined up in one dimensional space, that interact between adjacent particles. In this system, the interactions will lower the energy when the directions of the spins are aligned. Therefore, the lowest energy will be achived when all the spin directions are aligned.
 
 In this assignment, we will apply an external magnetic field to the system. When there is an external magnetic field, the energy will be lowered when the spin is aligned with the magnetic field. Therefore, if we apply the external magnetic field along the +$Z$ direction, the Hamiltonian is as follows.
 
@@ -62,7 +64,7 @@ $$
 
 This Hamiltonian has one more difference from the one considered previously. For the previous case, we considered the boundary condition that the spins located at the end of the chain interacted only spins at "inner side" of the chain by taking the sum of the spins from $j=0$ to $n-2$. This time the sum is taken all the way to $n-1$. This represents "periodic boundary condition" (the spins on a circle, not on a straight line) by treating $\sigma^{X,Y,Z}_n$ as equal to $\sigma^{X,Y,Z}_0$.
 
-Let's look into the eigenvalues and eigenstates of such Hamiltonian for a specific example. We consider the simplest case of $n=2$ and $g=0$, and derive the true answers by exact diagonalization. 
+Let's look into the eigenvalues and eigenstates of such Hamiltonian for a specific example. We consider the simplest case of $n=2$ and $g=0$, and derive the true answers by exact diagonalization.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -169,7 +171,7 @@ Therefore, if $\ket{\psi}$ can be written as
 \ket{\psi} = \sum_{m=0}^{2^{n_S} - 1} \psi_m \ket{\phi_m}
 ```
 
-using the eigenvectors of $\Theta$ $\{\ket{\phi_m}\}$, then the $\text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S$ can be written with the corresponding eigenvalues $\{\theta_m\}$ as  
+using the eigenvectors of $\Theta$ $\{\ket{\phi_m}\}$, then the $\text{QFT}^{\dagger}_R \Gamma \ket{0}_R \ket{\psi}_S$ can be written with the corresponding eigenvalues $\{\theta_m\}$ as
 
 ```{math}
 :label: spectrum_estimation_final
@@ -185,8 +187,8 @@ Finally we are going to measure the state, and then multiply $\theta_m = 2^{-n_R
 
 You might find it difficult to digest what we actually did because some new *ad-hoc* parameters $\omega$ and $\tau$ were introduced. Let us now look at the problem from different perspective. Eventually, what we did above was the following when a Hamiltonian $H$ was provided:
 
-1. Normalize $H$ such that the eigenvalue is $\lesssim 1$, or the absolute value is $\lesssim \frac{1}{2}$ if the eigenvalue could be negative (record the normalization constant). 
-2. Perform phase estimation of $U = \exp(-2 \pi i \Theta)$ with the normalized operator as $\Theta$. 
+1. Normalize $H$ such that the eigenvalue is $\lesssim 1$, or the absolute value is $\lesssim \frac{1}{2}$ if the eigenvalue could be negative (record the normalization constant).
+2. Perform phase estimation of $U = \exp(-2 \pi i \Theta)$ with the normalized operator as $\Theta$.
 3. Obtain the energy eigenvalue by multiplying the eigenvalues of $\Theta$ obtained from phase estimation by the normalization constant in Step 1.
 
 By doing above, we determine the eigenvalues of $\Theta$ so that the eigenvalues from the readout register will not cause any {ref}`overflow <signed_binary>`.
@@ -205,9 +207,9 @@ $$
 \mu = \min_{s_k = \pm 1} \left| \sum_{k} s_k h_k \right|
 $$
 
-In principle, we will have to examine $2^{L}$ combinations (where $L$ is the number of Hamiltonian terms) to determine this value. But, since practical Hamiltonians do not have too many terms, it is likely that this can be handled with a reasonable amount of computation. Let us set the number of bits in register R, $n_R$, to be able to read out $2^{n_R}\mu/(\hbar \omega)$. 
+In principle, we will have to examine $2^{L}$ combinations (where $L$ is the number of Hamiltonian terms) to determine this value. But, since practical Hamiltonians do not have too many terms, it is likely that this can be handled with a reasonable amount of computation. Let us set the number of bits in register R, $n_R$, to be able to read out $2^{n_R}\mu/(\hbar \omega)$.
 
-We have seen so far that the normalization constant and the size of the readout register can be determined easily. A problem resides in the state $\ket{\psi}$ which the operator $U$ is applied to. If we want to know the $m$-th excited energy of eigenvalues, $\psi_m \neq 0$ must be true in Equation {eq}`spectral_decomposition`. In special cases we may have an idea of the eigenvector before performing spectral estimation, but it is obvious that for general Hamiltonians we cannot prepare such states for an arbitrary value of $m$. 
+We have seen so far that the normalization constant and the size of the readout register can be determined easily. A problem resides in the state $\ket{\psi}$ which the operator $U$ is applied to. If we want to know the $m$-th excited energy of eigenvalues, $\psi_m \neq 0$ must be true in Equation {eq}`spectral_decomposition`. In special cases we may have an idea of the eigenvector before performing spectral estimation, but it is obvious that for general Hamiltonians we cannot prepare such states for an arbitrary value of $m$.
 
 On the other hand, for the lowest energy $\hbar \omega \theta_0$, we can evaluate it at relatively good precision by approximating the lowest energy state by using techniques in {doc}`vqe` and setting the obtained state as the input to the S register. Therefore, the above method can, in principle, be used to completely decompose the energy spectra, but in practice it is most commonly used to determine the lowest energy and its eigenvector accurately.
 
@@ -215,11 +217,11 @@ On the other hand, for the lowest energy $\hbar \omega \theta_0$, we can evaluat
 
 ## Exercise 1: Implement Spectrum Estimation and Comparison with Exact Solutions
 
-Let us now derive the energy spectra of the Hamiltonian for the Heisenberg model using phase estimation.  
+Let us now derive the energy spectra of the Hamiltonian for the Heisenberg model using phase estimation.
 
 We will use Suzuki-Trotter decomposition to calculate $U_H(-\tau)$ on a quantum computer. Refer to {doc}`dynamics_simulation` to implement the rotation gates of $ZZ$, $XX$ and $YY$.
 
-The next cell defines a function that returns a quantum circuit composed of Suzuki-Trotter steps of the Hamiltonian evolution. The argument `num_steps` specifies the number of Suzuki-Trotter steps. 
+The next cell defines a function that returns a quantum circuit composed of Suzuki-Trotter steps of the Hamiltonian evolution. The argument `num_steps` specifies the number of Suzuki-Trotter steps.
 
 ```{code-cell} ipython3
 ---
@@ -277,7 +279,7 @@ def trotter_twopi_heisenberg(state_register, energy_norm, g, num_steps):
     return circuit
 ```
 
-In the next cell, the algorithm of spectral estimation is implemented. This function returns a quantum circuit that takes state register, readout register and the time-evolution circuit as arguments and performs phase estimation.  
+In the next cell, the algorithm of spectral estimation is implemented. This function returns a quantum circuit that takes state register, readout register and the time-evolution circuit as arguments and performs phase estimation.
 
 ```{code-cell} ipython3
 ---
@@ -333,7 +335,7 @@ def spectrum_estimation(state_register, readout_register, u_circuit):
 
 In this exercise, we examine the case of $n=3$ and $g=0$ for which the exact solutions were derived above. Since we already know the energy eigenvalues this time, the normalization constant of the Hamiltonian is set $\hbar \omega = 16J$ so that the output state from the readout register becomes simple. In this case, the readout result has sign and the maximum absolute value is $2^{n_R} (6/16)$, therefore the overflow can be avoided by taking $n_R = 1 + 3$.
 
-In the next cell, the parameters of the simulation and phase estimation are set. 
+In the next cell, the parameters of the simulation and phase estimation are set.
 
 ```{code-cell} ipython3
 ## Physics model parameter
@@ -455,15 +457,15 @@ Is the output histogram consistent with this state?
 
 **Items to submit**:
 
-- Completed `make_trotter_step_heisenberg` function 
-- Completed quantum circuit to initialize the state register 
+- Completed `make_trotter_step_heisenberg` function
+- Completed quantum circuit to initialize the state register
 - Histogram of the results of spectrum esimation and its explanation
 
 +++
 
 ## Exercise 2: Examine the Behaviour of Non-trivial States
 
-Next, let's determine all energy spectra of the Heisenberg model with $n=4$ as a function of $g$. We can do an exact diagonalization, as done above, because $n=4$, but we will solely rely on quantum computation here. 
+Next, let's determine all energy spectra of the Heisenberg model with $n=4$ as a function of $g$. We can do an exact diagonalization, as done above, because $n=4$, but we will solely rely on quantum computation here.
 
 In order to know all the energy eignvalues, we will need to elaborate on the initial states of $S$. But, since we do not have any prior knowledge, we will take a strategy of exhausitve search. That is, we will repeat spectral estimation for each of the computational basis states $\ket{0}$ to $\ket{15}$ as input, and determine the entire spectrum by combining all the results.
 
@@ -494,7 +496,7 @@ P_l(k, h) = \left| \sum_{m=0}^{2^{n_S} - 1} c^l_m c^{h*}_m f(\kappa_m - k) \righ
 $$
 
 となります。$c^l_m$の値がわからなくても、これらの分布から
-Let's think how we can obtain: 
+Let's think how we can obtain:
 
 $$
 P(k) = \frac{1}{2^{n_S}} \sum_{m=0}^{2^{n_S} - 1} |f(\kappa_m - k)|^2
@@ -504,7 +506,7 @@ from these distributions, even if we do not know the value of $c_m^l$.
 
 Since the distribution of $|f(\kappa_m - k)|$ has a sharp peak near $\kappa_m$, we will be able to observe $m$ peaks (though they could be partially overlapped) by making plots of $P(k)$ with respect to $k$. From these peaks, we can calculate the energy eigenvalues.
 
-For example, the $P(k)$ distribution for $n=2$, $g=0$, $\hbar \omega = 20J and $n_R=4$ is as follows (Note that unlike exercise 1, $\kappa_m$ is not an integer because $\hbar \omega = 20J$). In this plot, we set $P(k - 2^{n_R}) = P(k)$ and show the range of $-2^{n_R - 1} \leq k < 2^{n_R - 1}$ to visualize the negative eigenvalues. 
+For example, the $P(k)$ distribution for $n=2$, $g=0$, $\hbar \omega = 20J and $n_R=4$ is as follows (Note that unlike exercise 1, $\kappa_m$ is not an integer because $\hbar \omega = 20J$). In this plot, we set $P(k - 2^{n_R}) = P(k)$ and show the range of $-2^{n_R - 1} \leq k < 2^{n_R - 1}$ to visualize the negative eigenvalues.
 
 
 ```{image} figs/spectrum_estimation_example.png
@@ -593,10 +595,9 @@ def get_spectrum_for_comp_basis(
     return probs
 ```
 
-We decide the number of bits in the readout register here. We take $\hbar \omega = 8(3 + |g|)J$ because the number of spins is 4. When $g=0$, the expected smallest absolute value of the eigenvalues of $\Theta$ is $1/24$. But, in fact the smallest value is expected to be $n=4$ times that value, that is, $1/6$, due to the symmetry of the system. Since we only consider $|g| \ll 1$, the external magnetic field is treated as a perturbation, and $n_R=5$ is chosen so that $2^{n_R} / 6$ is sufficiently greater than 1. 
+We decide the number of bits in the readout register here. We take $\hbar \omega = 8(3 + |g|)J$ because the number of spins is 4. When $g=0$, the expected smallest absolute value of the eigenvalues of $\Theta$ is $1/24$. But, in fact the smallest value is expected to be $n=4$ times that value, that is, $1/6$, due to the symmetry of the system. Since we only consider $|g| \ll 1$, the external magnetic field is treated as a perturbation, and $n_R=5$ is chosen so that $2^{n_R} / 6$ is sufficiently greater than 1.
 
 Now we have decided the circuit parameters. We will then define a function that calls the `get_spectrum_for_comp_basis` function with $g$ as an argument for $2^n$ computational basis states, and the function is executed for $g=0$ (this will take some time).
-
 
 ```{code-cell} ipython3
 :tags: [remove-output]

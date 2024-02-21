@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -28,7 +28,7 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-We have so far looked at the possibility of using the {doc}`quantum circuit learning<vqc_machine_learning>` technique to search for new physics, which is a quantum-classical hybrid algorithm. Here in this exercise, we consider the method of utilizing **Quantum Kernels**, an alternative approach for quantum machine learning. In particular, we attempt to apply the **Support Vector Machine**{cite}`quantum_svm` based on quantum kernels to the same problem of new physics search.    
+We have so far looked at the possibility of using the {doc}`quantum circuit learning<vqc_machine_learning>` technique to search for new physics, which is a quantum-classical hybrid algorithm. Here in this exercise, we consider the method of utilizing **Quantum Kernels**, an alternative approach for quantum machine learning. In particular, we attempt to apply the **Support Vector Machine**{cite}`quantum_svm` based on quantum kernels to the same problem of new physics search.
 
 ```{contents} Contents
 ---
@@ -50,21 +50,21 @@ $$
 U_{\text{in}}(x_i) = \prod_j R_j^Z(\cos^{-1}(x^2))R_j^Y(\sin^{-1}(x))
 $$
 
-Applying the feature map to the initial state $\ket{0}^{\otimes n}$, the quantum state $\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$ is prepared from the input data. 
+Applying the feature map to the initial state $\ket{0}^{\otimes n}$, the quantum state $\ket{\phi(x_i)}=U_{\text{in}}(x_i)\ket{0}^{\otimes n}$ is prepared from the input data.
 The quantum kernel is defined as the (square of the absolute value of) inner product of this state $\langle\phi(x_j)|\phi(x_i)\rangle$:
 
 $$
 K(x_i,x_j):=|\langle\phi(x_j)|\phi(x_i)\rangle|^2=|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_j)U_{\text{in}}(x_i)|0^{\otimes n}\rangle|^2
 $$
 
-The quantum kernel provides a measure of how close the two states of $\ket{\phi(x_i)}$ and $\ket{\phi(x_j)}$, are or how much they are overlapped to each other. 
+The quantum kernel provides a measure of how close the two states of $\ket{\phi(x_i)}$ and $\ket{\phi(x_j)}$, are or how much they are overlapped to each other.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (q_kernel_imp)=
 ### Estimation of Quantum Kernel
 
-In order to evaluate quantum kernel, it is necessary to calculate $K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2$ for all the pairs of $\{x_i,x_j\}$ in the training dataset. For the calculation of quantum kernel, one could often hear the term *kernel trick*. In the context of quantum computation, this is generally referred to that the kernel function $K(x_i,x_j)$ is calculated without explicitly using the coordinate values in Hilbert space. One way of doing this is to construct the following circuit: 
+In order to evaluate quantum kernel, it is necessary to calculate $K(x_i,x_j)=|\langle\phi(x_j)|\phi(x_i)\rangle|^2$ for all the pairs of $\{x_i,x_j\}$ in the training dataset. For the calculation of quantum kernel, one could often hear the term *kernel trick*. In the context of quantum computation, this is generally referred to that the kernel function $K(x_i,x_j)$ is calculated without explicitly using the coordinate values in Hilbert space. One way of doing this is to construct the following circuit:
 
 ```{image} figs/qke_circuit.png
 :alt: qke_circuit
@@ -91,13 +91,13 @@ $$
 
 A vector $\mathbf{w}$ is orthogonal to this hyperplane. Defining the norm of this vector as $\lVert \mathbf{w} \rVert$, $b/\lVert \mathbf{w} \rVert$ corresponds to the signed distance between the hyperplane and the origin (taken to be positive towards $\mathbf{w}$).
 
-Since a hyperplane is simple and hence a special set of points, there is a case where the training data cannot be separated by the hyperplane, depending on the data distribution. Whether such separation is possible or not is equivalent to whether $(\mathbf{w},b)$ that satisfies 
+Since a hyperplane is simple and hence a special set of points, there is a case where the training data cannot be separated by the hyperplane, depending on the data distribution. Whether such separation is possible or not is equivalent to whether $(\mathbf{w},b)$ that satisfies
 
 ```{math}
 :label: linear_separation
 S_i(\mathbf{w}, b) := y_i(\mathbf{w}\cdot\mathbf{X}_i+b) \geq 1,\:\:\:\forall i=1,\ldots,N
 ```
-exists or not. This equation can be interpreted as follows: the $\mathbf{w} \cdot \mathbf{X}_i + b$ in parentheses is the signed distance between the data point $X_i$ and hyperplane $(\mathbf{w},b)$, multiplied by $\lVert \mathbf{w} \rVert$. When this quantity is multiplied by $y_i$ and it is larger than 1, this means the data points with $y_i=1(-1)$ are in the positive (negative) region with respect to the hyperplane, and every point in the space is at least $1/\lVert \mathbf{w} \rVert$ distant from the hyperplane. 
+exists or not. This equation can be interpreted as follows: the $\mathbf{w} \cdot \mathbf{X}_i + b$ in parentheses is the signed distance between the data point $X_i$ and hyperplane $(\mathbf{w},b)$, multiplied by $\lVert \mathbf{w} \rVert$. When this quantity is multiplied by $y_i$ and it is larger than 1, this means the data points with $y_i=1(-1)$ are in the positive (negative) region with respect to the hyperplane, and every point in the space is at least $1/\lVert \mathbf{w} \rVert$ distant from the hyperplane.
 
 The purpose of machine learning is to construct a model based on training data and predict for unseen data with the trained model. For the present separation problem, $(\mathbf{w}, b)$ corresponds to the model, and the label prediction for unseen input $X$ is given by
 
@@ -123,7 +123,7 @@ Here the coefficient $C>0$ is a hyperparameter that controls which of the two pu
 
 Next, we consider a "dual formulation" of this optimization problem. A dual form can be obtained by defining a Lagrangian with constraints in an optimization problem and representing the values at stationary points as a function of undetermined multipliers. The introduction of constraints is carried out using the method of Karush-Kuhn-Tucker (KKT) conditions, which is a generalization of the method of Lagrange multipliers. The Lagrange multiplier allows only equality constraints while the method of KKT conditions is generalized to allow inequality constraints.
 
-Let us first re-write Eq.{eq}`primal_1` by introducing parameters $\xi_i$ instead of using the $\mathrm{max}$ function: 
+Let us first re-write Eq.{eq}`primal_1` by introducing parameters $\xi_i$ instead of using the $\mathrm{max}$ function:
 
 $$
 \begin{align}
@@ -132,7 +132,7 @@ F(\mathbf{w}, b, \{\xi_i\}) & = \frac{1}{2} \lVert \mathbf{w} \rVert^2 + C \sum_
 \end{align}
 $$
 
-When the $\mathbf{w}$, $b$ and $\{\xi_i\}$ that minimize $F$ by using the constraints on the second line, please confirm if the function $f$ is also minimized.  
+When the $\mathbf{w}$, $b$ and $\{\xi_i\}$ that minimize $F$ by using the constraints on the second line, please confirm if the function $f$ is also minimized.
 
 The Lagrangian of this optimization problem is given as follows by introducing non-negative mutlipliers $\{\alpha_i\}$ and $\{\beta_i\}$:
 
@@ -152,7 +152,7 @@ At stationary points, the following equations hold.
 \end{align}
 ```
 
-Therefore, by substituting these relations into Eq.{eq}`lagrangian`, the dual objection function 
+Therefore, by substituting these relations into Eq.{eq}`lagrangian`, the dual objection function
 
 ```{math}
 :label: dual
@@ -192,7 +192,7 @@ G(\{\alpha_i\}) & = \sum_{i} \alpha_i - \frac{1}{2} \sum_{ij} \alpha_i \alpha_j 
 \end{align}
 ```
 
-The kernel function defined above corresponds exactly to this distance function $K(x_i, x_j)$. Now it becomes clear how the kernel function is incorporated into the support vector machine. 
+The kernel function defined above corresponds exactly to this distance function $K(x_i, x_j)$. Now it becomes clear how the kernel function is incorporated into the support vector machine.
 
 Looking further into the complementarity conditions of Eq.{eq}`complementarity`, it turns out that the optimized parameters $\alpha^*_i$, $\xi^*_i$ and $S^*_i$ ($S^*_i := S_i(\mathbf{w}^*, b^*)$) can have only values that satisfy either one of the following three conditions:
 
@@ -200,21 +200,21 @@ Looking further into the complementarity conditions of Eq.{eq}`complementarity`,
 - $\alpha^*_i = 0, \xi^*_i = 0$
 - $0 < \alpha^*_i < C, \xi^*_i = 0, S^*_i = 1$
 
-In particular, when $S^*_i > 1$, $\alpha^*_i = 0$. This indicates that the summation in Eq.{eq}`dual_kernel` can be taken over all $i$'s with $S^*_i \leq 1$, that is, the points in the support vector. 
+In particular, when $S^*_i > 1$, $\alpha^*_i = 0$. This indicates that the summation in Eq.{eq}`dual_kernel` can be taken over all $i$'s with $S^*_i \leq 1$, that is, the points in the support vector.
 
-Finally, let us look at how the label of unseen data $x$ is predicted when the support vector machine represented in the kernel form is trained (i.e, when the $\{\alpha_i\}$ that maximizes $G$ are found). In the original main formulation of the problem, the label is given by Eq.{eq}`test_data_label`. When substituting the first equation of Eq.{eq}`stationarity` into it, 
+Finally, let us look at how the label of unseen data $x$ is predicted when the support vector machine represented in the kernel form is trained (i.e, when the $\{\alpha_i\}$ that maximizes $G$ are found). In the original main formulation of the problem, the label is given by Eq.{eq}`test_data_label`. When substituting the first equation of Eq.{eq}`stationarity` into it,
 
 $$
 y = \mathrm{sgn}\left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x) + b^*\right)
 $$
 
-is obtained. Here $\alpha^*_i$ is the optimized parameter that maximizes $G$, and the summation is taken over $i$'s in the support vector. The optimized parameter $b^*$ can be obtained by solving 
+is obtained. Here $\alpha^*_i$ is the optimized parameter that maximizes $G$, and the summation is taken over $i$'s in the support vector. The optimized parameter $b^*$ can be obtained by solving
 
 $$
 y_j \left(\sum_{i\in \mathrm{s.v.}} \alpha^*_i y_i K(x_i, x_j) + b^*\right)= 1
 $$
 
-for data points $j$ that satisfy $S^*_j = 1$. 
+for data points $j$ that satisfy $S^*_j = 1$.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -301,9 +301,9 @@ norm_test_data = mms.transform(test_data)
 (problem1)=
 ### Exercise 1
 
-Select feature map and implement it as a quantum circuit object named `feature_map`. You could use the existing classes such as `ZFeatureMap` and `ZZFeatureMap` as done in {doc}`vqc_machine_learning`, or make an empty `QuantumCircuit` object and write a circuit by hand using `Parameter` and `ParameterVector`.    
+Select feature map and implement it as a quantum circuit object named `feature_map`. You could use the existing classes such as `ZFeatureMap` and `ZZFeatureMap` as done in {doc}`vqc_machine_learning`, or make an empty `QuantumCircuit` object and write a circuit by hand using `Parameter` and `ParameterVector`.
 
-You could choose any number of qubits, but the `FidelityQuantumKernel` class used later seems to work better when the number of qubits is equal to the number of input features.   
+You could choose any number of qubits, but the `FidelityQuantumKernel` class used later seems to work better when the number of qubits is equal to the number of input features.
 
 ```{code-cell} ipython3
 ---
@@ -338,12 +338,12 @@ Create a circuit named with `manual_kernel` to calculate a kernel matrix from th
 
 **Hint 1**
 
-A QuantumCircuit object ican be added into another QuantumCircuit by doing 
+A QuantumCircuit object ican be added into another QuantumCircuit by doing
 
 ```python
 circuit.compose(another_circuit, inplace=True)
 ```
-If `inplace=True` is omitted, the `compose` method just returns a new circuit object, instead of addint the `circuit` into `another_circuit`.  
+If `inplace=True` is omitted, the `compose` method just returns a new circuit object, instead of addint the `circuit` into `another_circuit`.
 
 **Hint 2**
 
@@ -436,7 +436,7 @@ qc_circuit.decompose().decompose().draw('mpl')
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-We can easily visualize the contents of kernel matrix with the `FidelityQuantumKernel` class. Let us make plots of the kernel matrix obtained from the training data alone, and that from the training and testing data. 
+We can easily visualize the contents of kernel matrix with the `FidelityQuantumKernel` class. Let us make plots of the kernel matrix obtained from the training data alone, and that from the training and testing data.
 
 ```{code-cell} ipython3
 ---
@@ -461,7 +461,7 @@ plt.show()
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
 
-At the end, we attempt to perform classification with support vector machine implemented in sklearn package. Please check how the classification accuracy varies when changing the dataset size or feature maps.  
+At the end, we attempt to perform classification with support vector machine implemented in sklearn package. Please check how the classification accuracy varies when changing the dataset size or feature maps.
 
 ```{code-cell} ipython3
 ---
@@ -488,6 +488,6 @@ print(f'Precomputed kernel: Classification Test score:  {test_score*100}%')
 **Items to submit**
 - Explanation of the selected feature map and the code (Exercise 1).
 - Quantum circuit to calculate kernel matrix and the result of $K(x_0, x_1)$ obtained using the circuit (Exercise 2).
-- Comparison with results from quantum machine learning using variational quantum circuit in {doc}`this workboo <vqc_machine_learning>`. 
-   - Can we observe any systematic difference in classification accuracy when comparing the two methods in the same conditions (input features, dataset size, feature map)? Vary the conditions and discuss the observed behavior. 
+- Comparison with results from quantum machine learning using variational quantum circuit in {doc}`this workboo <vqc_machine_learning>`.
+   - Can we observe any systematic difference in classification accuracy when comparing the two methods in the same conditions (input features, dataset size, feature map)? Vary the conditions and discuss the observed behavior.
    - If one is systematically worse than the other, how can we improve the worse one? When the datasize is small, it is likely that the over-fitting occurs, i.e, the performance for the testing data is worse than that for the training data. Discuss if/how we can improve the classification performance for the testing data while reducing the effect of over-fitting.

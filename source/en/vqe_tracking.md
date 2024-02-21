@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,14 +19,16 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
-# 【Exercise】Find Tracks of Charged Particles Produced in High-Energy Physics Experiment 
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
+
+# 【Exercise】Find Tracks of Charged Particles Produced in High-Energy Physics Experiment
 
 +++
 
-In this assignment, you will think about how to apply the variational quantum eigensolver to physics experiment. Specifically, we focuse on high-energy physics (HEP) experiment and attempt to **reconstruct tracks of charged particles**, which is essential for HEP experiments, using variational quantum eigensolver. 
+In this assignment, you will think about how to apply the variational quantum eigensolver to physics experiment. Specifically, we focuse on high-energy physics (HEP) experiment and attempt to **reconstruct tracks of charged particles**, which is essential for HEP experiments, using variational quantum eigensolver.
 
 ```{contents} Contents
 ---
@@ -95,12 +97,16 @@ Fisrt, import the necessary libraries.
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
+tags: [remove-input, remove-output]
 ---
 import pprint
 import numpy as np
@@ -110,16 +116,16 @@ import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import TwoLocal
 from qiskit.primitives import BackendEstimator
-from qiskit.algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
-from qiskit.algorithms.optimizers import SPSA, COBYLA
-from qiskit.algorithms.gradients import ParamShiftEstimatorGradient
+from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
+from qiskit_algorithms.optimizers import SPSA, COBYLA
+from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 from qiskit.quantum_info import SparsePauliOp, Statevector
 from qiskit_optimization.applications import OptimizationApplication
 from qiskit_aer import AerSimulator
 ```
 
 (hamiltonian_form)=
-### Hamiltonian and VQE 
+### Hamiltonian and VQE
 
 In order to use VQE for optimization, the problem will need to be formulated in the form of Hamiltonian. If the problem is formulated such that the solution corresponds to the lowest energy state of the Hamiltonian, the VQE could solve the problem by finding such state.
 
@@ -130,7 +136,7 @@ In order to use VQE for optimization, the problem will need to be formulated in 
 
 This assignment will use data from the TrackML challenge, but because original data is difficult to work with, we will use data that has been preprocessed to make it easier to use in quantum calculation, based on {cite}`bapst2019pattern`.
 
-First, three consecutive layer hits are selected as shown in the figure below (a set of three-layer hits surrounded by a dashed line is called 'segment' here). Think of colored dots as hits. These segments are constructd simply by connecting hits, therefore they do not necessarily originate from real particles. Some of them may arise from connecting hits from different particles or from misidentifying detector noise as hits and grouping them to form segments. However, those "fake" segments can point to any directions while "genuine" segments originating from real particles should point to the center of the detector where collisions occur. 
+First, three consecutive layer hits are selected as shown in the figure below (a set of three-layer hits surrounded by a dashed line is called 'segment' here). Think of colored dots as hits. These segments are constructd simply by connecting hits, therefore they do not necessarily originate from real particles. Some of them may arise from connecting hits from different particles or from misidentifying detector noise as hits and grouping them to form segments. However, those "fake" segments can point to any directions while "genuine" segments originating from real particles should point to the center of the detector where collisions occur.
 Given this, each segment is assigned *score* depending on how well the direction of the segment is consistent with that from the detector center. As explained later, the score is assigned a smaller value with increasing consistency of the segment pointing to the detector center. The segments obviously identified as fakes are ignored from the first place, and only segments with scores less than certain threshold are considered below.
 
 ```{image} figs/track_segment.png
@@ -143,7 +149,7 @@ Next, all pairings of selected segments are taken. For each pairing, a score is 
 
 For example, if one of three hits in a segment is shared by two segments (such as those two red segments in the figure), it is not considered a track candidate and the score becomes +1. This is because these tracks with branched or merged segments are not consistent with charged particles produced at the center of the detector.
 
-Furthermore, the segments shown in orange (one of the hits is missing in intermediate layer) and in brown (a zigzag pattern) are not tracks of our interest either, therefore the score is set value larger than -1. The reason why a zigzag pattern is not preferred is that if a charged particle enters perpendicularly into a uniform magnetic field, the trajectory of the particle is bent with a constant curvature on the incident plane due to Lorentz force. 
+Furthermore, the segments shown in orange (one of the hits is missing in intermediate layer) and in brown (a zigzag pattern) are not tracks of our interest either, therefore the score is set value larger than -1. The reason why a zigzag pattern is not preferred is that if a charged particle enters perpendicularly into a uniform magnetic field, the trajectory of the particle is bent with a constant curvature on the incident plane due to Lorentz force.
 
 +++
 
@@ -157,7 +163,7 @@ $$
 
 is minimized. Here $a_i$ is the score of $i$-th segment and $b_{ij}$ is the score of the pair of $i$- and $j$-th segments. The objective function becomes smaller by selecting segments that have smaller $a_i$ values (pointing towards the detector center) and are paired with other segments with smaller $b_{ij}$ values (more consistent with a real track) and rejecting otherwise. Once correct segments are identified, the corresponding tracks can be reconstructed with high efficiency. Therefore, solving this minimization problem is the key to tracking.
 
-The optimization problem of the form illustrated above is called **QUBO**（*Quadratic Unconstrained Binary Optimization*). The form looks unique at first glance, but it is known that various optimization problems (for example, the famous travelling salesman problem) can be converted to QUBO format. This exercise considers only gate-based quantum computer, but different type of quantum computer called quantum annealing is designed to solve QUBO problem primarily. 
+The optimization problem of the form illustrated above is called **QUBO**（*Quadratic Unconstrained Binary Optimization*). The form looks unique at first glance, but it is known that various optimization problems (for example, the famous travelling salesman problem) can be converted to QUBO format. This exercise considers only gate-based quantum computer, but different type of quantum computer called quantum annealing is designed to solve QUBO problem primarily.
 
 Let us first read out the scores $a_i$ and $b_{ij}$.
 
@@ -175,13 +181,13 @@ print(b_score[:5, :5])
 
 #### Ising Format
 
-The QUBO objective function is not the form of Hamiltonian (i.e, not Hermitian operator). Therefore, the objective function needs to be transformed before solving with VQE. Given that $T_i$ takes a binary value $\{0, 1\}$, a new variable $s_i$ with values of $\{+1, -1\}$ can be defined by 
+The QUBO objective function is not the form of Hamiltonian (i.e, not Hermitian operator). Therefore, the objective function needs to be transformed before solving with VQE. Given that $T_i$ takes a binary value $\{0, 1\}$, a new variable $s_i$ with values of $\{+1, -1\}$ can be defined by
 
 $$
 T_i = \frac{1}{2} (1 - s_i).
 $$
 
-Note that $\{+1, -1\}$ is the eigenvalue of Pauli operator. By replacing $s_i$ with Pauli $Z$ operator acting on $i$-th qubit, the following objective Hamiltonian for which computational basis states in $N$-qubit system correspond to the eigenstates that encode adoptation or rejection of the segments is obtained.  
+Note that $\{+1, -1\}$ is the eigenvalue of Pauli operator. By replacing $s_i$ with Pauli $Z$ operator acting on $i$-th qubit, the following objective Hamiltonian for which computational basis states in $N$-qubit system correspond to the eigenstates that encode adoptation or rejection of the segments is obtained.
 
 $$
 H(h, J, s) = \sum_{i=1}^N h_i Z_i + \sum_{i=1}^N \sum_{j<i}^N J_{ij} Z_i Z_j + \text{(constant)}
@@ -208,7 +214,7 @@ coeff_J = np.zeros((num_qubits, num_qubits))
 ##################
 ```
 
-Next, let us define the Hamiltonian used in VQE as a SparsePauliOp object. In {ref}`vqe_imp` the SparsePauliOp was used to define a single Pauli string $ZXY$, but the same class can be used for the sum of Pauli strings. For example, 
+Next, let us define the Hamiltonian used in VQE as a SparsePauliOp object. In {ref}`vqe_imp` the SparsePauliOp was used to define a single Pauli string $ZXY$, but the same class can be used for the sum of Pauli strings. For example,
 
 $$
 H = 0.2 IIZ + 0.3 ZZI + 0.1 ZIZ
@@ -220,7 +226,7 @@ can be expressed as
 H = SparsePauliOp(['IIZ', 'ZZI', 'ZIZ'], coeffs=[0.2, 0.3, 0.1])
 ```
 
-Note that the qubits are ordered from right to left (the most right operator acts on the 0-th qubit) according to the rule in Qiskit. 
+Note that the qubits are ordered from right to left (the most right operator acts on the 0-th qubit) according to the rule in Qiskit.
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
@@ -244,7 +250,7 @@ hamiltonian = SparsePauliOp(pauli_products, coeffs=coeffs)
 (tracking_vqe)=
 #### Executing VQE
 
-Now we try to approximately obtain the lowest energy eigenvalues using VQE with the Hamiltonian defined above. But, before doing that, let us diagonalize the Hamiltonian matrix and calculate the exact energy eigenvalues and eigenstates. 
+Now we try to approximately obtain the lowest energy eigenvalues using VQE with the Hamiltonian defined above. But, before doing that, let us diagonalize the Hamiltonian matrix and calculate the exact energy eigenvalues and eigenstates.
 
 ```{code-cell} ipython3
 ---
@@ -265,9 +271,9 @@ optimal_segments_diag = OptimizationApplication.sample_most_likely(result_diag.e
 print(f'Optimal segments (diagonalization): {optimal_segments_diag}')
 ```
 
-The qubits with 1 in `optimal_segments_diag` correspond to segments that make the value of the objective function smallest. 
+The qubits with 1 in `optimal_segments_diag` correspond to segments that make the value of the objective function smallest.
 
-Next, the energy eigenvalues are obtained using VQE. The following code uses SPSA or COBYLA as optimizer. 
+Next, the energy eigenvalues are obtained using VQE. The following code uses SPSA or COBYLA as optimizer.
 
 ```{code-cell} ipython3
 ---
@@ -281,7 +287,7 @@ backend = AerSimulator()
 # Create Estimator instance
 estimator = BackendEstimator(backend)
 
-# Define variational form of VQE using a built-in function called TwoLocal.   
+# Define variational form of VQE using a built-in function called TwoLocal.
 ansatz = TwoLocal(num_qubits, 'ry', 'cz', 'linear', reps=1)
 
 # Optimizer
@@ -364,4 +370,4 @@ iplot_results(dw, final_doublets, missings, dims=dims, filename=dout)
 ```
 
 **Items to submit**:
-- Code used to implement the Hamiltonian 
+- Code used to implement the Hamiltonian

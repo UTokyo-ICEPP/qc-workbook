@@ -22,7 +22,7 @@ language_info:
   version: 3.10.12
 ---
 
-+++ {"editable": true, "slideshow": {"slide_type": ""}}
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 # 【課題】高エネルギー実験で生成された荷電粒子の飛跡を見つける
 
@@ -108,6 +108,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-input, remove-output]
 ---
 import pprint
 import numpy as np

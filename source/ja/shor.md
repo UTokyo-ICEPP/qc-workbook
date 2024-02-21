@@ -144,7 +144,6 @@ pycharm:
 
     '
 ---
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 from fractions import Fraction
 import matplotlib.pyplot as plt
 import numpy as np
@@ -366,11 +365,14 @@ show_distribution(answer)
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
-tags: [raises-exception, remove-output]
+slideshow:
+  slide_type: ''
+tags: [remove-input, remove-output]
 ---
 # 量子コンピュータで実行する場合
 # 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する

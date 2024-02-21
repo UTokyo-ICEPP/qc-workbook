@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,16 +19,16 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-# Performing Database Search 
+# Performing Database Search
 
 +++
 
-In this unit, we'll introduce **Grover's algorithm**{cite}`grover_search,nielsen_chuang_search` and consider the problem of searching for an answer in an unstructured database using this algorithm. After that, We will implement Grover's algorithm using Qiskit. 
+In this unit, we'll introduce **Grover's algorithm**{cite}`grover_search,nielsen_chuang_search` and consider the problem of searching for an answer in an unstructured database using this algorithm. After that, We will implement Grover's algorithm using Qiskit.
 
 ```{contents} Contents
 ---
@@ -44,12 +44,12 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 ## Introduction
 
-In order to realize quantum advantage over classical computation, one has to exploit quantum algorithm that can take advantage of quantum properties. One example of such algorithms is Grover's algorithm. Grover's algorithm is suited for **searching in unstructured database**, and it has been proven that Grover's algorithm can find solutions with fewer computational resources than those required for classical counterparts. This algorithm is based on a method known as **amplitude amplification** and is widely used as a subroutine in various quantum algorithms. 
+In order to realize quantum advantage over classical computation, one has to exploit quantum algorithm that can take advantage of quantum properties. One example of such algorithms is Grover's algorithm. Grover's algorithm is suited for **searching in unstructured database**, and it has been proven that Grover's algorithm can find solutions with fewer computational resources than those required for classical counterparts. This algorithm is based on a method known as **amplitude amplification** and is widely used as a subroutine in various quantum algorithms.
 
 +++
 
 (database)=
-## Searching for Unstructured Data 
+## Searching for Unstructured Data
 
 Let us consider that there is a list consisting of $N$ elements, and we want to find one element $w$ in that list. To find $w$ using a classical computer, out would have to query the list $N$ times in a worst case, or on average $N/2$ times. With Grover's algorithm, it is known that $w$ can be found by querying about $\sqrt{N}$ times. That it, Glover's algorithm allows one to search for unstructured data quadratically faster than the classical calculation.
 
@@ -75,7 +75,7 @@ f(x) = \bigg\{
 \end{aligned}
 $$
 
-this leads to the oracle (denoted as $U_w$) which inverts the phase for the answer $w$ that we want: 
+this leads to the oracle (denoted as $U_w$) which inverts the phase for the answer $w$ that we want:
 
 $$
 U_w:\begin{aligned}
@@ -84,7 +84,7 @@ U_w:\begin{aligned}
 \end{aligned}
 $$
 
-If we use a matrix form, the $U_w$ can be written as as $U_w=I-2\ket{w}\bra{w}$. Furthermore, if we think of another function $f_0(x)$: 
+If we use a matrix form, the $U_w$ can be written as as $U_w=I-2\ket{w}\bra{w}$. Furthermore, if we think of another function $f_0(x)$:
 
 $$
 f_0(x) = \bigg\{
@@ -94,7 +94,7 @@ f_0(x) = \bigg\{
 \end{aligned}
 $$
 
-then we can get unitary $U_0$ that inverts phases for all the states except 0. 
+then we can get unitary $U_0$ that inverts phases for all the states except 0.
 
 $$
 U_0:\begin{aligned}
@@ -103,7 +103,7 @@ U_0:\begin{aligned}
 \end{aligned}
 $$
 
-Here the matrix form of $U_0$ is given as $U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$. 
+Here the matrix form of $U_0$ is given as $U_0=2\ket{0}\bra{ 0}^{\otimes n}-I$.
 
 +++
 
@@ -118,7 +118,7 @@ The structure of the circuit used to implement Grover's algorithm is shown below
 :align: center
 ```
 
-$G$ is a unitary operator called **Grover Iieration** and consists of the following four steps. 
+$G$ is a unitary operator called **Grover Iieration** and consists of the following four steps.
 
 ```{image} figs/grover_iter.png
 :alt: grover_iter
@@ -126,7 +126,7 @@ $G$ is a unitary operator called **Grover Iieration** and consists of the follow
 :align: center
 ```
 
-The $U_w$ and $U_0$ are oracles that invert the phase of an answer $w$ and the phase of all states other than 0, respectively, as introduced above. 
+The $U_w$ and $U_0$ are oracles that invert the phase of an answer $w$ and the phase of all states other than 0, respectively, as introduced above.
 
 Together with the Hadamard operator at the beginning of the circuit, we will look at steps involved in a single Grover iteration in detail below.
 
@@ -147,7 +147,7 @@ $$
 \ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}
 $$
 
-This state is denoted as $\ket{s}$. 
+This state is denoted as $\ket{s}$.
 
 +++
 
@@ -156,7 +156,7 @@ This state is denoted as $\ket{s}$.
 
 Let's view this $\ket{s}$ state geometrically. First, consider a two-dimensional plane created by the superposition state $\ket{s}$ and the state $\ket{w}$, which is what we are trying to find. Since the state $\ket{w^{\perp}}$, which is orthogonal to $\ket{w}$, can be expressed as $\ket{w^{\perp}}:=\frac{1}{\sqrt{N-1}}\sum_{x \neq w}\ket{x}$, it corresponds to the axis orthogonal to $\ket{w}$ in this 2D plane. Therefore, $\ket{w^{\perp}}$ and $\ket{w}$ can be regarded as orthonormal basis states, i.e, $\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$, $\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$.
 
-In short, $\ket{s}$ can be expressed as a linear combination of the two vectors ($\ket{w^{\perp}}$, $\ket{w}$) on this 2D plane. 
+In short, $\ket{s}$ can be expressed as a linear combination of the two vectors ($\ket{w^{\perp}}$, $\ket{w}$) on this 2D plane.
 $$
 \begin{aligned}
 \ket{s}&=\sqrt{\frac{N-1}{N}}\ket{w^{\perp}}+\frac1{\sqrt{N}}\ket{w}\\
@@ -208,7 +208,7 @@ U_s &\equiv H^{\otimes n}U_0H^{\otimes n}\\
 \end{aligned}
 $$
 
-This means that the diffuser $U_s$ is an operator that inverts $U_w\ket{s}$ with respect to $\ket{s}$ (see figure below). 
+This means that the diffuser $U_s$ is an operator that inverts $U_w\ket{s}$ with respect to $\ket{s}$ (see figure below).
 
 ```{image} figs/grover_rot3.png
 :alt: grover_rot3
@@ -225,7 +225,7 @@ G&=U_sU_w\\
 \end{aligned}
 $$
 
-and is equivalent to rotating the $\ket{s}$ towards $\ket{w}$ by the angle $\theta$ (figure below). 
+and is equivalent to rotating the $\ket{s}$ towards $\ket{w}$ by the angle $\theta$ (figure below).
 
 ```{image} figs/grover_rot4.png
 :alt: grover_rot4
@@ -239,7 +239,7 @@ $$
 G^r\ket{s}=\begin{bmatrix}\cos\frac{2r+1}{2}\theta\\\sin\frac{2r+1}{2}\theta\end{bmatrix}
 $$
 
-This indicates that $\ket{s}$ would need to be rotated $r$ times so that $\frac{2r+1}2\theta\approx\frac{\pi}2$ to reach the desired answer of $\ket{w}$. If each rotation angle $\theta$ is small enough, then $\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2$, hence $r\approx\frac\pi4\sqrt{N}$. Now we have shown that {\cal O}(\sqrt{N})$ operations would allow us to reach the desired answer $\ket{w}$, meaning that it is quadratically faster than the classical calculation. 
+This indicates that $\ket{s}$ would need to be rotated $r$ times so that $\frac{2r+1}2\theta\approx\frac{\pi}2$ to reach the desired answer of $\ket{w}$. If each rotation angle $\theta$ is small enough, then $\sin\frac\theta2=\frac{1}{\sqrt{N}}\approx\frac\theta2$, hence $r\approx\frac\pi4\sqrt{N}$. Now we have shown that {\cal O}(\sqrt{N})$ operations would allow us to reach the desired answer $\ket{w}$, meaning that it is quadratically faster than the classical calculation.
 
 Let's look at the diffuser's role a bit more. We can think of a certain state $\ket{\psi}$ and assume that it is written as a superposition of some bases $\ket{k}$ with amplitude $a_k$, $\ket{\psi}:=\sum_k a_k\ket{k}$. When we apply the diffuser to this state,
 
@@ -258,11 +258,11 @@ $\langle a \rangle\equiv\frac{\sum_i a_i}{N}$ is an average of the amplitudes. I
 (grover_amp)=
 ### Visualize Amplitude Amplification
 
-Let us visualize how the amplitude of the state corresponding to correct answer is amplified. 
+Let us visualize how the amplitude of the state corresponding to correct answer is amplified.
 
-First, the Hadamard gates applied at the beginning of the circut create a superposition of all the computational basis states with equal amplitudes ((1) in the figure below). The horizontal axis shows $N$ computational basis states, and the vertical axis shows the magnitude of the amplitude for each basis state and it is $\frac{1}{\sqrt{N}}$ for all the states (the average is shown by a dotted red line). 
+First, the Hadamard gates applied at the beginning of the circut create a superposition of all the computational basis states with equal amplitudes ((1) in the figure below). The horizontal axis shows $N$ computational basis states, and the vertical axis shows the magnitude of the amplitude for each basis state and it is $\frac{1}{\sqrt{N}}$ for all the states (the average is shown by a dotted red line).
 
-Next, applying the oracle $U_w$ inverts the phase of $\ket{w}$, making the amplitude to $-\frac{1}{\sqrt{N}}$ ((2) of the figure). In this state, the average amplitude is $\frac{1}{\sqrt{N}}(1-\frac2N)$, which is lower than that in state (1). 
+Next, applying the oracle $U_w$ inverts the phase of $\ket{w}$, making the amplitude to $-\frac{1}{\sqrt{N}}$ ((2) of the figure). In this state, the average amplitude is $\frac{1}{\sqrt{N}}(1-\frac2N)$, which is lower than that in state (1).
 
 Last, the diffuser is applied to the state and all the amplitudes are reversed with respect to the average ((3) of the figure). This increases the amplitude of $\ket{w}$ and decreases the amplitudes of all other basis states. As seen in the figure, the amplitude of $\ket{w}$ state is amplified roughly three times. Repeating this process will further increase the amplitude of $\ket{w}$, so we can expect that we will have higher chance of getting the correct answer.
 
@@ -277,7 +277,7 @@ Last, the diffuser is applied to the state and all the amplitudes are reversed w
 (grover_multidata)=
 ### Searching for Multiple Data
 
-We have only considered so far searching for a single data. What if we consider finding multiple data? For example, we want to find $M$ data $\{w_i\}\;(i=0,1,\cdots,M-1)$ from a sample of $N=2^n$ data. Just as before, we can discuss this situation on a two-dimensional plance with the state we want to find, $\ket{w}$, and its orthogonal state, $\ket{w^{\perp}}$. 
+We have only considered so far searching for a single data. What if we consider finding multiple data? For example, we want to find $M$ data $\{w_i\}\;(i=0,1,\cdots,M-1)$ from a sample of $N=2^n$ data. Just as before, we can discuss this situation on a two-dimensional plance with the state we want to find, $\ket{w}$, and its orthogonal state, $\ket{w^{\perp}}$.
 
 $$
 \begin{aligned}
@@ -295,7 +295,7 @@ $$
 \end{aligned}
 $$
 
-If the amplitude $\sqrt{\frac{M}{N}}$ of the state $\ket{w}$ is defined as $\sin\frac\theta2$, then the angle $\theta$ is $\theta=2\arcsin\sqrt{\frac{M}{N}}$. Compared to the case of finding a single data, the angle rorated by the single Grover iteration is $\sqrt{M}$ times larger. As a result, we can reach the answer by a smaller number of rotations, $r\approx\frac\pi4\sqrt{\frac{N}{M}}$, than the single-data case.  
+If the amplitude $\sqrt{\frac{M}{N}}$ of the state $\ket{w}$ is defined as $\sin\frac\theta2$, then the angle $\theta$ is $\theta=2\arcsin\sqrt{\frac{M}{N}}$. Compared to the case of finding a single data, the angle rorated by the single Grover iteration is $\sqrt{M}$ times larger. As a result, we can reach the answer by a smaller number of rotations, $r\approx\frac\pi4\sqrt{\frac{N}{M}}$, than the single-data case.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -304,14 +304,14 @@ If the amplitude $\sqrt{\frac{M}{N}}$ of the state $\ket{w}$ is defined as $\sin
 
 Now let's try to solve database search problem by implementing Grover's algorithm.
 
-This exercise is to find a single answer "45" in a list containing $N=2^6$ elements of $[0,1,2,\cdots,63]$ (Of course, you could look for another number and feel free to do that later if you like). That is, we try to find $\ket{45}=\ket{101101}$ using a 6-qubit quantum circuit.  
+This exercise is to find a single answer "45" in a list containing $N=2^6$ elements of $[0,1,2,\cdots,63]$ (Of course, you could look for another number and feel free to do that later if you like). That is, we try to find $\ket{45}=\ket{101101}$ using a 6-qubit quantum circuit.
 
 +++
 
 (imp_qiskit)=
 ### Qiskit Implementation
 
-Set up the environment first. 
+Set up the environment first.
 
 ```{code-cell} ipython3
 ---
@@ -326,20 +326,19 @@ pycharm:
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Import Qiskit-related packages
+# Import qiskit packages
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
 from qiskit.quantum_info import Statevector
 from qiskit.visualization import plot_histogram
-from qiskit.tools.monitor import job_monitor
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
-# Modules necessary for this workbook
+# Original module for this workbook
 from qc_workbook.utils import operational_backend
 ```
 
-Prepare a 6-qubit circuit `grover_circuit`. 
+Prepare a 6-qubit circuit `grover_circuit`.
 
 A quantum circuit to perform a single Grover iteration will be something like below, and please write a quantum circuit that implements gates outlined in red (phase oracle and the unitary corresponding to $2\ket{0}\bra{0}-I$ of the diffuser).
 
@@ -349,7 +348,7 @@ A quantum circuit to perform a single Grover iteration will be something like be
 :align: center
 ```
 
-Implement the oracle after generating a uniform superposition state $\ket{s}$. 
+Implement the oracle after generating a uniform superposition state $\ket{s}$.
 
 ```{code-cell} ipython3
 ---
@@ -414,7 +413,7 @@ oracle.x(4)
 
 ````
 
-Next, implement the diffuser circuit. 
+Next, implement the diffuser circuit.
 
 ```{code-cell} ipython3
 ---
@@ -533,7 +532,7 @@ def show_distribution(answer):
 show_distribution(answer)
 ```
 
-If the circuit is implemented correctly, you will see that the state $\ket{101101}=\ket{45}$ is measured with high probability. 
+If the circuit is implemented correctly, you will see that the state $\ket{101101}=\ket{45}$ is measured with high probability.
 
 However, as discussed above, a single Grover iteration will produce incorrect answers with non-negligible probabilities in the search of $N=2^6$ elements. Later, we will see if repeating Grover iteration can produce correct answers with higher probabilities.
 
@@ -554,17 +553,19 @@ pycharm:
     '
 tags: [raises-exception, remove-output]
 ---
-# Implementation on a quantum computer
-instance = 'ibm-q/open/main'
+# Specify an instance here if you have access to multiple
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=6))
-backend = least_busy(backend_list)
-print("least busy backend: ", backend)
+# Find the backend with the shortest queue
+backend = service.least_busy(min_num_qubits=6, filters=operational_backend())
+
+print(f'Jobs will run on {backend.name}')
 ```
 
 ```{code-cell} ipython3
@@ -581,7 +582,6 @@ tags: [raises-exception, remove-output]
 
 grover_circuit = transpile(grover_circuit, backend=backend, optimization_level=3)
 job = backend.run(grover_circuit, shots=1024)
-job_monitor(job, interval=2)
 ```
 
 ```{code-cell} ipython3
@@ -600,14 +600,14 @@ answer = results.get_counts(grover_circuit)
 show_distribution(answer)
 ```
 
-As you can see, the results are much worse than what we got with the simulator. Unfortunately, this is a typical result of running a quantum circuit of Grover's search algorithm on the present quantum computer as it is. We can however expect that the quality of the results will be improved by employing {ref}`error mitigation <measurement_error_mitigation>` techniques. 
+As you can see, the results are much worse than what we got with the simulator. Unfortunately, this is a typical result of running a quantum circuit of Grover's search algorithm on the present quantum computer as it is. We can however expect that the quality of the results will be improved by employing {ref}`error mitigation <measurement_error_mitigation>` techniques.
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 (imp_simulator_amp)=
 ### Confirm Amplitude Amplification
 
-Here we will see how the amplitude is amplified by running the Grover's iteration multiple times using simulator. 
+Here we will see how the amplitude is amplified by running the Grover's iteration multiple times using simulator.
 
 For example, the circuit to execute the Grover's iteration three times is prepared and executed.
 
@@ -765,3 +765,7 @@ plt.show()
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 In this case, the number of iterations to have the highest probability is smaller than that in the case of single answer. Is this what you expected, right?
+
+```{code-cell} ipython3
+
+```
