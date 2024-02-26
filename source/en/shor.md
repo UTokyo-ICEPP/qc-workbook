@@ -24,7 +24,7 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
-# Learning Integer Factoring Algorithm
+# Learning the Integer Factoring Algorithm
 
 +++
 

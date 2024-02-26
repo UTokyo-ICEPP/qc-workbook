@@ -248,25 +248,26 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-# まずは必要になるpythonモジュールをすべてインポートしておく
+# First, import all the necessary python modules
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
 from qiskit.visualization import plot_histogram
 from qiskit_ibm_runtime import QiskitRuntimeService
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
-# qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
+# qc_workbook is the original module written for this workbook
+# If you encounter an ImportError, edit the environment variable PYTHONPATH or sys.path
 from qc_workbook.utils import operational_backend
 
 print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-circuit = QuantumCircuit(2) # レジスタを介さずビット数を指定して回路を作成することもできます
-circuit.h(0) # その場合、ゲートにはregister[0]ではなく直接量子ビットの番号を指定します
+circuit = QuantumCircuit(2) # You can also create a circuit by specifying the number of bits, without using a register
+circuit.h(0) # In that case, directly specify the number of the quantum bit for the gate, not register[0]
 circuit.ry(np.pi / 2., 0) #　θ = π/2
 circuit.x(0)
-# 実際の回路では出力を得るためには必ず最後に測定を行う
+# Measurement is always needed to get an output
 circuit.measure_all()
 
 print(f'This circuit has {circuit.num_qubits} qubits and {circuit.size()} operations')
@@ -296,10 +297,10 @@ $$
 
 $$
 \begin{align}
-C^1_0[U](\ket{0}_1\ket{0}_0) & = \ket{0}_1\ket{0}_0 \\
-C^1_0[U](\ket{0}_1\ket{1}_0) & = \ket{0}_1\ket{1}_0 \\
-C^1_0[U](\ket{1}_1\ket{0}_0) & = \ket{1}_1U\ket{0}_0 \\
-C^1_0[U](\ket{1}_1\ket{1}_0) & = \ket{1}_1U\ket{1}_0
+C^i_j[U](\ket{0}_i\ket{0}_j) & = \ket{0}_i\ket{0}_j \\
+C^i_j[U](\ket{0}_i\ket{1}_j) & = \ket{0}_i\ket{1}_j \\
+C^i_j[U](\ket{1}_i\ket{0}_j) & = \ket{1}_iU\ket{0}_j \\
+C^i_j[U](\ket{1}_i\ket{1}_j) & = \ket{1}_iU\ket{1}_j
 \end{align}
 $$
 
@@ -403,46 +404,46 @@ slideshow:
 ---
 circuits = []
 
-# 回路I - H, CX[0, 1], Ry(-π/4)[1]をかける
+# Circuit I - H, CX[0, 1], Ry(-π/4)[1]
 circuit = QuantumCircuit(2, name='circuit_I')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-np.pi / 4., 1)
 circuit.measure_all()
-# 回路リストに追加
+# Append to list
 circuits.append(circuit)
 
-# 回路II - H, CX[0, 1], Ry(-3π/4)[1]をかける
+# Circuit II - H, CX[0, 1], Ry(-3π/4)[1]
 circuit = QuantumCircuit(2, name='circuit_II')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-3. * np.pi / 4., 1)
 circuit.measure_all()
-# 回路リストに追加
+# Append to list
 circuits.append(circuit)
 
-# 回路III - H, CX[0, 1], Ry(-π/4)[1], Ry(-π/2)[0]をかける
+# Circuit III - H, CX[0, 1], Ry(-π/4)[1], Ry(-π/2)[0]
 circuit = QuantumCircuit(2, name='circuit_III')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-np.pi / 4., 1)
 circuit.ry(-np.pi / 2., 0)
 circuit.measure_all()
-# 回路リストに追加
+# Append to list
 circuits.append(circuit)
 
-# 回路IV - H, CX[0, 1], Ry(-3π/4)[1], Ry(-π/2)[0]をかける
+# Circuit IV - H, CX[0, 1], Ry(-3π/4)[1], Ry(-π/2)[0]
 circuit = QuantumCircuit(2, name='circuit_IV')
 circuit.h(0)
 circuit.cx(0, 1)
 circuit.ry(-3. * np.pi / 4., 1)
 circuit.ry(-np.pi / 2., 0)
 circuit.measure_all()
-# 回路リストに追加
+# Append to list
 circuits.append(circuit)
 
-# draw()にmatplotlibのaxesオブジェクトを渡すと、そこに描画してくれる
-# 一つのノートブックセルで複数プロットしたい時などに便利
+# draw() can accept a matplotlib Axes object as an argument, to which the circuit will be drawn
+# This is useful when visualizing multiple circuits from a single Jupyter cell
 fig, axs = plt.subplots(2, 2, figsize=[12., 6.])
 for circuit, ax in zip(circuits, axs.reshape(-1)):
     circuit.draw('mpl', ax=ax)
@@ -560,7 +561,7 @@ slideshow:
   slide_type: ''
 tags: [remove-output, raises-exception]
 ---
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# Specify an instance if you have access to multiple (e.g. premium access plan）
 # instance = 'hub-x/group-y/project-z'
 instance = None
 
@@ -579,7 +580,7 @@ slideshow:
   slide_type: ''
 tags: [raises-exception, remove-output]
 ---
-# 現在稼働中のバックエンド（実機）の中から一番空いているものを選ぶ
+# Find the backend that is operational and has the shortest job queue
 backend = service.least_busy(filters=operational_backend())
 
 print(f'Jobs will run on {backend.name}')
@@ -590,13 +591,12 @@ print(f'Jobs will run on {backend.name}')
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-# max_shotsがバックエンドごとに決められている最大ショット数
+# max_shots = the maximum number of allowed shots for this backend with the access parameters
 shots = min(backend.max_shots, 2000)
 print(f'Running four circuits, {shots} shots each')
 
-# transpileの説明は次回の実習にて
 circuits = transpile(circuits, backend=backend)
-# バックエンドで回路をshots回実行させ、測定結果を返させる
+# Execute each circuit for `shots` times
 job = backend.run(circuits, shots=shots)
 ```
 
@@ -619,14 +619,14 @@ IBMQのバックエンドは世界中からたくさんのユーザーに利用�
 
 result = job.result()
 
-# 4つの回路のヒストグラムデータを入れるリスト
+# List to collect the histogram data from the four circuits
 counts_list = []
 
-# 回路ごとの結果をresultから抽出する
+# Extracting the bit sequence counts from the result object
 for idx in range(4):
-    # get_counts(i)で回路iのヒストグラムデータが得られる
+    # get_counts(i) returns the histogram data for circuit i
     counts = result.get_counts(idx)
-    # データをリストに足す
+    # Append to list
     counts_list.append(counts)
 
 print(counts_list)
