@@ -64,50 +64,36 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize, Bounds
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import SamplerV2 as Sampler
 from qiskit.visualization import plot_histogram
 
 print('notebook ready')
 ```
 
+AerSimulatorは`AerSimulator()`でインスタンス化します。実機の場合はSamplerにバックエンドオブジェクトを渡していましたが、シミュレータのSamplerは内部で自動的にAerSimulatorを生成するのでバックエンドを与える必要がありません。
+
 ```python
 simulator = AerSimulator()
+sampler = Sampler()
 print(simulator.name)
 ```
 
-実習の内容を再現してみましょう。
+## 問題１：シミュレータを使う
+
+実習の内容を再現してみましょう。ポイントは実機とシミュレータで極力同じコードが動くようになっているということです。
 
 ```python
 circuits = []
 
-circuit = QuantumCircuit(2, name='circuit_I')
-circuit.h(0)
-circuit.cx(0, 1)
-circuit.ry(-np.pi / 4., 1)
-circuit.measure_all()
-circuits.append(circuit)
+##################
+### EDIT BELOW ###
+##################
 
-circuit = QuantumCircuit(2, name='circuit_II')
-circuit.h(0)
-circuit.cx(0, 1)
-circuit.ry(-3. * np.pi / 4., 1)
-circuit.measure_all()
-circuits.append(circuit)
+#講義と同様に4通りの回路を用意し、circuitsに編入する
 
-circuit = QuantumCircuit(2, name='circuit_III')
-circuit.h(0)
-circuit.cx(0, 1)
-circuit.ry(-np.pi / 4., 1)
-circuit.ry(-np.pi / 2., 0)
-circuit.measure_all()
-circuits.append(circuit)
-
-circuit = QuantumCircuit(2, name='circuit_IV')
-circuit.h(0)
-circuit.cx(0, 1)
-circuit.ry(-3. * np.pi / 4., 1)
-circuit.ry(-np.pi / 2., 0)
-circuit.measure_all()
-circuits.append(circuit)
+##################
+### EDIT ABOVE ###
+##################
 ```
 
 ```python
@@ -117,33 +103,210 @@ shots = 10000
 # 実習と同じく transpile() - 今は「おまじない」と思ってよい
 circuits = transpile(circuits, backend=simulator)
 # シミュレータもバックエンドと同じように振る舞うので、runメソッドで回路とショット数を受け取り、ジョブオブジェクトを返す
-sim_job = simulator.run(circuits, shots=shots)
+job = sampler.run(circuits, shots=shots)
 
 # シミュレータから渡されたジョブオブジェクトは実機のジョブと全く同じように扱える
-sim_result = sim_job.result()
+result = job.result()
 
-C = np.zeros(4, dtype=float)
-fig, axs = plt.subplots(2, 2, sharey=True, figsize=[12., 8.])
-for idx, (circuit, ax) in enumerate(zip(circuits, axs.reshape(-1))):
-    counts = sim_result.get_counts(idx)
-    plot_histogram(counts, ax=ax)
-    ax.set_title(circuit.name)
-    ax.yaxis.grid(True)
+c_arr = np.zeros(4, dtype=float)
 
-    C[idx] = counts.get('00', 0) + counts.get('11', 0) - counts.get('01', 0) - counts.get('10', 0)
+##################
+### EDIT BELOW ###
+##################
 
-C /= shots
+#講義と同様にSamplerの結果からc_arrを計算する
 
-S = C[0] - C[1] + C[2] + C[3]
-print('S =', S)
+##################
+### EDIT ABOVE ###
+##################
+
+c_arr /= shots
+
+s_val = c_arr[0] - c_arr[1] + c_arr[2] + c_arr[3]
+print('S =', s_val)
 ```
 
-上のように、`qasm_simulator`は実機と同様に`run`関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わるので、上の例では実習で使った`job_monitor()`関数を使用していません。また、シミュレータにはノイズがない[^simulator_noise]ので、$S$の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。
+上のように、`AerSimulator`のSamplerは実機の際と同様に`run`関数を実行でき、ヒストグラムデータを返します。実機ではショット数に制限がありますが、シミュレータにはありません。ただしショット数が多いほど、当然実行に時間がかかります。といってもこの程度の回路であれば常識的なショット数ならほぼ瞬間的にジョブの実行が終わります。また、シミュレータにはノイズがない[^simulator_noise]ので、$S$の計算結果が統計誤差の範囲内で理論値と一致していることが見て取れます。
 
 [^simulator_noise]: 標準設定において。実機の振る舞いに従うよう、あえてノイズを加えるような設定も存在します。
 
 
-## 測定基底の変換
+## 問題２：Ryの角度を連続的に変える
+
+ここまで測定の直前のRyゲートの引数に特定の値のみ使ってきましたが、この角度を細かく変えていくとどうなるでしょうか。
+
+```python tags=["remove-output"]
+# Consider 20 points each for theta and phi (400 points total)
+ntheta = 20
+nchi = 20
+
+thetas = np.linspace(0., np.pi, ntheta)
+chis = np.linspace(0., np.pi, nchi)
+
+# Construct a circuit for each (theta, chi) pair
+circuits = []
+# np.ndindex returns an iterator over a multi-dimensional array
+# -> idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...
+for idx in np.ndindex(ntheta, nchi):
+    theta = thetas[idx[0]]
+    chi = chis[idx[1]]
+
+    circuit = QuantumCircuit(2, name=f'circuit_{idx[0]}_{idx[1]}')
+
+    # Create a circuit that forms a Bell state, applies Ry gates with theta and chi
+    # as arguments, and measures the state
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    #circuit.?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+    circuit.measure_all()
+
+    circuits.append(circuit)
+
+# Execute all circuits in Sampler and retrieve the results
+shots = 10000
+circuits = transpile(circuits, backend=simulator)
+job = sampler.run(circuits, shots=shots)
+result = job.result()
+```
+
+```python tags=["remove-output"]
+# Compute the C values for each (theta, chi)
+c_values = np.zeros((ntheta, nchi), dtype=float)
+for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
+    # This is the counts dict for the (theta, chi) pair
+    counts = result[icirc].data.meas.get_counts()
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    #c_values[idx] = ?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+# Making a 2D plot using imshow()
+# The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner
+dtheta = (thetas[1] - thetas[0]) * 0.5
+dchi = (chis[1] - chis[0]) * 0.5
+plt.imshow(c_values[::-1], extent=(chis[0] - dchi, chis[-1] + dchi, thetas[0] - dtheta, thetas[-1] + dtheta))
+plt.xlabel(r'$\chi$')
+plt.ylabel(r'$\theta$')
+plt.colorbar(label='C')
+# Place markers at theta and chi values that realize |S| = 2 sqrt(2)
+plt.scatter([np.pi / 4., np.pi / 4., 3. * np.pi / 4.], [0., np.pi / 2., np.pi / 2.], c='red', marker='+')
+plt.scatter([3. * np.pi / 4.], [0.], c='white', marker='+');
+```
+
+プロット上に、合わせて$|S| = 2\sqrt{2}$となる時の$\theta, \chi$の値の組み合わせを表示してあります（$\langle \sigma^{\chi} \sigma^{\theta} \rangle$を足す点は赤、引く点は白）
+
+
+## 問題３：混合状態での評価
+
+回路の初期状態をBell状態$\frac{1}{\sqrt{2}}(\ket{00} + \ket{11})$ではなく、確率1/2で$\ket{00}$、確率1/2で$\ket{11}$であるような「混合状態」にして同じプロットを作ってみましょう。混合状態を作るには、まず量子ビットを3つ使って「GHZ状態」
+
+$$
+\ket{\Phi} = \frac{1}{\sqrt{2}} \left( \ket{000} + \ket{111} \right)
+$$
+
+を作ります。右二つのケットに対応する量子ビットを今までと同様右からAとBと呼び、この状態を様々な基底で測定します。一番左のケットに対応する量子ビットCには何もせず、ただ測定をし、しかもその結果を無視します[^implicit_measurement]。
+
+それでは、問題２のGHZバージョンを作ってみましょう。
+
+[^implicit_measurement]: 実はただ量子ビットを放置するだけでも、測定をして結果を見ないのと同じ効果をもたらすことができます。これをthe principle of implicit measurementと呼びます。
+
+```python tags=["remove-output"]
+# Construct a circuit for each (theta, chi) pair
+circuits_ghz = []
+# np.ndindex returns an iterator over a multi-dimensional array
+# -> idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...
+for idx in np.ndindex(ntheta, nchi):
+    theta = thetas[idx[0]]
+    chi = chis[idx[1]]
+
+    circuit = QuantumCircuit(3, name=f'circuit_{idx[0]}_{idx[1]}')
+
+    # Create a circuit that forms a GHZ state and then measures the two qubits
+    # along theta and chi bases
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    #circuit.?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+    circuit.measure_all()
+
+    circuits_ghz.append(circuit)
+
+# Execute all circuits in qasm_simulator and retrieve the results
+circuits_ghz = transpile(circuits_ghz, backend=simulator)
+sim_job_ghz = sampler.run(circuits_ghz, shots=shots)
+result_ghz = sim_job_ghz.result()
+```
+
+```python tags=["remove-output"]
+def counts_ignoring_qubit2(counts, bitstring):
+    """Add the counts of cases where qubit C is 0 and 1"""
+
+    return counts.get(f'0{bitstring}', 0) + counts.get(f'1{bitstring}', 0)
+
+# Compute the C values for each (theta, chi)
+c_values_ghz = np.zeros((ntheta, nchi), dtype=float)
+for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
+    # This is the counts dict for the (theta, chi) pair
+    counts = result_ghz[icirc].data.meas.get_counts()
+
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    #c_values_ghz[idx] = ?
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+# Making a 2D plot using imshow()
+# The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner
+plt.imshow(c_values_ghz[::-1], extent=(chis[0] - dchi, chis[-1] + dchi, thetas[0] - dtheta, thetas[-1] + dtheta))
+plt.xlabel(r'$\chi$')
+plt.ylabel(r'$\theta$')
+plt.colorbar(label='C');
+```
+
+ベル状態と明らかに違う挙動をしているのがわかります。原始的な方法ですが、計算した`c_values_ghz`から総当たりで$|S|$の最大値を計算してみましょう。
+
+```python tags=["remove-output"]
+max_abs_s = 0.
+
+# Use ndindex to iterate over all index combinations
+for ikappa, ilambda, imu, inu in np.ndindex(ntheta, nchi, ntheta, nchi):
+    abs_s = abs(c_values_ghz[ikappa, ilambda] - c_values_ghz[ikappa, inu] + c_values_ghz[imu, ilambda] + c_values_ghz[imu, inu])
+    max_abs_s = max(abs_s, max_abs_s)
+
+print(f'max |S| = {max_abs_s}')
+```
+
+量子ビットAとBに「古典的」な状態が実現しているようです。（有限のショット数でシミュレーションをしているため、統計誤差によって$|S|$の値が微妙に2を超えてしまうかもしれません。）
+
+
+## 背景１：測定基底の変換
+
+（背景セクションは読み飛ばしても課題に支障ありません）
 
 さて、おさらいをすると、上の$C^{\rmI, \rmII, \rmIII, \rmIV}$を計算する4つの回路は以下のようなものでした。
 
@@ -204,9 +367,9 @@ $$
 このように、測定を行いたい基底（ここでは$\ket{\theta_{+}}, \ket{\theta_{-}}$）を$\ket{0}, \ket{1}$から得るための変換ゲート（$R_y(\theta)$）の逆変換を測定したい状態にかけることで、計算基底での測定で求める結果を得ることができます。
 
 
-## 観測量の期待値とその計算法
+## 背景２：観測量の期待値とその計算法
 
-課題の説明に入る前に、さらに話が込み入ってきますが、量子計算でも多出する（ワークブックでは特に{doc}`vqe`以降）概念である「観測量の期待値」について説明します。
+次に、量子計算でも多出する（ワークブックでは特に{doc}`vqe`以降）概念である「観測量の期待値」について説明します。
 
 観測量とはそのまま「観測できる量」のことで、量子状態から取り出せる（古典的）情報のこととも言えます。例えば、何かしらの粒子の運動を量子力学的に記述した場合、その粒子の位置や運動量などが観測量です。
 
@@ -250,7 +413,7 @@ $$
 です[^pauli_decomposition]。3の測定の際には、上のセクションで説明した測定基底の変換を利用します。
 
 
-## CHSH不等式の解釈
+## 背景３：CHSH不等式の解釈
 
 実習の中で、
 
@@ -346,9 +509,7 @@ $$
 [^specifying_eigenvectors]: 量子ビットの一般の状態は実パラメータ2つで決まるので、$\sigma^{\theta, \phi}$などと書いたほうがより明示的ですが、ここでの議論では結局1パラメータしか使わないので、「何か一般の（次元を指定しない）パラメータ」として$\theta$と置いています。
 
 
-## 問題：ベル状態について調べる
-
-### 一般の$\sigma$演算子の期待値
+## 問題２の解説：一般の$\sigma$演算子の期待値
 
 上のように$R_y(\theta)\ket{0}$が固有値$+1$の固有ベクトルとなるような演算子を$\sigma^{\theta}$として、$\bra{\Psi} \sigma^{\chi}_B \sigma^{\theta}_A \ket{\Psi}$を計算してみましょう。まず基底変換を具体的に書き下します。
 
@@ -372,89 +533,10 @@ $$
 \end{align}
 ```
 
-となります。
-
-### 実験1
-
-上の計算結果を量子回路でも確認してみましょう。実習のように2ビット量子レジスタをベル状態にし、2つの量子ビットにそれぞれ適当な$R_y$ゲートをかけ、期待値$C$を$R_y$ゲートのパラメータの組み合わせについて二次元プロットに起こしてみます。
-
-```python tags=["remove-output"]
-# Consider 20 points each for theta and phi (400 points total)
-ntheta = 20
-nchi = 20
-
-thetas = np.linspace(0., np.pi, ntheta)
-chis = np.linspace(0., np.pi, nchi)
-
-# Construct a circuit for each (theta, chi) pair
-circuits = []
-# np.ndindex returns an iterator over a multi-dimensional array
-# -> idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...
-for idx in np.ndindex(ntheta, nchi):
-    theta = thetas[idx[0]]
-    chi = chis[idx[1]]
-
-    circuit = QuantumCircuit(2, name=f'circuit_{idx[0]}_{idx[1]}')
-
-    # Create a circuit that forms a Bell state and then measures the two qubits
-    # along theta and chi bases
-
-    ##################
-    ### EDIT BELOW ###
-    ##################
-
-    #circuit.?
-
-    ##################
-    ### EDIT ABOVE ###
-    ##################
-
-    circuit.measure_all()
-
-    circuits.append(circuit)
-
-# Execute all circuits in qasm_simulator and retrieve the results
-simulator = AerSimulator()
-shots = 10000
-circuits = transpile(circuits, backend=simulator)
-sim_job = simulator.run(circuits, shots=shots)
-result = sim_job.result()
-```
-
-```python tags=["remove-output"]
-# Compute the C values for each (theta, chi)
-c_values = np.zeros((ntheta, nchi), dtype=float)
-for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
-    # This is the counts dict for the (theta, chi) pair
-    counts = result.get_counts(icirc)
-
-    ##################
-    ### EDIT BELOW ###
-    ##################
-
-    #c_values[idx] = ?
-
-    ##################
-    ### EDIT ABOVE ###
-    ##################
-
-# Making a 2D plot using imshow()
-# The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner
-dtheta = (thetas[1] - thetas[0]) * 0.5
-dchi = (chis[1] - chis[0]) * 0.5
-plt.imshow(c_values[::-1], extent=(chis[0] - dchi, chis[-1] + dchi, thetas[0] - dtheta, thetas[-1] + dtheta))
-plt.xlabel(r'$\chi$')
-plt.ylabel(r'$\theta$')
-plt.colorbar(label='C')
-# Place markers at theta and chi values that realize |S| = 2 sqrt(2)
-plt.scatter([np.pi / 4., np.pi / 4., 3. * np.pi / 4.], [0., np.pi / 2., np.pi / 2.], c='red', marker='+')
-plt.scatter([3. * np.pi / 4.], [0.], c='white', marker='+');
-```
-
-プロット上に、合わせて$|S| = 2\sqrt{2}$となる時の$\theta, \chi$の値の組み合わせを表示してあります（$\langle \sigma^{\chi} \sigma^{\theta} \rangle$を足す点は赤、引く点は白）
+となります。得られたプロットはこの関数形にしたがっているでしょうか？
 
 
-### ベル状態の何がすごいのか？
+## 問題３の解説：ベル状態の何がすごいのか？
 
 ここまで、かなり天下り的に「エンタングルメント」や「ベル状態」が登場してきて、CHSH不等式が破れているから量子力学だ、と言われても、そもそも量子現象がないとしたら何が期待されるのか、なぜベル状態が不思議なのか、といったある種の「出発点」が欠けていると感じている方も多いかと思います（量子ネイティブを育成するという観点からは、出発点が量子力学でありエンタングルメントは当たり前、ということでいいのかもしれませんが）。量子現象のない「古典力学」とはすなわち、ボールを投げたら放物線を描いて地面に落ちる、といった我々の日常的な感覚に沿った物理法則体系とも言えます。そこで、一旦量子力学を忘れて、日常的な感覚でベル状態を解釈することを試みましょう。
 
@@ -509,107 +591,10 @@ $$
 
 様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では$|S| \leq 2$」という命題の意味です。
 
-
-### 実験2
-
-上で言及した「確率1/2で$\ket{00}$、確率1/2で$\ket{11}$」という状態（「混合状態」という状態の一種です）も、少し工夫をすると量子回路で再現することができます。まず量子ビットを3つ使って「GHZ状態」
-
-$$
-\ket{\Phi} = \frac{1}{\sqrt{2}} \left( \ket{000} + \ket{111} \right)
-$$
-
-を作ります。右二つのケットに対応する量子ビットを今までと同様右からAとBと呼び、この状態を様々な基底で測定します。一番左のケットに対応する量子ビットCには何もせず、ただ測定をし、しかもその結果を無視します[^implicit_measurement]。
-
-それでは、実験1のGHZバージョンを作ってみましょう。
-
-[^implicit_measurement]: 実はただ量子ビットを放置するだけでも、測定をして結果を見ないのと同じ効果をもたらすことができます。これをthe principle of implicit measurementと呼びます。
-
-```python tags=["remove-output"]
-# Construct a circuit for each (theta, chi) pair
-circuits_ghz = []
-# np.ndindex returns an iterator over a multi-dimensional array
-# -> idx = (0, 0), (0, 1), ..., (1, 0), (1, 1), ...
-for idx in np.ndindex(ntheta, nchi):
-    theta = thetas[idx[0]]
-    chi = chis[idx[1]]
-
-    circuit = QuantumCircuit(3, name=f'circuit_{idx[0]}_{idx[1]}')
-
-    # Create a circuit that forms a GHZ state and then measures the two qubits
-    # along theta and chi bases
-
-    ##################
-    ### EDIT BELOW ###
-    ##################
-
-    #circuit.?
-
-    ##################
-    ### EDIT ABOVE ###
-    ##################
-
-    circuit.measure_all()
-
-    circuits_ghz.append(circuit)
-
-# Execute all circuits in qasm_simulator and retrieve the results
-circuits_ghz = transpile(circuits_ghz, backend=simulator)
-sim_job_ghz = simulator.run(circuits_ghz, shots=shots)
-result_ghz = sim_job_ghz.result()
-```
-
-```python tags=["remove-output"]
-def counts_ignoring_qubit2(counts, bitstring):
-    """Add the counts of cases where qubit C is 0 and 1"""
-
-    return counts.get(f'0{bitstring}', 0) + counts.get(f'1{bitstring}', 0)
-
-# Compute the C values for each (theta, chi)
-c_values_ghz = np.zeros((ntheta, nchi), dtype=float)
-for icirc, idx in enumerate(np.ndindex(ntheta, nchi)):
-    # This is the counts dict for the (theta, chi) pair
-    counts = result_ghz.get_counts(icirc)
-
-    ##################
-    ### EDIT BELOW ###
-    ##################
-
-    #c_values_ghz[idx] = ?
-
-    ##################
-    ### EDIT ABOVE ###
-    ##################
-
-# Making a 2D plot using imshow()
-# The theta dimension of c_values must be reversed because imshow() puts the origin at the top left corner
-plt.imshow(c_values_ghz[::-1], extent=(chis[0] - dchi, chis[-1] + dchi, thetas[0] - dtheta, thetas[-1] + dtheta))
-plt.xlabel(r'$\chi$')
-plt.ylabel(r'$\theta$')
-plt.colorbar(label='C');
-```
-
-ベル状態と明らかに違う挙動をしているのがわかります。原始的な方法ですが、計算した`c_values_ghz`から総当たりで$|S|$の最大値を計算してみましょう。
-
-```python tags=["remove-output"]
-max_abs_s = 0.
-
-# Use ndindex to iterate over all index combinations
-for ikappa, ilambda, imu, inu in np.ndindex(ntheta, nchi, ntheta, nchi):
-    abs_s = abs(c_values_ghz[ikappa, ilambda] - c_values_ghz[ikappa, inu] + c_values_ghz[imu, ilambda] + c_values_ghz[imu, inu])
-    max_abs_s = max(abs_s, max_abs_s)
-
-print(f'max |S| = {max_abs_s}')
-```
-
-量子ビットAとBに「古典的」な状態が実現しているようです。なぜでしょうか。（有限のショット数でシミュレーションをしているため、統計誤差によって$|S|$の値が微妙に2を超えてしまうかもしれません）
-
-余談ですが、この実験は量子力学における測定という行為の一つのモデルとして考えることもできます。測定装置もその装置の出力を読み取る我々も究極的には量子力学的存在なので、測定とは対象系と測定装置の間にエンタングルメントを生じさせることに他なりません。そのエンタングルメントの結果、対象系（この実験では量子ビットAB）では量子力学的な重ね合わせ状態（ベル状態）が壊れ、混合状態が生じるというわけです。
-
 <!-- #region tags=["raises-exception", "remove-output"] -->
 **提出するもの**
 
-- 完成した回路のコード（EDIT BELOW / EDIT ABOVEの間を埋める）とシミュレーション結果によるプロット
-- 実験2で、「確率1/2で$\ket{00}$、確率1/2で$\ket{11}$」という状態が作られたメカニズムの考察
+- 問題1, 2, 3において完成した回路のコード（EDIT BELOW / EDIT ABOVEの間を埋める）とシミュレーション結果によるプロット
 - おまけ（評価対象外）：実験2で、量子ビットCをどのような基底で測定しても、その結果を無視する限りにおいて$C$の値は変わらないということの証明
 - おまけ（評価対象外）：実験2で、量子ビットCをある基底で測定し、その結果が0であった時のみを考慮すると、ABにベル状態を回復することができる。そのような基底の同定と、できれば実験2のように量子回路を組んで実験1と同じプロットが得られることの確認
 <!-- #endregion -->

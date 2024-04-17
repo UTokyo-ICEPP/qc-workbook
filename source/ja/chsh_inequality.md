@@ -253,7 +253,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
 from qiskit.visualization import plot_histogram
-from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # qc_workbook is the original module written for this workbook
 # If you encounter an ImportError, edit the environment variable PYTHONPATH or sys.path
@@ -571,7 +571,7 @@ except AccountNotFoundError:
     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 ```
 
-認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。
+認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。バックエンドで回路を実行するために、Samplerというインターフェースを使います。
 
 ```{code-cell} ipython3
 ---
@@ -582,11 +582,12 @@ tags: [raises-exception, remove-output]
 ---
 # Find the backend that is operational and has the shortest job queue
 backend = service.least_busy(filters=operational_backend())
+sampler = Sampler(backend)
 
 print(f'Jobs will run on {backend.name}')
 ```
 
-回路をバックエンドに送るには、`transpile`という関数とバックエンドの`run`というメソッドを使います。`transpile`については次回{ref}`transpilation`で説明するので、今は「おまじない」だと思ってください。`run`で回路を送るとき、前述したように同時にショット数を指定します。バックエンドごとに一度のジョブでの最大ショット数が決められており、8192、30000、100000などとさまざまです。回路をバックエンドに渡し、`shots`回実行させることをジョブと呼びます。
+回路をバックエンドに送るには、`transpile`という関数とSamplerの`run`というメソッドを使います。`transpile`については次回{ref}`transpilation`で説明するので、今は「おまじない」だと思ってください。`run`で回路を送るとき、前述したように同時にショット数を指定します。バックエンドごとに一度のジョブでの最大ショット数が決められており、8192、30000、100000などとさまざまです。回路をバックエンドに渡し、`shots`回実行させることをジョブと呼びます。
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
@@ -597,7 +598,7 @@ print(f'Running four circuits, {shots} shots each')
 
 circuits = transpile(circuits, backend=backend)
 # Execute each circuit for `shots` times
-job = backend.run(circuits, shots=shots)
+job = sampler.run(circuits, shots=shots)
 ```
 
 これで回路がバックエンドに送られ、キューに入りました。ジョブの実行結果は`run`メソッドの返り値であるジョブオブジェクトから参照します。
@@ -612,7 +613,7 @@ IBMQのバックエンドは世界中からたくさんのユーザーに利用�
 
 ## 量子測定結果の解析
 
-ジョブオブジェクトの`result()`というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、それの`get_counts`というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。
+ジョブオブジェクトの`result()`というメソッドを呼ぶと、ジョブが完了して結果が帰ってくるまでコードの実行が止まります。実行結果はオブジェクトとして返され、Samplerに渡した各回路毎にインデックスされています。回路毎のデータの`get_counts`というメソッドを使うと、各ビット列が何回観測されたかというヒストグラムデータがPythonのdictとして得られます。
 
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
@@ -625,7 +626,7 @@ counts_list = []
 # Extracting the bit sequence counts from the result object
 for idx in range(4):
     # get_counts(i) returns the histogram data for circuit i
-    counts = result.get_counts(idx)
+    counts = result[idx].data.meas.get_counts()
     # Append to list
     counts_list.append(counts)
 
@@ -683,21 +684,21 @@ $c^2/2 = (s + c)^2/4 = 0.427$, $s^2/2 = (s - c)^2 / 4 = 0.073$なので、得ら
 ```{code-cell} ipython3
 # C^I, C^II, C^III, C^IVを一つのアレイにする
 #（今の場合ただのリストにしてもいいが、純粋な数字の羅列にはnumpy arrayを使うといいことが多い）
-C = np.zeros(4, dtype=float)
+c_arr = np.zeros(4, dtype=float)
 
 # enumerate(L)でリストのインデックスと対応する要素に関するループを回せる
 for ic, counts in enumerate(counts_list):
     # counts['00'] でなく counts.get('00', 0) - 上のテキストを参照
-    C[ic] = counts.get('00', 0) + counts.get('11', 0) - counts.get('01', 0) - counts.get('10', 0)
+    c_arr[ic] = counts.get('00', 0) + counts.get('11', 0) - counts.get('01', 0) - counts.get('10', 0)
 
 # 4つの要素を同時にshotsで規格化（リストではこういうことはできない）
-C /= shots
+c_arr /= shots
 
-S = C[0] - C[1] + C[2] + C[3]
+s_val = c_arr[0] - c_arr[1] + c_arr[2] + c_arr[3]
 
-print('C:', C)
-print('S =', S)
-if S > 2.:
+print('C:', c_arr)
+print('S =', s_val)
+if s_val > 2.:
     print('Yes, we are using a quantum computer!')
 else:
     print('Armonk, we have a problem.')
