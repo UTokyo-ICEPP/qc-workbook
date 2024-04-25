@@ -61,7 +61,7 @@ $$
 \end{align}
 $$
 
-まず、以下の回路$U$は計算基底$\ket{\text{in}} = \ket{xyz}$（ビットは回路の下から読む）を$\ket{\text{out}_1} = \ket{\textlbrackdbl x + y + z \textrbrackdbl (x \oplus y) (x \oplus z)}$に変換します。ここで$\textlbrackdbl x + y + z \textrbrackdbl$は$x + y + z$の2の位、つまり「繰り上がり」を表します。
+まず、以下の回路$U$は計算基底$\ket{\text{in}} = \ket{xyz}$（ビットは回路の下から読む）を$\ket{\text{out}_1} = \ket{\{ x + y + z \} (x \oplus y) (x \oplus z)}$に変換します。ここで$\{ x + y + z \}$は$x + y + z$の2の位、つまり「繰り上がり」を表します。
 
 ```{image} figs/ripple_carry_maj.png
 :alt: ripple_carry_maj
@@ -82,7 +82,7 @@ $$
 | 1 1 0 | 1 0 1 |
 | 1 1 1 | 1 0 0 |
 
-いっぽう、次の回路$V$は$\ket{\text{out}_1} = \ket{\textlbrackdbl x + y + z \textrbrackdbl (x \oplus y) (x \oplus z)}$を$\ket{\text{out}_2} = \ket{x (x \oplus y \oplus z) z}$に変換します。
+いっぽう、次の回路$V$は$\ket{\text{out}_1} = \ket{\{ x + y + z \} (x \oplus y) (x \oplus z)}$を$\ket{\text{out}_2} = \ket{x (x \oplus y \oplus z) z}$に変換します。
 
 ```{image} figs/ripple_carry_uma.png
 :alt: ripple_carry_uma
@@ -119,13 +119,13 @@ U\ket{a_0 b_0 0} = \ket{c_1 (a_0 \oplus b_0) a_0}
 $$
 を得ます。ここで
 $$
-c_1 = \textlbrackdbl a_0 + b_0 \textrbrackdbl
+c_1 = \{ a_0 + b_0 \}
 $$
 です。次に$\ket{a_1} \ket{b_1} \ket{c_1}$に$U$を作用させると
 $$
 U\ket{a_1 b_1 c_1} = \ket{c_2 (a_1 \oplus b_1) (a_1 \oplus c_1)}
 $$
-を得ます（$c_2 = \textlbrackdbl a_1 + b_1 + c_1 \textrbrackdbl$）。このように、適当な大きさのレジスタを
+を得ます（$c_2 = \{ a_1 + b_1 + c_1 \}$）。このように、適当な大きさのレジスタを
 $$
 \ket{a_{n-1} b_{n-1} a_{n-2} b_{n-2} \cdots a_0 b_0 0}
 $$
