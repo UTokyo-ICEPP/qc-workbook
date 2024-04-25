@@ -52,6 +52,7 @@ import matplotlib.pyplot as plt
 from IPython.display import Math
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
 from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import SamplerV2 as Sampler
 # qc_workbookはこのワークブック独自のモジュール（インポートエラーが出る場合はPYTHONPATHを設定するか、sys.pathをいじってください）
 from qc_workbook.show_state import statevector_expr
 
@@ -862,10 +863,12 @@ print(np.square(np.abs(np.sum(sv_psi.conjugate() * sv_phi))))
 
 ```{code-cell} ipython3
 simulator = AerSimulator()
+sampler = Sampler()
 shots = 1000000
 
 circuit = transpile(circuit, backend=simulator)
-counts = simulator.run(circuit, shots=shots).result().get_counts()
+job_result = sampler.run([circuit], shots=shots).result()
+counts = job_result[0].data.out.get_counts()
 
 print((counts['0'] - counts['1']) / shots)
 ```
@@ -890,13 +893,16 @@ P_0 = |\braket{\psi}{\phi}|^2
 
 ```{code-cell} ipython3
 reg_data = QuantumRegister(data_width, name='data')
-circuit = QuantumCircuit(reg_data)
+out = ClassicalRegister(data_width, name='out')
+
+circuit = QuantumCircuit(reg_data, out)
 
 circuit.append(phi_circuit, qargs=reg_data)
 # psi_circuit.inverse() -> psi_circuitの逆回路
 circuit.append(psi_circuit.inverse(), qargs=reg_data)
 
-circuit.measure_all()
+# 量子ビット[0, 1, 2, ...]を測定し、結果を古典ビット[0, 1, 2, ...]に書き出す
+circuit.measure(range(data_width), range(data_width))
 
 circuit.draw('mpl')
 ```
@@ -974,7 +980,8 @@ $$
 shots = 1000000
 
 circuit = transpile(circuit, backend=simulator)
-counts = simulator.run(circuit, shots=shots).result().get_counts()
+job_result = sampler.run([circuit], shots=shots).result()
+counts = job_result[0].data.out.get_counts()
 
 print(counts['000'] / shots)
 ```
