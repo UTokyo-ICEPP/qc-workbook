@@ -1,24 +1,44 @@
 name: publish
 
 # Only run this when the master branch changes
-on:
-  push:
-    branches:
-    - master
+on: workflow_dispatch
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the latest
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Build the books
       run: |
-        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.1.2 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --keep-reports
+        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang ja
+        docker run --rm --mount type=bind,src=$GITHUB_WORKSPACE,dst=/qc-workbook yiiyama/jupyterbook-qiskit:1.2.1 /qc-workbook/build-runner/build_and_publish.py --account $GITHUB_REPOSITORY_OWNER --lang en
+        mkdir _site
+        cp -r build/ja/_build/html _site/ja
+        cp -r build/en/_build/html _site/en
+        cp $GITHUB_WORKSPACE/source/common/redirections/*.html _site/
 
-    - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3.7.3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/ja/_build/html
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # 【Exercise】Finding Operations of Bit Reversing Board
@@ -30,9 +30,9 @@ Here we consider a problem of converting a given number to another using a hypot
 
 ## Problem Setup
 
-In {doc}`Grover's algorithm <grover>`, we considered the problem of finding 45 from the list containing $N=2^6$ elements ($=[0,1,2,\cdots,63]$) is considered. In this exercise, we extend this 6-qubit search problem, as follows. 
+In {doc}`Grover's algorithm <grover>`, we considered the problem of finding 45 from the list containing $N=2^6$ elements ($=[0,1,2,\cdots,63]$) is considered. In this exercise, we extend this 6-qubit search problem, as follows.
 
-We have a board in our hand, and we write down a number in binary format. For example, 45 is written as $101101(=45)$ in the board with 6 slots. 
+We have a board in our hand, and we write down a number in binary format. For example, 45 is written as $101101(=45)$ in the board with 6 slots.
 
 ```{image} figs/grover_kadai1.png
 :alt: grover_kadai1
@@ -70,8 +70,8 @@ There are many approaches to tackle the problem, but we can consider a quantum c
 You could try the followings using this circuit:
 
 1. Set 45 as an initial state on the board register.
-2. Create the superposition of *all possible patterns of pushing down the 6 qubits* in the flip register for a 6-bit number problem. 
-3. Implement quantum gates to reverse bits in the board register for individual bit operations. 
+2. Create the superposition of *all possible patterns of pushing down the 6 qubits* in the flip register for a 6-bit number problem.
+3. Implement quantum gates to reverse bits in the board register for individual bit operations.
 4. Construct unitary to flip phase of the oracle register when the number on the board register is what we want.
 
 ```{code-cell} ipython3
@@ -134,7 +134,7 @@ qc = QuantumCircuit(board, flip, oracle, result)
 ##################
 ```
 
-Run the code using simulator and check the result. Among the results of bit sequences, those with 10 highest occurrences are displayed below as the final score.  
+Run the code using simulator and check the result. Among the results of bit sequences, those with 10 highest occurrences are displayed below as the final score.
 
 ```{code-cell} ipython3
 ---

@@ -3,6 +3,7 @@
 from typing import Callable, Optional, Union, Tuple
 import collections
 import numpy as np
+from qiskit_ibm_runtime.api.exceptions import RequestsApiError
 
 def operational_backend(
     min_qubits: int = 0,
@@ -33,10 +34,14 @@ def operational_backend(
     """
 
     def backend_filter(backend):
-        if not backend.status().operational:
+        try:
+            status = backend.status()
+            config = backend.configuration()
+        except RequestsApiError:
             return False
 
-        config = backend.configuration()
+        if not status.operational:
+            return False
 
         if config.simulator:
             return False
@@ -106,11 +111,13 @@ def find_best_chain(
     # Find the chain with the smallest error (CX and readout) product
     prop = backend.properties()
 
+    entangling_gate = next(g.name for g in backend.gates if g.name in ['cx', 'ecr'])
+
     min_log_gate_error = 0.
     min_log_readout_error = 0.
     best_chain = None
     for chain in chains:
-        log_gate_error = sum(np.log(prop.gate_error('cx', [q1, q2])) for q1, q2 in zip(chain[:-1], chain[1:]))
+        log_gate_error = sum(np.log(prop.gate_error(entangling_gate, [q1, q2])) for q1, q2 in zip(chain[:-1], chain[1:]))
         log_readout_error = sum(np.log(prop.readout_error(q)) for q in chain)
 
         if log_gate_error + log_readout_error < min_log_gate_error + min_log_readout_error:

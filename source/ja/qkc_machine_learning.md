@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,10 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 # 【課題】量子カーネルを使った新現象の分類
 
@@ -230,6 +230,11 @@ $$
 データセットの準備は同じです。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -248,12 +253,15 @@ from qiskit_machine_learning.kernels import FidelityQuantumKernel
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # ファイルから変数を読み出す
 df = pd.read_csv("data/SUSY_1K.csv",
@@ -300,7 +308,7 @@ norm_train_data = mms.fit_transform(train_data)
 norm_test_data = mms.transform(test_data)
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (problem1)=
 ### 問題1
@@ -311,12 +319,15 @@ norm_test_data = mms.transform(test_data)
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 ##################
 ### EDIT BELOW ###
@@ -333,7 +344,7 @@ feature_map = QuantumCircuit(num_qubits)
 ##################
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (problem2)=
 ### 問題2
@@ -369,12 +380,15 @@ new_circuit = circuit.assign_parameters(bind_params, inplace=False)
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 manual_kernel = QuantumCircuit(feature_map.num_qubits)
 
@@ -389,18 +403,21 @@ manual_kernel = QuantumCircuit(feature_map.num_qubits)
 manual_kernel.measure_all()
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 作った量子回路をシミュレータで実行して、全ての量子ビットで0を測定する確率$|\langle0^{\otimes n}|U_{\text{in}}^\dagger(x_1)U_{\text{in}}(x_0)|0^{\otimes n}\rangle|^2$を計算します。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 sampler = Sampler()
@@ -413,16 +430,21 @@ fidelity = job.result().quasi_dists[0].get(0, 0.)
 print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 次に同じことを`FidelityQuantumKernel`クラスを利用して行います。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 # FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
@@ -437,18 +459,21 @@ qc_circuit = q_kernel.fidelity.create_fidelity_circuit(feature_map_0, feature_ma
 qc_circuit.decompose().decompose().draw('mpl')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
++++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"], "editable": true, "slideshow": {"slide_type": ""}}
 
 `FidelityQuantumKernel`を使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 matrix_train = q_kernel.evaluate(x_vec=norm_train_data)
@@ -462,18 +487,21 @@ axs[1].set_title("validation kernel matrix")
 plt.show()
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
++++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"], "editable": true, "slideshow": {"slide_type": ""}}
 
 最後に、sklearnパッケージに実装されているサポートベクターマシンを使って分類を行います。量子回路学習の場合と同様に、データサイズや特徴量マップを変えるなどして分類精度がどう変わるか調べてみてください。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
@@ -486,7 +514,7 @@ print(f'Precomputed kernel: Classification Train score: {train_score*100}%')
 print(f'Precomputed kernel: Classification Test score:  {test_score*100}%')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"]}
++++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"], "editable": true, "slideshow": {"slide_type": ""}}
 
 **提出するもの**
 - 選んだ特徴量マップの説明とそのコード（問題１）

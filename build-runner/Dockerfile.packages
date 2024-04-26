@@ -3,17 +3,10 @@ FROM ubuntu:latest
 RUN apt-get -y update && \
     apt-get install -y python3 python3-venv python3-pip git
 
-# First line: jupyter-book installs a bunch of dependencies and some have
-# superficially conflicting version requirements. Conflict occurs because
-# pip does not perform a full dependency resolution and can be resolved
-# by installing the specific versions of the packages in the first line.
-RUN pip3 install --no-cache-dir mdit-py-plugins==0.3.5 docutils==0.17.1 pydata-sphinx-theme==0.13.1 && \
-    pip3 install --no-cache-dir setuptools==67.6.1 && \
-    pip3 install --no-cache-dir qiskit==0.42.1 qiskit-ibm-runtime==0.9.1 qiskit-ibm-provider==0.4.0 qiskit-optimization==0.5.0 qiskit-machine-learning==0.6.0 qiskit-experiments==0.5.0 qiskit-nature==0.5.2 && \
-    pip3 install --no-cache-dir matplotlib==3.7.1 pylatexenc==2.10 plotly==5.14.1 && \
-    pip3 install --no-cache-dir pandas==1.5.3 && \
-    pip3 install --no-cache-dir scikit-learn==1.2.2 && \
-    pip3 install --no-cache-dir jupyter-book==0.15.1 tabulate==0.9.0
+RUN pip3 install --no-cache-dir qiskit==1.0.0 qiskit-aer==0.13.3 qiskit-ibm-runtime==0.19.1 qiskit-experiments==0.6.0 qiskit-machine-learning==0.7.1 qiskit-nature==0.7.1 qiskit-optimization==0.6.0 && \
+    pip3 install --no-cache-dir matplotlib==3.8.3 pylatexenc==2.10 plotly==5.19.0 && \
+    pip3 install --no-cache-dir pandas==2.2.0 && \
+    pip3 install --no-cache-dir jupyter-book==1.0.0 tabulate==0.9.0
 
 # The next two blocks are libraries required at runtime (not build time) only, so they are not needed in principle
 # (Cells using these libraries are tagged as "throws-exception")

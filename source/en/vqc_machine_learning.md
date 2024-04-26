@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 varInspector:
   cols:
     lenName: 16
@@ -40,11 +40,13 @@ varInspector:
   window_display: false
 ---
 
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
+
 # Search for New Physics with Quantum Machine Learning
 
 +++
 
-In this exercise, we will first learn the basics of **Quantum Machine Learning** (QML), which is a typical application of quantum-classical hybrid algorithm. After that, we will explore, as an example, application of quantum machine learning to **search for new particles in particle physics experiment**. The QML technique that we learn here is called **Quantum Circuit Learning** (QCL) {cite}`quantum_circuit_learning` developed as an extension of Variational Quantum Algorithm. 
+In this exercise, we will first learn the basics of **Quantum Machine Learning** (QML), which is a typical application of quantum-classical hybrid algorithm. After that, we will explore, as an example, application of quantum machine learning to **search for new particles in particle physics experiment**. The QML technique that we learn here is called **Quantum Circuit Learning** (QCL) {cite}`quantum_circuit_learning` developed as an extension of Variational Quantum Algorithm.
 
 ```{contents} Contents
 ---
@@ -59,11 +61,11 @@ $\newcommand{\expval}[3]{\langle #1 | #2 | #3 \rangle}$
 
 ## Introduction <a id='introduction'></a>
 
-In recent years, **Deep Learning** (DL) has gained considerable attention in the field of machine learning (ML). A generic deep learning model uses multiple hidden layers in the architecture of **neural networks** (NN)) and attempts to learn complex relationship between 
-input and output. The successfully learned DL model is capable of predicting outout for unseen input data. The QML algorithm that we study in this unit is based on a variational quantum circuit that replaces neural network in a ML model. In other words, instead of adjusting trainable parameters for each neuron in neural networks, the QML model learns the input-output relation by adjusting the parameters of variational quantum circuit such as angles of rotation gates. 
-A strength of quantum computer lies in the fact that it can represent exponentially large Hilbert space using finite number of qubits. If we can leverage this strength, the QML might be able to learn complex, high-dimensional correlations between data, providing a unique strength compared to conventional classical ML. 
+In recent years, **Deep Learning** (DL) has gained considerable attention in the field of machine learning (ML). A generic deep learning model uses multiple hidden layers in the architecture of **neural networks** (NN)) and attempts to learn complex relationship between
+input and output. The successfully learned DL model is capable of predicting outout for unseen input data. The QML algorithm that we study in this unit is based on a variational quantum circuit that replaces neural network in a ML model. In other words, instead of adjusting trainable parameters for each neuron in neural networks, the QML model learns the input-output relation by adjusting the parameters of variational quantum circuit such as angles of rotation gates.
+A strength of quantum computer lies in the fact that it can represent exponentially large Hilbert space using finite number of qubits. If we can leverage this strength, the QML might be able to learn complex, high-dimensional correlations between data, providing a unique strength compared to conventional classical ML.
 
-The QML model is in general capable of representing wide range of functions using a polynomial number of quantum gates if the circuit is sufficiently deep. However, the QML in quantum-classical hybrid architecture is essentially heuristic and has no mathematical guarantee that it is superior to classical ML in terms of computational complexity (except for specific cases). In particular, in the era of *Noisy Intermediate-Scale Quantum* (NISQ) computer with hardware noise, it is not clear whether the QML has any advantage over classical ML, and therefore it is an active area of research. Since the quantum-classical hybrid QML is suitable for NISQ computer, an early QCL algorithm was implemented into IBM Quantum hardware by IBM team in March 2019, and the result was published in a paper{cite}`quantum_svm`. 
+The QML model is in general capable of representing wide range of functions using a polynomial number of quantum gates if the circuit is sufficiently deep. However, the QML in quantum-classical hybrid architecture is essentially heuristic and has no mathematical guarantee that it is superior to classical ML in terms of computational complexity (except for specific cases). In particular, in the era of *Noisy Intermediate-Scale Quantum* (NISQ) computer with hardware noise, it is not clear whether the QML has any advantage over classical ML, and therefore it is an active area of research. Since the quantum-classical hybrid QML is suitable for NISQ computer, an early QCL algorithm was implemented into IBM Quantum hardware by IBM team in March 2019, and the result was published in a paper{cite}`quantum_svm`.
 
 +++
 
@@ -79,7 +81,7 @@ One of the most popular methods to approximate the function $f$ is to use artifi
 :align: center
 ```
 
-Let us look at the mathematical model of neural networks. Denoting the $j$-th unit in the $l$-th layer as $u_j^l$, if the $u_j^l$ takes $n$ inputs $o_k^{l-1}$ ($k=1,2,\cdots n$) from the units in the preceding $(l-1)$-th layer, the output from the unit $u_j^l$ is expressed as follows by applying weights $w_k^j$ to the inputs $o_k^{l-1}$: 
+Let us look at the mathematical model of neural networks. Denoting the $j$-th unit in the $l$-th layer as $u_j^l$, if the $u_j^l$ takes $n$ inputs $o_k^{l-1}$ ($k=1,2,\cdots n$) from the units in the preceding $(l-1)$-th layer, the output from the unit $u_j^l$ is expressed as follows by applying weights $w_k^j$ to the inputs $o_k^{l-1}$:
 
 $$
 o_j^l=g\left(\sum_{k=1}^n o_k^{l-1}w_k^l\right)
@@ -101,7 +103,7 @@ $$
 L(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^N L(f(x_i,\mathbf{w}),y_i)
 $$
 
-Here $N$ is the number of $(x_i, y_i)$ data points. We want to determine the parameter $\mathbf{w}^*$ that minimizes the loss function $L(\mathbf{w})$, and this can be done using the method called gradient descent. 
+Here $N$ is the number of $(x_i, y_i)$ data points. We want to determine the parameter $\mathbf{w}^*$ that minimizes the loss function $L(\mathbf{w})$, and this can be done using the method called gradient descent.
 In the gradient descent method, one attempts to calculate the partial derivative of the loss function, $\Delta_w L(\mathbf{w})$, for each parameter $w$ and update the parameter so that the loss function "decreases" as follows:
 
 $$
@@ -116,14 +118,14 @@ where $w$ and $w'$ are parameters before and after being updated, respectively. 
 
 The QML algorithm based on variational quantum circuit generally takes the following steps to construct learning model, implement it into a quantum circuit and execute: ed to perform computation.
 
-1. Prepare the training data $\{(\mathbf{x}_i, y_i)\}$. The $\mathbf{x}_i$ is the input data vector and $y_i$ is the true value of the input data (e.g, teacher label) ($i$ stands for the index of training data sample). 
-2. Create a circuit $U_{\text{in}}(\mathbf{x})$ (called **feature map**) to encode the input data $\mathbf{x}$, then producing the input state $\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}$, in which the $\mathbf{x}_i$ information is embedded. 
-3. Generate the output state $\ket{\psi_{\text{out}}(\mathbf{x}i,\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{\psi{\text{in}}(\mathbf{x}_i)}$ by applying a parametrized unitary $U(\boldsymbol{\theta})$ (**variational form**) with parameter $\boldsymbol{\theta}$. 
-4. Measure some **observable** under the output state and get the measurement outcome $O$. For example, consider the expectation value of a Pauli $Z$ operator for the first qubit, $\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}$. 
-5. Introduce some function $F$ and obtain $F(O)$ as the model output $y(\mathbf{x}_i,\boldsymbol{\theta})$. 
+1. Prepare the training data $\{(\mathbf{x}_i, y_i)\}$. The $\mathbf{x}_i$ is the input data vector and $y_i$ is the true value of the input data (e.g, teacher label) ($i$ stands for the index of training data sample).
+2. Create a circuit $U_{\text{in}}(\mathbf{x})$ (called **feature map**) to encode the input data $\mathbf{x}$, then producing the input state $\ket{\psi_{\text{in}}(\mathbf{x}_i)} = U_{\text{in}}(\mathbf{x}_i)\ket{0}$, in which the $\mathbf{x}_i$ information is embedded.
+3. Generate the output state $\ket{\psi_{\text{out}}(\mathbf{x}i,\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{\psi{\text{in}}(\mathbf{x}_i)}$ by applying a parametrized unitary $U(\boldsymbol{\theta})$ (**variational form**) with parameter $\boldsymbol{\theta}$.
+4. Measure some **observable** under the output state and get the measurement outcome $O$. For example, consider the expectation value of a Pauli $Z$ operator for the first qubit, $\langle Z_1\rangle = \expval{\psi_{\text{out}}}{Z_1}{\psi_{\text{out}}}$.
+5. Introduce some function $F$ and obtain $F(O)$ as the model output $y(\mathbf{x}_i,\boldsymbol{\theta})$.
 6. Define a **cost function** $L(\boldsymbol{\theta})$ to quantify the gap between the true value $y_i$ and the output $y(\mathbf{x}_i,\boldsymbol{\theta})$ and calculate it using a classical computer.
 7. Update the parameter $\boldsymbol{\theta}$ so that the $L(\boldsymbol{\theta})$ gets smaller.
-8. Repeat steps 3 through 7 to minimize the cost function and obtain the optimized parameter $\boldsymbol{\theta^*}$. 
+8. Repeat steps 3 through 7 to minimize the cost function and obtain the optimized parameter $\boldsymbol{\theta^*}$.
 9. Obtain the **prediction of the model** as $y(\mathbf{x},\boldsymbol{\theta^*})$ after training.
 
 ```{image} figs/var_circuit.png
@@ -157,7 +159,7 @@ from qiskit.primitives import Estimator, Sampler
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_machine_learning.algorithms.classifiers import VQC
 #from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
-from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_algorithms.optimizers import SPSA, COBYLA
 from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 ```
@@ -218,12 +220,16 @@ By applying the $U_{\text{in}}(x_i)$ to the standard zero state, the input data 
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
+tags: [remove-input, remove-output]
 ---
 u_in = QuantumCircuit(nqubit, name='U_in')
 x = Parameter('x')
@@ -234,8 +240,10 @@ for iq in range(nqubit):
     # Similarly for arccos
     u_in.rz((x * x).arccos(), iq)
 
-u_in.bind_parameters({x: x_train[0]}).draw('mpl')
+u_in.assign_parameters({x: x_train[0]}, inplace=False).draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 ### Tranforming State using Variational Form<a id='func_variational_form'></a>
 
@@ -251,7 +259,7 @@ Next, we will create the variational quantum circuit $U(\boldsymbol{\theta})$ to
 We will use controlled-$Z$ gates ($CZ$) to entangle qubits, increasing the expressibility of the circuit model.
 
 #### Rotation Gate and $U(\boldsymbol{\theta})$
-Using entangling gates $U_{\text{ent}}$ of $CZ$ and single-qubit rotation gates on $j$-th qubit ($j \:(=1,2,\cdots n)$) in the $l$-th layer, 
+Using entangling gates $U_{\text{ent}}$ of $CZ$ and single-qubit rotation gates on $j$-th qubit ($j \:(=1,2,\cdots n)$) in the $l$-th layer,
 
 $$
 U_{\text{rot}}(\theta_j^l) = R_j^Y(\theta_{j3}^l)R_j^Z(\theta_{j2}^l)R_j^Y(\theta_{j1}^l)
@@ -310,12 +318,12 @@ print(f'{len(theta)} parameters')
 
 theta_vals = rng.uniform(0., 2. * np.pi, size=len(theta))
 
-u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
+u_out.assign_parameters(dict(zip(theta, theta_vals)), inplace=False).draw('mpl')
 ```
 
 ### Measurement and Model Output<a id='func_measurement'></a>
 
-As an output of the model (prediction value), we take the expectation value of Pauli $Z$ operator on the first qubit under the state $\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$. 
+As an output of the model (prediction value), we take the expectation value of Pauli $Z$ operator on the first qubit under the state $\ket{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}=U(\boldsymbol{\theta})\ket{\psi_{\text{in}}(\mathbf{x})}$.
 That means y(\mathbf{x},\boldsymbol{\theta}) = \langle Z_0(\mathbf{x},\boldsymbol{\theta}) \rangle = \expval{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}{Z_0}{\psi_{\text{out}}(\mathbf{x},\boldsymbol{\theta})}$.
 
 ```{code-cell} ipython3
@@ -335,7 +343,7 @@ model.compose(u_out, inplace=True)
 bind_params = dict(zip(theta, theta_vals))
 bind_params[x] = x_train[0]
 
-model.bind_parameters(bind_params).draw('mpl')
+model.assign_parameters(bind_params, inplace=False).draw('mpl')
 ```
 
 ```{code-cell} ipython3
@@ -352,7 +360,7 @@ estimator = Estimator()
 def yvals(param_vals, x_vals=x_train):
     circuits = list()
     for x_val in x_vals:
-        circuits.append(model.bind_parameters({x: x_val}))
+        circuits.append(model.assign_parameters({x: x_val}, inplace=False))
 
     # Observable = IIZ (the first qubit from right is 0-th qubit)
     observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
@@ -379,12 +387,15 @@ Let us execute the circuit and check the results.
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # Maximum number of steps in COBYLA
 maxiter = 50
@@ -393,13 +404,16 @@ tol = 0.05
 # Number of shots in the backend
 shots = 1000
 
-
 optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # Cell for text
 import os
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -408,17 +422,20 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
-tags: [raises-exception, remove-output]
+slideshow:
+  slide_type: ''
+tags: [remove-output, raises-exception]
 ---
 initial_params = rng.uniform(0., 2. * np.pi, size=len(theta))
 
-losses = list()
+losses = []
 min_result = optimizer.minimize(objective_function, initial_params)
 ```
 
@@ -442,7 +459,7 @@ plt.plot(losses)
 
 +++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}}
 
-Check the output of the trained model with optimized parameters and the inputs taken uniformly between x_min and x_max. 
+Check the output of the trained model with optimized parameters and the inputs taken uniformly between x_min and x_max.
 
 ```{code-cell} ipython3
 ---
@@ -531,9 +548,9 @@ df_sig_train = df_sig.values[:train_size]
 df_bkg_train = df_bkg.values[:train_size]
 df_sig_test = df_sig.values[train_size:train_size + test_size]
 df_bkg_test = df_bkg.values[train_size:train_size + test_size]
-# The first (last) train_size events correspond to signal (background) events that (do not) contain SUSY particles 
+# The first (last) train_size events correspond to signal (background) events that (do not) contain SUSY particles
 train_data = np.concatenate([df_sig_train, df_bkg_train])
-# The first (last) test_size events correspond to signal (background) events that (do not) contain SUSY particles 
+# The first (last) test_size events correspond to signal (background) events that (do not) contain SUSY particles
 test_data = np.concatenate([df_sig_test, df_bkg_test])
 
 # one-hot vector
@@ -567,19 +584,19 @@ $$
 U_{\phi_{\{l,m\}}}(\mathbf{x}_i)=\exp\left(i\phi_{\{l,m\}}(\mathbf{x}_i)Z_lZ_m\right)
 $$
 
-where $k$, $l$ and $m$ are the indices of elements of an input vector $\mathbf{x}_i$. 
-These feature maps are called Z feature map and ZZ feature map, respectively. Here $\phi_{\{k\}}$ and $\phi{\{l,m\}}$ are defined as $\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}$ and $\phi{\{l,m\}}(\mathbf{x}_i)=(\pi-x_i^{(l)})(\pi-x_i^{(m)})$, respectively, 
-with $x_i^{k(l,m)}$ being the $k$ ($l$, $m$)-th element of $\mathbf{x}_i$, and are used to encode input data. 
+where $k$, $l$ and $m$ are the indices of elements of an input vector $\mathbf{x}_i$.
+These feature maps are called Z feature map and ZZ feature map, respectively. Here $\phi_{\{k\}}$ and $\phi{\{l,m\}}$ are defined as $\phi_{\{k\}}(\mathbf{x}_i)=x_i^{(k)}$ and $\phi{\{l,m\}}(\mathbf{x}_i)=(\pi-x_i^{(l)})(\pi-x_i^{(m)})$, respectively,
+with $x_i^{k(l,m)}$ being the $k$ ($l$, $m$)-th element of $\mathbf{x}_i$, and are used to encode input data.
 The Z feature map embeds each element of the input data directly into qubits (i.e, $\phi_{\{k\}}(\mathbf{x}_i)$ uses one qubit per input). The ZZ feature map often includes Z feature map in practice, therefore the $\phi{\{l,m\}}(\mathbf{x}_i)$ embeds the input data in a cyclic manner by using the same number of qubits as used for the $\phi_{\{k\}}(\mathbf{x}_i)$.
 Since the ZZ feature map uses 2-qubit entangling gates, it is generally considered to be difficult to simulate the encoding of the ZZ feature map classically.
 
-By combining U_\phi(\mathbf{x}_i)$ with Hadamard gates, the Z feature map is given as 
+By combining U_\phi(\mathbf{x}_i)$ with Hadamard gates, the Z feature map is given as
 
 $$
 U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
 $$
 
-The ZZ feature map is 
+The ZZ feature map is
 
 $$
 U_{\text{in}}(\mathbf{x}_i) = U_{\phi}(\mathbf{x}_i)H^{\otimes n},\:\:U_{\phi}(\mathbf{x}_i) = \exp\left(i\sum_{k=1}^n(\pi-x_i^{(k)})(\pi-x_i^{(k\%n+1)})Z_kZ_{k\%n+1}\right)\exp\left(i\sum_{k=1}^nx_i^{(k)}Z_k\right)
@@ -630,7 +647,6 @@ ansatz.decompose().draw('mpl')
 The measurement of quantum states, parameter optimization and the definition of the cost function are also largely the same as those used for the example above. Since we will use VQC class in Qiskit API, the program itself is greatly simplified.
 
 In vhe VQC class, all the steps described above, i.e, creation of feature map and variational form, substituting input data and parameter values, measuring the generated state, calculating the objective function and updating the parameters, are done internally. The measurement is performed using the Sampler class. The function of this class is similar to the Estimator class, but there is a difference: the latter computes the expectation value of an observable, but the former calculates the probability distribution of bit-strings obtained by measuring all the qubits in $Z$ basis. The VQC uses htis distribution for the classification task. What we deal here is two class classification, so the probability of measuring 0 on the first qubit for each input event corresponds to the probability of this event to be signal (model prediction).
-
 
 ```{code-cell} ipython3
 ---

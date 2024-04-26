@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 varInspector:
   cols:
     lenName: 16
@@ -39,6 +39,8 @@ varInspector:
   types_to_exclude: [module, function, builtin_function_or_method, instance, _Feature]
   window_display: false
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}, "tags": ["remove-input", "remove-output"]}
 
 # 量子機械学習を使った新しい素粒子現象の探索
 
@@ -136,12 +138,15 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -156,10 +161,12 @@ from qiskit.primitives import Estimator, Sampler
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_machine_learning.algorithms.classifiers import VQC
 #from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
-from qiskit.algorithms.optimizers import SPSA, COBYLA
+from qiskit_algorithms.optimizers import SPSA, COBYLA
 from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 初歩的な例<a id='example'></a>
 
@@ -171,12 +178,15 @@ from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 random_seed = 0
 rng = np.random.default_rng(random_seed)
@@ -205,6 +215,8 @@ x_validation = rng.uniform(x_min, x_max, size=num_x_validation)
 y_validation = func_to_learn(x_validation) + rng.normal(0., mag_noise, size=num_x_validation)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 ### 量子状態の生成<a id='func_state_preparation'></a>
 
 次に、入力$x_i$を初期状態$\ket{0}^{\otimes n}$に埋め込むための回路$U_{\text{in}}(x_i)$（特徴量マップ）を作成します。まず参考文献{cite}`quantum_circuit_learning`に従い、回転ゲート$R_j^Y(\theta)=e^{-i\theta Y_j/2}$と$R_j^Z(\theta)=e^{-i\theta Z_j/2}$を使って
@@ -217,12 +229,16 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
+tags: [remove-input, remove-output]
 ---
 u_in = QuantumCircuit(nqubit, name='U_in')
 x = Parameter('x')
@@ -233,8 +249,10 @@ for iq in range(nqubit):
     # arccosも同様
     u_in.rz((x * x).arccos(), iq)
 
-u_in.bind_parameters({x: x_train[0]}).draw('mpl')
+u_in.assign_parameters({x: x_train[0]}, inplace=False).draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 変分フォームを使った状態変換<a id='func_variational_form'></a>
 
@@ -265,12 +283,16 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
+tags: [remove-input, remove-output]
 ---
 u_out = QuantumCircuit(nqubit, name='U_out')
 
@@ -308,8 +330,10 @@ print(f'{len(theta)} parameters')
 
 theta_vals = rng.uniform(0., 2. * np.pi, size=len(theta))
 
-u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
+u_out.assign_parameters(dict(zip(theta, theta_vals)), inplace=False).draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 測定とモデル出力<a id='func_measurement'></a>
 
@@ -317,12 +341,15 @@ u_out.bind_parameters(dict(zip(theta, theta_vals))).draw('mpl')
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 model = QuantumCircuit(nqubit, name='model')
 
@@ -332,25 +359,28 @@ model.compose(u_out, inplace=True)
 bind_params = dict(zip(theta, theta_vals))
 bind_params[x] = x_train[0]
 
-model.bind_parameters(bind_params).draw('mpl')
+model.assign_parameters(bind_params, inplace=False).draw('mpl')
 ```
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
 estimator = Estimator()
 
 # 与えられたパラメータの値とxの値に対してyの値を計算する
 def yvals(param_vals, x_vals=x_train):
-    circuits = list()
+    circuits = []
     for x_val in x_vals:
         # xだけ数値が代入された変分回路
-        circuits.append(model.bind_parameters({x: x_val}))
+        circuits.append(model.assign_parameters({x: x_val}, inplace=False))
 
     # 観測量はIIZ（右端が第0量子ビット）
     observable = SparsePauliOp('I' * (nqubit - 1) + 'Z')
@@ -371,18 +401,23 @@ def callback_function(param_vals):
         print(f'COBYLA iteration {len(losses)}: cost={losses[-1]}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 コスト関数$L$として、モデルの予測値$y(x_i, \theta)$と真の値$y_i$の平均2乗誤差の総和を使っています。
 
 では、最後にこの回路を実行して、結果を見てみましょう。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # COBYLAの最大ステップ数
 maxiter = 50
@@ -395,8 +430,12 @@ optimizer = COBYLA(maxiter=maxiter, tol=tol, callback=callback_function)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル - わざと次のセルでエラーを起こさせる
 import os
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -405,23 +444,30 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 initial_params = rng.uniform(0., 2. * np.pi, size=len(theta))
 
-losses = list()
+losses = []
 min_result = optimizer.minimize(objective_function, initial_params)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセルなので無視してよい
 
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
@@ -431,24 +477,34 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
         min_result, losses = pickle.load(source)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 コスト値の推移をプロットします。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 plt.plot(losses)
 ```
 
-+++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}}
++++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 最適パラメータ値でのモデルの出力値をx_minからx_maxまで均一にとった100点で確認します。
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 x_list = np.linspace(x_min, x_max, 100)
 
@@ -460,6 +516,8 @@ plt.plot(x_list, func_to_learn(x_list), label='Original Function')
 plt.plot(x_list, np.array(y_pred), label='Predicted Function')
 plt.legend();
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 生成された図を確認してください。ノイズを印加した学習データの分布から、元の関数$f(x)=x^3$をおおよそ導き出せていることが分かると思います。
 
@@ -492,12 +550,15 @@ plt.legend();
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # ファイルから変数を読み出す
 df = pd.read_csv("data/SUSY_1K.csv",
@@ -550,7 +611,7 @@ norm_train_data = mms.fit_transform(train_data)
 norm_test_data = mms.transform(test_data)
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 ### 量子状態の生成<a id='susy_state_preparation'></a>
 
@@ -584,17 +645,22 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 #feature_map = ZFeatureMap(feature_dimension=feature_dim, reps=1)
 feature_map = ZZFeatureMap(feature_dimension=feature_dim, reps=1, entanglement='circular')
 feature_map.decompose().draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 変分フォームを使った状態変換<a id='susy_variational_form'></a>
 
@@ -608,17 +674,22 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry', 'rz'], entanglement_blocks='cz', entanglement='circular', reps=3)
 #ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry'], entanglement_blocks='cz', entanglement='circular', reps=3)
 ansatz.decompose().draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ### 測定とモデル出力<a id='susy_measurement'></a>
 
@@ -628,12 +699,15 @@ VQCクラスでは、特徴量マップと変分フォームを結合させ、�
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-output]
 ---
 # 上のEstimatorと同じく、バックエンドを使わずシミュレーションを簡略化したSampler
@@ -680,8 +754,12 @@ vqc = VQC(num_qubits=feature_dim,
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセル - わざと次のセルでエラーを起こさせる
 if os.getenv('JUPYTERBOOK_BUILD') == '1':
     del objective_func_vals
@@ -689,12 +767,15 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
 vqc.fit(norm_train_data, train_label_one_hot)
@@ -704,11 +785,13 @@ vqc.fit(norm_train_data, train_label_one_hot)
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+---
 # テキスト作成用のセルなので無視してよい
-with open('data/vqc_machine_learning_susycost.pkl', 'rb') as source:
-    fig = pickle.load(source)
 
 with open('data/vqc_machine_learning_susyresult.pkl', 'rb') as source:
     vqc._fit_result = pickle.load(source)
@@ -725,12 +808,15 @@ print('''   Return from subroutine COBYLA because the MAXFUN limit has been reac
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 train_score = vqc.score(norm_train_data, train_label_one_hot)
 test_score = vqc.score(norm_test_data, test_label_one_hot)
@@ -739,7 +825,7 @@ print(f'--- Classification Train score: {train_score} ---')
 print(f'--- Classification Test score:  {test_score} ---')
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 この結果を見てどう思うでしょうか？機械学習を知っている方であれば、この結果はあまり良いようには見えませんね。。訓練用のデータでは学習ができている、つまり信号とバックグラウンドの選別ができていますが、テスト用のサンプルでは選別性能が悪くなっています。これは「過学習」を起こしている場合に見られる典型的な症状で、訓練データのサイズに対して学習パラメータの数が多すぎるときによく起こります。
 

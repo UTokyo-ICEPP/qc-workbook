@@ -6,7 +6,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -20,10 +20,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
-# 【課題】アダマールテスト
+# 【課題】関数の実装とアダマールテスト
 
 ```{contents} 目次
 ---
@@ -42,12 +42,185 @@ import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import SamplerV2 as Sampler
 from qiskit.visualization import plot_histogram
 
 print('notebook ready')
 ```
 
-## 問題1: アダマールテストで状態ベクトルを同定する
+## 問題1: 足し算回路
+
+実習で単純な関数を実装する量子回路を書きました。その続きとしてripple-carry adderという足し算回路を書いてみましょう。まず、バイナリ値（0か1）$x$と$y$の2を法とする足し算を$x \oplus y$と表します。
+
+$$
+\begin{align}
+0 \oplus 0 = 0 \\
+0 \oplus 1 = 1 \\
+1 \oplus 0 = 1 \\
+1 \oplus 1 = 0
+\end{align}
+$$
+
+まず、以下の回路$U$は計算基底$\ket{\text{in}} = \ket{xyz}$（ビットは回路の下から読む）を$\ket{\text{out}_1} = \ket{\{ x + y + z \} (x \oplus y) (x \oplus z)}$に変換します。ここで$\{ x + y + z \}$は$x + y + z$の2の位、つまり「繰り上がり」を表します。
+
+```{image} figs/ripple_carry_maj.png
+:alt: ripple_carry_maj
+:width: 300px
+:align: center
+```
+
+参考までに、それぞれの$\ket{xyz}$の変換先をあらわに書いた「真理値表」は以下のようになります。
+
+| in    | out1  |
+|-------|-------|
+| 0 0 0 | 0 0 0 |
+| 0 0 1 | 0 0 1 |
+| 0 1 0 | 0 1 0 |
+| 0 1 1 | 1 1 1 |
+| 1 0 0 | 0 1 1 |
+| 1 0 1 | 1 1 0 |
+| 1 1 0 | 1 0 1 |
+| 1 1 1 | 1 0 0 |
+
+いっぽう、次の回路$V$は$\ket{\text{out}_1} = \ket{\{ x + y + z \} (x \oplus y) (x \oplus z)}$を$\ket{\text{out}_2} = \ket{x (x \oplus y \oplus z) z}$に変換します。
+
+```{image} figs/ripple_carry_uma.png
+:alt: ripple_carry_uma
+:width: 300px
+:align: center
+```
+
+回路$U$と$V$を直列に繋いだ場合の真理値表は以下の通りです。
+
+| in    | out1  | out2  |
+|-------|-------|-------|
+| 0 0 0 | 0 0 0 | 0 0 0 |
+| 0 0 1 | 0 0 1 | 0 1 1 |
+| 0 1 0 | 0 1 0 | 0 1 0 |
+| 0 1 1 | 1 1 1 | 0 0 1 |
+| 1 0 0 | 0 1 1 | 1 1 0 |
+| 1 0 1 | 1 1 0 | 1 0 1 |
+| 1 1 0 | 1 0 1 | 1 0 0 |
+| 1 1 1 | 1 0 0 | 1 1 1 |
+
+さて、整数$a$と$b$が二進数で$a_{n-1} \cdots a_0$, $b_{n-1} \cdots b_0$と書き表せる、つまり
+
+$$
+\begin{align}
+a & = \sum_{j=0}^{n-1} a_j 2^j \\
+b & = \sum_{j=0}^{n-1} b_j 2^j
+\end{align}
+$$
+
+とします。このとき、状態$\ket{a_0 b_0 0}$に$U$を作用させると
+
+$$
+U\ket{a_0 b_0 0} = \ket{c_1 (a_0 \oplus b_0) a_0}
+$$
+を得ます。ここで
+$$
+c_1 = \{ a_0 + b_0 \}
+$$
+です。次に$\ket{a_1} \ket{b_1} \ket{c_1}$に$U$を作用させると
+$$
+U\ket{a_1 b_1 c_1} = \ket{c_2 (a_1 \oplus b_1) (a_1 \oplus c_1)}
+$$
+を得ます（$c_2 = \{ a_1 + b_1 + c_1 \}$）。このように、適当な大きさのレジスタを
+$$
+\ket{a_{n-1} b_{n-1} a_{n-2} b_{n-2} \cdots a_0 b_0 0}
+$$
+に初期化し、繰り返し$U$を作用させていくと、状態
+$$
+\ket{c_n (a_{n-1} \oplus b_{n-1}) (a_{n-1} \oplus c_{n-1}) (a_{n-2} \oplus b_{n-2}) \cdots (a_1 \oplus c_1) (a_0 \oplus b_0) a_0}
+$$
+が得られることがわかります。この状態に対して今度は$V$を高い位から順に作用させていくと、
+$$
+\ket{a_{n-1} (a_{n-1} \oplus b_{n-1} \oplus c_{n-1}) a_{n-2} (a_{n-2} \oplus b_{n-2} \oplus c_{n-2}) \cdots (a_0 \oplus b_0) 0}
+$$
+となるので、終状態のビット値を一つ飛ばしで読み出せば、$a$と$b$の足し算の結果になっています。ただしこのままでは一番高い位の繰り上げビット$c_n$の情報が失われているので、実際には$V$を作用させる前に一番左のビットを制御、別に用意する補助ビットを標的とするCXゲートを使って情報を書き出しておきます。
+
+2桁＋2桁の場合の最終的な足し算回路は以下のようになります。
+
+```{image} figs/adder_2plus2.png
+:alt: adder_2plus2
+:width: 300px
+:align: center
+```
+
+それでは、3桁＋3桁のripple-carry adderをQiskitで実装し、5+6を計算してください。
+
+QuantumCircuitオブジェクトでiを制御、jを標的とするCXゲートは``circuit.cx(i, j)``、i, jを制御、kを標的とするToffoli (CCX)ゲートは``circuit.ccx(i, j, k)``で記述できます。
+
+```{code-cell} ipython3
+input_digits = 3
+
+# 回路のビット数は入力の桁数x2 + 2（補助ビット）
+circuit_width = 2 * input_digits + 2
+qreg = QuantumRegister(circuit_width, name='q')
+# 足し算の結果が書かれるビットのみ測定するので、出力の古典レジスタは4桁
+creg = ClassicalRegister(input_digits + 1, name='out')
+circuit = QuantumCircuit(qreg, creg)
+
+# 入力の状態(a=5, b=6)をXゲートを使って設定
+##################
+### EDIT BELOW ###
+##################
+
+# for iq in [?, ?, ?, ..]:
+#     circuit.x(iq)
+
+##################
+### EDIT ABOVE ###
+##################
+
+circuit.barrier()
+
+# Uを qlow, qlow+1, qlow+2 に対して作用させる。range(0, n, 2)によってqlowの値は一つ飛ばしで与えられる
+for qlow in range(0, circuit_width - 2, 2):
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    # Uを実装
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+circuit.cx(circuit_width - 2, circuit_width - 1)
+
+# Vを qlow, qlow+1, qlow+2 に対して作用させる。range(n-1, -1, -2)によってqlowの値は一つ飛ばしで与えられる
+for qlow in range(circuit_width - 4, -1, -2):
+    ##################
+    ### EDIT BELOW ###
+    ##################
+
+    # Vを実装
+
+    ##################
+    ### EDIT ABOVE ###
+    ##################
+
+# [1, 3, ...]量子ビットを測定し、古典レジスタに書き出す
+circuit.measure(range(1, circuit_width, 2), creg)
+
+circuit.draw('mpl')
+```
+
+```{code-cell} ipython3
+# シミュレータで回路を実行
+simulator = AerSimulator()
+sampler = Sampler()
+shots = 100
+
+circuit = transpile(circuit, backend=simulator)
+job_result = sampler.run([circuit], shots=shots).result()
+counts = job_result[0].data.out.get_counts()
+
+plot_histogram(counts)
+```
+
+## 問題2: アダマールテストで状態ベクトルを同定する
 
 実習で登場したSWAPテストは、実はアダマールテストという、より一般的な量子回路の構造の一例でした。アダマールテスト回路は以下のような形をしています。
 
@@ -172,7 +345,7 @@ def make_cukinv_gate(k):
 
 reg_data = QuantumRegister(data_width, name='data')
 reg_test = QuantumRegister(1, name='test')
-creg_test = ClassicalRegister(1)
+creg_test = ClassicalRegister(1, name='out')
 
 # 実部用と虚部用の回路をそれぞれリストに入れ、一度にシミュレータに渡す
 circuits_re = []
@@ -203,20 +376,21 @@ for k in ks:
 
 # シミュレータで回路を実行
 simulator = AerSimulator()
+sampler = Sampler()
 shots = 10000
 
 circuits_re = transpile(circuits_re, backend=simulator)
 circuits_im = transpile(circuits_im, backend=simulator)
 
-counts_list_re = simulator.run(circuits_re, shots=shots).result().get_counts()
-counts_list_im = simulator.run(circuits_im, shots=shots).result().get_counts()
+job_result_re = sampler.run(circuits_re, shots=shots).result()
+job_result_im = sampler.run(circuits_im, shots=shots).result()
 
 # 状態ベクトルアレイ
 statevector = np.empty(2 ** data_width, dtype=np.complex128)
 
 for k in ks:
-    counts_re = counts_list_re[k]
-    counts_im = counts_list_im[k]
+    counts_re = job_result_re[k].data.out.get_counts()
+    counts_im = job_result_im[k].data.out.get_counts()
     statevector[k] = (counts_re.get('0', 0) - counts_re.get('1', 0)) / shots
     statevector[k] += 1.j * (counts_im.get('0', 0) - counts_im.get('1', 0)) / shots
 ```
@@ -252,7 +426,7 @@ plt.xlabel('k')
 plt.legend();
 ```
 
-## 問題2: 符号が反転している基底を見つける
+## 問題3（おまけ・評価対象外）: 符号が反転している基底を見つける
 
 実習で出てきたequal superposition状態
 
@@ -351,15 +525,17 @@ haystack_needle.draw('mpl')
 :tags: [remove-output]
 
 simulator = AerSimulator()
+sampler = Sampler()
 haystack_needle = transpile(haystack_needle, backend=simulator)
-sim_job = simulator.run(haystack_needle, shots=10000)
-sim_result = sim_job.result()
-plot_histogram(sim_result.get_counts(), figsize=(16, 4))
+counts = sampler.run([haystack_needle], shots=10000).result()[0].data.meas.get_counts()
+plot_histogram(counts, figsize=(16, 4))
 ```
 
 **提出するもの**
 
 - 問題1と2の完成した回路のコード（EDIT BELOWからEDIT ABOVEの部分を埋める）と得られるプロット
-- 問題2で、ヒストグラムから`needle`を見つける方法の記述
-- `haystack`レジスタが一般の$n$ビットであるとき、この方法で`needle`を探すことの問題点（実行時間の観点から）に関する考察
-- おまけ（評価対象外）：`haystack_needle`回路を適当な実機でも実行してみる。エラーによってシミュレーションと結果が大幅に異なると予想されるが、なぜ一見単純な回路が大きく撹乱されてしまうのか？を考えてみる
+- おまけ（評価対象外）：問題3でヒストグラムから`needle`を見つける方法の記述と、`haystack`レジスタが一般の$n$ビットであるとき、この方法で`needle`を探すことの問題点（実行時間の観点から）に関する考察
+
+```{code-cell} ipython3
+
+```

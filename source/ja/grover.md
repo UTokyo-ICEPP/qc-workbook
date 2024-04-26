@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,10 +19,10 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 # データベース検索を行う
 
@@ -312,12 +312,15 @@ $$
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import matplotlib.pyplot as plt
@@ -327,14 +330,15 @@ import numpy as np
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
 from qiskit.quantum_info import Statevector
 from qiskit.visualization import plot_histogram
-from qiskit.tools.monitor import job_monitor
 from qiskit_aer import AerSimulator
-from qiskit_ibm_provider import IBMProvider, least_busy
-from qiskit_ibm_provider.accounts import AccountNotFoundError
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
 from qc_workbook.utils import operational_backend
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 6量子ビットの回路`grover_circuit`を準備します。
 
@@ -350,12 +354,15 @@ from qc_workbook.utils import operational_backend
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-output]
 ---
 Nsol = 45
@@ -386,6 +393,8 @@ grover_circuit.append(oracle_gate, list(range(n)))
 grover_circuit.barrier()
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 **解答**
 
 ````{toggle}
@@ -415,12 +424,15 @@ oracle.x(4)
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 def diffuser(n):
     qc = QuantumCircuit(n)
@@ -448,6 +460,8 @@ grover_circuit.append(diffuser(n), list(range(n)))
 grover_circuit.measure_all()
 grover_circuit.decompose().draw('mpl')
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 **解答**
 
@@ -495,12 +509,15 @@ def diffuser(n):
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [remove-output]
 ---
 simulator = AerSimulator()
@@ -530,11 +547,13 @@ def show_distribution(answer):
 show_distribution(answer)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 正しく回路が実装できていれば、$\ket{101101}=\ket{45}$の状態を高い確率で測定できる様子を見ることができるでしょう。
 
 しかし、上での議論からも分かるように、$N=2^6$の探索では、一回のグローバー反復では正しくない答えも無視できない確率で現れてきます。グローバーの反復を複数回繰り返すことで、正しい答えがより高い確率で得られることをこの後見ていきます。
 
-+++
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 (imp_qc)=
 ### 量子コンピュータでの実験
@@ -543,42 +562,49 @@ show_distribution(answer)
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
-# 量子コンピュータで実行する場合
-instance = 'ibm-q/open/main'
+# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
+# instance = 'hub-x/group-y/project-z'
+instance = None
 
 try:
-    provider = IBMProvider(instance=instance)
-except IBMQAccountCredentialsNotFound:
-    provider = IBMProvider(token='__paste_your_token_here__', instance=instance)
+    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
+except AccountNotFoundError:
+    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend_list = provider.backends(filters=operational_backend(min_qubits=6))
-backend = least_busy(backend_list)
-print("least busy backend: ", backend)
+# 現在稼働中のバックエンド（実機）の中から一番空いているものを選ぶ
+backend = service.least_busy(min_num_qubits=6, filters=operational_backend())
+
+print(f'Jobs will run on {backend.name}')
 ```
 
 ```{code-cell} ipython3
 ---
+editable: true
 jupyter:
   outputs_hidden: false
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 tags: [raises-exception, remove-output]
 ---
-# 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。
+# 最も空いているバックエンドで回路を実行します。
 
 grover_circuit = transpile(grover_circuit, backend=backend, optimization_level=3)
 job = backend.run(grover_circuit, shots=1024)
-job_monitor(job, interval=2)
 ```
 
 ```{code-cell} ipython3
@@ -610,10 +636,13 @@ show_distribution(answer)
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 # 繰り返しの回数
 Niter = 3
@@ -629,10 +658,13 @@ grover_circuit_iterN.draw('mpl')
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
 results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
@@ -640,7 +672,7 @@ answer = results.get_counts()
 show_distribution(answer)
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 正しい答え$\ket{45}$をより高い確率で測定できていることが分かりますね。
 
@@ -648,10 +680,13 @@ show_distribution(answer)
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 x = []
 y = []
@@ -679,15 +714,15 @@ plt.ylabel('# of correct observations (1 solution)')
 plt.show()
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 この図から、グローバー反復を5~6回程度繰り返すことで、正しい答えを最も高い確率で測定できることが分かりますね。計算で求めた検索に必要な反復回数と一致しているかどうか、確認してみてください。
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 問題：解が一つの場合で、探索リストのサイズを$N=2^4$から$N=2^{10}$まで変えた時に、測定で求めた最適な反復回数が$N$とどういう関係になっているのか調べてください。
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (imp_simulator_multi)=
 ### 複数解の探索の場合
@@ -698,10 +733,13 @@ plt.show()
 
 ```{code-cell} ipython3
 ---
+editable: true
 pycharm:
   name: '#%%
 
     '
+slideshow:
+  slide_type: ''
 ---
 N1 = 45
 N2 = 26
@@ -759,6 +797,15 @@ plt.ylabel('# of correct observations (2 solutions)')
 plt.show()
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+
+```

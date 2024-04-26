@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,7 +19,7 @@ language_info:
   name: python
   nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.6
+  version: 3.10.12
 ---
 
 # Preparation of Hands-on Exercise
@@ -36,12 +36,12 @@ local: true
 
 ### Obtain IBMid and log in IBM Quantum
 
-To use IBM Quantum, you must first create an IBMid account and receive a service token. Obtain an IBMid from the <a href="https://quantum-computing.ibm.com/" target="_blank">IBM Quantum</a> website and log into the service.
+To use IBM Quantum, you must first create an IBMid account and receive a service token. Obtain an IBMid from the <a href="https://quantum.ibm.com/" target="_blank">IBM Quantum</a> website and log into the service.
 
 (install_token)=
 ### （Local environment）Get IBM Quantum API token and store it in Qiskit setting
 
-You can skip the following step if you are going to execute program on IBM Quantum Lab (Jupyter Lab on IBM Quantum website). 
+You can skip the following step if you are going to execute program on IBM Quantum Lab (Jupyter Lab on IBM Quantum website).
 
 On the main screen shown after logging in, copy the token displayed in the "Your API token" area.
 ```{image} figs/ibmq_home.png
@@ -54,17 +54,17 @@ Service tokens issued on an account basis are used for username+password in Pyth
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-IBMProvider.save_account('__paste_your_token_here__')
+QiskitRuntimeService.save_account('__paste_your_token_here__')
 ```
 
 By saving the token in a setting file, your access to IBM Quantum can be authenticated through IBMProvider, as follows:
 
 ```{code-block} python
-from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-provider = IBMProvider()
+service = QiskitRuntimeService(channel='ibm_quantum')
 ```
 
 In the IBM Quantum Lab, the access token is automatically stored, therefore this code will work as it is.
@@ -72,9 +72,9 @@ In the IBM Quantum Lab, the access token is automatically stored, therefore this
 If you do not have a write access to local disks (e.g, you are using this notebook interactively), you need to authenticate by hand every time you execute a python program (restarting a Jupyter kernel) as follows:
 
 ```{code-block} python
-from qiskit_ibm_provider import IBMProvider
+from qiskit_ibm_runtime import QiskitRuntimeService
 
-provider = IBMProvider(token='__paste_your_token_here__')
+service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__')
 ```
 
 ## How to use this workbook
@@ -110,5 +110,5 @@ Python version 3.8 or above is required to execute the notebook locally. You nee
 
 
 ```{code-block}
-pip install qiskit qiskit-ibm-provider qiskit-ibm-runtime matplotlib pylatexenc tabulate
+pip install qiskit qiskit-aer qiskit-ibm-runtime qiskit-experiments qiskit-machine-learning qiskit-optimization matplotlib pylatexenc pandas tabulate
 ```
