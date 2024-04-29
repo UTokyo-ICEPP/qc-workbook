@@ -64,6 +64,12 @@ $$
 
 つまり下図にある通り、$\ket{\psi}=\cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w}$と書けている場合、$G$は$\ket{\psi}$を$\ket{w}$に向かって角度$\theta$だけ回転するという訳で、グローバーアルゴリズムと同じ操作になっています。
 
+```{image} figs/grover_qae1.png
+:alt: grover_qae1
+:width: 300px
+:align: center
+```
+
 ## 量子振幅推定
 
 $\ket{\psi}$に対するグローバーのアルゴリズムと量子位相推定の方法を組み合わせて振幅の推定を行う方法が[1]で提案されました。
