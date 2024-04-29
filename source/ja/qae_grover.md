@@ -26,7 +26,7 @@ language_info:
 
 # 【課題】グローバーアルゴリズムを使った量子振幅推定
 
-グローバーアルゴリズムは求める答えの位相を反転させるという操作を行うことによって、構造を持たないデータベースから答えを見つけることができるというものでした。
+{doc}`グローバーアルゴリズム <grover>`は求める答えの位相を反転させるという操作を行うことによって、構造を持たないデータベースから答えを見つけることができるというものでした。
 
 グローバーアルゴリズムでは、 最初にアダマール演算子をかけて均等重ね合わせの状態$\ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x$を作りました。
 ここでは、$\ket{s}$の代わりに、$\ket{0}^{\otimes n}$に既知のユニタリー$U$を適用して作った状態$\ket{\psi}=U\ket{0}^{\otimes n}$を持ってくるとしましょう。
@@ -35,10 +35,10 @@ language_info:
 {ref}`ここ <grover_geometry>`で使った2次元平面での記述方法に従うと、$\ket{\psi}$も
 
 $$
-\ket{\psi} := \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
+\ket{\psi} =: \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
 $$
 
-と書くことができます。$\sin\frac\theta2$が$\ket{w}$の振幅ですが、この$\theta$がまだ分からないという状況です。
+と書くことができます。$\sin\frac\theta2$が$\ket{w}$の振幅ですが、この$\theta$の値が分からないという状況です。
 
 この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。
 
@@ -76,7 +76,13 @@ $$
 $\ket{\psi}$に対するグローバーのアルゴリズムと量子位相推定の方法を組み合わせて振幅の推定を行う方法が[1]で提案されました。
 
 グローバーの反復$G=U_sU_w$は
-$$ \begin{aligned} G&=U_sU_w\\ &= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned} $$
+
+$$
+\begin{aligned} 
+G &= U_sU_w\\ 
+&= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned} 
+$$
+
 なので、
 
 $$
