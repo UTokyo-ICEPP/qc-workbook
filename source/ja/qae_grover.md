@@ -56,7 +56,7 @@ $$
 \begin{aligned} 
 U_s &= UU_0U^\dagger\\ 
 &=2\ket{\psi}\bra{\psi}-I\\
-&=\begin{bmatrix}\cos\theta&\sin\theta\\ \sin\theta&-\cos\theta\end{bmatrix}
+&=\begin{bmatrix}\cos\theta&\sin\theta\\\sin\theta&-\cos\theta\end{bmatrix}
 \end{aligned} 
 $$
 
