@@ -30,19 +30,19 @@ language_info:
 
 グローバーアルゴリズムでは、 最初にアダマール演算子をかけて均等重ね合わせの状態$\ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x$を作りました。
 ここでは、$\ket{s}$の代わりに、$\ket{0}^{\otimes n}$に既知のユニタリー$U$を適用して作った状態$\ket{\psi}=U\ket{0}^{\otimes n}$を持ってくるとしましょう。
-この状態$\ket{\psi}$は求める答え$\ket{w}$の成分を含んでいますが、その振幅が分からないとします。
 
-{ref}`ここ <grover_geometry>`で使った2次元平面での記述方法に従うと、$\ket{\psi}$も
+この状態$\ket{\psi}$は求める答え$\ket{w}$の成分を含んでいますが、その振幅が分からないとします。
+つまり、 {ref}`ここ <grover_geometry>`で使った2次元平面での記述方法に従うと、$\ket{\psi}$も$\ket{s}$と同じく
 
 $$
 \ket{\psi} =: \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
 $$
 
-と書くことができます。$\sin\frac\theta2$が$\ket{w}$の振幅ですが、この$\theta$の値が分からないという状況です。
+と書くことができますが、$\ket{w}$の振幅である$\sin\frac\theta2$の$\theta$の値が分からないという状況です。
 
 この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。
 
-$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuserは
+$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser$U_s$は
 
 $$
 \begin{aligned} 
