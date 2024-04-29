@@ -32,21 +32,26 @@ language_info:
 この状態$\ket{\psi}$は求める答え$\ket{w}$の成分を含んでいますが、その振幅が分からないとします。
 
 ここで使った2次元平面での記述方法に従うと、$\ket{\psi}$も
+
 $$
 \ket{\phi} := \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
 $$
+
 と書くことができます。$\sin\frac\theta2$が$\ket{w}$の振幅ですが、この$\theta$がまだ分からないという状況です。
 
 この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。
 
 $U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuserは
+
 $$
 \begin{aligned} 
 U_s &= H^{\otimes n}U_0H^{\otimes n}\\ 
 &=2\ket{s}\bra{ s}-I\\ 
-\end{aligned} 
+\end{aligned}
 $$
+
 でしたが、今は$\ket{\psi}$としているため
+
 $$
 \begin{aligned} 
 U_s &= UU_0U^\dagger\\ 
@@ -54,6 +59,7 @@ U_s &= UU_0U^\dagger\\
 &=\begin{bmatrix}\cos\theta&\sin\theta\\\sin\theta&-\cos\theta\end{bmatrix}
 \end{aligned} 
 $$
+
 になります。$\theta$を使った行列表記は前と同じです。
 
 つまり下図にある通り、$\ket{\psi}=\cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w}$と書けている場合、$G$は$\ket{\psi}$を$\ket{w}$に向かって角度$\theta$だけ回転するという訳で、グローバーアルゴリズムと同じ操作になっています。
@@ -65,12 +71,14 @@ $\ket{\psi}$に対するグローバーのアルゴリズムと量子位相推�
 グローバーの反復$G=U_sU_w$は
 $$ \begin{aligned} G&=U_sU_w\\ &= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned} $$
 なので、
+
 $$
 \begin{aligned} 
 G\ket{w} &= -\sin\theta\ket{w^{\perp}}+\cos\theta\ket{w}\\ 
 G\ket{w^{\perp}} &= \cos\theta\ket{w^{\perp}}+\sin\theta\ket{w}
 \end{aligned} 
 $$
+
 と書けます。
 
 ここで$\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})$という状態を定義すると
