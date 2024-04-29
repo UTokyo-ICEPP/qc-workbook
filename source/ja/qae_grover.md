@@ -34,7 +34,7 @@ language_info:
 ここで使った2次元平面での記述方法に従うと、$\ket{\psi}$も
 
 $$
-\ket{\phi} := \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
+\ket{\psi} := \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
 $$
 
 と書くことができます。$\sin\frac\theta2$が$\ket{w}$の振幅ですが、この$\theta$がまだ分からないという状況です。
@@ -56,7 +56,7 @@ $$
 \begin{aligned} 
 U_s &= UU_0U^\dagger\\ 
 &=2\ket{\psi}\bra{\psi}-I\\
-&=\begin{bmatrix}\cos\theta&\sin\theta\\\sin\theta&-\cos\theta\end{bmatrix}
+&=\begin{bmatrix}\cos\theta&\sin\theta\\ \sin\theta&-\cos\theta\end{bmatrix}
 \end{aligned} 
 $$
 
@@ -85,7 +85,7 @@ $$
 
 $$
 \begin{aligned} 
-G$\ket{\psi_{\pm}} &= \frac{1}{\sqrt{2}}(G\ket{w}\pm iG\ket{w^{\perp}}) \\
+G\ket{\psi_{\pm}} &= \frac{1}{\sqrt{2}}(G\ket{w}\pm iG\ket{w^{\perp}}) \\
 &= \frac{1}{\sqrt{2}}(\cos\theta\pm i\sin\theta)(\ket{w}\pm i\ket{w^{\perp}}) \\
 &= e^{\pm i\theta}\ket{\psi_{\pm}}
 \end{aligned} 
