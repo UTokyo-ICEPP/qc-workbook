@@ -28,7 +28,7 @@ language_info:
 
 {doc}`グローバーアルゴリズム <grover>`は求める答えの位相を反転させるという操作を行うことによって、構造を持たないデータベースから答えを見つけることができるというものでした。
 
-グローバーアルゴリズムでは、 最初にアダマール演算子をかけて均等重ね合わせの状態$\ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x$を作りました。
+グローバーアルゴリズムでは、 最初にアダマール演算子をかけて均等重ね合わせの状態$\ket{s} = H^{\otimes n}\ket{0}^{\otimes n} = \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}$を作りました。
 ここでは、$\ket{s}$の代わりに、$\ket{0}^{\otimes n}$に既知のユニタリー$U$を適用して作った状態$\ket{\psi}=U\ket{0}^{\otimes n}$を持ってくるとしましょう。
 
 この状態$\ket{\psi}$は求める答え$\ket{w}$の成分を含んでいますが、その振幅が分からないとします。
@@ -40,9 +40,7 @@ $$
 
 と書くことができますが、$\ket{w}$の振幅である$\sin\frac\theta2$の$\theta$の値が分からないという状況です。
 
-この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。
-
-$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser$U_s$は
+この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
 
 $$
 \begin{aligned} 
@@ -61,7 +59,7 @@ U_s &= UU_0U^\dagger\\
 \end{aligned} 
 $$
 
-になります。$\theta$を使った行列表記は前と同じです。
+になります。$\theta$を使った行列表記は$\ket{s}$の場合と同じです。
 
 つまり下図にある通り、$\ket{\psi}=\cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w}$と書けている場合、$G$は$\ket{\psi}$を$\ket{w}$に向かって角度$\theta$だけ回転するという訳で、グローバーアルゴリズムと同じ操作になっています。
 
@@ -73,9 +71,9 @@ $$
 
 ## 量子振幅推定
 
-$\ket{\psi}$に対するグローバーのアルゴリズムと量子位相推定の方法を組み合わせて振幅の推定を行う方法が[1]で提案されました。
+グローバーのアルゴリズムと量子位相推定の方法を組み合わせることで、量子状態$\ket{\psi}$の振幅を推定することができます。この方法は**量子振幅推定**と呼ばれ、その基本的な方法は最初にこの論文{cite}`Brassard_2000xvp`で提案されました。
 
-グローバーの反復$G=U_sU_w$は
+グローバーの反復$G=U_sU_w$が
 
 $$
 \begin{aligned} 
@@ -83,7 +81,7 @@ G &= U_sU_w\\
 &= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned} 
 $$
 
-なので、
+と書けることを思い出すと、
 
 $$
 \begin{aligned} 
@@ -92,7 +90,7 @@ G\ket{w^{\perp}} &= \cos\theta\ket{w^{\perp}}+\sin\theta\ket{w}
 \end{aligned} 
 $$
 
-と書けます。
+となります。
 
 ここで$\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})$という状態を定義すると
 
@@ -154,7 +152,7 @@ $$
 \ket{\psi}=\cos\frac\theta2\ket{000}+\sin\frac\theta2\ket{111}
 $$
 
-を作る量子回路を作ります。
+を生成する量子回路を作ります。
 
 
 ```{code-cell} ipython3
@@ -170,9 +168,9 @@ slideshow:
   slide_type: ''
 tags: [remove-output]
 ---
-n = 3
+n_state = 3
 
-state_prep = QuantumCircuit(n)
+state_prep = QuantumCircuit(n_state)
 
 ##################
 ### EDIT BELOW ###
@@ -245,8 +243,8 @@ slideshow:
 tags: [remove-output]
 ---
 
-oracle = QuantumCircuit(n)
-diffuser = QuantumCircuit(n)
+oracle = QuantumCircuit(n_state)
+diffuser = QuantumCircuit(n_state)
 
 ##################
 ### EDIT BELOW ###
@@ -259,14 +257,14 @@ diffuser = QuantumCircuit(n)
 ### ABOVE BELOW ###
 ##################
 
-grover_iter = QuantumCircuit(n)
+grover_iter = QuantumCircuit(n_state)
 
 ##################
 ### EDIT BELOW ###
 ##################
 
-grover_iter.append(oracle.to_gate(), list(range(n)))
-grover_iter.append(diffuser.to_gate(), list(range(n)))
+grover_iter.append(oracle.to_gate(), list(range(n_state)))
+grover_iter.append(diffuser.to_gate(), list(range(n_state)))
 
 ##################
 ### ABOVE BELOW ###
@@ -278,7 +276,7 @@ grover_iter.decompose().draw('mpl')
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 
-量子位相推定の回路は以下のようにします。
+量子位相推定の回路は以下のようにします。読み出しレジスタ`qreg_readout`を制御ビットとして、制御Gゲートを状態レジスタ`qreg_status`に適用する回路を書いてください。
 
 ```{code-cell} ipython3
 ---
@@ -292,25 +290,25 @@ pycharm:
 slideshow:
   slide_type: ''
 ---
-# 測定用レジスタの量子ビット数
-n_meas = 3
+# 読み出しレジスタの量子ビット数
+n_readout = 3
 
-# 位相測定用のレジスタ
-qreg_meas = QuantumRegister(n_meas, name='meas')
-# 固有ベクトルを保持するレジスタ
-qreg_aux = QuantumRegister(n, name='aux')
-# 位相測定の結果が書き出される古典レジスタ
-creg_meas = ClassicalRegister(n_meas, name='out')
+# 読み出しレジスタ
+qreg_readout = QuantumRegister(n_readout, name='readout')
+# 状態レジスタ
+qreg_status = QuantumRegister(n_status, name='status')
+# 読み出し結果が書き出される古典レジスタ
+creg_readout = ClassicalRegister(n_readout, name='out')
 
 # 2つの量子レジスタと1つの古典レジスタから量子回路を作る
-qc = QuantumCircuit(qreg_meas, qreg_aux, creg_meas)
+qc = QuantumCircuit(qreg_readout, qreg_readout, creg_readout)
 
 # それぞれのレジスタを初期化
-qc.h(qreg_meas)
+qc.h(qreg_readout)
 qc.barrier()
 
 # 状態準備の回路state_prepを固有ベクトルを保持するレジスタに入れる
-qc.append(state_prep, qargs=qreg_aux)
+qc.append(state_prep, qargs = qreg_status)
 
 qc.barrier()
 
@@ -318,7 +316,7 @@ qc.barrier()
 ### EDIT BELOW ###
 ##################
 
-# 位相推定用のレジスタを制御ビットとして、制御Gゲートを適用する回路を書いてください。
+# 読み出しレジスタを制御ビットとして、制御Gゲートを状態レジスタに適用する回路を書いてください。
 
 ##################
 ### ABOVE BELOW ###
@@ -361,9 +359,9 @@ def qft_dagger(qreg):
     return qc
 
 qc.barrier()
-qc.append(qft_dagger(qreg_meas), qargs=qreg_meas)
+qc.append(qft_dagger(qreg_readout), qargs = qreg_readout)
 qc.barrier()
-qc.measure(qreg_meas, creg_meas)
+qc.measure(qreg_readout, creg_readout)
 qc.draw('mpl')
 ```
 
