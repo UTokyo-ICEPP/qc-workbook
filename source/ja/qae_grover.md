@@ -296,19 +296,19 @@ n_readout = 3
 # 読み出しレジスタ
 qreg_readout = QuantumRegister(n_readout, name='readout')
 # 状態レジスタ
-qreg_status = QuantumRegister(n_status, name='status')
+qreg_state = QuantumRegister(n_state, name='state')
 # 読み出し結果が書き出される古典レジスタ
 creg_readout = ClassicalRegister(n_readout, name='out')
 
 # 2つの量子レジスタと1つの古典レジスタから量子回路を作る
-qc = QuantumCircuit(qreg_readout, qreg_readout, creg_readout)
+qc = QuantumCircuit(qreg_readout, qreg_state, creg_readout)
 
 # それぞれのレジスタを初期化
 qc.h(qreg_readout)
 qc.barrier()
 
 # 状態準備の回路state_prepを固有ベクトルを保持するレジスタに入れる
-qc.append(state_prep, qargs = qreg_status)
+qc.append(state_prep, qargs = qreg_state)
 
 qc.barrier()
 
