@@ -22,6 +22,8 @@ language_info:
   version: 3.10.12
 ---
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 # 【課題】量子フーリエ変換と量子ダイナミクスシミュレーション
 
 第三回の実習では量子計算の並列性と、その顕著な利用法としての量子フーリエ変換および量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。
@@ -36,8 +38,12 @@ $\newcommand{\plusket}{\ket{+}}$
 $\newcommand{\minusket}{\ket{-}}$
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 # 必要なモジュールを先にインポート
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,6 +72,12 @@ $$
 となります。このことを利用して、測定でビット列$k$を得る確率が$\frac{1}{2}[1 + \cos (8 \pi k / 2^5)]$となるような量子回路を作ってください。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
 num_qubits = 5
 
 circuit = QuantumCircuit(num_qubits)
