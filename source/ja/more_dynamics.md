@@ -22,9 +22,9 @@ language_info:
   version: 3.10.12
 ---
 
-# 【課題】量子ダイナミクスシミュレーション・続
+# 【課題】量子フーリエ変換と量子ダイナミクスシミュレーション
 
-第三回の実習では量子計算の並列性と、その顕著な利用法としての量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。
+第三回の実習では量子計算の並列性と、その顕著な利用法としての量子フーリエ変換および量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。
 
 ```{contents} 目次
 ---
@@ -35,9 +35,95 @@ $\newcommand{\ket}[1]{|#1\rangle}$
 $\newcommand{\plusket}{\ket{+}}$
 $\newcommand{\minusket}{\ket{-}}$
 
+```{code-cell} ipython3
+:tags: [raises-exception, remove-output]
+
+# 必要なモジュールを先にインポート
+import numpy as np
+import matplotlib.pyplot as plt
+from qiskit import QuantumCircuit, transpile
+from qiskit.quantum_info import SparsePauliOp
+from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import SamplerV2 as Sampler
+# このワークブック独自のモジュール
+from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts, diagonalized_evolution
+```
+
+## 問題1: cos型の確率分布を作る
+
 +++
 
-## 問題1: ハイゼンベルグモデル、X方向のスピン
+### 問題
+
+$n$ビット量子フーリエ変換は
+$$
+\ket{k} \rightarrow \sum_{j} \exp(2 \pi i j k / 2^n) \ket{j}
+$$
+という変換です。量子回路は線形演算なので、左辺が例えば2つの計算基底の重ね合わせであれば
+$$
+\alpha \ket{k} + \beta \ket{l} \rightarrow \sum_{j} \left[\exp(2 \pi i j k / 2^n) + \exp(2 \pi i j l / 2^n) \right] \ket{j}
+$$
+となります。このことを利用して、測定でビット列$k$を得る確率が$\frac{1}{2}[1 + \cos (8 \pi k / 2^5)]$となるような量子回路を作ってください。
+
+```{code-cell} ipython3
+num_qubits = 5
+
+circuit = QuantumCircuit(num_qubits)
+
+##################
+### EDIT BELOW ###
+##################
+
+# Set up a superposition of computational basis states
+
+##################
+### EDIT ABOVE ###
+##################
+
+# 実習の量子フーリエ変換回路
+
+for itarg in range(num_qubits - 1, -1, -1):
+    # 標的ビットにアダマールゲートをかける
+    circuit.h(itarg)
+    # target - 1から0まで制御ビットについてループ
+    for ictrl in range(itarg - 1, -1, -1):
+        # 標的と制御ビットのインデックスに応じた角度で制御Pゲートをかける
+        power = ictrl - itarg - 1 + num_qubits
+        circuit.cp((2 ** power) * 2. * np.pi / (2 ** num_qubits), ictrl, itarg)
+
+    # 回路図を見やすくするためにバリアを入れる
+    circuit.barrier()
+
+# 最後にビットの順番を反転させる
+for i in range(num_qubits // 2):
+    circuit.swap(i, num_qubits - 1 - i)
+
+circuit.measure_all()
+
+# シミュレータ上のSamplerを利用
+simulator = AerSimulator()
+sampler = Sampler()
+shots = 100000
+
+circuit = transpile(circuit, backend=simulator)
+sim_job = sampler.run([circuit], shots=shots)
+counts_dict = sim_job.result()[0].data.meas.get_counts()
+
+# 測定結果をプロットしやすいようにアレイに変換
+counts = np.zeros(2 ** num_qubits)
+for key, value in counts_dict.items():
+    counts[int(key, 2)] = value
+counts /= shots
+
+# 測定結果と理論曲線をプロット
+plt.scatter(np.arange(2 ** num_qubits), counts, label='observed')
+x = np.linspace(0., 2 ** num_qubits, 400)
+y = (1. + np.cos(8. * np.pi * x / 2 ** num_qubits)) / 2 ** num_qubits
+plt.plot(x, y, label='target')
+plt.legend();
+```
+
+## 問題2: ハイゼンベルグモデル、X方向のスピン
 
 +++
 
@@ -48,19 +134,6 @@ $\newcommand{\minusket}{\ket{-}}$
 **ヒント**:
 
 [プロット用関数`plot_heisenberg_spins`](https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py)で厳密解のカーブを書くとき、追加の引数`spin_component='x'`を渡すと$X$方向のスピンのプロットに切り替わります。ただし、実験結果の`counts_list`は相応する測定の結果となっていなければいけません。具体的には、各スピンについて「0が測定される＝スピンが+$X$を向いている、1が測定される＝スピンが-$X$を向いている」という対応付けが必要です。）
-
-```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
-# 必要なモジュールを先にインポート
-import numpy as np
-import matplotlib.pyplot as plt
-from qiskit import QuantumCircuit, transpile
-from qiskit.quantum_info import SparsePauliOp
-from qiskit_aer import AerSimulator
-# このワークブック独自のモジュール
-from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit_expectations_counts, diagonalized_evolution
-```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -128,8 +201,9 @@ for istep in range(M):
 simulator = AerSimulator()
 
 circuits = transpile(circuits, backend=simulator)
-sim_job = simulator.run(circuits, shots=shots)
-sim_counts_list = sim_job.result().get_counts()
+sampler = Sampler()
+sim_job = sampler.run(circuits, shots=shots)
+sim_counts_list = [result.data.meas.get_counts() for result in sim_job.result()]
 
 # Initial state as a statevector
 initial_state = np.zeros(2 ** n, dtype=np.complex128)
@@ -137,13 +211,6 @@ initial_state[0:2] = np.sqrt(0.5)
 
 plot_heisenberg_spins(sim_counts_list, n, initial_state, omegadt, add_theory_curve=True, spin_component='x')
 ```
-
-**提出するもの**
-
-- 完成した回路のコードとシミュレーション結果によるプロット
-- 一般の方向のスピンの期待値を測定するためにはどうすればいいかの説明
-
-+++
 
 ### おまけ: スピン総和
 
@@ -161,7 +228,7 @@ $$
 
 +++
 
-## 問題2: シュウィンガーモデル
+## 問題3（おまけ・評価対象外）: シュウィンガーモデル
 
 これまで扱ったような、スピンに関連する現象とは異なる物理モデルのシミュレーションをしましょう。空間1次元、時間1次元の時空における量子電磁力学の模型「シュウィンガーモデル」を考えます。
 
@@ -374,10 +441,11 @@ for istep in range(M):
 
 # Run the circuits in the simulator
 simulator = AerSimulator()
+sampler = Sampler()
 
 circuits = transpile(circuits, backend=simulator)
-sim_job = simulator.run(circuits, shots=shots)
-sim_counts_list = sim_job.result().get_counts()
+sim_job = sampler.run(circuits, shots=shots)
+sim_counts_list = [result.data.meas.get_counts() for result in sim_job.result()]
 ```
 
 ```{code-cell} ipython3
@@ -430,8 +498,5 @@ plt.plot(time_points, number_density(bit_exp), 'o')
 
 **提出するもの**
 
-- 完成した回路のコードとシミュレーション結果によるプロット
-
-```{code-cell} ipython3
-
-```
+- 問題1、2の完成した回路のコードとシミュレーション結果によるプロット
+- 問題2で一般の方向のスピンの期待値を測定するためにはどうすればいいかの説明

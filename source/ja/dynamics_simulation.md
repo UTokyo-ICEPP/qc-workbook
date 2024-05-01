@@ -448,7 +448,8 @@ circuit.draw('mpl')
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
-from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_aer.primitives import SamplerV2 as AerSampler
+from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as RuntimeSampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
@@ -515,10 +516,14 @@ initial_state[0:2] = np.sqrt(0.5)
 shots = 100000
 
 simulator = AerSimulator()
+# 今回はシミュレータと実機両方のSamplerを使うので、シミュレータベースのものをAerSamplerと呼んでいる（上のimport文を参照）
+sampler = AerSampler()
 
 circuits_sim = transpile(circuits, backend=simulator)
-sim_job = simulator.run(circuits_sim, shots=shots)
-sim_counts_list = sim_job.result().get_counts()
+sim_job = sampler.run(circuits_sim, shots=shots)
+sim_results = sim_job.result()
+
+sim_counts_list = [result.data.meas.get_counts() for result in sim_results]
 
 plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
 ```
@@ -549,15 +554,13 @@ print(f'Job will run on {backend.name}')
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
+sampler = RuntimeSampler(backend)
+
 circuits_ibmq = transpile(circuits, backend=backend)
+job = sampler.run(circuits_ibmq, shots=2000)
+results = job.result()
 
-job = backend.run(circuits_ibmq, shots=8192)
-
-counts_list = job.result().get_counts()
-```
-
-```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+counts_list = [result.data.meas.get_counts() for result in results]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
 ```

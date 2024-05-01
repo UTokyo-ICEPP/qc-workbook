@@ -1,26 +1,26 @@
 ---
-jupytext:
-  formats: md:myst,ipynb
-  notebook_metadata_filter: all
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.16.1
-kernelspec:
-  display_name: Python 3 (ipykernel)
-  language: python
-  name: python3
-language_info:
-  codemirror_mode:
-    name: ipython
-    version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
-  pygments_lexer: ipython3
-  version: 3.10.12
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.16.1
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.10.12
 ---
 
 # 【課題】関数の実装とアダマールテスト
@@ -34,9 +34,7 @@ local: true
 $\newcommand{\ket}[1]{|#1\rangle}$
 $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 # まずは全てインポート
 import numpy as np
 import matplotlib.pyplot as plt
@@ -151,7 +149,7 @@ $$
 
 QuantumCircuitオブジェクトでiを制御、jを標的とするCXゲートは``circuit.cx(i, j)``、i, jを制御、kを標的とするToffoli (CCX)ゲートは``circuit.ccx(i, j, k)``で記述できます。
 
-```{code-cell} ipython3
+```python
 input_digits = 3
 
 # 回路のビット数は入力の桁数x2 + 2（補助ビット）
@@ -207,7 +205,7 @@ circuit.measure(range(1, circuit_width, 2), creg)
 circuit.draw('mpl')
 ```
 
-```{code-cell} ipython3
+```python
 # シミュレータで回路を実行
 simulator = AerSimulator()
 sampler = Sampler()
@@ -288,7 +286,7 @@ $$
 
 以下で、既知だけど何か複雑な状態$\ket{\psi}$の状態ベクトルを調べてみましょう。まずは$U_{\psi}$を定義します。
 
-```{code-cell} ipython3
+```python
 # データレジスタのビット数
 data_width = 6
 
@@ -309,14 +307,14 @@ for iq in range(data_width // 2):
 
 Qiskitでは、`QuantumCircuit`オブジェクトで表される量子回路を、`to_gate()`メソッドで一つのゲートオブジェクトに変換することができます。さらにそのゲートに対して`control(n)`メソッドを用いると、元の回路をn量子ビットで制御する制御ゲートを作ることができます。
 
-```{code-cell} ipython3
+```python
 upsi_gate = upsi.to_gate()
 cupsi_gate = upsi_gate.control(1)
 ```
 
 $U^{-1}_k$とその制御ゲート化は$k$の関数として定義しておきます。
 
-```{code-cell} ipython3
+```python
 def make_cukinv_gate(k):
     uk = QuantumCircuit(data_width, name=f'u_{k}')
 
@@ -340,9 +338,7 @@ def make_cukinv_gate(k):
 
 次のセルで$k=0$から$2^n-1$までそれぞれ2通りのアダマールテストを行い、$\ket{\psi}$の計算基底展開を求めてください。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 reg_data = QuantumRegister(data_width, name='data')
 reg_test = QuantumRegister(1, name='test')
 creg_test = ClassicalRegister(1, name='out')
@@ -395,9 +391,7 @@ for k in ks:
     statevector[k] += 1.j * (counts_im.get('0', 0) - counts_im.get('1', 0)) / shots
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 plt.plot(ks, statevector.real, label='Re($c_k$)')
 plt.plot(ks, statevector.imag, label='Im($c_k$)')
 plt.xlabel('k')
@@ -406,9 +400,7 @@ plt.legend();
 
 得られた結果と状態ベクトルシミュレータで計算される状態ベクトルとを比較してみましょう。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 sv_simulator = AerSimulator(method='statevector')
 
 # save_statevectorをくっつけるので元の回路をコピーする
@@ -450,7 +442,7 @@ $$
 
 後で便利なように、まずはブラックボックスを単体の回路として定義します。
 
-```{code-cell} ipython3
+```python
 num_qubits = 3
 needle = 5
 
@@ -476,7 +468,7 @@ blackbox_circuit.draw('mpl')
 
 問題1でやったのと同様、QuantumCircuitオブジェクト全体を一つのゲートのようにみなして、それから制御ゲートを派生させます。
 
-```{code-cell} ipython3
+```python
 # blackbox_circuitを3量子ビットゲート化
 blackbox = blackbox_circuit.to_gate()
 # さらにblackboxゲートを1制御+3標的ビットゲート化
@@ -487,9 +479,7 @@ cblackbox = blackbox.control(1)
 
 ヒント：アダマールテストの回路は、量子状態ベクトル同士を足したり引いたりして振幅の干渉を起こさせる回路のテンプレートでもあります。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 def make_haystack_needle():
     test_register = QuantumRegister(1, 'test')
     circuit = QuantumCircuit(haystack_register, test_register)
@@ -512,18 +502,14 @@ def make_haystack_needle():
     return circuit
 ```
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 haystack_needle = make_haystack_needle()
 haystack_needle.draw('mpl')
 ```
 
 回路が完成したら、`qasm_simulator`で実行し、ヒストグラムをプロットしてください。
 
-```{code-cell} ipython3
-:tags: [remove-output]
-
+```python tags=["remove-output"]
 simulator = AerSimulator()
 sampler = Sampler()
 haystack_needle = transpile(haystack_needle, backend=simulator)
@@ -536,6 +522,6 @@ plot_histogram(counts, figsize=(16, 4))
 - 問題1と2の完成した回路のコード（EDIT BELOWからEDIT ABOVEの部分を埋める）と得られるプロット
 - おまけ（評価対象外）：問題3でヒストグラムから`needle`を見つける方法の記述と、`haystack`レジスタが一般の$n$ビットであるとき、この方法で`needle`を探すことの問題点（実行時間の観点から）に関する考察
 
-```{code-cell} ipython3
+```python
 
 ```
