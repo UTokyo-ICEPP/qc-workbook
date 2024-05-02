@@ -62,13 +62,17 @@ from qc_workbook.dynamics import plot_heisenberg_spins, bit_expectations_sv, bit
 ### 問題
 
 $n$ビット量子フーリエ変換は
+
 $$
 \ket{k} \rightarrow \sum_{j} \exp(2 \pi i j k / 2^n) \ket{j}
 $$
+
 という変換です。量子回路は線形演算なので、左辺が例えば2つの計算基底の重ね合わせであれば
+
 $$
 \alpha \ket{k} + \beta \ket{l} \rightarrow \sum_{j} \left[\exp(2 \pi i j k / 2^n) + \exp(2 \pi i j l / 2^n) \right] \ket{j}
 $$
+
 となります。このことを利用して、測定でビット列$k$を得る確率が$\frac{1}{2}[1 + \cos (8 \pi k / 2^5)]$となるような量子回路を作ってください。
 
 ```{code-cell} ipython3
