@@ -170,13 +170,12 @@ tags: [remove-output]
 ---
 n_state = 3
 
-state_prep = QuantumCircuit(n_state)
-
 ##################
 ### EDIT BELOW ###
 ##################
 
 # state_prepの回路を書いてください
+#state_prep = ...
 
 ##################
 ### ABOVE BELOW ###
@@ -250,21 +249,8 @@ diffuser = QuantumCircuit(n_state)
 ### EDIT BELOW ###
 ##################
 
-# oracleの回路を書いてください
-# diffuserの回路を書いてください
-
-##################
-### ABOVE BELOW ###
-##################
-
-grover_iter = QuantumCircuit(n_state)
-
-##################
-### EDIT BELOW ###
-##################
-
-grover_iter.append(oracle.to_gate(), list(range(n_state)))
-grover_iter.append(diffuser.to_gate(), list(range(n_state)))
+# Groberの反復回路eを書いてください
+#grover_iter = ...?
 
 ##################
 ### ABOVE BELOW ###
@@ -309,7 +295,6 @@ qc.barrier()
 
 # 状態準備の回路state_prepを固有ベクトルを保持するレジスタに入れる
 qc.append(state_prep, qargs = qreg_state)
-
 qc.barrier()
 
 ##################
@@ -359,6 +344,7 @@ def qft_dagger(qreg):
     return qc
 
 qc.barrier()
+読み出しレジスタに逆フーリエ変換の回路を追加
 qc.append(qft_dagger(qreg_readout), qargs = qreg_readout)
 qc.barrier()
 qc.measure(qreg_readout, creg_readout)
@@ -398,5 +384,8 @@ plot_distribution(result.quasi_dists[0])
 
 
 **提出するもの**
-- この問題を解く量子回路
-- 45を13に変換するビット押し下げパターンを高確率で見つけていることが分かる結果
+- 以下を行う回路
+  - 状態を準備する
+  - グローバーの反復Gを行う
+  - 読み出しレジスタを制御ビットとして、制御Gゲートを状態レジスタに適用する
+- 量子振幅推定を行った結果のヒストグラムと、その解釈
