@@ -149,8 +149,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit.visualization import plot_histogram
-from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import QiskitRuntimeService
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
@@ -319,32 +317,19 @@ pycharm:
 
     '
 ---
-simulator = AerSimulator()
-shots = 2048
-qc_tr = transpile(qc, backend=simulator)
-results = simulator.run(qc_tr, shots=shots).result()
-answer = results.get_counts()
+from qiskit.primitives import Sampler
 
-def show_distribution(answer):
-    n = len(answer)
-    x = [int(key, 2) for key in list(answer.keys())]
-    y = list(answer.values())
+# Instantiate a new Sampler object
+sampler = Sampler()
 
-    fig, ax = plt.subplots()
-    rect = ax.bar(x,y)
+# Now run the job and examine the results
+sampler_job = sampler.run(qc)
+result = sampler_job.result()
 
-    def autolabel(rects):
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate(f'{height/sum(y):.3f}',
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 0),
-                        textcoords="offset points", ha='center', va='bottom')
-    autolabel(rect)
-    plt.ylabel('Probabilities')
-    plt.show()
+from qiskit.visualization import plot_distribution
+plt.style.use('dark_background')
+plot_distribution(result.quasi_dists[0])
 
-show_distribution(answer)
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}}
@@ -384,7 +369,7 @@ try:
 except AccountNotFoundError:
     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend = service.least_busy(min_num_qubits=4, filters=operational_backend())
+backend = service.least_busy(min_num_qubits=n_meas+1, simulator=False, operational=True)
 print(f"least busy backend: {backend.name}")
 ```
 
@@ -401,7 +386,12 @@ tags: [raises-exception, remove-output]
 ---
 # 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。
 qc_tr = transpile(qc, backend=backend, optimization_level=3)
-job = backend.run(qc_tr, shots=shots)
+
+from qiskit_ibm_runtime import Sampler, Session
+# create a Runtime session for efficient execution (optional)
+session = Session(service=service, backend=backend)
+sampler = Sampler(session=session)
+job = sampler.run(qc)
 ```
 
 ```{code-cell} ipython3
@@ -413,9 +403,8 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # 計算結果
-results = job.result()
-answer = results.get_counts()
-show_distribution(answer)
+result = job.result()
+plot_distribution(result.quasi_dists[0])
 ```
 
 (shor_algo)=
@@ -957,11 +946,19 @@ pycharm:
 slideshow:
   slide_type: ''
 ---
-qc = transpile(qc, backend=simulator)
-results = simulator.run(qc, shots=2048).result()
-answer = results.get_counts()
+shots = 10000
 
-show_distribution(answer)
+# Instantiate a new Sampler object
+from qiskit.primitives import Sampler
+sampler = Sampler()
+
+# Now run the job and examine the results
+sampler_job = sampler.run(qc)
+answer = sampler_job.result().quasi_dists[0]
+
+from qiskit.visualization import plot_distribution
+plt.style.use('dark_background')
+plot_distribution(answer)
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
@@ -984,11 +981,10 @@ slideshow:
 ---
 rows, measured_phases = [], []
 for output in answer:
-    decimal = int(output, 2)  # 10進数に変換
-    phase = decimal / (2 ** n_meas)
+    phase = output / (2 ** n_meas)
     measured_phases.append(phase)
     # これらの値をテーブルの行に追加：
-    rows.append(f"{decimal:3d}      {decimal:3d}/{2 ** n_meas} = {phase:.3f}")
+    rows.append(f"{output:3d}      {output:3d}/{2 ** n_meas} = {phase:.3f}")
 
 # 結果を表示
 print('Register Output    Phase')
