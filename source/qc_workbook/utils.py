@@ -3,6 +3,8 @@
 from typing import Callable, Optional, Union, Tuple
 import collections
 import numpy as np
+from qiskit.transpiler import CouplingMap
+from qiskit.providers.exceptions import BackendPropertyError
 from qiskit_ibm_runtime.api.exceptions import RequestsApiError
 
 def operational_backend(
@@ -81,43 +83,46 @@ def find_best_chain(
         Qubit IDs (int) of the best chain, or a tuple containing the tuple of qubit IDs, log(prod(gate error)),
         and log(prod(readout error)).
     """
-
-    # Put the couplings into a dict for convenience
-    couplings = collections.defaultdict(list)
-    for pair in backend.configuration().coupling_map:
-        couplings[pair[0]].append(pair[1])
+    cmap = CouplingMap(backend.coupling_map.get_edges())
+    cmap.make_symmetric()
 
     # Recursive function to form a list of chains given a starting qubit
-    def make_chains(qubit, chain=tuple()):
+    def make_chains(qubit, chain=()):
         chain += (qubit,)
 
         if len(chain) == length:
             return [chain]
 
         chains = []
-        for neighbor in couplings[qubit]:
-            if neighbor in chain:
-                continue
-
-            chains += make_chains(neighbor, chain)
+        for neighbor in cmap.neighbors(qubit):
+            if neighbor not in chain:
+                chains += make_chains(neighbor, chain)
 
         return chains
 
     # Get all chains starting from all qubits
     chains = []
-    for qubit in range(backend.configuration().n_qubits):
+    for qubit in range(backend.num_qubits):
         chains += make_chains(qubit)
 
     # Find the chain with the smallest error (CX and readout) product
     prop = backend.properties()
 
-    entangling_gate = next(g.name for g in backend.gates if g.name in ['cx', 'ecr'])
+    entangling_gate = next(g.name for g in backend.gates if g.name in ['cz', 'ecr'])
 
     min_log_gate_error = 0.
     min_log_readout_error = 0.
     best_chain = None
     for chain in chains:
-        log_gate_error = sum(np.log(prop.gate_error(entangling_gate, [q1, q2])) for q1, q2 in zip(chain[:-1], chain[1:]))
+        log_gate_error = 0.
+        for q1, q2 in zip(chain[:-1], chain[1:]):
+            try:
+                ent_err = prop.gate_error(entangling_gate, (q1, q2))
+            except BackendPropertyError:
+                ent_fid = (1. - prop.gate_error(entangling_gate, (q2, q1)))
+                ent_fid *= (1. - prop.gate_error('sx', q1)) * (1. - prop.gate_error('sx', q2))
+                ent_err = 1. - ent_fid
+            log_gate_error += np.log(ent_err)
         log_readout_error = sum(np.log(prop.readout_error(q)) for q in chain)
 
         if log_gate_error + log_readout_error < min_log_gate_error + min_log_readout_error:

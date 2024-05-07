@@ -261,7 +261,7 @@ $$
 
 これまで量子「計算機」の話をしていながら、単純であるはずの四則演算のやりかたについて触れていませんでした。理由は、実は量子コンピュータでは四則演算がそんなに単純でないから、です。
 
-足し算を行う量子サブルーチンはいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです{cite}`quantum_addition`。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。
+足し算を行う量子サブルーチンは{doc}`前回の課題 <quantum_computation>`のものを含めいくつか知られていますが、その中で量子ビットの数や用いるゲートの種類の面で効率的なのが、フーリエ変換を用いたものです{cite}`quantum_addition`。ただの足し算にフーリエ変換を持ち出すのは奇妙に思えますが、実際に動かしてみるとなかなかスマートな手法であることがわかります。
 
 このサブルーチンは自然数$a$と$b$が計算基底で表現されている二つの入力レジスタと一つの出力レジスタを使用し、以下のように状態を移します。
 
@@ -493,7 +493,7 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 これまで何度も登場しましたが、量子回路オブジェクトを実機やシミュレータの`run`メソッドに渡す前に、必ず`transpile`という関数を呼んでいました。この関数はトランスパイルという変換を回路に施します。実機においてトランスパイルとは、様々な複合ゲートからなる論理的な回路から、実機のハードウェアに実装されている「基本ゲート」のみで書かれる物理的な回路を作ることを言います[^physical]。
 
-基本ゲートとは何でしょうか。実は、{ref}`第一回 <common_gates>`や{ref}`第二回の前半 <other_gates>`で様々なゲートを紹介しましたが、量子コンピュータの物理的実体（超伝導振動子など）で実際に行える量子操作にはごく少数の種類しかありません。例えば、IBMのマシンでは$X$, $\sqrt{X}$, $R_{z}$, CNOTの4通りです。しかし、この4つの組み合わせで全てのゲートを作ることができます。そのようなゲートの集合を基本ゲートと呼んでいます。
+基本ゲートとは何でしょうか。実は、{ref}`第一回 <common_gates>`や{ref}`第二回の前半 <other_gates>`で様々なゲートを紹介しましたが、量子コンピュータの物理的実体（超伝導振動子など）で実際に行える量子操作にはごく少数の種類しかありません。例えば、IBMのマシンでは$X$, $\sqrt{X}$, $R_{z}$, CNOTもしくはCZの4通りです。しかし、この4つの組み合わせで全てのゲートを作ることができます。そのようなゲートの集合を基本ゲートと呼んでいます。
 
 足し算回路の愚直な実装と効率化した実装の比較に話を戻すと、上で比べていたのはあくまで複合ゲートを使った論理的な回路でした。論理的な回路はどのようにでも書ける（極端に言えば回路全体を一つの「足し算ゲート」と呼んでしまうこともできる）ので、回路のゲート数の比較はトランスパイル後でなければ意味がありません。
 
@@ -508,7 +508,7 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 - 1量子ビットゲートの基本ゲートへの分解
 - 物理的回路の最適化
 
-実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲート（IBMQではCNOT）が実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば以前運用されていたibmq_16_melbourneというマシンは以下のようなトポロジーを持っていました。
+実機のトポロジーとは、実際の量子プロセッサチップ上での量子ビット同士の繋がりかたのことを指します。2つの量子ビットが繋がっているとは、その間で基本制御ゲートが実行できるということを意味します。これまで考慮してきませんでしたが、実はすべての量子ビットが繋がっているわけではないのです。例えば以前運用されていたibmq_16_melbourneというマシンは以下のようなトポロジーを持っていました。
 
 ```{image} figs/melbourne_topology.png
 :height: 200px
@@ -522,7 +522,7 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 {ref}`ゲートの解説 <other_gates>`に出てきたように、SWAPは3つのCNOTに分解されます。つまり、直接接続のない量子ビット同士の制御ゲートが多出するような回路があると、莫大な数のCNOTが使われることになります。**CNOTのエラー率（ゲート操作一回あたりに操作の結果を間違える確率）は1量子ビットゲートのエラー率より一桁ほど高い**ので、これは大きな問題になります。そこで、論理的回路の量子ビットと実機の量子ビットとのマッピング（SWAPが発生すれば対応は変わっていくので、あくまで初期対応）と、回路中にどうSWAPを挿入していくかというルーティングの両方を上手に決めるということが、トランスパイルにおける中心的な課題です。
 
-しかし、実は任意の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。
+しかし、実は任意の回路に対して最適なマッピングとルーティングを探すという問題自体がいわゆるNP-hardな問題なので、qiskitのトランスパイル・ルーチンではこの問題の最適解を探してくれません。代わりにstochastic swapという、乱数を用いた手法が標準設定では利用されます{cite}`sabre_swap`。Stochastic swapは多くの回路で比較的効率のいいルーティングを作ることが知られていますが、乱数を利用するため実行のたびに異なるルーティングが出てくるなど、やや扱いにくい面もあります。また、単純な回路で事前に最適なルーティングがわかっている場合は、stochastic swapを使うべきではありません。
 
 [^physical]: 「物理的」な回路もまだ実は論理的な存在であり、本当にハードウェアが理解するインストラクションに変換するには、さらに基本ゲートを特定のマイクロ波パルス列に直す必要があります。
 
@@ -533,9 +533,7 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 これまで`transpile`関数を回路とバックエンド以外の引数を渡さずに実行してきましたが、実はこの関数の実行時に様々なオプションを使ってトランスパイルの設定を細かくコントロールすることができます。今回の効率化した回路は一列に並んだ量子ビット列上でSWAPを一切使わずに実装できるようになっているので、stochastic swapを使用しないよう設定を変更してトランスパイルをします。バックエンド上のどの量子ビット列を使うかは、`find_best_chain`という関数で自動的に決めます。
 
-本来は実機を使ってこの先の議論を進めたいところですが、2022年4月現在、`'ibm-q/open/main'`プロバイダを使っている場合、最大5量子ビットのマシンしか利用できないため、1ビット+1ビットの足し算回路しか作れず、意味のある比較になりません。そのため、openプロバイダを使っている場合は「フェイク」のバックエンド（実際のバックエンドに似せたシミュレータ）を使います。
-
-```python tags=["remove-output"]
+```python tags=["remove-output"] editable=true slideshow={"slide_type": ""}
 # 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
 # instance = 'hub-x/group-y/project-z'
 instance = None
@@ -550,11 +548,7 @@ backend = service.least_busy(min_num_qubits=13, filters=operational_backend())
 print(f'Using backend {backend.name}')
 ```
 
-```python
-backend.gates[0].name
-```
-
-```python tags=["remove-output"]
+```python tags=["remove-output"] editable=true slideshow={"slide_type": ""}
 # オリジナルの回路をトランスパイルする。optimization_level=3は自動設定のうち、最も効率のいい回路を作る
 print('Transpiling the original circuit with standard settings')
 circuit_original_tr = transpile(circuit_original, backend=backend, optimization_level=3)
@@ -570,22 +564,24 @@ circuit_optimized_tr = transpile(circuit_optimized, backend=backend,
 nops_orig = circuit_original_tr.count_ops()
 nops_opt = circuit_optimized_tr.count_ops()
 
-# バックエンドによって2量子ビット基本ゲートが異なるので、調べておく
-entangling_gate = next(g.name for g in backend.gates if g.name in ['cx', 'ecr'])
+# バックエンドによって2量子ビット基本ゲートが異なるので、調べておく。ecrはCNOTゲートの要素
+entangling_gate = next(g.name for g in backend.gates if g.name in ['cz', 'ecr'])
 
 print(f'Number of operations in the original circuit: {circuit_original_tr.size()}')
-print(f'  Breakdown: N(Rz)={nops_orig["rz"]}, N(X)={nops_orig["x"]}, N(SX)={nops_orig["sx"]}, N(CNOT)={nops_orig[entangling_gate]}')
+print(f'  Breakdown: N(Rz)={nops_orig["rz"]}, N(X)={nops_orig["x"]}, N(SX)={nops_orig["sx"]}, N(2Q)={nops_orig[entangling_gate]}')
 print(f'Number of operations in the optimized circuit: {circuit_optimized_tr.size()}')
-print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(CNOT)={nops_opt[entangling_gate]}')
+print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(2Q)={nops_opt[entangling_gate]}')
 ```
 
-上のセルを実行すると、今度は効率化回路のオペレーションの全数が元の回路の8割、CNOTの数は6割という結果になることがわかります。
+<!-- #region editable=true slideshow={"slide_type": ""} -->
+上のセルを実行すると、今度は効率化回路のオペレーションの全数と2量子ビットゲートの数がともに元の回路の7-8割という結果になることがわかります。
 
 元の回路と効率化した回路の違いは、後者では「数珠つなぎ」になった量子ビット列というトポロジーを仮定して、制御ゲートの順番を工夫して直接明示的にSWAPを挿入していることです。さらに、可能なところでは$C[P]$ゲートの分解で生じるCNOTとSWAPのCNOTが打ち消し合うことも利用しています。最後の逆フーリエ変換でもゲートの順番が工夫してあります。
 
 それでは、トランスパイルした回路を実行してみます。
+<!-- #endregion -->
 
-```python tags=["remove-output"]
+```python tags=["remove-output"] editable=true slideshow={"slide_type": ""}
 simulator = AerSimulator()
 
 job_original = simulator.run(circuit_original_tr, shots=20)
@@ -632,4 +628,6 @@ plot_counts(counts_optimized, n1, n2, ax_optimized)
 fig.subplots_adjust(bottom=-0.2)
 ```
 
+<!-- #region editable=true slideshow={"slide_type": ""} -->
 両方の回路とも、正しい足し算の式がランダムに出現していることを確認してください。
+<!-- #endregion -->
