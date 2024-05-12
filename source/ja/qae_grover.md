@@ -254,7 +254,7 @@ diffuser = QuantumCircuit(n_state)
 ### EDIT BELOW ###
 ##################
 
-# Groverの反復回路eを書いてください
+# Groverの反復を行う回路を書いてください
 #grover_iter = ...?
 
 ##################
