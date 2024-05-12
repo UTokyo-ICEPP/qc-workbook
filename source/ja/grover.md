@@ -319,20 +319,19 @@ pycharm:
 slideshow:
   slide_type: ''
 ---
-# Tested with python 3.8.12, qiskit 0.34.2, numpy 1.22.2
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Qiskit関連のパッケージをインポート
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
-from qiskit.quantum_info import Statevector
-from qiskit.visualization import plot_histogram
+#from qiskit.quantum_info import Statevector
+#from qiskit.visualization import plot_histogram
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import QiskitRuntimeService
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
-from qc_workbook.utils import operational_backend
+#from qc_workbook.utils import operational_backend
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -363,14 +362,15 @@ slideshow:
 tags: [remove-output]
 ---
 Nsol = 45
-n = 6
+n_qubits = 6
 
-grover_circuit = QuantumCircuit(n)
+grover_circuit = QuantumCircuit(n_qubits)
 
-grover_circuit.h(range(n))
+grover_circuit.h(range(n_qubits))
+grover_circuit.barrier()
 
 # オラクルを作成して、回路に実装
-oracle = QuantumCircuit(n)
+oracle = QuantumCircuit(n_qubits)
 
 ##################
 ### EDIT BELOW ###
@@ -384,10 +384,7 @@ oracle = QuantumCircuit(n)
 
 oracle_gate = oracle.to_gate()
 oracle_gate.name = "U_w"
-print(oracle)
-
-grover_circuit.append(oracle_gate, list(range(n)))
-grover_circuit.barrier()
+oracle.draw('mpl')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -404,9 +401,7 @@ grover_circuit.barrier()
 
 oracle.x(1)
 oracle.x(4)
-oracle.h(n-1)
-oracle.mcx(list(range(n-1)), n-1)
-oracle.h(n-1)
+oracle.mcp(np.pi, list(range(n_qubits-1)), n_qubits-1)
 oracle.x(1)
 oracle.x(4)
 
@@ -453,7 +448,9 @@ def diffuser(n):
     U_s.name = "U_s"
     return U_s
 
-grover_circuit.append(diffuser(n), list(range(n)))
+grover_circuit.append(oracle_gate, list(range(n_qubits)))
+grover_circuit.barrier()
+grover_circuit.append(diffuser(n_qubits), list(range(n_qubits)))
 grover_circuit.measure_all()
 grover_circuit.decompose().draw('mpl')
 ```
@@ -478,9 +475,7 @@ def diffuser(n):
     qc.x(list(range(n)))
 
     # multi-controlled Zゲート
-    qc.h(n-1)
-    qc.mcx(list(range(n-1)), n-1)
-    qc.h(n-1)
+    qc.mcp(np.pi, list(range(n-1)), n-1)
 
     qc.x(list(range(n)))
 
@@ -517,6 +512,20 @@ slideshow:
   slide_type: ''
 tags: [remove-output]
 ---
+# Instantiate new AerSimulator and Sampler objects
+simulator = AerSimulator()
+sampler = Sampler()
+
+# Now run the job and examine the results
+grover_circuit = transpile(grover_circuit, backend=simulator)
+sampler_job = sampler.run(grover_circuit, shots=10000)
+result = sampler_job.result()
+
+from qiskit.visualization import plot_distribution
+#plt.style.use('dark_background')
+plot_distribution(result.quasi_dists[0])
+
+'''
 simulator = AerSimulator()
 grover_circuit = transpile(grover_circuit, backend=simulator)
 results = simulator.run(grover_circuit, shots=1024).result()
@@ -542,6 +551,7 @@ def show_distribution(answer):
     plt.show()
 
 show_distribution(answer)
+'''
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -580,9 +590,8 @@ except AccountNotFoundError:
     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
 # 現在稼働中のバックエンド（実機）の中から一番空いているものを選ぶ
-backend = service.least_busy(min_num_qubits=6, filters=operational_backend())
-
-print(f'Jobs will run on {backend.name}')
+backend = service.least_busy(min_num_qubits=n_qubits, simulator=False, operational=True)
+print(f"least busy backend: {backend.name}")
 ```
 
 ```{code-cell} ipython3
@@ -599,9 +608,16 @@ slideshow:
 tags: [raises-exception, remove-output]
 ---
 # 最も空いているバックエンドで回路を実行します。
-
 grover_circuit = transpile(grover_circuit, backend=backend, optimization_level=3)
-job = backend.run(grover_circuit, shots=1024)
+
+session = Session(service=service, backend=backend)
+sampler = RuntimeSampler(session=session)
+
+job = sampler.run(qc)
+print(f">>> Job ID: {job.job_id()}")
+print(f">>> Session ID: {job.session_id}")
+print(f">>> Job Status: {job.status()}")
+#job = backend.run(grover_circuit, shots=1024)
 ```
 
 ```{code-cell} ipython3
@@ -615,9 +631,8 @@ pycharm:
 tags: [raises-exception, remove-output]
 ---
 # 計算結果
-results = job.result()
-answer = results.get_counts(grover_circuit)
-show_distribution(answer)
+result = job.result()
+plot_distribution(result.quasi_dists[0])
 ```
 
 シミュレータに比べると結果は非常に悪いですね。。。残念ながら、今の量子コンピュータをそのまま使うとこういう結果になってしまいます。しかし、{ref}`エラー緩和 <measurement_error_mitigation>`等のテクニックを使うことである程度改善することはできます。
@@ -644,11 +659,11 @@ slideshow:
 # 繰り返しの回数
 Niter = 3
 
-grover_circuit_iterN = QuantumCircuit(n)
-grover_circuit_iterN.h(range(n))
+grover_circuit_iterN = QuantumCircuit(n_qubits)
+grover_circuit_iterN.h(range(n_qubits))
 for I in range(Niter):
-    grover_circuit_iterN.append(oracle_gate, list(range(n)))
-    grover_circuit_iterN.append(diffuser(n), list(range(n)))
+    grover_circuit_iterN.append(oracle_gate, list(range(n_qubits)))
+    grover_circuit_iterN.append(diffuser(n_qubits), list(range(n_qubits)))
 grover_circuit_iterN.measure_all()
 grover_circuit_iterN.draw('mpl')
 ```
@@ -663,10 +678,14 @@ pycharm:
 slideshow:
   slide_type: ''
 ---
-grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
-results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
-answer = results.get_counts()
-show_distribution(answer)
+grover_circuit_iterN = transpile(grover_circuit_iterN, backend=simulator)
+sampler_job = sampler.run(grover_circuit_iterN, shots=10000)
+result = sampler_job.result()
+plot_distribution(result.quasi_dists[0])
+#grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
+#results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
+#answer = results.get_counts()
+#show_distribution(answer)
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
@@ -685,24 +704,33 @@ pycharm:
 slideshow:
   slide_type: ''
 ---
+simulator = AerSimulator()
+sampler = Sampler()
+
 x = []
 y = []
 
+shots = 10000
+
 # 例えば10回繰り返す
 for Niter in range(1,11):
-    grover_circuit_iterN = QuantumCircuit(n)
-    grover_circuit_iterN.h(range(n))
+    grover_circuit_iterN = QuantumCircuit(n_qubits)
+    grover_circuit_iterN.h(range(n_qubits))
     for I in range(Niter):
-        grover_circuit_iterN.append(oracle_gate, list(range(n)))
-        grover_circuit_iterN.append(diffuser(n), list(range(n)))
+        grover_circuit_iterN.append(oracle_gate, list(range(n_qubits)))
+        grover_circuit_iterN.append(diffuser(n_qubits), list(range(n_qubits)))
     grover_circuit_iterN.measure_all()
 
-    grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
-    results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
-    answer = results.get_counts()
+    grover_circuit_iterN = transpile(grover_circuit_iterN, backend=simulator)
+    sampler_job_iterN = sampler.run(grover_circuit_iterN, shots=shots)
+    results_sim_iterN = sampler_job_iterN.result()
+    #grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
+    #results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
+    #answer = results.get_counts()
 
     x.append(Niter)
-    y.append(answer[format(Nsol,'b').zfill(n)])
+    y.append(results_sim_iterN.quasi_dists[0][Nsol]*shots)
+    #y.append(answer[format(Nsol,'b').zfill(n)])
 
 plt.clf()
 plt.scatter(x,y)
@@ -741,51 +769,71 @@ slideshow:
 N1 = 45
 N2 = 26
 
-oracle_2sol = QuantumCircuit(n)
-
 # 45
-oracle_2sol.x(1)
-oracle_2sol.x(4)
-oracle_2sol.h(n-1)
-oracle_2sol.mcx(list(range(n-1)), n-1)
-oracle_2sol.h(n-1)
-oracle_2sol.x(1)
-oracle_2sol.x(4)
+oracle_2sol_1 = QuantumCircuit(n_qubits)
+oracle_2sol_1.x(1)
+oracle_2sol_1.x(4)
+oracle_2sol_1.mcp(np.pi, list(range(n_qubits-1)), n_qubits-1)
+oracle_2sol_1.x(1)
+oracle_2sol_1.x(4)
 
 # 26
-oracle_2sol.x(0)
-oracle_2sol.x(2)
-oracle_2sol.x(5)
-oracle_2sol.h(n-1)
-oracle_2sol.mcx(list(range(n-1)), n-1)
-oracle_2sol.h(n-1)
-oracle_2sol.x(0)
-oracle_2sol.x(2)
-oracle_2sol.x(5)
+oracle_2sol_2 = QuantumCircuit(n_qubits)
+oracle_2sol_2.x(0)
+oracle_2sol_2.x(2)
+oracle_2sol_2.x(5)
+oracle_2sol_2.mcp(np.pi, list(range(n_qubits-1)), n_qubits-1)
+oracle_2sol_2.x(0)
+oracle_2sol_2.x(2)
+oracle_2sol_2.x(5)
+
+oracle_2sol_gate = QuantumCircuit(n_qubits)
+oracle_2sol_gate.append(oracle_2sol_1.to_gate(), list(range(n_qubits)))
+oracle_2sol_gate.barrier()
+oracle_2sol_gate.append(oracle_2sol_2.to_gate(), list(range(n_qubits)))
+oracle_2sol_gate.barrier()
+oracle_2sol_gate.name = "U_w(2sol)"
+oracle_2sol_gate.decompose().draw('mpl')
 
 oracle_2sol_gate = oracle_2sol.to_gate()
 oracle_2sol_gate.name = "U_w(2sol)"
 print(oracle_2sol)
+```
 
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
+
+```{code-cell} ipython3
+---
+editable: true
+pycharm:
+  name: '#%%
+
+    '
+slideshow:
+  slide_type: ''
+---
 x = []
 y = []
 for Niter in range(1,11):
-    grover_circuit_2sol_iterN = QuantumCircuit(n)
-    grover_circuit_2sol_iterN.h(range(n))
+    grover_circuit_2sol_iterN = QuantumCircuit(n_qubits)
+    grover_circuit_2sol_iterN.h(range(n_qubits))
     for I in range(Niter):
-        grover_circuit_2sol_iterN.append(oracle_2sol_gate, list(range(n)))
-        grover_circuit_2sol_iterN.append(diffuser(n), list(range(n)))
+        grover_circuit_2sol_iterN.append(oracle_2sol_gate, list(range(n_qubits)))
+        grover_circuit_2sol_iterN.append(diffuser(n_qubits), list(range(n_qubits)))
     grover_circuit_2sol_iterN.measure_all()
     #print('-----  Niter =',Niter,' -----------')
     #print(grover_circuit_2sol_iterN)
 
-    grover_circuit_2sol_iterN_tr = transpile(grover_circuit_2sol_iterN, backend=simulator)
-    results = simulator.run(grover_circuit_2sol_iterN_tr, shots=1024).result()
-    answer = results.get_counts()
-    #show_distribution(answer)
+    grover_circuit_2sol_iterN = transpile(grover_circuit_2sol_iterN, backend=simulator)
+    sampler_job_2sol_iterN = sampler.run(grover_circuit_2sol_iterN, shots=shots)
+    results_sim_2sol_iterN = sampler_job_2sol_iterN.result()
+    #grover_circuit_2sol_iterN_tr = transpile(grover_circuit_2sol_iterN, backend=simulator)
+    #results = simulator.run(grover_circuit_2sol_iterN_tr, shots=1024).result()
+    #nswer = results.get_counts()
 
     x.append(Niter)
-    y.append(answer[format(N1,'06b')]+answer[format(N2,'06b')])
+    y.append((results_sim_2sol_iterN.quasi_dists[0][N1]+results_sim_2sol_iterN.quasi_dists[0][N2])*shots)
+    #y.append(answer[format(N1,'06b')]+answer[format(N2,'06b')])
 
 plt.clf()
 plt.scatter(x,y)

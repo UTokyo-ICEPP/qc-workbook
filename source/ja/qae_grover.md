@@ -40,7 +40,7 @@ $$
 
 と書くことができますが、$\ket{w}$の振幅である$\sin\frac\theta2$の$\theta$の値が分からないという状況です。
 
-この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
+この書き方に従えば、求める状態は$\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$、それに直交する状態は$\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$だったので、 オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
 
 $$
 \begin{aligned} 
@@ -92,7 +92,7 @@ $$
 
 となります。
 
-ここで$\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})$という状態を定義すると
+ここで$\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})$という状態を考えると、その状態にグローバーの反復$G$を適用すると
 
 $$
 \begin{aligned} 
@@ -102,7 +102,7 @@ G\ket{\psi_{\pm}} &= \frac{1}{\sqrt{2}}(G\ket{w}\pm iG\ket{w^{\perp}}) \\
 \end{aligned} 
 $$
 
-となり、$\ket{\psi_{\pm}}$は$G$の固有ベクトル、$e^{\pm i\theta}$が固有値であることが分かります。
+となるため、$\ket{\psi_{\pm}}$は$G$の固有ベクトル、$e^{\pm i\theta}$が固有値であることが分かります。
 
 このことから、ある状態$\ket{\psi}$を準備して、その状態に量子位相推定の方法を使ってグローバーの反復$G$を作用させて位相推定を行えば、角度$\theta/(2\pi)$を求めることができます。この角度が分かれば、求める答え$\ket{w}$の振幅$\sin\frac\theta2$を推定することができます。これが量子振幅推定と呼ばれる方法です。
 
@@ -149,10 +149,10 @@ from qc_workbook.show_state import statevector_expr
 状態準備として、 3量子ビットの回路でGHZ状態を作ることにします。求める答えの状態$\ket{w}$を$\ket{111}$として、この状態の振幅が$\sin\frac\theta2$となる状態
 
 $$
-\ket{\psi}=\cos\frac\theta2\ket{000}+\sin\frac\theta2\ket{111}
+\ket{\psi(\theta)}=\cos\frac\theta2\ket{000}+\sin\frac\theta2\ket{111}
 $$
 
-を生成する量子回路を作ります。
+を生成する量子回路を作ります。$\theta$の値は$\theta=\frac{1}{3}\pi$とします。
 
 
 ```{code-cell} ipython3
@@ -174,7 +174,7 @@ n_state = 3
 ### EDIT BELOW ###
 ##################
 
-# state_prepの回路を書いてください
+# |psi(theta=pi/3)>を作る回路（state_prep）を書いてください
 #state_prep = ...
 
 ##################
@@ -249,7 +249,7 @@ diffuser = QuantumCircuit(n_state)
 ### EDIT BELOW ###
 ##################
 
-# Groberの反復回路eを書いてください
+# Groverの反復回路eを書いてください
 #grover_iter = ...?
 
 ##################
