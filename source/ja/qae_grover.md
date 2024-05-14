@@ -282,7 +282,7 @@ slideshow:
   slide_type: ''
 ---
 # 読み出しレジスタの量子ビット数
-n_readout = 3
+n_readout = 4
 
 # 読み出しレジスタ
 qreg_readout = QuantumRegister(n_readout, name='readout')
