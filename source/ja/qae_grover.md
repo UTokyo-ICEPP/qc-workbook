@@ -349,7 +349,7 @@ def qft_dagger(qreg):
     return qc
 
 qc.barrier()
-読み出しレジスタに逆フーリエ変換の回路を追加
+# 読み出しレジスタに逆フーリエ変換の回路を追加
 qc.append(qft_dagger(qreg_readout), qargs = qreg_readout)
 qc.barrier()
 qc.measure(qreg_readout, creg_readout)
