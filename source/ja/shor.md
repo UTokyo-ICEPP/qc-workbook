@@ -39,6 +39,7 @@ local: true
 $\newcommand{\ket}[1]{|#1\rangle}$
 $\newcommand{\modequiv}[3]{#1 \equiv #2 \pmod{#3}}$
 $\newcommand{\modnequiv}[3]{#1 \not\equiv #2 \pmod{#3}}$
+$\newcommand{\modne}[3]{#1 \neq #2 \pmod{#3}}$
 
 (shor_introduction)=
 ## はじめに
@@ -442,7 +443,7 @@ plot_distribution(result.quasi_dists[0])
 |y|1|7|4|13|1|7|4|$\cdots$|
 
 のようになります。つまり、$\modequiv{7^r}{1}{15}$を満たす最小の非自明な$r$は4になることが分かります。
-$r=4$は偶数なので、$\modequiv{x}{7^{4/2}}{15}$が定義でき、$x=4$です。$x+1 = \modnequiv{5}{0}{15}$なので、
+$r=4$は偶数なので、$\modequiv{x}{7^{4/2}}{15}$が定義でき、$x=4$です。$x+1 = \modne{5}{0}{15}$なので、
 
 $$
 \{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}

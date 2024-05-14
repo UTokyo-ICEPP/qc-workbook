@@ -40,7 +40,7 @@ $$
 
 と書くことができますが、$\ket{w}$の振幅である$\sin\frac\theta2$の$\theta$の値が分からないという状況です。
 
-この書き方に従えば、オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
+この書き方に従えば、求める状態は$\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$、それに直交する状態は$\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$だったので、 オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
 
 $$
 \begin{aligned} 
@@ -73,7 +73,13 @@ $$
 
 グローバーのアルゴリズムと量子位相推定の方法を組み合わせることで、量子状態$\ket{\psi}$の振幅を推定することができます。この方法は**量子振幅推定**と呼ばれ、その基本的な方法は最初にこの論文{cite}`Brassard_2000xvp`で提案されました。
 
-グローバーの反復$G=U_sU_w$が
+まず、グローバーの反復$G$が$\ket{\psi}$を$\ket{w}$に向かって角度$\theta$回転するということをよりクリアに見るため、 $\ket{w}$と$\ket{w^{\perp}}$を使って
+
+$$
+\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})
+$$
+
+と書ける状態$\ket{\psi_{\pm}}$を考えてみます。この状態に$G$を適用するわけですが、 $G=U_sU_w$が
 
 $$
 \begin{aligned} 
@@ -90,9 +96,7 @@ G\ket{w^{\perp}} &= \cos\theta\ket{w^{\perp}}+\sin\theta\ket{w}
 \end{aligned} 
 $$
 
-となります。
-
-ここで$\ket{\psi_{\pm}} := \frac{1}{\sqrt{2}}(\ket{w}\pm i\ket{w^{\perp}})$という状態を定義すると
+となります。なので、$\ket{\psi_{\pm}}$に$G$を適用すると
 
 $$
 \begin{aligned} 
@@ -102,9 +106,10 @@ G\ket{\psi_{\pm}} &= \frac{1}{\sqrt{2}}(G\ket{w}\pm iG\ket{w^{\perp}}) \\
 \end{aligned} 
 $$
 
-となり、$\ket{\psi_{\pm}}$は$G$の固有ベクトル、$e^{\pm i\theta}$が固有値であることが分かります。
+となります。つまり$\ket{\psi_{\pm}}$は$G$の固有ベクトルで、$e^{\pm i\theta}$はその固有値です。
+これは$\ket{\psi}$が$G$の固有ベクトルそのものになっているケースですが、 {ref}`量子位相推定の実習 <qpe_imp_simulator>`で見たように、準備する状態$\ket{\psi}$が固有ベクトルの成分を含む形になっていれば、効率は下がりますが、量子位相推定が使えると予想できそうです。
 
-このことから、ある状態$\ket{\psi}$を準備して、その状態に量子位相推定の方法を使ってグローバーの反復$G$を作用させて位相推定を行えば、角度$\theta/(2\pi)$を求めることができます。この角度が分かれば、求める答え$\ket{w}$の振幅$\sin\frac\theta2$を推定することができます。これが量子振幅推定と呼ばれる方法です。
+このことから、（$\ket{w}$を含む）状態$\ket{\psi}$を準備して、その状態にグローバーの反復$G$を作用させて量子位相推定を行えば、固有値の位相として角度$\theta/(2\pi)$を求めることができそうです。この角度が分かれば、求める答え$\ket{w}$の振幅$\sin\frac\theta2$を推定することができます。これが量子振幅推定と呼ばれる方法です。
 
 
 
@@ -149,10 +154,10 @@ from qc_workbook.show_state import statevector_expr
 状態準備として、 3量子ビットの回路でGHZ状態を作ることにします。求める答えの状態$\ket{w}$を$\ket{111}$として、この状態の振幅が$\sin\frac\theta2$となる状態
 
 $$
-\ket{\psi}=\cos\frac\theta2\ket{000}+\sin\frac\theta2\ket{111}
+\ket{\psi(\theta)}=\cos\frac\theta2\ket{000}+\sin\frac\theta2\ket{111}
 $$
 
-を生成する量子回路を作ります。
+を生成する量子回路を作ります。$\theta$の値は$\theta=\frac{\pi}{3}$とします。
 
 
 ```{code-cell} ipython3
@@ -174,7 +179,7 @@ n_state = 3
 ### EDIT BELOW ###
 ##################
 
-# state_prepの回路を書いてください
+# |psi(theta=pi/3)>を作る回路（state_prep）を書いてください
 #state_prep = ...
 
 ##################
@@ -249,7 +254,7 @@ diffuser = QuantumCircuit(n_state)
 ### EDIT BELOW ###
 ##################
 
-# Groberの反復回路eを書いてください
+# Groverの反復を行う回路を書いてください
 #grover_iter = ...?
 
 ##################
@@ -344,7 +349,7 @@ def qft_dagger(qreg):
     return qc
 
 qc.barrier()
-読み出しレジスタに逆フーリエ変換の回路を追加
+# 読み出しレジスタに逆フーリエ変換の回路を追加
 qc.append(qft_dagger(qreg_readout), qargs = qreg_readout)
 qc.barrier()
 qc.measure(qreg_readout, creg_readout)
