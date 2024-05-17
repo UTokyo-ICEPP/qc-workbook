@@ -165,7 +165,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
