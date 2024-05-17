@@ -208,7 +208,7 @@ def random_statevector(nq):
 statevector = Statevector(np.array([np.cos(np.pi / 6.), np.exp(1.j * np.pi / 6.) * np.sin(np.pi / 6.)]))
 for pauli in ['X', 'Y', 'Z']:
     op = SparsePauliOp(pauli)
-    print(f'<{pauli}> = {statevector.expectation_value(op).real}')
+    print(f'<{pauli}> = {statevector.expectation_value(op).real:.5f}')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -263,7 +263,7 @@ ansatz_1q.assign_parameters({theta: np.pi / 3., phi: np.pi / 6.}, inplace=False)
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 circuits = {}
 
@@ -292,7 +292,7 @@ circuits['Z'].measure_all()
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 backend = AerSimulator()
 
