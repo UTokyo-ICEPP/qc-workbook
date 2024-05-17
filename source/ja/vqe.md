@@ -238,7 +238,7 @@ Parameterに値を代入するには、回路の`assign_parameters`メソッド�
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 # Parameterの値は未定
 ansatz_1q.draw('mpl')
@@ -374,7 +374,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -536,7 +536,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -666,7 +666,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -858,7 +858,7 @@ $$
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import CG, GradientDescent
@@ -870,7 +870,7 @@ from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 # Ansatzの定義
 
