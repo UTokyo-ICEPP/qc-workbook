@@ -227,22 +227,14 @@ phi = Parameter('φ')
 
 ansatz_1q = QuantumCircuit(1)
 ansatz_1q.u(theta, phi, 0., 0)
+
+# Parameterの値は未定
+ansatz_1q.draw('mpl')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 Parameterに値を代入するには、回路の`assign_parameters`メソッドを利用します。
-
-```{code-cell} ipython3
----
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-output]
----
-# Parameterの値は未定
-ansatz_1q.draw('mpl')
-```
 
 ```{code-cell} ipython3
 ---
@@ -873,7 +865,6 @@ slideshow:
 tags: [remove-output]
 ---
 # Ansatzの定義
-
 num_qubits = 3   # 量子ビット数
 num_layers = 2  # レイヤー数
 
