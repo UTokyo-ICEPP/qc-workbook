@@ -108,8 +108,11 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
+import os
+import sys
+import logging
 import pprint
 import numpy as np
 import h5py
@@ -156,6 +159,59 @@ VQEを一般の最適化アルゴリズムとして利用するには、問題�
 また、図中のオレンジのようなケース（途中でヒットが抜けているようなセグメント）や茶色のケース（飛跡がジグザグしているもの）も興味のある飛跡とは言えないため、スコアは-1より大きな値に設定されます。なぜジグザグした飛跡が好ましくないかですが、一様な磁場に直交する方向に荷電粒子が入射した場合、その入射平面ではローレンツ力のせいで一定の曲率で同じ方向に粒子の軌道が曲がるからです。
 
 +++
+
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+from hepqpr.qallse import *
+
+density = 0.0015
+prefix = 'ds'+str(density)
+
+# ==== BUILD CONFIG
+loglevel = logging.INFO
+
+input_path = 'data/ds/'+prefix+'/event000001000-hits.csv'
+output_path = 'data/ds/'+prefix+'/'
+
+model_class = QallseD0  # model class to use
+extra_config = dict()  # model config
+
+dump_config = dict(
+    output_path = os.getcwd()+'/ds/'+prefix+'/',
+    prefix=prefix+'_',
+    xplets_kwargs=dict(format='json', indent=3), # use json (vs "pickle") and indent the output
+    qubo_kwargs=dict(w_marker=None, c_marker=None) # save the real coefficients VS generic placeholders
+)
+
+# ==== configure logging
+logging.basicConfig(
+    stream=sys.stderr,
+    format="%(asctime)s.%(msecs)03d [%(name)-15s %(levelname)-5s] %(message)s",
+    datefmt='%Y-%m-%dT%H:%M:%S')
+
+logging.getLogger('hepqpr').setLevel(loglevel)
+
+# ==== build model
+# load data
+dw = DataWrapper.from_path(input_path)
+doublets = pd.read_csv(input_path.replace('-hits.csv', '-doublets.csv'))
+
+# build model
+model = model_class(dw, **extra_config)
+model.build_model(doublets)
+
+# dump model to a file
+dumper.dump_model(model, **dump_config)
+```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
+
 
 #### QUBO
 

@@ -13,13 +13,13 @@ def scale_z(z,minz,maxz,nbins):
     minz = np.abs(minz)
     maxz = np.abs(maxz)
     z = np.add(minz,z)
-    return (z * float(nbins-1) / (minz+maxz)).astype(np.int)
+    return (z * float(nbins-1) / (minz+maxz)).astype(int)
 
 def scale_phi(phi, phi_bins):
     """
     bin phi
     """
-    return (phi * float(phi_bins-1) / (2*np.pi)).astype(np.int)
+    return (phi * float(phi_bins-1) / (2*np.pi)).astype(int)
 
 
 #calc_r, theta, eta, phi, draw_scatter from Steve's notebook
