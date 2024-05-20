@@ -482,9 +482,9 @@ print(f'Optimal segments (VQE): {optimal_segments_vqe}')
 (omake)=
 ### おまけ
 
-Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。厳密対角化の結果を図示する時は`type = diag`、VQEの結果を図示する時は`type = vqe`としてください。
+Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。厳密対角化の結果を図示する時は`type = "diag"`、VQEの結果を図示する時は`type = "vqe"`としてください。
 
-正しい計算ができていれば、いくつかの情報とともに"tracks found: 1"という結果が出て、その時の飛跡の図が作られます。セルを実行したあと、ウィンドウの左端にあるフォルダアイコンをクリックし、出てくるサブウィンドウの中の`plot-ising_[type]_found_tracks.html`をダウンロードして、ブラウザで開いてください。。この図はQUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面に投影したものです。再構成が成功していれば、ヒットが繋がって飛跡として再構成されていることが見て取れるはずです。緑の線が実際に見つかった飛跡です。
+正しい計算ができていれば、いくつかの情報とともに"tracks found: 1"という結果が出て、その時の飛跡の図が作られます。 この図はQUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面に投影したものです。再構成が成功していれば、ヒットが繋がって飛跡として再構成されていることが見て取れるはずです。緑の線が実際に見つかった飛跡です。
 
 ```{code-cell} ipython3
 ---
@@ -533,6 +533,9 @@ dims = ['x', 'y']
 _, missings, _ = diff_rows(final_doublets, dw.get_real_doublets())
 dout = 'plot-ising_'+type+'_found_tracks.html'
 iplot_results(dw, final_doublets, missings, dims=dims, filename=dout)
+
+from IPython.display import HTML
+HTML(dout)
 ```
 
 **提出するもの**
