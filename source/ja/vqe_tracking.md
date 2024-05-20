@@ -531,7 +531,7 @@ print(f'          tracks found: {len(final_tracks)}, trackml score (%): {trackml
 
 dims = ['x', 'y']
 _, missings, _ = diff_rows(final_doublets, dw.get_real_doublets())
-dout = 'plot-ising_found_tracks.html'
+dout = 'plot-ising_'+type+'_found_tracks.html'
 iplot_results(dw, final_doublets, missings, dims=dims, filename=dout)
 ```
 
