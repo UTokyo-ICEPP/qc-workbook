@@ -314,15 +314,6 @@ print(f'Number of segments: {a_score.shape[0]}')
 # 最初の5x5をプリント
 print(a_score[:5])
 print(b_score[:5, :5])
-
-# スコアの読み込み
-#with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
-#    a_score = source['a_score'][()]
-#    b_score = source['b_score'][()]
-#print(f'Number of segments: {a_score.shape[0]}')
-# 最初の5x5をプリント
-#print(a_score[:5])
-#print(b_score[:5, :5])
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -438,8 +429,6 @@ print(f'Optimal segments (diagonalization): {optimal_segments_diag}')
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-`optimal_segments_diag`のリストで1になっている量子ビットが、目的関数を最小化するセグメントの選択に対応します。
-
 次に、VQEで最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。
 
 ```{code-cell} ipython3
@@ -493,9 +482,9 @@ print(f'Optimal segments (VQE): {optimal_segments_vqe}')
 (omake)=
 ### おまけ
 
-Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。
+Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。厳密対角化の結果を図示する時は`type = diag`、VQEの結果を図示する時は`type = vqe`としてください。
 
-このコードは、QUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面でプロットして、どのヒットが選ばれたかを分かりやすく可視化したものです。緑の線が実際に見つかった飛跡で、青の線を含めたものが全体の飛跡の候補です。この実習では限られた数の量子ビットしか使っていないため、大部分の飛跡は見つけられていませんが、緑の線から計算に使った3点ヒットからは正しく飛跡が見つかっていることが分かると思います。
+正しい計算ができていれば、いくつかの情報とともに"tracks found: 1"という結果が出て、その時の飛跡の図が作られます。セルを実行したあと、ウィンドウの左端にあるフォルダアイコンをクリックし、出てくるサブウィンドウの中の`plot-ising_[type]_found_tracks.html`をダウンロードして、ブラウザで開いてください。。この図はQUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面に投影したものです。再構成が成功していれば、ヒットが繋がって飛跡として再構成されていることが見て取れるはずです。緑の線が実際に見つかった飛跡です。
 
 ```{code-cell} ipython3
 ---
