@@ -160,6 +160,8 @@ VQEを一般の最適化アルゴリズムとして利用するには、問題�
 
 +++
 
+最初に下のセルを実行し、すでに作成してあるデータを取得します。データに含まれるセグメント（triplet）の数などの情報をプリントアウトするようにしています。
+
 
 ```{code-cell} ipython3
 ---
@@ -175,14 +177,14 @@ prefix = 'ds'+str(density)
 # ==== BUILD CONFIG
 loglevel = logging.INFO
 
-input_path = 'data/ds/'+prefix+'/event000001000-hits.csv'
-output_path = 'data/ds/'+prefix+'/'
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+output_path = 'source/data/ds/'+prefix+'/'
 
 model_class = QallseD0  # model class to use
 extra_config = dict()  # model config
 
 dump_config = dict(
-    output_path = os.getcwd()+'/ds/'+prefix+'/',
+    output_path = 'source/data/ds/'+prefix+'/',
     prefix=prefix+'_',
     xplets_kwargs=dict(format='json', indent=3), # use json (vs "pickle") and indent the output
     qubo_kwargs=dict(w_marker=None, c_marker=None) # save the real coefficients VS generic placeholders
@@ -211,6 +213,51 @@ dumper.dump_model(model, **dump_config)
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
++++
+
+次のセルでデータからQUBOを作成します
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+import pickle
+from os.path import join as path_join
+
+from hepqpr.qallse.other.stdout_redirect import capture_stdout
+from hepqpr.qallse.other.dw_timing_recorder import solver_with_timing, TimingRecord
+from hepqpr.qallse.plotting import *
+
+# ==== RUN CONFIG
+nreads = 10
+nseed = 1000000
+
+loglevel = logging.INFO
+
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+qubo_path = 'source/data/ds/'+prefix+'/'
+
+# ==== configure logging
+logging.basicConfig(
+    stream=sys.stdout,
+    format="%(asctime)s.%(msecs)03d [%(name)-15s %(levelname)-5s] %(message)s",
+    datefmt='%Y-%m-%dT%H:%M:%S')
+
+logging.getLogger('hepqpr').setLevel(loglevel)
+
+# ==== build model
+# load data
+dw = DataWrapper.from_path(input_path)
+pickle_file = prefix+'_qubo.pickle'
+with open(path_join(qubo_path, pickle_file), 'rb') as f:
+    Q = pickle.load(f)
+#print(Q)
+```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 
 
 #### QUBO
@@ -234,14 +281,44 @@ slideshow:
   slide_type: ''
 ---
 # スコアの読み込み
-with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
-    a_score = source['a_score'][()]
-    b_score = source['b_score'][()]
+n_max = 100
+
+nvar = 0
+key_i = []
+a_score = np.zeros(n_max)
+for (k1, k2), v in Q.items():
+    if k1 == k2:
+        a_score[nvar] = v
+        key_i.append(k1)
+        nvar += 1
+a_score = a_score[:nvar]
+
+b_score = np.zeros((n_max,n_max))
+for (k1, k2), v in Q.items():
+    if k1 != k2:
+        for i in range(nvar):
+            for j in range(nvar):
+                if k1 == key_i[i] and k2 == key_i[j]:
+                    if i < j:
+                        b_score[j][i] = v
+                    else:
+                        b_score[i][j] = v
+
+b_score = b_score[:nvar,:nvar]
 
 print(f'Number of segments: {a_score.shape[0]}')
 # 最初の5x5をプリント
 print(a_score[:5])
 print(b_score[:5, :5])
+
+# スコアの読み込み
+#with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
+#    a_score = source['a_score'][()]
+#    b_score = source['b_score'][()]
+#print(f'Number of segments: {a_score.shape[0]}')
+# 最初の5x5をプリント
+#print(a_score[:5])
+#print(b_score[:5, :5])
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
