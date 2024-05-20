@@ -512,23 +512,27 @@ from hepqpr.qallse import DataWrapper, Qallse, TrackRecreaterD
 from hepqpr.qallse.plotting import iplot_results, iplot_results_tracks
 from hepqpr.qallse.utils import diff_rows
 
-optimal_segments = optimal_segments_vqe
-# optimal_segments = optimal_segments_diag
+# どちらの結果をプロットするか指定する
+#   diag = 厳密対角化の結果
+#   vqe = VQEの結果
+type = "diag"
+#type = "vqe"
 
-# セグメントにはそれぞれIDがついているので、{ID: 0 or 1}の形でQallseにデータを渡す
-# まずはセグメントのIDの読み出し（バイナリ文字データで保存されているので、UTF-8にdecodeしている）
-with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
-    triplet_keys = map(lambda key: key.decode('UTF-8'), source['triplet_keys'][()])
+if type == "diag":
+    optimal_segments = optimal_segments_diag
+elif type == "vqe":
+    optimal_segments = optimal_segments_vqe
 
 # ここで {ID: 0 or 1} の辞書を作っている
-samples = dict(zip(triplet_keys, optimal_segments))
+samples = dict(zip(key_i, optimal_segments))
 
-# get the results
+# 結果を取得する
 all_doublets = Qallse.process_sample(samples)
 
 final_tracks, final_doublets = TrackRecreaterD().process_results(all_doublets)
 
-dw = DataWrapper.from_path('data/event000001000-hits.csv')
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+dw = DataWrapper.from_path(input_path)
 
 p, r, ms = dw.compute_score(final_doublets)
 trackml_score = dw.compute_trackml_score(final_tracks)
