@@ -147,6 +147,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -292,7 +293,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 u_out = QuantumCircuit(nqubit, name='U_out')
 
@@ -350,6 +351,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 model = QuantumCircuit(nqubit, name='model')
 
@@ -486,6 +488,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 plt.plot(losses)
 ```
@@ -505,6 +508,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 x_list = np.linspace(x_min, x_max, 100)
 
@@ -654,6 +658,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 #feature_map = ZFeatureMap(feature_dimension=feature_dim, reps=1)
 feature_map = ZZFeatureMap(feature_dimension=feature_dim, reps=1, entanglement='circular')
@@ -776,7 +781,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [remove-output]
 ---
 vqc.fit(norm_train_data, train_label_one_hot)
 
@@ -817,6 +822,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 train_score = vqc.score(norm_train_data, train_label_one_hot)
 test_score = vqc.score(norm_test_data, test_label_one_hot)

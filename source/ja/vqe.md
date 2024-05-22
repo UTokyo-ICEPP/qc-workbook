@@ -192,6 +192,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 rng = np.random.default_rng(999999)
 
@@ -241,6 +242,7 @@ Parameterに値を代入するには、回路の`assign_parameters`メソッド�
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 # thetaとphiにπ/3とπ/6を代入
 ansatz_1q.assign_parameters({theta: np.pi / 3., phi: np.pi / 6.}, inplace=False).draw('mpl')
@@ -432,6 +434,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 plt.plot(losses);
 ```
@@ -451,6 +454,7 @@ slideshow:
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 fidelity(ansatz_1q, min_result.x, target_state_1q)
 ```
@@ -476,6 +480,7 @@ VQEを含む変分量子アルゴリズムでは、上のように変分フォ�
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 # BackendEstimatorインスタンスの生成
 estimator = BackendEstimator(backend)
@@ -588,6 +593,7 @@ if os.getenv('JUPYTERBOOK_BUILD') == '1':
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 fidelity(ansatz_1q, min_result.x, target_state_1q)
 ```
@@ -730,6 +736,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 fidelity(ansatz_2q, min_result.x, target_state_2q)
 ```
@@ -973,6 +980,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 print('Result:')
 print(f'  Exact      = {result_ee.eigenvalue}')
