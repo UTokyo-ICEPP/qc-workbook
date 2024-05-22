@@ -165,7 +165,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -208,7 +208,7 @@ def random_statevector(nq):
 statevector = Statevector(np.array([np.cos(np.pi / 6.), np.exp(1.j * np.pi / 6.) * np.sin(np.pi / 6.)]))
 for pauli in ['X', 'Y', 'Z']:
     op = SparsePauliOp(pauli)
-    print(f'<{pauli}> = {statevector.expectation_value(op).real}')
+    print(f'<{pauli}> = {statevector.expectation_value(op).real:.5f}')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -227,22 +227,14 @@ phi = Parameter('φ')
 
 ansatz_1q = QuantumCircuit(1)
 ansatz_1q.u(theta, phi, 0., 0)
+
+# Parameterの値は未定
+ansatz_1q.draw('mpl')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 Parameterに値を代入するには、回路の`assign_parameters`メソッドを利用します。
-
-```{code-cell} ipython3
----
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-input, remove-output]
----
-# Parameterの値は未定
-ansatz_1q.draw('mpl')
-```
 
 ```{code-cell} ipython3
 ---
@@ -263,7 +255,7 @@ ansatz_1q.assign_parameters({theta: np.pi / 3., phi: np.pi / 6.}, inplace=False)
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 circuits = {}
 
@@ -292,7 +284,7 @@ circuits['Z'].measure_all()
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 backend = AerSimulator()
 
@@ -374,7 +366,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -536,7 +528,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -666,7 +658,7 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 500
+maxiter = 300
 # COBYLAの収束条件（小さいほどよい近似を目指す）
 tol = 0.0001
 # バックエンドでのショット数
@@ -858,7 +850,7 @@ $$
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 from qiskit_algorithms.minimum_eigensolvers import VQE, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import CG, GradientDescent
@@ -870,10 +862,9 @@ from qiskit_algorithms.gradients import ParamShiftEstimatorGradient
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 # Ansatzの定義
-
 num_qubits = 3   # 量子ビット数
 num_layers = 2  # レイヤー数
 

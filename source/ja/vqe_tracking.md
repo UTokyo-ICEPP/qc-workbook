@@ -108,8 +108,11 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
+import os
+import sys
+import logging
 import pprint
 import numpy as np
 import h5py
@@ -157,6 +160,65 @@ VQEを一般の最適化アルゴリズムとして利用するには、問題�
 
 +++
 
+最初に下のセルを実行し、すでに作成してあるデータを取得します。データに含まれるセグメント（triplet）の数などの情報をプリントアウトするようにしています。
+
+
+```{code-cell} ipython3
+---
+editable: true
+pycharm:
+  name: '#%%
+
+    '
+slideshow:
+  slide_type: ''
+tags: [remove-output]
+---
+from hepqpr.qallse import *
+
+density = 0.0015
+prefix = 'ds'+str(density)
+
+# ==== BUILD CONFIG
+loglevel = logging.INFO
+
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+output_path = 'source/data/ds/'+prefix+'/'
+
+model_class = QallseD0  # model class to use
+extra_config = dict()  # model config
+
+dump_config = dict(
+    output_path = 'source/data/ds/'+prefix+'/',
+    prefix=prefix+'_',
+    xplets_kwargs=dict(format='json', indent=3), # use json (vs "pickle") and indent the output
+    qubo_kwargs=dict(w_marker=None, c_marker=None) # save the real coefficients VS generic placeholders
+)
+
+# ==== configure logging
+logging.basicConfig(
+    stream=sys.stderr,
+    format="%(asctime)s.%(msecs)03d [%(name)-15s %(levelname)-5s] %(message)s",
+    datefmt='%Y-%m-%dT%H:%M:%S')
+
+logging.getLogger('hepqpr').setLevel(loglevel)
+
+# ==== build model
+# load data
+dw = DataWrapper.from_path(input_path)
+doublets = pd.read_csv(input_path.replace('-hits.csv', '-doublets.csv'))
+
+# build model
+model = model_class(dw, **extra_config)
+model.build_model(doublets)
+
+# dump model to a file
+dumper.dump_model(model, **dump_config)
+```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
+
 #### QUBO
 
 以上のセットアップで、各セグメントを粒子飛跡の一部として採用するかフェイクとして棄却するかを考えます。具体的には、$N$個のセグメントのうち$i$番目の採用・棄却を二値変数$T_i$の値1と0に対応させ、目的関数
@@ -169,7 +231,52 @@ $$
 
 上のような形式の最適化問題を**QUBO**（*Quadratic Unconstrained Binary Optimization*、2次制約無し2値最適化）と呼びます。一見特殊な形式ですが、実は様々な最適化問題（例えば有名な巡回セールスマン問題なども）がQUBOの形に落とし込めることが知られています。また、ここでは直接関係しませんが、量子アニーリングマシンと呼ばれるタイプの量子コンピュータでは、QUBOを解くことが動作の基本です。
 
-それでは、まずスコア$a_{i}$と$b_{ij}$を読み出しましょう。
++++
+
+まず、上のセルで作ったデータからQUBOを作成します
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+import pickle
+from os.path import join as path_join
+
+from hepqpr.qallse.other.stdout_redirect import capture_stdout
+from hepqpr.qallse.other.dw_timing_recorder import solver_with_timing, TimingRecord
+from hepqpr.qallse.plotting import *
+
+# ==== RUN CONFIG
+nreads = 10
+nseed = 1000000
+
+loglevel = logging.INFO
+
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+qubo_path = 'source/data/ds/'+prefix+'/'
+
+# ==== configure logging
+logging.basicConfig(
+    stream=sys.stdout,
+    format="%(asctime)s.%(msecs)03d [%(name)-15s %(levelname)-5s] %(message)s",
+    datefmt='%Y-%m-%dT%H:%M:%S')
+
+logging.getLogger('hepqpr').setLevel(loglevel)
+
+# ==== build model
+# load data
+dw = DataWrapper.from_path(input_path)
+pickle_file = prefix+'_qubo.pickle'
+with open(path_join(qubo_path, pickle_file), 'rb') as f:
+    Q = pickle.load(f)
+#print(Q)
+```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
+作ったQUBOから、スコア$a_{i}$と$b_{ij}$を読み出します。
 
 ```{code-cell} ipython3
 ---
@@ -178,9 +285,30 @@ slideshow:
   slide_type: ''
 ---
 # スコアの読み込み
-with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
-    a_score = source['a_score'][()]
-    b_score = source['b_score'][()]
+n_max = 100
+
+nvar = 0
+key_i = []
+a_score = np.zeros(n_max)
+for (k1, k2), v in Q.items():
+    if k1 == k2:
+        a_score[nvar] = v
+        key_i.append(k1)
+        nvar += 1
+a_score = a_score[:nvar]
+
+b_score = np.zeros((n_max,n_max))
+for (k1, k2), v in Q.items():
+    if k1 != k2:
+        for i in range(nvar):
+            for j in range(nvar):
+                if k1 == key_i[i] and k2 == key_i[j]:
+                    if i < j:
+                        b_score[j][i] = v
+                    else:
+                        b_score[i][j] = v
+
+b_score = b_score[:nvar,:nvar]
 
 print(f'Number of segments: {a_score.shape[0]}')
 # 最初の5x5をプリント
@@ -189,6 +317,7 @@ print(b_score[:5, :5])
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 
 #### Ising形式
 
@@ -300,8 +429,6 @@ print(f'Optimal segments (diagonalization): {optimal_segments_diag}')
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-`optimal_segments_diag`のリストで1になっている量子ビットが、目的関数を最小化するセグメントの選択に対応します。
-
 次に、VQEで最小エネルギーを求めてみます。オプティマイザーとしてSPSAあるいはCOBYLAを使う場合のコードは以下のようになります。
 
 ```{code-cell} ipython3
@@ -355,9 +482,9 @@ print(f'Optimal segments (VQE): {optimal_segments_vqe}')
 (omake)=
 ### おまけ
 
-Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。
+Trackingがうまく行っても、この答えだと0と1が並んでいるだけで面白くないですよね。正しく飛跡が見つかったかどうか目で確認するため、以下のコードを走らせてみましょう。厳密対角化の結果を図示する時は`type = "diag"`、VQEの結果を図示する時は`type = "vqe"`としてください。
 
-このコードは、QUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面でプロットして、どのヒットが選ばれたかを分かりやすく可視化したものです。緑の線が実際に見つかった飛跡で、青の線を含めたものが全体の飛跡の候補です。この実習では限られた数の量子ビットしか使っていないため、大部分の飛跡は見つけられていませんが、緑の線から計算に使った3点ヒットからは正しく飛跡が見つかっていることが分かると思います。
+正しい計算ができていれば、いくつかの情報とともに"tracks found: 1"という結果が出て、その時の飛跡の図が作られます。 この図はQUBOを定義する時に使った検出器のヒット位置をビーム軸に垂直な平面に投影したものです。再構成が成功していれば、ヒットが繋がって飛跡として再構成されていることが見て取れるはずです。緑の線が実際に見つかった飛跡です。
 
 ```{code-cell} ipython3
 ---
@@ -374,23 +501,27 @@ from hepqpr.qallse import DataWrapper, Qallse, TrackRecreaterD
 from hepqpr.qallse.plotting import iplot_results, iplot_results_tracks
 from hepqpr.qallse.utils import diff_rows
 
-optimal_segments = optimal_segments_vqe
-# optimal_segments = optimal_segments_diag
+# どちらの結果をプロットするか指定する
+#   diag = 厳密対角化の結果
+#   vqe = VQEの結果
+type = "diag"
+#type = "vqe"
 
-# セグメントにはそれぞれIDがついているので、{ID: 0 or 1}の形でQallseにデータを渡す
-# まずはセグメントのIDの読み出し（バイナリ文字データで保存されているので、UTF-8にdecodeしている）
-with h5py.File('data/QUBO_05pct_input.h5', 'r') as source:
-    triplet_keys = map(lambda key: key.decode('UTF-8'), source['triplet_keys'][()])
+if type == "diag":
+    optimal_segments = optimal_segments_diag
+elif type == "vqe":
+    optimal_segments = optimal_segments_vqe
 
 # ここで {ID: 0 or 1} の辞書を作っている
-samples = dict(zip(triplet_keys, optimal_segments))
+samples = dict(zip(key_i, optimal_segments))
 
-# get the results
+# 結果を取得する
 all_doublets = Qallse.process_sample(samples)
 
 final_tracks, final_doublets = TrackRecreaterD().process_results(all_doublets)
 
-dw = DataWrapper.from_path('data/event000001000-hits.csv')
+input_path = 'source/data/ds/'+prefix+'/event000001000-hits.csv'
+dw = DataWrapper.from_path(input_path)
 
 p, r, ms = dw.compute_score(final_doublets)
 trackml_score = dw.compute_trackml_score(final_tracks)
@@ -400,8 +531,11 @@ print(f'          tracks found: {len(final_tracks)}, trackml score (%): {trackml
 
 dims = ['x', 'y']
 _, missings, _ = diff_rows(final_doublets, dw.get_real_doublets())
-dout = 'plot-ising_found_tracks.html'
+dout = 'plot-ising_'+type+'_found_tracks.html'
 iplot_results(dw, final_doublets, missings, dims=dims, filename=dout)
+
+from IPython.display import HTML
+HTML(dout)
 ```
 
 **提出するもの**
