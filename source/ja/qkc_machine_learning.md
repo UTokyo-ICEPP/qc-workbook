@@ -265,7 +265,7 @@ slideshow:
   slide_type: ''
 ---
 # ファイルから変数を読み出す
-df = pd.read_csv("data/SUSY_1K.csv",
+df = pd.read_csv("source/data/SUSY_1K.csv",
                  names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
                         'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
                         'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
