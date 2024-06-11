@@ -24,7 +24,7 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
-# 【課題】量子カーネルを使った新現象の分類
+# 【参考】量子カーネルを使った新現象の分類
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -234,6 +234,7 @@ $$
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -262,9 +263,10 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 # ファイルから変数を読み出す
-df = pd.read_csv("data/SUSY_1K.csv",
+df = pd.read_csv("source/data/SUSY_1K.csv",
                  names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
                         'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
                         'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
@@ -418,7 +420,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception, remove_output]
 ---
 sampler = Sampler()
 
@@ -445,7 +447,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception, remove_output]
 ---
 # FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
 q_kernel = FidelityQuantumKernel(feature_map=feature_map)
@@ -474,7 +476,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception, remove_output]
 ---
 matrix_train = q_kernel.evaluate(x_vec=norm_train_data)
 matrix_test = q_kernel.evaluate(x_vec=norm_test_data, y_vec=norm_train_data)
@@ -502,7 +504,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception, remove_output]
 ---
 qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
 qc_svc.fit(matrix_train, train_label)
