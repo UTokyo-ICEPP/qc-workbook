@@ -24,7 +24,7 @@ language_info:
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
-# 【課題】量子カーネルを使った新現象の分類
+# 【参考】量子カーネルを使った新現象の分類
 
 +++ {"pycharm": {"name": "#%% md\n"}}
 
@@ -418,7 +418,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception]
 ---
 sampler = Sampler()
 
@@ -445,7 +445,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception]
 ---
 # FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
 q_kernel = FidelityQuantumKernel(feature_map=feature_map)
@@ -474,7 +474,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception]
 ---
 matrix_train = q_kernel.evaluate(x_vec=norm_train_data)
 matrix_test = q_kernel.evaluate(x_vec=norm_test_data, y_vec=norm_train_data)
@@ -502,7 +502,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception, remove-output]
+tags: [raises-exception]
 ---
 qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
 qc_svc.fit(matrix_train, train_label)
