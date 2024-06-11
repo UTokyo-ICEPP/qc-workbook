@@ -688,6 +688,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry', 'rz'], entanglement_blocks='cz', entanglement='circular', reps=3)
 #ansatz = TwoLocal(num_qubits=feature_dim, rotation_blocks=['ry'], entanglement_blocks='cz', entanglement='circular', reps=3)
