@@ -234,6 +234,7 @@ $$
 editable: true
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 import numpy as np
 import matplotlib.pyplot as plt
@@ -418,7 +419,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception]
+tags: [raises-exception, remove_output]
 ---
 sampler = Sampler()
 
@@ -445,7 +446,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception]
+tags: [raises-exception, remove_output]
 ---
 # FidelityQuantumKernelは内部で勝手にSamplerインスタンスを作る
 q_kernel = FidelityQuantumKernel(feature_map=feature_map)
@@ -474,7 +475,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception]
+tags: [raises-exception, remove_output]
 ---
 matrix_train = q_kernel.evaluate(x_vec=norm_train_data)
 matrix_test = q_kernel.evaluate(x_vec=norm_test_data, y_vec=norm_train_data)
@@ -502,7 +503,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [raises-exception]
+tags: [raises-exception, remove_output]
 ---
 qc_svc = SVC(kernel='precomputed') # ハイパーパラメータ(C)のデフォルト値は1
 qc_svc.fit(matrix_train, train_label)
