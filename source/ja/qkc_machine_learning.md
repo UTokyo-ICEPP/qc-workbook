@@ -263,6 +263,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 # ファイルから変数を読み出す
 df = pd.read_csv("source/data/SUSY_1K.csv",

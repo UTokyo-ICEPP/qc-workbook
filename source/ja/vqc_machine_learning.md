@@ -239,7 +239,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-output]
 ---
 u_in = QuantumCircuit(nqubit, name='U_in')
 x = Parameter('x')
