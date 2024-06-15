@@ -188,6 +188,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 random_seed = 0
 rng = np.random.default_rng(random_seed)
@@ -214,6 +215,12 @@ y_train_noise = y_train + rng.normal(0., mag_noise, size=num_x_train)
 # 検証用データセットの生成
 x_validation = rng.uniform(x_min, x_max, size=num_x_validation)
 y_validation = func_to_learn(x_validation) + rng.normal(0., mag_noise, size=num_x_validation)
+
+# 学習用データをプロットして確認
+x_list = np.arange(x_min, x_max, 0.02)
+plt.plot(x_train, y_train_noise, "o", label='Training Data (w/ Noise)')
+plt.plot(x_list, func_to_learn(x_list), label='Original Function')
+plt.legend()
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -375,7 +382,9 @@ slideshow:
   slide_type: ''
 ---
 # 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
-estimator = Estimator()
+#estimator = Estimator()
+backend = AerSimulator()
+estimator = BackendEstimator(backend)
 
 # 与えられたパラメータの値とxの値に対してyの値を計算する
 def yvals(param_vals, x_vals=x_train):
@@ -422,9 +431,9 @@ slideshow:
   slide_type: ''
 ---
 # COBYLAの最大ステップ数
-maxiter = 50
+maxiter = 100
 # COBYLAの収束条件（小さいほどよい近似を目指す）
-tol = 0.05
+tol = 0.01
 # バックエンドでのショット数
 shots = 1000
 
@@ -495,7 +504,7 @@ plt.plot(losses)
 
 +++ {"jupyter": {"outputs_hidden": false}, "pycharm": {"name": "#%%\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
-最適パラメータ値でのモデルの出力値をx_minからx_maxまで均一にとった100点で確認します。
+最適化したパラメータ値でのモデルの出力を、x_minからx_maxまで均一にとった100個の点で確認します。
 
 ```{code-cell} ipython3
 ---
@@ -565,7 +574,7 @@ slideshow:
   slide_type: ''
 ---
 # ファイルから変数を読み出す
-df = pd.read_csv("data/SUSY_1K.csv",
+df = pd.read_csv("source/data/SUSY_1K.csv",
                  names=('isSignal', 'lep1_pt', 'lep1_eta', 'lep1_phi', 'lep2_pt', 'lep2_eta',
                         'lep2_phi', 'miss_ene', 'miss_phi', 'MET_rel', 'axial_MET', 'M_R', 'M_TR_2',
                         'R', 'MT2', 'S_R', 'M_Delta_R', 'dPhi_r_b', 'cos_theta_r1'))
@@ -597,6 +606,12 @@ df_bkg_test = df_bkg.values[train_size:train_size + test_size]
 train_data = np.concatenate([df_sig_train, df_bkg_train])
 # 最初のtest_size事象がSUSY粒子を含む信号事象、残りのtest_size事象がSUSY粒子を含まない背景事象
 test_data = np.concatenate([df_sig_test, df_bkg_test])
+
+# ラベル
+train_label = np.zeros(train_size * 2, dtype=int)
+train_label[:train_size] = 1
+test_label = np.zeros(train_size * 2, dtype=int)
+test_label[:test_size] = 1
 
 # one-hotベクトル（信号事象では第1次元の第0要素が1、背景事象では第1次元の第1要素が1）
 train_label_one_hot = np.zeros((train_size * 2, 2))
@@ -740,15 +755,16 @@ optimizer = COBYLA(maxiter=maxiter, disp=True)
 objective_func_vals = []
 # Draw the value of objective function every time when the fit() method is called
 def callback_graph(weights, obj_func_eval):
-    clear_output(wait=True)
+    #clear_output(wait=True)
     objective_func_vals.append(obj_func_eval)
     #print('obj_func_eval =',obj_func_eval)
 
-    plt.title("Objective function value against iteration")
-    plt.xlabel("Iteration")
-    plt.ylabel("Objective function value")
-    plt.plot(objective_func_vals)
-    plt.show()
+    #plt.title("Objective function value against iteration")
+    #plt.xlabel("Iteration")
+    #plt.ylabel("Objective function value")
+    #plt.plot(objective_func_vals)
+    #plt.show()
+
 
 vqc = VQC(num_qubits=feature_dim,
           feature_map=feature_map,
@@ -828,8 +844,8 @@ tags: [remove-output]
 train_score = vqc.score(norm_train_data, train_label_one_hot)
 test_score = vqc.score(norm_test_data, test_label_one_hot)
 
-print(f'--- Classification Train score: {train_score} ---')
-print(f'--- Classification Test score:  {test_score} ---')
+print(f'--- Classification Train score: {train_score*100}% ---')
+print(f'--- Classification Test score:  {test_score*100}% ---')
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}

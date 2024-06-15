@@ -422,11 +422,11 @@ slideshow:
   slide_type: ''
 tags: [raises-exception, remove_output]
 ---
-sampler = Sampler()
-
 first_two_inputs = np.concatenate(norm_train_data[:2]).flatten()
 
+sampler = Sampler()
 job = sampler.run(manual_kernel, parameter_values=first_two_inputs, shots=10000)
+
 # quasi_dists[0]がmanual_kernelの測定結果のcountsから推定される確率分布
 fidelity = job.result().quasi_dists[0].get(0, 0.)
 print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
@@ -453,15 +453,37 @@ tags: [raises-exception, remove_output]
 q_kernel = FidelityQuantumKernel(feature_map=feature_map)
 
 bind_params = dict(zip(feature_map.parameters, norm_train_data[0]))
-feature_map_0 = feature_map.bind_parameters(bind_params)
+feature_map_0 = feature_map.assign_parameters(bind_params)
 bind_params = dict(zip(feature_map.parameters, norm_train_data[1]))
-feature_map_1 = feature_map.bind_parameters(bind_params)
+feature_map_1 = feature_map.assign_parameters(bind_params)
 
 qc_circuit = q_kernel.fidelity.create_fidelity_circuit(feature_map_0, feature_map_1)
 qc_circuit.decompose().decompose().draw('mpl')
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "tags": ["raises-exception", "remove-output"], "editable": true, "slideshow": {"slide_type": ""}}
+
+```{code-cell} ipython3
+---
+editable: true
+jupyter:
+  outputs_hidden: false
+pycharm:
+  name: '#%%
+
+    '
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove_output]
+---
+sampler = Sampler()
+job = sampler.run(qc_circuit, shots=10000)
+
+fidelity = job.result().quasi_dists[0].get(0, 0.)
+print(f'|<φ(x_0)|φ(x_1)>|^2 = {fidelity}')
+```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 `FidelityQuantumKernel`を使うと、カーネル行列を直接書き出して見ることも容易にできます。学習データから求めたカーネル行列と、学習データとテストデータから計算したカーネル行列をプロットしてみます。
 
