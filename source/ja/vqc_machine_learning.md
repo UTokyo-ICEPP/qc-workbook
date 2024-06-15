@@ -158,10 +158,10 @@ from sklearn.preprocessing import MinMaxScaler
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter, ParameterVector
 from qiskit.circuit.library import TwoLocal, ZFeatureMap, ZZFeatureMap
-from qiskit.primitives import Estimator, Sampler
+from qiskit.primitives import Estimator, Sampler, BackendEstimator
 from qiskit.quantum_info import SparsePauliOp
+from qiskit_aer import AerSimulator
 from qiskit_machine_learning.algorithms.classifiers import VQC
-#from qiskit.utils import split_dataset_to_data_and_labels, map_label_to_class_name
 from qiskit_algorithms.optimizers import SPSA, COBYLA
 from qiskit_ibm_runtime import Session, Sampler as RuntimeSampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
@@ -382,7 +382,6 @@ slideshow:
   slide_type: ''
 ---
 # 今回はバックエンドを利用しない（量子回路シミュレーションを簡略化した）Estimatorクラスを使う
-#estimator = Estimator()
 backend = AerSimulator()
 estimator = BackendEstimator(backend)
 
