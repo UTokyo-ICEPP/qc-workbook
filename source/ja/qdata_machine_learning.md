@@ -33,10 +33,10 @@ language_info:
 ここで考えるイジング模型のハミルトニアンは
 
 $$
-H = -J\sum_{j=0}^{L-2}Z_iZ_{i+1}-h(\sin\alpha\sum_{i=0}^{L-1}Z_i+\cos\alpha\sum_{i=0}^{L-1}X_i)
+H = -J\sum_{j=0}^{L-2}Z_iZ_{i+1}-h\left(\sin\alpha\sum_{i=0}^{L-1}Z_i+\cos\alpha\sum_{i=0}^{L-1}X_i\right)
 $$
 
-として、$\alpha$というパラメータで横磁場と縦磁場の混ざり具合をコントロールするものとします。$\alpha=0$（$=\frac{\pi}{2}$）が純粋な横磁場（縦磁場）に対応しています。
+として、$\alpha$というパラメータで横磁場と縦磁場の混ざり具合をコントロールするものとします。$\alpha=0$（$=\pi/2$）が純粋な横磁場（縦磁場）に対応しています。
 
 まず、イジング模型の基底状態を生成するところから始めていきます。
 
@@ -74,7 +74,7 @@ from qiskit_machine_learning.algorithms import NeuralNetworkRegressor
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-アンザッツとして、Ryゲートと制御Zゲートからなる回路を使ってみます。量子ビット数は2です。
+アンザッツとして、Ryゲートと制御Zゲートからなる一般的な量子回路を使ってみます。量子ビット数は2です。
 
 ```{code-cell} ipython3
 ---
@@ -92,7 +92,7 @@ tags: [remove-output]
 # VQEの設定
 num_qubits = 2
 
-ansatz = TwoLocal(num_qubits, "ry", "cz", reps=3)  # Ry gates with trainable parameters and CZ for entanglement
+ansatz = TwoLocal(num_qubits, "ry", "cz", reps=3)
 ansatz.decompose().draw('mpl')
 ```
 
@@ -114,7 +114,7 @@ slideshow:
 ---
 # Estimatorを使う
 estimator = Estimator()
-optimizer = SLSQP(maxiter=1000)  # Classical optimizer
+optimizer = SLSQP(maxiter=1000)  # オプティマイザー
 
 # QiskitのVQEクラスを使う
 vqe = VQE(estimator, ansatz, optimizer)
@@ -723,6 +723,4 @@ plt.show()
 **提出するもの**
 - 問題1と問題2の量子回路
 - 問題3の結果と、その考察
-
-**問題3の考察**
 
