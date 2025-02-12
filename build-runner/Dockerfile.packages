@@ -1,19 +1,29 @@
 FROM ubuntu:latest
+ADD requirements.txt /tmp/requirements.txt
+ADD clean_packages.sh /tmp/clean_packages.sh
 
-RUN apt-get -y update && \
-    apt-get install -y python3 python3-venv python3-pip git
+RUN apt -y update && \
+    apt install -y python3 python3-venv python3-pip && \
+    apt -y clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir qiskit==1.0.2 qiskit-aer==0.14.1 qiskit-ibm-runtime==0.23.0 qiskit-experiments==0.6.1 qiskit-machine-learning==0.7.2 qiskit-nature==0.7.2 qiskit-optimization==0.6.1 && \
-    pip3 install --no-cache-dir matplotlib==3.8.4 pylatexenc==2.10 plotly==5.21.0 && \
-    pip3 install --no-cache-dir pandas==2.2.2 && \
-    pip3 install --no-cache-dir jupyter-book==1.0.0 tabulate==0.9.0
+RUN python3 -m venv /opt/packages
+ENV PATH="/opt/packages/bin:$PATH"
+
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir jupyter-book
 
 # The next two blocks are libraries required at runtime (not build time) only, so they are not needed in principle
 # (Cells using these libraries are tagged as "throws-exception")
-RUN pip3 install dwave-qbsolv
+# RUN pip3 install dwave-qbsolv
 
-RUN git clone https://github.com/LAL/trackml-library.git && \
-    pip3 install ./trackml-library && \
-    rm -rf trackml-library
+# RUN apt -y install git
+# RUN git clone https://github.com/LAL/trackml-library.git && \
+#     pip3 install ./trackml-library && \
+#     rm -rf trackml-library
+
+RUN /tmp/clean_packages.sh
+
+RUN rm /tmp/requirements.txt /tmp/clean_packages.sh
 
 # Tag as yiiyama/jupyterbook-qiskit-packages:__version__
