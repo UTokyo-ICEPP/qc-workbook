@@ -7,9 +7,9 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.16.7
 kernelspec:
-  display_name: ibm_collab_py3-10_qiskit_v1
+  display_name: Python 3 (ipykernel)
   language: python
-  name: ibm_collab_py3-10_qiskit_v1
+  name: python3
 ---
 
 ```{code-cell} ipython3
