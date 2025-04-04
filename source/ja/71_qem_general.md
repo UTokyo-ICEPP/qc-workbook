@@ -34,13 +34,13 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 量子計算の回路モデルを考える際には、状態$\rho_0$への初期化、ユニタリ演算の列$\{\mathcal{U}_l\}_{l=1}^L$、測定$\mathcal{M}$によって構成する例が多くみられます。
 これらの全てが理想的に行える場合にはとてもハッピーですが、自然界に完全に孤立した系を作り出すことは難しいことから、エネルギーや位相情報の散逸が発生します（孤立量子系vs量子開放系）。
 具体的には、理想的な操作を経た後の量子状態（測定直前）は
-\begin{eqnarray}
+$$
 \rho_0 = \mathcal{U}_L \circ \cdots \circ \mathcal{U}_1 (\rho_{\rm init})
-\end{eqnarray}
+$$
 のようにかけるはずですが、実際には、$\rho_{\rm init} \rightarrow \mathcal{E}_{\rm init}(\rho_{\rm init})$、 $\mathcal{U}_l \rightarrow \mathcal{E}_l \circ \mathcal{U}_l$のように、意図しない操作に変更されます。
-\begin{eqnarray}
+$$
 \rho = \mathcal{E}_L \circ\mathcal{U}_L \circ \cdots \circ \mathcal{U}_1 \circ \mathcal{E}_{\rm init}(\rho_{\rm init})
-\end{eqnarray}
+$$
 
 ここで、$\mathcal{E}_{l}$や$\mathcal{E}_{\rm init}$をそれぞれ**ゲートノイズ**や**初期化ノイズ**などと呼びます（測定ノイズもあります）。
 ノイズは必ずしもユニタリ演算ではなく、それを一般化した**量子チャネル**として特徴づけることが多いです。
@@ -70,16 +70,16 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 理想状態では、Bloch ベクトルは Bloch 球上を滑らかに回転しますが、T1 や T2 による緩和（ノイズ）の影響で、振動は減衰し、最終的には定常状態に落ち着きます。
 
 具体的に、初期状態を $|0\rangle$にとり、Rabi振動を考えます。具体的には, 
-\begin{eqnarray}
+$$
 |\psi(\theta)\rangle = R_y(2\theta) |0\rangle = \cos \theta |0\rangle + \sin \theta |1\rangle
-\end{eqnarray}
+$$
 のような時間発展を考えます。ここで、 $R_y(\theta) = e^{i Y \theta} = \begin{pmatrix}\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta \end{pmatrix}$はパウリY演算子に関する回転演算子として定義されています。
 この時の量子状態の期待値は、理想的には
-\begin{eqnarray}
-\langle \psi(\theta) | Z | \psi(\theta) \rangle &=& \cos \theta \\
-\langle \psi(\theta) | X | \psi(\theta) \rangle &=& \sin \theta \\
-\langle \psi(\theta) | Y | \psi(\theta) \rangle &=& 0 \\
-\end{eqnarray}
+$$
+\langle \psi(\theta) | Z | \psi(\theta) \rangle = \cos \theta, 
+\langle \psi(\theta) | X | \psi(\theta) \rangle = \sin \theta, 
+\langle \psi(\theta) | Y | \psi(\theta) \rangle = 0 
+$$
 のように与えられます。
 
 [練習]これを確かめてください。
@@ -222,13 +222,13 @@ $R_y(\theta) |0\rangle$という状態を生成する際に、T1,T2緩和によ�
 求めたい真の期待値はエラーがゼロの極限に対応するものであるから、$O_{\rm est} = 2\langle O(p)\rangle - \langle O(2p)\rangle$のように推定する、というのが外挿法です。
 
 上の係数は、Richardson extrapolationに基づいて決定されています。具体的に、ある関数$f(\lambda)$について、二つの非負の値$\lambda_1, \lambda_2$における値$f(\lambda_1), f(\lambda_2)$を知っていたと仮定しましょう。ここで、関数が
-\begin{eqnarray}
+$$
 f(\lambda) = f(0) + c\lambda
-\end{eqnarray}
+$$
 のように線形近似できると仮定すると、$f$を用いた推定に関する二乗誤差を最小化することによって以下が求まります。
-\begin{eqnarray}
+$$
 f(0) = \frac{\lambda_2 f(\lambda_1) - \lambda_1 f(\lambda_2)}{\lambda_2 - \lambda_1}.
-\end{eqnarray}
+$$
 これに$\lambda_1 = 1, \lambda_2 = 2$を代入すると、上の表式が出てきます。
 
 同様な考え方により、$\{O(\lambda p)\}_{\lambda>1}$のように、パラメータ$\lambda$に関する期待値の集合を用いた外挿法が実行できます。
@@ -272,13 +272,13 @@ plt.grid()
 ここまでの結果を見ると、外挿法でエラーを削減できることがわかりました。
 ただし、外挿法をはじめとする量子エラー抑制手法は、期待値のバイアスを小さくする代わりに、代償として推定の分散が大きくなってしまいます。
 例えば、$O_{\rm est} = 2 \langle O(p) \rangle - \langle O(2p)\rangle$のように推定を行うとき、それぞれの推定の分散が$\sigma_{p}^2, \sigma_{2p}^2$とすると、$O_{\rm est}$の分散$\sigma_{\rm est}^2$は
-\begin{eqnarray}
+$$
 \sigma_{\rm est}^2 = 2^2 \sigma_p^2 + \sigma_{2p}^2
-\end{eqnarray}
+$$
 に従います。同様に、$p$, $2p$, $3p$の3点を用いた場合には
-\begin{eqnarray}
+$$
 \sigma_{\rm est}^2 = 3^2 \sigma_p^2 + 3^2\sigma_{2p}^2 + \sigma_{3p}^2
-\end{eqnarray}
+$$
 となります。多くの点を用いて推定精度を上げれば、Richardson補間における多項式の係数の値は大きくなるため、分散も大きくなります。
 
 例えば、パウリ演算子の固有状態に関する射影測定を通じて期待値を推定する場合には、分散と測定回数$M$の間には $\sigma^2 \propto 1/M$の関係式があります。
