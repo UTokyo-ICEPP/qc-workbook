@@ -35,7 +35,7 @@ language_info:
 つまり、 {ref}`ここ <grover_geometry>`で使った2次元平面での記述方法に従うと、$\ket{\psi}$も$\ket{s}$と同じく
 
 $$
-\ket{\psi} =: \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w} 
+\ket{\psi} =: \cos\frac\theta2\ket{w^{\perp}}+\sin\frac\theta2\ket{w}
 $$
 
 と書くことができますが、$\ket{w}$の振幅である$\sin\frac\theta2$の$\theta$の値が分からないという状況です。
@@ -43,20 +43,20 @@ $$
 この書き方に従えば、求める状態は$\ket{w}=\begin{bmatrix}0\\1\end{bmatrix}$、それに直交する状態は$\ket{w^{\perp}}=\begin{bmatrix}1\\0\end{bmatrix}$だったので、 オラクル$U_w$は前と同じく$U_w=I-2\ket{w}\bra{w}=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$です。$U_0=2\ket{0}\bra{0}^{\otimes n}-I$なので、均等重ね合わせ$\ket{s}$の場合はDiffuser $U_s$は
 
 $$
-\begin{aligned} 
-U_s &= H^{\otimes n}U_0H^{\otimes n}\\ 
-&=2\ket{s}\bra{ s}-I\\ 
+\begin{aligned}
+U_s &= H^{\otimes n}U_0H^{\otimes n}\\
+&=2\ket{s}\bra{ s}-I\\
 \end{aligned}
 $$
 
 でしたが、今は$\ket{\psi}$としているため
 
 $$
-\begin{aligned} 
-U_s &= UU_0U^\dagger\\ 
+\begin{aligned}
+U_s &= UU_0U^\dagger\\
 &=2\ket{\psi}\bra{\psi}-I\\
 &=\begin{bmatrix}\cos\theta&\sin\theta\\\sin\theta&-\cos\theta\end{bmatrix}
-\end{aligned} 
+\end{aligned}
 $$
 
 になります。$\theta$を使った行列表記は$\ket{s}$の場合と同じです。
@@ -82,28 +82,28 @@ $$
 と書ける状態$\ket{\psi_{\pm}}$を考えてみます。この状態に$G$を適用するわけですが、 $G=U_sU_w$が
 
 $$
-\begin{aligned} 
-G &= U_sU_w\\ 
-&= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned} 
+\begin{aligned}
+G &= U_sU_w\\
+&= \begin{bmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{bmatrix} \end{aligned}
 $$
 
 と書けることを思い出すと、
 
 $$
-\begin{aligned} 
-G\ket{w} &= -\sin\theta\ket{w^{\perp}}+\cos\theta\ket{w}\\ 
+\begin{aligned}
+G\ket{w} &= -\sin\theta\ket{w^{\perp}}+\cos\theta\ket{w}\\
 G\ket{w^{\perp}} &= \cos\theta\ket{w^{\perp}}+\sin\theta\ket{w}
-\end{aligned} 
+\end{aligned}
 $$
 
 となります。なので、$\ket{\psi_{\pm}}$に$G$を適用すると
 
 $$
-\begin{aligned} 
+\begin{aligned}
 G\ket{\psi_{\pm}} &= \frac{1}{\sqrt{2}}(G\ket{w}\pm iG\ket{w^{\perp}}) \\
 &= \frac{1}{\sqrt{2}}(\cos\theta\pm i\sin\theta)(\ket{w}\pm i\ket{w^{\perp}}) \\
 &= e^{\pm i\theta}\ket{\psi_{\pm}}
-\end{aligned} 
+\end{aligned}
 $$
 
 となります。つまり$\ket{\psi_{\pm}}$は$G$の固有ベクトルで、$e^{\pm i\theta}$はその固有値です。
