@@ -108,7 +108,7 @@ def heisenberg_chain(L):
             H += kron_all(ops)
     return H.real
 
-# 12サイトハミルトニアンの構築と固有値計算
+# 10サイトハミルトニアンの構築と固有値計算
 n_qubit = 10
 hamiltonian = heisenberg_chain(n_qubit)
 eigvals, eigvecs = scipy.sparse.linalg.eigsh(hamiltonian, k=1, which='SA')  # 最小固有値を求める
@@ -147,11 +147,13 @@ print("Noisy energy:")
 print(gs_noisy)
 ```
 
-### QSCIもしくはSQD
+# QSCIもしくはSQD
 
 上で見たように、ノイズの影響は物理量の評価に大きな影響を与えてしまいます。より精密に実行する方法はあるでしょうか？
-ここで、(NISQデバイスで)物理量を評価する際には「量子回路の実行 →　量子測定によるサンプリング → 古典的な事後処理」という工程を経ることに注目します。
-従来の評価方法では、古典的な事後処理にて行われるのは非常に単純な操作です。具体的には、平均・中央値をとる、といった操作が相当します。
+
+ここで、(NISQデバイスで)物理量を評価する際には「(1)量子回路の実行 →　(2)量子測定によるサンプリング → (3)古典的な事後処理」という工程を経ることに注目します。
+
+従来の評価方法では、(3)古典的な事後処理にて行われるのは非常に単純な操作です。具体的には、平均・中央値をとる、といった操作が相当します。
 サンプリングの結果と古典計算機を最大限に活用できないか、との問題意識のもとで生まれたのがQSCI/SQDです。
 
 考え方としては以下のようなものになります：
@@ -180,14 +182,15 @@ print(gs_noisy)
 [課題] 例えばパウリ演算子$Z_1$の期待値は大域的脱分局ノイズのもとでどのように振る舞うか？
 
 [課題(難)] 大域的脱分局ノイズのもと、期待値を推定するためのサンプリングの回数は$1/(1-p)^2$倍されるが、これはなぜか。
-(ヒント) 射影測定を1度実行した時の推定値が $\{\pm 1\}$であることに着目すると、期待値のestimatorは、該当の量子ビットで 0/1を測定した割合$p_{0/1} = N_{0/1} / (N_0+N_1)$を用いて  $\hat{Z} = p_0 \cdot 1 + p_1 \cdot (-1)$と書ける。サンプリングが理想的に実行できる場合、$p_0$, $p_1$は真値の周りで揺らいでいるが、大数の法則に従って精密なものになっていく。
+
+(ヒント) 射影測定を1度実行した時の推定値が $\{\pm 1\}$であることに着目すると、期待値のestimatorは、該当の量子ビットで 0/1を測定した割合$\hat{p}_{0/1} = N_{0/1} / (N_0+N_1)$を用いて  $\hat{Z} = \hat{p}_0 \cdot 1 + \hat{p}_1 \cdot (-1)$と書ける。サンプリングが理想的に実行できる場合、$\hat{p}_0$, $\hat{p}_1$は真値$p_0, p_1$の周りで揺らいでいるが、大数の法則に従って精密なものになっていく。
 
 ```{code-cell} ipython3
 probs_ideal = (np.abs(gsvec)**2).real
 probs_noisy = rho.diagonal().real
 
 n_sample = 200
-states_sampled = np.random.choice(len(probs), size = n_sample, p = probs_noisy)
+states_sampled = np.random.choice(len(probs_noisy), size = n_sample, p = probs_noisy)
 unique_bases = np.unique(states_sampled)
 H_sub = hamiltonian[:, unique_bases][unique_bases, :] # 部分行列を抽出
 
@@ -200,6 +203,8 @@ print(energy_sub)
 nsamp_array =[20,40, 80, 100, 150, 200, 300, 500, 800, 1000, ]
 energy_noisy_array = []
 energy_ideal_array = []
+
+np.random.seed(123456) #再現性のためseedを固定
 
 for n_sample in nsamp_array:
     #ノイズのあるQSCI
