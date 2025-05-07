@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -44,27 +44,27 @@ $\newcommand{\rmIV}{\mathrm{IV}}$
 
 ## 本当に量子コンピュータなのか？
 
-このワークブックの主旨が量子コンピュータ（QC）を使おう、ということですが、QCなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソースとして使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQCなのでしょうか。どうしたらそれが調べられるでしょうか。
+このワークブックの主旨が量子コンピュータを使おう、ということですが、量子コンピュータなんて数年前までSFの世界の存在でした。それが今やクラウドの計算リソース（量子演算子・QPU）として使えるというわけですが、ではそもそも私たちがこれから使おうとしている機械は本当にQPUなのでしょうか。どうしたらそれが調べられるでしょうか。
 
-QCの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めてQCが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。
+量子コンピュータの基本的な仕組みは、「何らかの物理的な系（超電導共振器や冷却原子など）をうまく操作して、求める計算の結果がその系の量子状態に表現されるようにする」ということです。つまり、量子状態が長く保たれてかつ思うように操作できる対象と、「計算」という実体のなさそうなものを具体的な「量子操作」に対応させるアルゴリズムの両方があって初めて量子コンピューティングが成り立ちます。アルゴリズムの部分はこのワークブックを通じて少しずつ紹介していくので、今回は「量子状態が保たれ、それを操作できる」ということを確認してみましょう。
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## CHSH不等式
 
-量子力学的状態が実際に存在するかどうかを確かめる実験として、2022年のノーベル物理学賞でも取り上げられたCHSH不等式{cite}`chsh`の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQC（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。
+量子力学的状態が実際に存在するかどうかを確かめる実験として、2022年のノーベル物理学賞でも取り上げられたCHSH不等式{cite}`chsh`の検証というものがあります。かいつまんで言うと、CHSH不等式とは「二体系の特定の観測量について、エンタングルメントなど量子力学固有の現象がなければ保たれる不等式」です。やや回りくどいロジックですが、つまりQPU（だと考えられる機械）で測ったこの観測量の値がCHSH不等式を破っていれば、その機械は実際に量子現象を利用しているかもしれないということになります。
 
-通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウドQCではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum.ibm.com" target="_blank">IBM Quantum</a>の量子コンピュータを利用します。
+通常このような実験を行うには高度なセットアップ（レーザーと非線形結晶、冷却原子など）が必要ですが、クラウド量子コンピュータではブラウザひとつしか要りません。このワークブックではJupyter NotebookでPythonのプログラムを書き、<a href="https://quantum.ibm.com" target="_blank">IBM Quantum</a>のQPUを利用します。
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## Qiskitの基本構造
 
-IBM QuantumのQCで量子計算を実行するには、IBMの提供する<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は
+IBMのQPUで量子計算を実行するには、<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリを利用します。Qiskitの基本的な使い方は
 
-1. 使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路を作る
-1. 回路を実行して計算結果を得る。ここでは二通りのオプションがあり、
-   - 回路をQCの実機に送り、実行させる。
+1. 使用する量子ビットの数を決め、量子計算の操作（ゲート）をかけて、量子回路（プログラム）を作る
+1. 回路を実行して計算結果を得る。ここでは二通りのオプションがあります。
+   - 回路を実際のクラウドQPUに送り、実行させる。
    - 回路をシミュレートする。
 1. 計算結果を解析する。
 
@@ -132,13 +132,13 @@ $$
 
 となります。量子ビットがいくつあっても拘束条件は2つだけです。
 
-つまり、量子ビット$n$個のレジスタでは、基底の数が$2^n$個で、それぞれに複素数の振幅がかかるので、実数$2 \times 2^n - 2$個分の情報が記録できることになります。これが量子計算に関して「指数関数的」という表現がよく用いられる所以です。
+つまり、量子ビット$n$個のレジスタでは、基底の数が$2^n$個で、それぞれに複素数の振幅がかかり、拘束条件が2つあるので、実数$2 \times 2^n - 2$個分の情報が記録できることになります。これが量子計算に関して「指数関数的」という表現がよく用いられる所以です。
 
 量子レジスタの計算基底状態の表記法としては、上に書いたようにケットを$n$個並べたり$n$個の0/1を一つのケットの中に並べたりする方法がありますが、さらにコンパクトなのが、0/1の並び（ビット列）を二進数とみなして、対応する（十進数の）数字で表現する方法です。例えば4量子ビットのレジスタで状態$\ket{0000}$と$\ket{1111}$はそれぞれ$\ket{0}$と$\ket{15}$と書けます。
 
 ただし、ここで注意すべきなのは、左右端のどちらが「1の位」なのか事前に約束しないといけないことです。$\ket{0100}$を$\ket{4}$（右端が1の位）とするか$\ket{2}$（左端が1の位）とするかは約束次第です。このワークブックでは、Qiskitでの定義に従って、右端を1の位とします。同時に、レジスタの最初の量子ビットが1の位に対応するようにしたいので、ケットや0/1を並べて計算基底を表現するときは、右から順にレジスタの量子ビットを並べていくことにします。
 
-Qiskitには量子レジスタオブジェクトがあり、
+Qiskitには量子レジスタを表すクラスQuantumRegisterがあります。QuantumRegisterは
 ```{code-block} python
 from qiskit import QuantumRegister
 register = QuantumRegister(4, 'myregister')
@@ -171,7 +171,7 @@ circuit.h(register[1])
 ```
 とします。
 
-上で「振幅を利用する」という曖昧な表現をしましたが、それはいろいろな利用の仕方があるからです。しかし、どんな方法であっても、必ず量子レジスタの**測定**という操作を行います。量子コンピュータから何かしらの情報を得るための唯一の方法が測定です。Qiskitでは`measure_all`というメソッドを使って測定を行います。
+上で「振幅を利用する」という曖昧な表現をしましたが、それはいろいろな利用の仕方があるからです。しかし、どんな方法であっても、必ず量子レジスタの**測定**という操作を行います。量子コンピュータから何かしらの情報を得るための唯一の方法が測定です。Qiskitでは`measure_all`などのメソッドを使って測定を行います。
 ```{code-block} python
 circuit.measure_all()
 ```
@@ -195,7 +195,7 @@ circuit.measure_all()
 (common_gates)=
 ### よく使うゲート
 
-IBM Q System Oneのような超電導振動子を利用した量子コンピュータでは、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、$n$量子ビットレジスタにおいてどのような状態も実現できることが、数学的に証明されています。
+IBMのQPUのように超電導振動子を利用する量子コンピュータでは、通常、実際に使用できるゲートは量子ビット1つにかかるものと2つにかかるものに限定されます。しかし、それらを十分な数組み合わせれば、$n$量子ビットレジスタにおいてどのような状態も実現（任意の精度で近似）できることが、数学的に証明されています。
 
 #### 1量子ビットの操作
 
@@ -252,7 +252,7 @@ IBM Q System Oneのような超電導振動子を利用した量子コンピュ�
 import numpy as np
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit, transpile
-from qiskit.visualization import plot_histogram
+from qiskit.visualization import plot_distribution
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # qc_workbook is the original module written for this workbook
@@ -263,9 +263,9 @@ print('notebook ready')
 ```
 
 ```{code-cell} ipython3
-circuit = QuantumCircuit(2) # You can also create a circuit by specifying the number of bits, without using a register
-circuit.h(0) # In that case, directly specify the number of the quantum bit for the gate, not register[0]
-circuit.ry(np.pi / 2., 0) #　θ = π/2
+circuit = QuantumCircuit(2)  # You can also create a circuit by specifying the number of bits without using a register
+circuit.h(0)  # Qubits can be addressed by their index within the circuit
+circuit.ry(np.pi / 2., 0)  #　θ = π/2
 circuit.x(0)
 # Measurement is always needed to get an output
 circuit.measure_all()
@@ -337,8 +337,8 @@ theta3 = 2. * np.arctan(np.sqrt(4. / 3))
 circuit = QuantumCircuit(2)
 circuit.ry(theta1, 1)
 circuit.ry(theta2, 0)
-circuit.cry(theta3 - theta2, 1, 0) # C[Ry]　1が制御で0が標的
-circuit.cz(0, 1) # C[Z] 0が制御で1が標的（実はC[Z]ではどちらが制御でも結果は同じ）
+circuit.cry(theta3 - theta2, 1, 0)  # C[Ry]　1が制御で0が標的
+circuit.cz(0, 1)  # C[Z] 0が制御で1が標的（実はC[Z]ではどちらが制御でも結果は同じ）
 circuit.measure_all()
 
 print(f'This circuit has {circuit.num_qubits} qubits and {circuit.size()} operations')
@@ -394,7 +394,7 @@ circuit.draw()
 
 それではいよいよ本題に入りましょう。CHSH不等式を「ベル状態」$1/\sqrt{2}(\ket{00} + \ket{11})$で検証します。ベル状態は「どちらの量子ビットについても$\ket{0}$でも$\ket{1}$でもない状態」つまり、全体としては一つの定まった（純粋）状態であるにも関わらず、部分を見ると純粋でない状態です。このような時、**二つの量子ビットはエンタングルしている**といいます。エンタングルメントの存在は量子力学の非常に重要な特徴です。
 
-ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。詳しい説明は{doc}`課題 <nonlocal_correlations>`に譲りますが、CHSH不等式の検証用の観測量を作るために、4つの回路I, II, III, IVを使います。回路IとIIIでは量子ビット1に対し測定の直前に$R_y(-\pi/4)$、IIとIVでは同様に$R_y(-3\pi/4)$を作用させます。また回路IIIとIVでは量子ビット0に$R_y(-\pi/2)$を同じく測定の直前に作用させます。4つの回路を一度にIBMQに送るので、`circuits`というリストに回路を足していきます。
+ベル状態はアダマールゲートとCNOTゲートを組み合わせて作ります。詳しい説明は{doc}`課題 <nonlocal_correlations>`に譲りますが、CHSH不等式の検証用の観測量を作るために、4つの回路I, II, III, IVを使います。回路IとIIIでは量子ビット1に対し測定の直前に$R_y(-\pi/4)$、IIとIVでは同様に$R_y(-3\pi/4)$を作用させます。また回路IIIとIVでは量子ビット0に$R_y(-\pi/2)$を同じく測定の直前に作用させます。4つの回路を一度にQPUに送るので、`circuits`というリストに回路を足していきます。
 
 ```{code-cell} ipython3
 ---
@@ -542,13 +542,13 @@ $$
 
 となり、$S = \sqrt{2} < 2$です。これがCHSH不等式です。
 
-それでは、IBMQの「量子コンピュータ」が実際にエンタングル状態を生成できるのか、上の四つの回路から$S$の値を計算して確認してみましょう。
+それでは、IBMの「QPU」が実際にエンタングル状態を生成できるのか、上の四つの回路から$S$の値を計算して確認してみましょう。
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 ## 回路を実機で実行する
 
-まずはIBM Quantumに認証・接続します。IBM Quantum Lab (IBM Quantumウェブサイト上のJupyter Lab)で実行している、もしくは自分のラップトップなどローカルの環境ですでに{ref}`認証設定が保存されている <install_token>`場合は
+まずはIBM Quantumに認証・接続します。すでに{ref}`認証設定が保存されている <install_token>`場合は
 ```{code-block} python
 service = QiskitRuntimeService(channel='ibm_quantum')
 ```
@@ -603,9 +603,9 @@ job = sampler.run(circuits, shots=shots)
 
 これで回路がバックエンドに送られ、キューに入りました。ジョブの実行結果は`run`メソッドの返り値であるジョブオブジェクトから参照します。
 
-IBMQのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。
+IBMのバックエンドは世界中からたくさんのユーザーに利用されているため、場合によっては予約されているジョブが多数あってキューにかなりの待ち時間が生じることがあります。
 
-バックエンドごとのキューの長さは<a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending jobs として表示されます。また、一番下の Your access providers という欄でバックエンドのジョブあたりの最大ショット数と最大回路数を確認できます。
+バックエンドごとのキューの長さは<a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantumのバックエンド一覧ページ</a>から確認できます。バックエンドを一つクリックすると詳細が表示され、現在の全ジョブ数が Total pending workloads として表示されます。
 
 また、自分の投じたジョブのステータスは<a href="https://quantum.ibm.com/jobs" target="_blank">ジョブ一覧ページ</a>から確認できます。
 
@@ -651,31 +651,30 @@ except NameError:
 ```
 
 ````{tip}
-ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、ジョブIDを使って`retrieve_job`というメソッドでジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（cgr3kaemln50ss91pj10のような）をコピーし、
+ノートブックの接続が切れてしまったり、過去に走らせたジョブの結果を再び解析したくなったりした場合は、QiskitRuntimeServiceオブジェクトの`job`というメソッドにジョブIDを渡してジョブオブジェクトを再構成することができます。過去に走らせたジョブはIBM Quantumのホームページにリストされているので、そこにあるジョブID（cgr3kaemln50ss91pj10のような）をコピーし、
 
 ```{code-block} python
-backend = provider.get_backend('__backend_you_used__')
-job = backend.retrieve_job('__job_id__')
+job = service.job('__job_id__')
 ```
 
 とすると、`backend.run`によって返されたのと同じようにジョブオブジェクトが生成されます。
 ````
 
-Qiskitから提供されている`plot_histogram`関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。
+Qiskitから提供されている`plot_distribution`関数を使って、この情報を可視化できます。プロットの縦軸は観測回数を全測定数で割って、観測確率に規格化してあります。
 
 ```{code-cell} ipython3
 fig, axs = plt.subplots(2, 2, sharey=True, figsize=[12., 8.])
 for counts, circuit, ax in zip(counts_list, circuits, axs.reshape(-1)):
-    plot_histogram(counts, ax=ax)
+    plot_distribution(counts, ax=ax)
     ax.set_title(circuit.name)
     ax.yaxis.grid(True)
 ```
 
-$c^2/2 = (s + c)^2/4 = 0.427$, $s^2/2 = (s - c)^2 / 4 = 0.073$なので、得られた確率は当たらずとも遠からずというところでしょうか。
+$c^2/2 = (s + c)^2/4 = 0.427$, $s^2/2 = (s - c)^2 / 4 = 0.073$なので、得られた確率はいい線を行っているというところでしょうか。
 
-実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては多少の緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して "*Noisy* intermediate-scale quantum (NISQ) device" と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。
+実は現在の量子コンピュータにはまだ様々なノイズやエラーがあり、計算結果は往々にして理論的な値から統計誤差の範囲を超えてずれます。特定のエラーに関しては緩和法も存在しますが、全て防げるわけでは決してありません。現在の量子コンピュータを指して "*Noisy* intermediate-scale quantum (NISQ) device" と呼んだりしますが、このNoisyの部分はこのような簡単な実験でもすでに顕著に現れるわけです。
 
-逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。{doc}`vqe`で紹介する変分量子回路を用いた最適化などがその候補として注目されています。
+逆に、NISQデバイスを有効活用するには、ノイズやエラーがあっても意味のある結果が得られるようなロバストな回路が求められます。{doc}`vqe`で紹介する変分量子回路を用いた最適化などはその候補として提唱されました。
 
 さて、それでは最後にCHSH不等式の破れを確認してみましょう。$C^{\rmI}, C^{\rmII}, C^{\rmIII}, C^{\rmIV}$を計算して$S$を求めます。
 

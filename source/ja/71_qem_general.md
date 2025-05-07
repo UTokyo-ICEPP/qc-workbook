@@ -56,11 +56,11 @@ $$
 
 超伝導量子ビットでは、主に次の2つの緩和過程が問題となります。
 
-- **T1 緩和（エネルギー緩和）**  
+- **T1 緩和（エネルギー緩和）**
   量子ビットが励起状態（|1⟩）から基底状態（|0⟩）へエネルギーを失いながら遷移する過程を表します。$T_1$ はこのエネルギー緩和にかかる平均時間を示します。
   ある1量子ビットゲートにかかる時間が$t$の時、確率$p=1-e^{-t/T_1}$で$|1\rangle \rightarrow |0\rangle$の遷移を起こす操作としてモデル化されています。
 
-- **T2 緩和（位相緩和、デコヒーレンス）**  
+- **T2 緩和（位相緩和、デコヒーレンス）**
   量子状態の位相情報が失われる過程で、$T_2$ は位相コヒーレンスが保たれる時間の尺度です。一般に、$T_2$ は $T_1$ より短くなる傾向があります（理想的には $T_2 \leq 2T_1$）。
   量子力学では相対位相が重要であることを考えると、この過程は $|1\rangle$状態の位相が乱される過程と見なすことができます。
   ある1量子ビットゲートにかかる時間が$t$の時、確率$p=1-e^{-t/T_2}$で$|1\rangle \rightarrow -|1\rangle$の遷移を起こすものとしてモデル化されます。
@@ -69,10 +69,10 @@ $$
 
 ### 具体例：ラビ振動とノイズ
 
-ラビ振動は、外部からの駆動（例えば、マイクロ波パルス）により二準位系（qubit）が周期的に遷移する現象です。  
+ラビ振動は、外部からの駆動（例えば、マイクロ波パルス）により二準位系（qubit）が周期的に遷移する現象です。
 理想状態では、Bloch ベクトルは Bloch 球上を滑らかに回転しますが、T1 や T2 による緩和（ノイズ）の影響で、振動は減衰し、最終的には定常状態に落ち着きます。
 
-具体的に、初期状態を $|0\rangle$にとり、Rabi振動を考えます。具体的には, 
+具体的に、初期状態を $|0\rangle$にとり、Rabi振動を考えます。具体的には,
 
 $$
 |\psi(\theta)\rangle = R_y(2\theta) |0\rangle = \cos \theta |0\rangle + \sin \theta |1\rangle
@@ -82,9 +82,9 @@ $$
 この時の量子状態の期待値は、理想的には
 
 $$
-\langle \psi(\theta) | Z | \psi(\theta) \rangle = \cos \theta, 
-\langle \psi(\theta) | X | \psi(\theta) \rangle = \sin \theta, 
-\langle \psi(\theta) | Y | \psi(\theta) \rangle = 0 
+\langle \psi(\theta) | Z | \psi(\theta) \rangle = \cos \theta,
+\langle \psi(\theta) | X | \psi(\theta) \rangle = \sin \theta,
+\langle \psi(\theta) | Y | \psi(\theta) \rangle = 0
 $$
 
 のように与えられます。
@@ -109,23 +109,23 @@ T2 = 80e-6       # T2 緩和時間 [s]
 def simulate_bloch(angles, variable_gate_time=False, base_gate_time=1e-6):
     """
     各 Ry 回転角度に対する Bloch ベクトルの期待値をシミュレーションする関数。
-    
+
     variable_gate_time が True の場合、各角度に応じたゲート実行時間を用いてノイズをシミュレートします。
-    
+
     パラメータ:
       angles (array): Ry 回転角度のリスト
       variable_gate_time (bool): ゲート時間を角度に比例させるか否か
       base_gate_time (float): 2π の回転に対応するゲート実行時間 [s]
-    
+
     戻り値:
       x_vals, y_vals, z_vals (list): 各角度における Bloch ベクトルの期待値
     """
     x_vals, y_vals, z_vals = [], [], []
-    
+
     for theta in angles:
         qc = QuantumCircuit(1)
         qc.ry(theta, 0)
-        
+
         if variable_gate_time:
             # 回転角 theta に比例したゲート時間を計算
             current_gate_time = base_gate_time * (theta / (2*np.pi))
@@ -138,14 +138,14 @@ def simulate_bloch(angles, variable_gate_time=False, base_gate_time=1e-6):
         else:
             backend = AerSimulator()  # 理想シミュレーション（ノイズなし）
             qc.save_statevector()
-        
+
         compiled_qc = transpile(qc, backend)
         result = backend.run(compiled_qc).result()
-        
+
         opX = Operator.from_label('X')
         opY = Operator.from_label('Y')
         opZ = Operator.from_label('Z')
-        
+
         if variable_gate_time:
             rho = result.data(0)['density_matrix']
             dm = DensityMatrix(rho)
@@ -158,11 +158,11 @@ def simulate_bloch(angles, variable_gate_time=False, base_gate_time=1e-6):
             expX = np.real(sv.expectation_value(opX))
             expY = np.real(sv.expectation_value(opY))
             expZ = np.real(sv.expectation_value(opZ))
-        
+
         x_vals.append(expX)
         y_vals.append(expY)
         z_vals.append(expZ)
-    
+
     return x_vals, y_vals, z_vals
 ```
 
@@ -317,7 +317,7 @@ def simulate_projective(angles, variable_gate_time, base_gate_time, shots=1024):
     """
     各角度に対して、Ry 回転とその後の Z 基底での projective measurement を行い、
     ショット数による評価結果（期待値と標準誤差）を返す関数。
-    
+
     パラメータ:
       angles: 0 ～ 2π の回転角度の配列
       variable_gate_time: True の場合、各角度に比例してゲート時間を延ばす
@@ -329,13 +329,13 @@ def simulate_projective(angles, variable_gate_time, base_gate_time, shots=1024):
     """
     f_vals = []
     f_errs = []
-    
+
     for theta in angles:
         # 1 qubit, 1 classical bitの回路を作成
         qc = QuantumCircuit(1, 1)
         qc.ry(theta, 0)
         qc.measure(0, 0)
-        
+
         # variable_gate_time が True の場合、各角度でゲート時間を調整
         if variable_gate_time:
             # 現在の Ry ゲートの実行時間: θ/(2π) * base_gate_time
@@ -347,7 +347,7 @@ def simulate_projective(angles, variable_gate_time, base_gate_time, shots=1024):
             backend = AerSimulator(noise_model=noise_model, shots=shots)
         else:
             backend = AerSimulator(shots=shots)
-        
+
         compiled_qc = transpile(qc, backend)
         result = backend.run(compiled_qc).result()
         counts = result.get_counts(qc)
@@ -361,7 +361,7 @@ def simulate_projective(angles, variable_gate_time, base_gate_time, shots=1024):
         f_err = 2 * np.sqrt(p * (1-p) / shots)
         f_vals.append(f_val)
         f_errs.append(f_err)
-    
+
     return np.array(f_vals), np.array(f_errs)
 
 # 0～2π の回転角度

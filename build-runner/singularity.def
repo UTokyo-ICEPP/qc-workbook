@@ -1,9 +1,15 @@
-Bootstrap: docker-daemon
-From: yiiyama/jupyterbook-qiskit-packages:1.2.2
+Bootstrap: docker
+From: yiiyama/jupyterbook-qiskit-packages:1.3.0
+
+%environment
+    export PATH="/opt/packages/bin:$PATH"
 
 %post
-    apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get -y install wget git
+    apt -y update
+    DEBIAN_FRONTEND=noninteractive apt install -y git
+
+    export PATH="/opt/packages/bin:$PATH"
+    echo $PATH
 
     pip3 install --no-cache-dir jupyterlab jupytext
 
