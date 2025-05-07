@@ -197,7 +197,16 @@ H_sub = hamiltonian[:, unique_bases][unique_bases, :] # 部分行列を抽出
 energy_sub = np.linalg.eigvalsh(H_sub)[0]
 print("reconstructed energy :")
 print(energy_sub)
+
+print()
+print("Noisy energy:")
+print(gs_noisy)
+print("Exact energy:")
+print(gs_en)
 ```
+
+ノイズのある量子回路における期待値を素朴に測定した結果と比べて、はるかに精度の良い結果が得られました。
+測定回数を増やすと、構成された部分空間の次元は単調に増えていくことから、計算結果は系統的に改善されることが期待されます。
 
 ```{code-cell} ipython3
 nsamp_array =[20,40, 80, 100, 150, 200, 300, 500, 800, 1000, ]
@@ -253,4 +262,8 @@ plt.yscale("log")
 plt.legend()
 ```
 
-$p=0.4$ととっていたので、おおよそ$1/(1-p) \approx 1.6$倍程度のoverheadによって元の計算結果を復元できている。
+$p=0.4$ととっていたので、おおよそ$1/(1-p) \approx 1.6$倍程度のoverheadによってideal QSCIの計算結果を復元できています。
+
+```{code-cell} ipython3
+
+```
