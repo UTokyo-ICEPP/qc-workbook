@@ -319,9 +319,9 @@ objective_func_vals_exp = []
 
 # 実験をNexp回繰り返す
 for iexp in range(Nexp):
-    
+
     qc = QuantumCircuit(num_qubits)
-    
+
     # VQE回路
     qc.compose(vqe_ansatz, inplace=True)
 
@@ -546,10 +546,10 @@ slideshow:
 tags: [remove-output]
 ---
 def trotter_ising_circuit(num_spins, J, num_steps):
-    
+
     circuit = QuantumCircuit(num_spins)
 
-    # hをパラメータ化して変更できるようにする    
+    # hをパラメータ化して変更できるようにする
     h_param = Parameter('h_param')
 
     ##################
@@ -611,13 +611,13 @@ objective_func_vals_exp = []
 
 # 実験をNexp回繰り返す
 for iexp in range(Nexp):
-    
+
     qc = QuantumCircuit(num_qubits)
-    
+
     # 時間発展用の回路
     state_prep = trotter_ising_circuit(num_qubits, J, num_steps)
     qc.compose(state_prep, inplace=True)
-    
+
     # 学習用の量子回路
     qnn_ansatz = RealAmplitudes(num_qubits=num_qubits, reps=nlayer, parameter_prefix='theta')
     qc.compose(qnn_ansatz, inplace=True)
@@ -723,4 +723,3 @@ plt.show()
 **提出するもの**
 - 問題1と問題2の量子回路
 - 問題3の結果と、その考察
-
