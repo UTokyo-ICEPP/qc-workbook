@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -26,7 +26,7 @@ language_info:
 
 +++
 
-{doc}`chsh_inequality`で、量子回路の基本的な書き方と実機での実行の仕方を学びました。そこで出てきたように、QCでは量子レジスタに特定の量子状態を実現することが計算を行うこととなります。そこで今回は、基本的なゲートを組み合わせて様々な量子状態を作る実習を行います。
+{doc}`chsh_inequality`で、量子回路の基本的な書き方と実機での実行の仕方を学びました。そこで出てきたように、量子コンピュータでは量子レジスタに特定の量子状態を実現することが計算を行うこととなります。そこで今回は、基本的なゲートを組み合わせて様々な量子状態を作る実習を行います。
 
 ```{contents} 目次
 ---
@@ -41,7 +41,7 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 
 ## 状態ベクトルシミュレータで量子状態を調べる
 
-第一回の課題で利用したQCシミュレータ`AerSimulator`は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`AerSimulator`の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
+第一回の課題で利用した古典シミュレータ`AerSimulator`は、デフォルトの設定では実機と同様に量子回路の測定結果をヒストグラムとして返します。測定結果を返すということは、その出力からは量子状態の複素位相を含めた振幅は読み取れません。今回は作った量子状態をより詳細に調べるために、`AerSimulator`の状態ベクトルシミュレーション機能を利用します。状態ベクトルシミュレーションは、回路の終状態におけるすべての計算基底の確率振幅、つまりその量子状態に関する最も完全な情報を返します。
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -79,7 +79,7 @@ circuit.draw('mpl')
 回路に測定操作(`measure_all()`)を加えてしまうと、状態ベクトルシミュレータを利用して測定前の回路の量子状態を確認することができなくなります。
 ```
 
-状態ベクトルシミュレーションを実行する際も`transpile`とバックエンドの`run`関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので`get_counts`ではなく`result.data()['statevector']`を参照します。
+状態ベクトルシミュレーションを実行する際も`transpile`とシミュレータの`run`関数を使い、ジョブオブジェクトから結果を得ます。ただし、今回は計算結果からカウントではなく状態ベクトル（＝量子振幅の配列）を得るので`get_counts`ではなく`result.data()['statevector']`を参照します。
 
 ```{code-cell} ipython3
 def get_statevector_array(circuit):
@@ -144,6 +144,14 @@ Math(expr)
   - 1
   - パラメータ$\phi$を取り、$\ket{1}$に位相$e^{i\phi}$をかける。$P(\phi)$は$R_{z}(\phi)$と等価なので、1量子ビットゲートとして利用する分にはどちらでも同じ結果が得られる。
   - `circuit.p(phi, i)`
+* - $U$
+  - 1
+  - パラメータ$\theta, \phi, \lambda$を取り、1量子ビットに対する任意の操作を表現する。
+    ```{math}
+    U(\theta, \phi, \lambda) \ket{0} = \cos \left(\frac{\theta}{2}\right) \ket{0} + e^{i\phi} \sin \left(\frac{\theta}{2}\right) \ket{1} \\
+    U(\theta, \phi, \lambda) \ket{1} = e^{-i\lambda} \sin \left(\frac{\theta}{2}\right) \ket{0} + e^{i(\phi + \lambda)} \cos \left(\frac{\theta}{2}\right) \ket{1}
+    ```
+  - `circuit.u(theta, phi, lam, i)`
 * - $C^i_j[P]$
   - 2
   - パラメータ$\phi$を取り、ビット$i, j$が1であるような計算基底の位相を$\phi$前進させる。
@@ -245,10 +253,10 @@ circuit.p(np.pi / 2., 0)
 
 でしょう。自分で入力して確認してみてください。
 
-また、上で触れたように、単一量子ビットの場合、$U_3$ゲートを使えば任意の状態を一つのゲート操作で生成できます。$U_3$を使った解答は
+また、上で触れたように、単一量子ビットの場合、$U$ゲートを使えば任意の状態を一つのゲート操作で生成できます。$U$を使った解答は
 
 ```{code-block} python
-circuit.u3(np.pi / 2., np.pi / 2., 0., 0)
+circuit.u(np.pi / 2., np.pi / 2., 0., 0)
 ```
 
 です。
@@ -289,7 +297,7 @@ Math(expr)
 **解答**
 
 ````{toggle}
-問題1の結果を利用すると簡単です。初期状態は両ビットとも$\ket{0}$なので、2ビットレジスタに対して問題1の操作をすると状態$1/\sqrt{2}(\ket{0} + i\ket{1})\ket{0}$ができます。ここでビット0から1にCNOTをかけると、$\ket{1}\ket{0} \rightarrow \ket{1}\ket{1}$となるので、望む状態が実現します。
+問題1の結果を利用すると簡単です。初期状態は両ビットとも$\ket{0}$なので、ビット0に対して問題1の操作をすると状態$1/\sqrt{2}\ket{0}(\ket{0} + i\ket{1})$ができます。ここでビット0から1にCNOTをかけると、$\ket{0}\ket{1} \rightarrow \ket{1}\ket{1}$となるので、望む状態が実現します。
 
 ```{code-block} python
 circuit.h(0)
@@ -383,7 +391,7 @@ Math(expr)
 **解答**
 
 ````{toggle}
-Equal superpositionと呼ばれるこの状態は、量子計算でおそらく一番多様される状態です。一見複雑に思えますが、$n$桁の二進数で$0$から$2^n-1$までの数を表現すると、全ての0/1の組み合わせが登場するということを考えると、
+Equal superposition（均等重ね合わせ状態）と呼ばれるこの状態は、量子計算でおそらく一番多様される状態です。一見複雑に思えますが、$n$桁の二進数で$0$から$2^n-1$までの数を表現すると、全ての0/1の組み合わせが登場するということを考えると、
 
 $$
 \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} \ket{k} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}) \otimes \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}) \otimes \cdots \otimes \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})
@@ -395,7 +403,11 @@ $$
 for i in range(4):
     circuit.h(i)
 ```
-が正解です。
+もしくは
+```{code-block} python
+circuit.h(range(4))
+```
+などが正解です。
 ````
 
 +++
@@ -462,7 +474,7 @@ circuit.x(3)
 一般の$n$量子ビットに対して状態
 
 $$
-\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi i s k/2^n} \ket{k} \quad (s \in \mathbb{R})
+\frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi \frac{s k}{2^n}i} \ket{k} \quad (s \in \mathbb{R})
 $$
 
 を作る回路を考え、$n=6, s=2.5$のケースを実装しなさい。
@@ -499,7 +511,7 @@ Math(expr)
 **解答**
 
 ````{toggle}
-問題4と同じように、この状態も個々の量子ビットにおける$\ket{0}$と$\ket{1}$の重ね合わせの積として表現できます。そのためには$k$の二進数表現$k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m=0,1)$を用いて、$\ket{k}$の位相を
+問題4と同じように、この状態も個々の量子ビットにおける$\ket{0}$と$\ket{1}$の重ね合わせの積として表現できます。そのためには$k$の二進数表現$k = \sum_{m=0}^{n-1} 2^m k_m \, (k_m \in \{0,1\})$を用いて、$\ket{k}$の位相を
 
 $$
 \exp\left(2\pi i \frac{sk}{2^n}\right) = \exp \left(2\pi i \frac{s}{2^n} \sum_{m=0}^{n-1} 2^m k_m\right) = \prod_{m=0}^{n-1} \exp \left(2\pi i \frac{s}{2^{n-m}} k_m\right)
@@ -570,7 +582,8 @@ dtheta = 2. * np.pi / 16.
 for idx in range(4):
     # circuit.***.c_if(classical_bit, 1) <- classical_bitが1のときに***ゲートをかける
     angle = dtheta * (2 ** idx)
-    circuit.ry(angle, register2[0]).c_if(output1[idx], 1)
+    with circuit.if_test((output1[idx], 1)):
+        circuit.ry(angle, register2[0])
 
 circuit.draw('mpl')
 ```
@@ -626,7 +639,8 @@ circuit.draw('mpl')
 
 ```{code-cell} ipython3
 lines = statevector_expr(circuit, register_sizes=[4, 1], terms_per_row=6)
-Math(r' \\ '.join(lines))
+for line in lines:
+    display(Math(line))
 ```
 
 ### 関数
@@ -637,10 +651,10 @@ $$
 U_{f}\ket{y}\ket{x} = \ket{y \oplus f(x)}\ket{x} \quad (y \in \{0, 1\})
 $$
 
-となるようなゲートの組み合わせ$U_{f}$を見つけることです。ここで、$\oplus$は「2を法とする足し算」つまり和を2で割った余りを表します（$y=0$なら$y \oplus f(x) = f(x)$、$y=1$なら$y \oplus f(x) = 1 - f(x)$）。要するに、$U_{f}$は「$f(x)$の値が0だったら何もせず、1だったら右のケットをビット反転させる」というオペレーションです。
+となるようなゲートの組み合わせ$U_{f}$を見つけることです。ここで、$\oplus$は「2を法とする足し算」つまり和を2で割った余りを表します（$y=0$なら$y \oplus f(x) = f(x)$、$y=1$なら$y \oplus f(x) = 1 - f(x)$）。要するに、$U_{f}$は「$f(x)$の値が0だったら何もせず、1だったら左のケットをビット反転させる」というオペレーションです。
 
 このような関数回路は量子アルゴリズムを考える上で頻出します。二点指摘しておくと、
-- 単に$U_{f}\ket{y}\ket{x} = \ket{f(x)}\ket{x}$とできないのは、量子回路は可逆でなければいけないという制約があるからです。もともと右のレジスタにあった$y$という情報を消してしまうような回路は不可逆なので、そのような$U_{f}$の回路実装は存在しません。
+- 単に$U_{f}\ket{y}\ket{x} = \ket{f(x)}\ket{x}$とできないのは、量子回路は可逆でなければいけないという制約があるからです。もともと左のレジスタにあった$y$という情報を消してしまうような回路は不可逆なので、そのような$U_{f}$の回路実装は存在しません。
 - 関数の返り値がバイナリというのはかなり限定的な状況を考えているようですが、一般の整数値関数も単に「1の位を返す関数$f_0$」「2の位を返す関数$f_1$」...と重ねていくだけで表現できます。
 
 さて、このような$U_f$を実装する時も、やはり鍵となるのは制御ゲートです。例えば、実際に4ビット整数値関数に拡張した$f=f_3 f_2 f_1 f_0$を$x \in \{0, \dots, 7\}$を15から引く関数としたとき、それに対応する回路は
@@ -704,7 +718,7 @@ $$
 
 （単位ベクトルにおけるCauchy-Schwarzの不等式）があります。二つの状態ベクトルが物理的に同一であるときに内積の絶対値が最大になるので、内積の絶対値は状態の「近さ」を表す指標になります。また、内積が0になるとき、二つのベクトルは直交すると言います。
 
-それから、状態ベクトルの内積と密接に関わる量として、状態ベクトルの重ね合わせ
+それから、状態ベクトルの内積と密接に関わる量として、状態ベクトルの和
 
 $$
 \ket{\psi} + \ket{\phi} = \sum_k (c_k + d_k) \ket{k} = \sum_k z_k \ket{k}
@@ -716,7 +730,7 @@ $$
 \lVert \ket{\psi} + \ket{\phi} \rVert_2 = \sum_k |z_k|^2
 $$
 
-があります。単一の状態ベクトル$\ket{\psi}$では「量子力学の決まりごと」$\braket{\psi}{\psi} = \sum_k |c_k|^2 = 1$（$\ket{\psi}$は単位ベクトル）より2-ノルムが常に1ですが、上のような重ね合わせに対しては
+があります。単一の状態ベクトル$\ket{\psi}$では「量子力学の決まりごと」$\braket{\psi}{\psi} = \sum_k |c_k|^2 = 1$（$\ket{\psi}$は単位ベクトル）より2-ノルムが常に1ですが、上のように規格化されていない和に対しては
 
 $$
 \begin{split}
@@ -791,7 +805,7 @@ for idx in range(data_width):
 
 circuit.h(reg_test)
 
-circuit.measure(reg_test, out)
+circuit.measure(reg_test, out);
 ```
 
 ```{code-cell} ipython3
@@ -1032,7 +1046,7 @@ $$
 
 ```{code-cell} ipython3
 # まずは入力ビットを適当な状態にする回路を作る
-# circuit.u (U3 gate)は3パラメータで一つの量子ビットを完全にコントロールするゲート
+# circuit.u (U gate)は3パラメータで一つの量子ビットを完全にコントロールするゲート
 prep_circuit = QuantumCircuit(1, name='prep')
 prep_circuit.u(0.7, 1.8, 2.1, 0)
 
@@ -1061,8 +1075,10 @@ circuit.measure(reg_in[0], res_in[0])
 circuit.measure(reg_out[0], res_ent[0])
 
 # reg_out[1]にreg_in, reg_entの測定結果に応じたゲートをかける
-circuit.x(reg_out[1]).c_if(res_ent[0], 1)
-circuit.z(reg_out[1]).c_if(res_in[0], 1)
+with circuit.if_test((res_ent[0], 1)):
+    circuit.x(reg_out[1])
+with circuit.if_test((res_in[0], 1)):
+    circuit.z(reg_out[1])
 
 circuit.draw('mpl')
 ```

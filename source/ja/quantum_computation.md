@@ -6,7 +6,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.16.1
+      jupytext_version: 1.16.7
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -115,26 +115,37 @@ $$
 $$
 U\ket{a_0 b_0 0} = \ket{c_1 (a_0 \oplus b_0) a_0}
 $$
+
 を得ます。ここで
+
 $$
 c_1 = \{ a_0 + b_0 \}
 $$
+
 です。次に$\ket{a_1} \ket{b_1} \ket{c_1}$に$U$を作用させると
+
 $$
 U\ket{a_1 b_1 c_1} = \ket{c_2 (a_1 \oplus b_1) (a_1 \oplus c_1)}
 $$
+
 を得ます（$c_2 = \{ a_1 + b_1 + c_1 \}$）。このように、適当な大きさのレジスタを
+
 $$
 \ket{a_{n-1} b_{n-1} a_{n-2} b_{n-2} \cdots a_0 b_0 0}
 $$
+
 に初期化し、繰り返し$U$を作用させていくと、状態
+
 $$
 \ket{c_n (a_{n-1} \oplus b_{n-1}) (a_{n-1} \oplus c_{n-1}) (a_{n-2} \oplus b_{n-2}) \cdots (a_1 \oplus c_1) (a_0 \oplus b_0) a_0}
 $$
+
 が得られることがわかります。この状態に対して今度は$V$を高い位から順に作用させていくと、
+
 $$
 \ket{a_{n-1} (a_{n-1} \oplus b_{n-1} \oplus c_{n-1}) a_{n-2} (a_{n-2} \oplus b_{n-2} \oplus c_{n-2}) \cdots (a_0 \oplus b_0) 0}
 $$
+
 となるので、終状態のビット値を一つ飛ばしで読み出せば、$a$と$b$の足し算の結果になっています。ただしこのままでは一番高い位の繰り上げビット$c_n$の情報が失われているので、実際には$V$を作用させる前に一番左のビットを制御、別に用意する補助ビットを標的とするCXゲートを使って情報を書き出しておきます。
 
 2桁＋2桁の場合の最終的な足し算回路は以下のようになります。
