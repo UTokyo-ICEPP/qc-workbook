@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from qiskit import transpile, QuantumCircuit
-from qiskit_aer import AerSimulator
+from qiskit.quantum_info import Operator
+
 
 def show_state(
     statevector: Union[QuantumCircuit, np.ndarray],
@@ -86,16 +87,7 @@ def statevector_expr(
     ## If a QuantumCircuit is passed, extract the statevector
 
     if isinstance(statevector, QuantumCircuit):
-        circuit = statevector.copy()
-        # Run the circuit in statevector_simulator and obtain the final state statevector
-        simulator = AerSimulator(method='statevector')
-
-        # Append an instruction to save the statevector of the final state of the circuit
-        circuit.save_statevector()
-
-        # Transpile and run the circuit
-        circuit = transpile(circuit, backend=simulator)
-        statevector = np.asarray(simulator.run(circuit).result().data()['statevector'])
+        statevector = Operator(statevector).data[:, 0]
 
     ## Setup
 
