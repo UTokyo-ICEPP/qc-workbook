@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -28,9 +28,9 @@ language_info:
 
 ## 効率化前後の回路の比較
 
-実習のおさらいをすると、まずもともとの足し算のロジックをそのまま踏襲した回路を作り、それではゲート数が多すぎるので効率化した回路を作成しました。
+実習のおさらいをすると、まずもともとの足し算のロジックをそのまま踏襲した回路（標準回路）を作り、量子ビットが一列に並んでいることを仮定してSWAPを最小化した回路（効率化回路）を作成しました。ただし、トランスパイラの高性能化によって、標準回路も`optimization_level=3`でトランスパイルすれば2量子ビットゲートの数に効率化回路と大差がなくなることを知りました。
 
-実は効率化した回路でもまだゲートの数が多すぎて、4ビット+4ビットの計算では答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、$(n_1, n_2)$の値として(4, 4)以外に(3, 3)、(2, 2)、(1, 1)も同時に試すことにしましょう。
+2量子ビットゲートの数を極力減らせたとはいえ、これでもまだ実機での実行ではエラーで答えがスクランブルされてしまいます。回路が小規模になればそれだけ成功確率も上がりますので、$(n_1, n_2)$の値として(1, 1)から(8, 8)まで試してみることにしましょう。
 
 ```{code-cell} ipython3
 ---
@@ -67,7 +67,7 @@ try:
 except AccountNotFoundError:
     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend = service.least_busy(min_num_qubits=13, filters=operational_backend())
+backend = service.least_busy(filters=operational_backend())
 
 print(f'Using backend {backend.name}')
 ```
@@ -131,14 +131,16 @@ def make_original_circuit(n1, n2):
     return circuit
 ```
 
-(4, 4)から(1, 1)までそれぞれオリジナルと効率化した回路の二通りを作り、全てリストにまとめてバックエンドに送ります。
+(1, 1)から(8, 8)までそれぞれ標準回路と効率化回路を作り、全てリストにまとめてバックエンドに送ります。
 
 ```{code-cell} ipython3
+entangling_gate = next(g.name for g in backend.gates if g.name in ['cz', 'ecr'])
+
 # count_ops()の結果をテキストにする関数
 def display_nops(circuit):
     nops = circuit.count_ops()
     text = []
-    for key in ['rz', 'x', 'sx', 'cx']:
+    for key in ['rz', 'x', 'sx', entangling_gate]:
         text.append(f'N({key})={nops.get(key, 0)}')
 
     return ', '.join(text)
@@ -175,14 +177,12 @@ def make_circuits(n1, n2, backend):
 editable: true
 slideshow:
   slide_type: ''
-tags: [remove-input]
+tags: [remove-output, raises-exception]
 ---
-# テキスト作成用のセル
-import pickle
-
-shots = 2000
-with open('data/quantum_computation_fake_data.pkl', 'rb') as source:
-    counts_list = pickle.load(source)
+# List of circuits
+circuits = []
+for nq in range(1, 9):
+    circuits += make_circuits(nq, nq, backend)
 ```
 
 ```{code-cell} ipython3
@@ -192,11 +192,6 @@ slideshow:
   slide_type: ''
 tags: [remove-output, raises-exception]
 ---
-# List of circuits
-circuits = []
-for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
-    circuits += make_circuits(n1, n2, backend)
-
 # バックエンドで定められた最大のショット数だけ各回路を実行
 shots = min(backend.max_shots, 2000)
 
@@ -230,58 +225,101 @@ def count_correct_additions(counts, n1, n2):
 
 
 icirc = 0
-for n1, n2 in [(4, 4), (3, 3), (2, 2), (1, 1)]:
+for nq in range(1, 9):
+    print(f'({nq}, {nq}):')
     for ctype in ['Original', 'Optimized']:
-        n_correct = count_correct_additions(counts_list[icirc], n1, n2)
+        n_correct = count_correct_additions(counts_list[icirc], nq, nq)
         r_correct = n_correct / shots
-        print(f'{ctype} circuit ({n1}, {n2}): {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
+        print(f'  {ctype} circuit: {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
         icirc += 1
 ```
 
-ちなみに、`ibm_kawasaki`というマシンで同じコードを走らせると、下のような結果が得られます。
+トランスパイル後の標準回路と効率化回路とのCZの数の差が計算結果の精度に直接影響します。トランスパイルをするセルから先を何度か実行してみて、差が大きい時と小さい時を比べるのも参考になるでしょう。
+
+ちなみに、`ibm_torino`というマシンでの試行では、以下のような結果が得られました。
 
 <pre>
-Original circuit with n1, n2 = 4, 4
-  Transpiling..
-  Done. Ops: N(rz)=170, N(x)=3, N(sx)=67, N(cx)=266
-Optimized circuit with n1, n2 = 4, 4
-  Transpiling..
-  Done. Ops: N(rz)=175, N(x)=1, N(sx)=64, N(cx)=142
-Original circuit with n1, n2 = 3, 3
-  Transpiling..
-  Done. Ops: N(rz)=120, N(x)=5, N(sx)=57, N(cx)=90
-Optimized circuit with n1, n2 = 3, 3
-  Transpiling..
-  Done. Ops: N(rz)=117, N(x)=0, N(sx)=48, N(cx)=84
-Original circuit with n1, n2 = 2, 2
-  Transpiling..
-  Done. Ops: N(rz)=50, N(x)=0, N(sx)=20, N(cx)=56
-Optimized circuit with n1, n2 = 2, 2
-  Transpiling..
-  Done. Ops: N(rz)=67, N(x)=0, N(sx)=32, N(cx)=41
 Original circuit with n1, n2 = 1, 1
   Transpiling..
-  Done. Ops: N(rz)=25, N(x)=0, N(sx)=15, N(cx)=13
+  Done. Ops: N(rz)=25, N(x)=4, N(sx)=23, N(cz)=11
 Optimized circuit with n1, n2 = 1, 1
   Transpiling..
-  Done. Ops: N(rz)=27, N(x)=0, N(sx)=16, N(cx)=13
+  Done. Ops: N(rz)=25, N(x)=1, N(sx)=33, N(cz)=13
+Original circuit with n1, n2 = 2, 2
+  Transpiling..
+  Done. Ops: N(rz)=56, N(x)=5, N(sx)=83, N(cz)=41
+Optimized circuit with n1, n2 = 2, 2
+  Transpiling..
+  Done. Ops: N(rz)=79, N(x)=1, N(sx)=105, N(cz)=41
+Original circuit with n1, n2 = 3, 3
+  Transpiling..
+  Done. Ops: N(rz)=114, N(x)=11, N(sx)=185, N(cz)=88
+Optimized circuit with n1, n2 = 3, 3
+  Transpiling..
+  Done. Ops: N(rz)=150, N(x)=3, N(sx)=203, N(cz)=84
+Original circuit with n1, n2 = 4, 4
+  Transpiling..
+  Done. Ops: N(rz)=174, N(x)=15, N(sx)=303, N(cz)=148
+Optimized circuit with n1, n2 = 4, 4
+  Transpiling..
+  Done. Ops: N(rz)=245, N(x)=3, N(sx)=340, N(cz)=142
+Original circuit with n1, n2 = 5, 5
+  Transpiling..
+  Done. Ops: N(rz)=253, N(x)=17, N(sx)=490, N(cz)=238
+Optimized circuit with n1, n2 = 5, 5
+  Transpiling..
+  Done. Ops: N(rz)=362, N(x)=11, N(sx)=516, N(cz)=215
+Original circuit with n1, n2 = 6, 6
+  Transpiling..
+  Done. Ops: N(rz)=342, N(x)=15, N(sx)=694, N(cz)=333
+Optimized circuit with n1, n2 = 6, 6
+  Transpiling..
+  Done. Ops: N(rz)=512, N(x)=7, N(sx)=718, N(cz)=303
+Original circuit with n1, n2 = 7, 7
+  Transpiling..
+  Done. Ops: N(rz)=447, N(x)=25, N(sx)=941, N(cz)=457
+Optimized circuit with n1, n2 = 7, 7
+  Transpiling..
+  Done. Ops: N(rz)=661, N(x)=16, N(sx)=974, N(cz)=406
+Original circuit with n1, n2 = 8, 8
+  Transpiling..
+  Done. Ops: N(rz)=577, N(x)=21, N(sx)=1244, N(cz)=599
+Optimized circuit with n1, n2 = 8, 8
+  Transpiling..
+  Done. Ops: N(rz)=851, N(x)=19, N(sx)=1250, N(cz)=524
 </pre>
 
 +++ {"tags": ["remove-input"]}
 
 <pre>
-Original circuit (4, 4): 990 / 32000 = 0.031 +- 0.001
-Optimized circuit (4, 4): 879 / 32000 = 0.027 +- 0.001
-Original circuit (3, 3): 2435 / 32000 = 0.076 +- 0.001
-Optimized circuit <b>(3, 3)</b>: 2853 / 32000 = <b>0.089 +- 0.002</b>
-Original circuit (2, 2): 3243 / 32000 = 0.101 +- 0.002
-Optimized circuit <b>(2, 2)</b>: 7994 / 32000 = <b>0.250 +- 0.002</b>
-Original circuit <b>(1, 1)</b>: 25039 / 32000 = <b>0.782 +- 0.002</b>
-Optimized circuit <b>(1, 1)</b>: 26071 / 32000 = <b>0.815 +- 0.002</b>
+(1, 1):
+  Original circuit: 1764 / 2000 = 0.882 +- 0.007
+  Optimized circuit: 1823 / 2000 = 0.911 +- 0.006
+(2, 2):
+  Original circuit: 1161 / 2000 = 0.581 +- 0.011
+  Optimized circuit: 1544 / 2000 = 0.772 +- 0.009
+(3, 3):
+  Original circuit: 1035 / 2000 = 0.517 +- 0.011
+  Optimized circuit: 1100 / 2000 = 0.550 +- 0.011
+(4, 4):
+  Original circuit: 689 / 2000 = 0.344 +- 0.011
+  Optimized circuit: 720 / 2000 = 0.360 +- 0.011
+(5, 5):
+  Original circuit: 120 / 2000 = 0.060 +- 0.005
+  Optimized circuit: 406 / 2000 = 0.203 +- 0.009
+(6, 6):
+  Original circuit: 216 / 2000 = 0.108 +- 0.007
+  Optimized circuit: 337 / 2000 = 0.169 +- 0.008
+(7, 7):
+  Original circuit: 73 / 2000 = 0.036 +- 0.004
+  Optimized circuit: 18 / 2000 = 0.009 +- 0.002
+(8, 8):
+  Original circuit: 10 / 2000 = 0.005 +- 0.002
+  Optimized circuit: 22 / 2000 = 0.011 +- 0.002
 </pre>
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-回路が均一にランダムに$0$から$2^{n_1 + n_2 + n_3} - 1$までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は$2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}$となります。実機では、(4, 4)と(3, 3)でどちらの回路も正答率がほとんどこの値に近くなっています。(2, 2)では効率化回路で明らかにランダムでない結果が出ています。(1, 1)では両回路とも正答率8割です。
+系が大きくなるに従ってトランスパイラが効率的なルーティングを見つけにくくなる傾向があるようです。(5, 5)以降で標準回路と効率化回路に2量子ビットゲートの数の差が出ています。
 
-フェイクバックエンドでは実機のエラーもシミュレートされていますが、エラーのモデリングが甘い部分もあり、$2^{-n_3}$よりは遥かに良い成績が得られています。いずれのケースも、回路が短い効率化バージョンの方が正答率が高くなっています。
+回路が均一にランダムに$0$から$2^{n_1 + n_2 + n_3} - 1$までの数を返す場合、レジスタ1と2のそれぞれの値の組み合わせに対して正しいレジスタ3の値が一つあるので、正答率は$2^{n_1 + n_2} / 2^{n_1 + n_2 + n_3} = 2^{-n_3}$となります。(1, 1)では正答率が9割を超えていますが、(8, 8)まで行くとランダムに近い結果が出てしまっているのが見て取れます。

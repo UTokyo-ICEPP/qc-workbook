@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -26,7 +26,7 @@ language_info:
 
 # 【課題】量子フーリエ変換と量子ダイナミクスシミュレーション
 
-第三回の実習では量子計算の並列性と、その顕著な利用法としての量子フーリエ変換および量子ダイナミクスシミュレーションを取り上げました。また、実機で計算を行う際の実用的な問題として、回路の最適化や測定エラーの緩和についても議論しました。この課題はその直接の延長です。
+今回の実習では<doc>`量子計算の並列性 <extreme_simd>`と、その顕著な利用法としての量子フーリエ変換および<doc>`量子ダイナミクスシミュレーション <dynamics_simulation>`を取り上げました。この課題はその直接の延長です。
 
 ```{contents} 目次
 ---
@@ -70,10 +70,10 @@ $$
 という変換です。量子回路は線形演算なので、左辺が例えば2つの計算基底の重ね合わせであれば
 
 $$
-\alpha \ket{k} + \beta \ket{l} \rightarrow \sum_{j} \left[\exp(2 \pi i j k / 2^n) + \exp(2 \pi i j l / 2^n) \right] \ket{j}
+\alpha \ket{k} + \beta \ket{l} \rightarrow \sum_{j} \left[\alpha \exp(2 \pi i j k / 2^n) + \beta \exp(2 \pi i j l / 2^n) \right] \ket{j}
 $$
 
-となります。このことを利用して、測定でビット列$k$を得る確率が$\frac{1}{2}[1 + \cos (8 \pi k / 2^5)]$となるような量子回路を作ってください。
+となります。このことを利用して、測定でビット列$k$を得る確率が$\frac{1}{32}[1 + \cos (8 \pi k / 32)]$となるような量子回路を作ってください。
 
 ```{code-cell} ipython3
 ---
@@ -282,17 +282,24 @@ H = \frac{1}{2a} \bigg\{ -i \sum_{j=0}^{n-2} \left[ \Phi^{\dagger}_{j} e^{i\thet
 
 となります。ここで$J = g^2 a^2 / 2$, $\mu = m a$, また$\Phi_j$はサイト$j$上の（1元）物質場、$\theta_j$は$j$上のゲージ場、$L_j$は格子$j$と$j+1$間の接続上の電場です。
 
-Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは$j$が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト$j$の基底$\plusket_j$と$\minusket_j$を、$\Phi_j$と$\Phi^{\dagger}_j$が
+Kogut-Susskindハミルトニアンにおける物質場はstaggered fermionsと呼ばれ、隣接サイトのうち片方が物質を、もう一方が反物質を表します。約束として、ここでは$j$が偶数のサイトを物質（電荷-1）に、奇数のサイトを反物質（電荷+1）に対応付けます。一般に各サイトにおける物質の状態は、フェルミ統計に従って粒子が存在する・しないという2つの状態の重ね合わせです。サイト$j$の基底$\plusket_j$と$\minusket_j$を、$\Phi_j$と$\Phi^{\dagger}_j$が
 
 ```{math}
-:label: creation_annihilation
 \Phi_j \plusket_j = \minusket_j \\
 \Phi_j \minusket_j = 0 \\
 \Phi^{\dagger}_j \plusket_j = 0 \\
 \Phi^{\dagger}_j \minusket_j = \plusket_j
 ```
 
-と作用する状態と定めます。質量項の符号から、偶数サイトでは$\minusket$が粒子が存在する状態、$\plusket$が存在しない状態を表現し、奇数サイトでは逆に$\plusket$が粒子あり、$\minusket$が粒子なしを表すことがわかります。つまり、$\Phi^{\dagger}_j$と$\Phi_j$はサイト$j$における電荷の上昇と下降を引き起こす演算子です。
+と作用する状態と定めます。するとハミルトニアンの質量項$H_{\mathrm{mass}}$（$\mu$に比例する項）はサイト$j$の基底ケットに対して
+
+```{math}
+:label: number_op
+H_{\mathrm{mass}} \plusket_j = (-1)^{j+1} \plusket_j \\
+H_{\mathrm{mass}} \minusket_j = 0
+```
+
+のようにかかるので、$j$が偶数のときは$\plusket_j$のほうが$\minusket_j$より質量エネルギーが低く、奇数のときはその逆となることになります。つまり、偶数サイトでは$\minusket$が物質粒子が存在する状態、$\plusket$が存在しない状態を表現し、奇数サイトでは逆に$\plusket$が反物質粒子あり、$\minusket$が粒子なしを表します。電荷に着目すると、$\Phi_j$は物質粒子を生成し、半物質粒子を消滅させることから電荷の下降演算子、$\Phi^{\dagger}_j$はその逆の電荷上昇演算子となっています。
 
 +++
 
@@ -339,7 +346,7 @@ $$
 
 ### ハミルトニアンをパウリ行列で表現する
 
-最後に、$\plusket$と$\minusket$をスピン$\pm Z$の状態のようにみなして、$\Phi^{\dagger}_j\Phi_j$と$\Phi^{\dagger}_j\Phi_{j+1}$をパウリ行列で表現します。式{eq}`creation_annihilation`から
+最後に、$\plusket$と$\minusket$をスピン$\pm Z$の状態のようにみなして、$\Phi^{\dagger}_j\Phi_j$と$\Phi^{\dagger}_j\Phi_{j+1}$をパウリ行列で表現します。式{eq}`number_op`から
 前者は
 
 $$
@@ -376,7 +383,7 @@ $$
 
 ### 問題
 
-上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、$\plusket$と$\minusket$をそれぞれ$\ket{0}$と$\ket{1}$に対応させて、8ビット量子レジスタに対して実装してください。初期状態は真空、つまりどのサイトにも粒子・反粒子が存在しない状態$\ket{+-+-+-+-}$とし、系全体の粒子数密度の期待値
+上のシュウィンガーモデルのハミルトニアンによる時間発展シミュレーションを、$\plusket$と$\minusket$をそれぞれ$\ket{0}$と$\ket{1}$に対応させて、8ビット量子レジスタに対して実装してください。初期状態はどのサイトにも粒子・反粒子が存在しない状態$\ket{-+-+-+-+}$とし、系全体の粒子数密度の期待値
 
 $$
 \nu = \left\langle \frac{1}{n} \sum_{j=0}^{n-1} \frac{1}{2} \left[(-1)^{j+1} \sigma^Z_j + 1\right] \right\rangle

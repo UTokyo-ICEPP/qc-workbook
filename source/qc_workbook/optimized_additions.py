@@ -17,7 +17,7 @@ def optimized_additions(
     reg2 = QuantumRegister(n2, 'r2')
     reg3 = QuantumRegister(n3, 'r3')
 
-    circuit = QuantumCircuit(reg1, reg2, reg3, ClassicalRegister(n1 + n2 + n3, 'c'))
+    circuit = QuantumCircuit(reg1, reg2, reg3, ClassicalRegister(n1 + n2 + n3, 'meas'))
 
     # Set all registers to equal superpositions
     for iq in range(n1 + n2 + n3):
