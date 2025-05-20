@@ -134,6 +134,12 @@ def make_original_circuit(n1, n2):
 (1, 1)から(8, 8)までそれぞれ標準回路と効率化回路を作り、全てリストにまとめてバックエンドに送ります。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-output, raises-exception]
+---
 entangling_gate = next(g.name for g in backend.gates if g.name in ['cz', 'ecr'])
 
 # count_ops()の結果をテキストにする関数
