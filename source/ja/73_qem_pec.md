@@ -37,13 +37,13 @@ $\newcommand{\braket}[2]{\langle #1 | #2 \rangle}$
 # !pip install mitiq ply cirq
 ```
 
-PEC（Probabilistic Error Cancellation）とは、エラーに対応するノイズチャネル$\mathcal{E}$の逆演算$\mathcal{E}^{-1}$を、物理的な量子チャネルの線形和として実現するものです。
+PECでは、エラーに対応するノイズチャネル$\mathcal{E}$の逆演算$\mathcal{E}^{-1}$を、物理的な量子チャネルの線形和として実現します。
 
 $$
 \mathcal{E}^{-1} = \sum_k q_k \mathcal{B}_k,~\sum_k q_k =1
 $$
 
-ここで、$\{\mathcal{B}_k\}$はノイズなく実行できる量子操作の集合で、$\{q_k\}$はその符号つき重みに対応しています。
+ここで、$\{\mathcal{B}_k\}$はノイズなく実行できる量子操作の集合で、$\{q_k\}$はその符号付き重みに対応しています。
 
 ```{code-cell} ipython3
 import mitiq
@@ -76,6 +76,8 @@ mitiq_circuit, _ = convert_to_mitiq(circuit)
 noisy_circuit = mitiq_circuit.with_noise(depolarize(p=noise_rate))
 
 print(noisy_circuit)
+
+#q_0: ───H───D(0.3)[<virtual>]───Ry(0.125π)───D(0.3)[<virtual>]───
 ```
 
 ## 実行器の定義とノイズ付き期待値計算
@@ -100,6 +102,8 @@ def estimate_Z_noisy(circuit, noise_level=0.3):
 noisy_value = estimate_Z_noisy(circuit, noise_level = noise_rate)
 ideal_value = estimate_Z_noisy(circuit, noise_level=0.0)
 print(f"誤差（補正なし）: {abs(ideal_value - noisy_value):.5f}")
+
+#誤差（補正なし）: 0.24492
 ```
 
 ## 擬確率表現の生成とPECの適用
@@ -134,6 +138,9 @@ reps_noisy = represent_operations_in_circuit_with_local_depolarizing_noise(circu
 print(f"ゲートのノイズ除去のための擬確率表現:")
 print(reps_noisy[0])
 print(reps_noisy[1])
+
+#q_0: ───Ry(0.125π)─── = 1.500*(q_0: ───Ry(0.125π)───)-0.167*(q_0: ───Ry(0.125π)───X───)-0.167*(q_0: ───Ry(0.125π)───Y───)-0.167*(q_0: ───Ry(0.125π)───Z───)
+#q_0: ───H─── = 1.500*(q_0: ───H───)-0.167*(q_0: ───H───X───)-0.167*(q_0: ───H───Y───)-0.167*(q_0: ───H───Z───)
 ```
 
 ```{code-cell} ipython3
@@ -160,4 +167,16 @@ for num_shots in [10, 100, 1000]:
 
     print(f"\n測定回数 = {num_shots}")
     print(f"誤差（PECあり）: {abs(ideal_value - pec_value):.5f}")
+
+
+#誤差（PECなし）: 0.24492
+
+#測定回数 = 10
+#誤差（PECあり）: 0.05817
+
+#測定回数 = 100
+#誤差（PECあり）: 0.02780
+
+#測定回数 = 1000
+#誤差（PECあり）: 0.01612
 ```
