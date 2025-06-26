@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -546,7 +546,7 @@ try:
 except AccountNotFoundError:
     service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
 
-backend = service.least_busy(min_num_qubits=n_spins, filters=operational_backend())
+backend = service.least_busy(filters=operational_backend())
 
 print(f'Job will run on {backend.name}')
 ```
@@ -563,8 +563,4 @@ results = job.result()
 counts_list = [result.data.meas.get_counts() for result in results]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
-```
-
-```{code-cell} ipython3
-
 ```

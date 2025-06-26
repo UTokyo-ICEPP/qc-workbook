@@ -1,11 +1,12 @@
 ---
 jupytext:
+  formats: md:myst,ipynb
   notebook_metadata_filter: all
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.16.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -136,7 +137,7 @@ CやJavaなどの言語と異なり、Pythonでは変数を明示的に宣言し
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-# sという変数に「abc」という文字列を代入
+# sという変数に「Hello World」という文字列を代入
 # ' (single quote)もしくは " (double quote) で挟まれたテキストは文字列となる
 s = 'Hello World'
 
@@ -258,7 +259,7 @@ f = 5.4
 c = 2.3 + 0.9j
 
 # 数学的には整数でも、小数点が入ると実数型になる
-print('type of 7.0 is', type(7.0)) # type()はデータの型を返す関数
+print('type of 7.0 is', type(7.0))  # type()はデータの型を返す関数
 
 # intとfloatとの間の演算の結果はfloat
 print('type of i + 8.0 is', type(i + 8.0))
@@ -405,20 +406,21 @@ print(r'\frac{e^{%fi}}{2}' % a)
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-# 空のtupleやlistを新しく作る
-my_empty_tuple = tuple()
-my_empty_list = list()
+# 空のtupleを作る
+my_empty_tuple = ()  # tuple() でもよいが、こちらが推奨される
+# 空のlistを作る
+my_empty_list = []  # list() でもよいが、こちらが推奨される
 
 # データの入ったtupleやlistを新しく作る
 # データの型が揃っている必要はない
 my_tuple = (1, 2, 3, 'dah')
 my_list = [2.3, 5. + 1.j, 2]
 # コンストラクタ関数にリストやタプルを入れる
-my_list = list(my_tuple)
-my_tuple = tuple(my_list)
-# 「ジェネレータ表現」を使う
-my_tuple = tuple(x for x in ['a', 'b', 'c'])
-my_list = list(x for x in range(4))
+my_new_list = list(my_tuple)  # my_tupleをもとに新しいlistを作る
+my_new_tuple = tuple(my_list)  # my_listをもとに新しいtupleを作る
+# 「ジェネレータ」や「内包表現」を使う
+my_another_tuple = tuple(x for x in ['a', 'b', 'c'])
+my_another_list = [x for x in range(4)]
 ```
 
 タプルやリストの要素を一つ参照するときは、鉤括弧でインデックス（要素の番号）を指定します。インデックスは0から始まるので、長さnの配列に対して有効なインデックスは0からn-1までです。
@@ -438,7 +440,7 @@ print(t[2])
 :tags: [remove-output]
 
 print(my_list) # 数値や文字列以外もprint()できる
-my_list[3] = 'three'
+my_list[2] = 'three'
 print(my_list)
 ```
 
@@ -508,7 +510,7 @@ print(list1)
 :tags: [remove-output]
 
 # 空のdict
-my_empty_dict = dict()
+my_empty_dict = {}  # dict() でもよいが、こちらが推奨される
 
 # データの入ったdict
 # キーも要素もデータ型が揃っている必要はない
@@ -650,8 +652,12 @@ print(f'len(my_dict) was {len(my_dict)} so if I try to reference true_case I get
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [raises-exception, remove-output]
+---
 # エラーを起こす
 print(f'len(my_dict) was {len(my_dict)} so if I try to reference false_case I get this: {false_case}')
 ```
@@ -712,7 +718,7 @@ print(my_string)
 :tags: [remove-output]
 
 class EmptyClass:
-    pass # passは「文法上インデントしなければいけないけどプログラムとして何もしない」ことを表す
+    pass  # passは「文法上インデントしなければいけないけどプログラムとして何もしない」ことを表す
 ```
 
 このままでは`EmptyClass`というクラスがプログラムの中で定義されているという他、何の役割も果たしません。プログラムによってはあるクラスが存在するだけでいいということもありますが、通常は属性（インスタンスに付随するデータ）を足したり、「メソッド」を定義したりします。メソッドというのはクラスに対して定義される関数のことです。インスタンスを自動的に引数に取るため、挙動がインスタンスごとに異なります。
@@ -871,47 +877,61 @@ for char, num in zip(l, m):
 :tags: [remove-output]
 
 # str.join: 文字列の配列をつなげる
-', '.join(['apples', 'bananas', 'bonobos']) # 'apples, bananas, bonobos'
+joined = ', '.join(['apples', 'bananas', 'bonobos'])
+print('joined =', joined)
 
 # list.append: 配列の最後に要素を足す
-[0, 1].append(2) # [0, 1, 2]
+appended = [0, 1]
+appended.append(2)
+print('appended =', appended)
 
 # list.insert: 配列の任意の位置に要素を挿入する。最初の引数が位置、次の引数が要素
-['x', 'y'].insert(0, 'a') # ['a', 'x', 'y']
+inserted = ['x', 'y']
+inserted.insert(0, 'a')
+print('inserted =', inserted)
 
 # dict.keys: 辞書のキーの配列を作る
 d = {'this': 3, 'is': 89, 'a': 123, 'dictionary': 98}
+print('keys:')
 for key in d.keys():
-    # keyが'this', 'is', 'a', 'dictionary'のいずれかの値になる
-    # ただし、キーがどの順番で現れるかは（特殊な場合を除いて）不確定
-    pass
+    # keyが'this', 'is', 'a', 'dictionary'の値を取る
+    # （キーはdictに加えられた順番に現れる）
+    print(key)
 
 # dict.values: 辞書の値の配列を作る
+print('values:')
 for value in d.values():
-    # valueが3, 89, 123, 98のいずれかの値になる
-    # keysと同じく順序は不確定
-    pass
+    # valueが3, 89, 123, 98の値を取る（keysと同じくdictに加えられた順）
+    print(value)
 
 # dict.items: 辞書のキーと値のペアの配列を作る
+print('items:')
 for key, value in d.items():
-    # keysと同じく順序は不確定
-    pass
+    # keysと同じく挿入順
+    print(f'({key}, {value})')
 
 # dict.get: [key]と同じように特定のキーに対応する値を返すが、キーが存在しない場合にデフォルトの返り値を設定できる
-d.get('that', 39) # 39 (default value)
+print('that in d =', d.get('that', 39))
 ```
 
 リスト、タプル、辞書などを生成するときに時々使う構文を紹介します。
 
 ```{code-cell} ipython3
-# list comprehension: 一行の中でforループを回す
-list(f'a{i}' for i in range(3)) # ['a0', 'a1', 'a2']
+# list comprehension（内包表現）
+new_list = [f'a{i}' for i in range(3)]
+print(new_list)
+
+# dict comprehension
+new_dict = {f'v{i}': i for i in range(3)}
+print(new_dict)
 
 # dictは（キー, 値）のタプルの配列からも生成できる
-dict((f'v{i}', i) for i in range(3)) # {'v0': 0, 'v1': 1, 'v2': 2}
+dict_from_tuples = dict((f'v{i}', i) for i in range(3))
+print(dict_from_tuples)
 
 # dictのタプル配列からの生成とzipの組み合わせ
-dict(zip(['a', 'b', 'c'], [3, 4, 5])) # {'a': 3, 'b': 4, 'c': 5}
+dict_from_zip = dict(zip(['a', 'b', 'c'], [3, 4, 5]))
+print(dict_from_zip)
 ```
 
 ### NumPy
@@ -936,19 +956,19 @@ numpyの配列は`ndarray`という独自のクラスのオブジェクトで、
 :tags: [remove-output]
 
 # データから直接作る
-arr = np.array([0., 1., 2.5, 7.]) # numpyの配列では要素のデータ型が揃っている必要がある。ただし整数と実数が混ざっていれば実数の、複素数が混ざっていれば複素数の配列が作られる
+arr = np.array([0., 1., 2.5, 7.])  # numpyの配列では要素のデータ型が揃っている必要がある。ただし整数と実数が混ざっていれば実数の、複素数が混ざっていれば複素数の配列が作られる
 
 # 配列を作る関数から作る
-arr = np.arange(4) # 組み込みrange(4)のように、[0, 1, 2, 3]という配列を作る
-arr = np.linspace(0., 1., 100) # 長さ100の配列で、0.0から1.0まで等間隔に値を取る
-arr = np.zeros(5, dtype=float) # 長さ5の配列で、全ての要素が0.0。dtype=floatはデータ型を陽に実数と決めるための引数
-arr = np.ones(7, dtype=bool) # 長さ7の配列で、全ての要素が1。ただしdtype=boolとしたので、1の真偽値変換（True）が入る
-arr = np.empty(4) # 長さ4の配列で、値が初期化されていない
+arr = np.arange(4)  # 組み込みrange(4)のように、[0, 1, 2, 3]という配列を作る
+arr = np.linspace(0., 1., 100)  # 長さ100の配列で、0.0から1.0まで等間隔に値を取る
+arr = np.zeros(5, dtype=float)  # 長さ5の配列で、全ての要素が0.0。dtype=floatはデータ型を陽に実数と決めるための引数
+arr = np.ones(7, dtype=bool)  # 長さ7の配列で、全ての要素が1。ただしdtype=boolとしたので、1の真偽値変換（True）が入る
+arr = np.empty(4)  # 長さ4の配列で、値が初期化されていない
 
 # さまざまな配列をndarrayに変換する
 m = [9, 4, 5]
 arr = np.asarray(m)
-arr2 = np.asarray(arr) # ndarrayをasarrayに入れても何も起こらない（arrとarr2は同じオブジェクト）
+arr2 = np.asarray(arr)  # ndarrayをasarrayに入れても何も起こらない（arrとarr2は同じオブジェクト）
 
 # ある配列と同じ形（次元数と各次元の要素数）の配列を作る
 arr2 = np.zeros_like(arr)
@@ -962,7 +982,12 @@ arr2 = np.empty_like(arr)
 :tags: [remove-output]
 
 # 要素数2x4の2次元配列を生成
-arr = np.array([[0, 1, 2, 3], [4, 5, 6, 7]])
+arr = np.array(
+    [
+        [0, 1, 2, 3],
+        [4, 5, 6, 7]
+    ]
+)
 print('The full array:')
 print(arr)
 
@@ -982,9 +1007,9 @@ print(f'arr[1, 0:4:2] = {arr[1, 0:4:2]}')
 :tags: [remove-output]
 
 # reshape: 配列の次元数や各次元の要素数を変える
-arr = np.arange(12) # 要素数12の1次元配列
+arr = np.arange(12)  # 要素数12の1次元配列
 print(arr)
-rarr = arr.reshape(3, 4) # 要素数3x4の2次元配列。[0, 0]が0、[0, 1]が1、...
+rarr = arr.reshape(3, 4)  # 要素数3x4の2次元配列。[0, 0]が0、[0, 1]が1、...
 print(f'reshaped: {rarr}')
 
 # concatenate: 配列をつなげる
@@ -1003,7 +1028,7 @@ NumPyの大きな強みの一つが、さまざまな計算オペレーション
 list1 = [0, 1, 2]
 list2 = [3, 4, 5]
 
-list1 + list2 # これではただリストが繋がるだけなので
+list1 + list2  # これではただリストが繋がるだけなので
 
 # ループを回して要素ごとに足し算をする必要がある
 list3 = []
@@ -1036,33 +1061,33 @@ print(arr3)
 :tags: [remove-output]
 
 # 要素ごとの引き算、掛け算、割り算
-arr1 - arr2
-arr1 * arr2
-arr1 // arr2
-arr1 / arr2
+print('arr1 - arr2 =', arr1 - arr2)
+print('arr1 * arr2 =', arr1 * arr2)
+print('arr1 // arr2 =', arr1 // arr2)
+print('arr1 / arr2 =', arr1 / arr2)
 
 # 配列と一つの数（スカラー）との演算。配列の全ての要素に同じ演算が施される
-arr1 + 2
-arr1 - 3
-arr1 * np.pi # np.pi = 3.141592653589793
-arr1 // 2
-arr1 / np.e # np.e = 2.718281828459045
-arr1 ** 3
+print('arr1 + 2 =', arr1 + 2)
+print('arr1 - 3 =', arr1 - 3)
+print('arr1 * np.pi =', arr1 * np.pi)  # np.pi = 3.141592653589793
+print('arr1 // 2 =', arr1 // 2)
+print('arr1 / np.e =', arr1 / np.e)  # np.e = 2.718281828459045
+print('arr1 ** 3 =', arr1 ** 3)
 
 # 数学的関数の数々
-np.exp(arr1)
-np.log(arr2)
-np.log2(arr2) # 2を底とする対数
-np.cos(arr1)
-np.sin(arr1)
-np.tan(arr1)
-np.arccos(np.linspace(0., 1., 20))
-np.arcsin(np.linspace(0., 1., 20))
-np.arctan(arr1)
-np.square(arr1) # 全ての要素を2乗する
-np.sqrt(arr1) # 全ての要素のルートを取る
-np.ceil(arr1) # ceiling (値以上で最も小さい整数)
-np.floor(arr1) # floor (値以下で最も大きい整数)
+print('np.exp(arr1) =', np.exp(arr1))
+print('np.log(arr2) =', np.log(arr2))
+print('np.log2(arr2) =', np.log2(arr2))  # 2を底とする対数
+print('np.cos(arr1) =', np.cos(arr1))
+print('np.sin(arr1) =', np.sin(arr1))
+print('np.tan(arr1) =', np.tan(arr1))
+print('np.arccos(0 to 1) =', np.arccos(np.linspace(0., 1., 5)))
+print('np.arcsin(0 to 1) =', np.arcsin(np.linspace(0., 1., 5)))
+print('np.arctan(arr1) =', np.arctan(arr1))
+print('np.square(arr1) =', np.square(arr1))  # 全ての要素を2乗する
+print('np.sqrt(arr1) =', np.sqrt(arr1))  # 全ての要素のルートを取る
+print('np.ceil(arr1) =', np.ceil(arr1))  # ceiling (値以上で最も小さい整数)
+print('np.floor(arr1) =', np.floor(arr1))  # floor (値以下で最も大きい整数)
 ```
 
 要素ごとではなく配列全体にかかる関数もあります。
@@ -1071,10 +1096,9 @@ np.floor(arr1) # floor (値以下で最も大きい整数)
 :tags: [remove-output]
 
 # 配列の全要素を足し上げる
-np.sum(arr2)
-
+print('np.sum(arr2) =', np.sum(arr2))
 # 配列の要素の平均値
-np.mean(arr2)
+print('np.mean(arr2) =', np.mean(arr2))
 ```
 
 NumPyで実装されている関数はあまりにも多いので、このワークブックで使われている分でもここで紹介しきれていないかもしれません。残りは[NumPyのドキュメンテーション](https://numpy.org/doc/stable/)を参照してください。
@@ -1107,7 +1131,7 @@ fig = plt.figure()
 ax = fig.add_subplot()
 
 # Figureを作ると同時に、中身のAxesも作り、配置する
-fig, axs = plt.subplots(2, 3) # 縦に2列、横に3列の合計6個のAxesが生成される。figはFigureオブジェクト、axsはAxesオブジェクトの配列
+fig, axs = plt.subplots(2, 3)  # 縦に2列、横に3列の合計6個のAxesが生成される。figはFigureオブジェクト、axsはAxesオブジェクトの配列
 ```
 
 こうして作ったFigureやAxesオブジェクトの様々なメソッドを使ってグラフを描くことができますが、実は単にxとyのデータがあって一つスキャッタープロットを作りたいという時などは、もっと簡単な方法を取ることもできます。
@@ -1139,7 +1163,7 @@ plt.legend()
 
 ### Jupyter
 
-Pythonはもともとコマンドラインからスクリプト・プログラムとして実行したり、プロンプトを通じて一行ずつ動かしたりするようにできていますが、近年では（今このノートブックを表示・実行している）JupyterやVisual Studioなどの実行環境を通じてインタラクティブかつグラフィカルにプログラミングができるようになりました。
+Pythonはもともとコマンドラインからスクリプト・プログラムとして実行したり、プロンプトを通じて一行ずつ動かしたりするようにできていますが、近年では（今このノートブックを表示・実行している）JupyterやVS Codeなどの実行環境を通じてインタラクティブかつグラフィカルにプログラミングができるようになりました。
 
 中でもJupyterはIPythonというライブラリと深く関係しており、ブラウザ上で快適にPythonを動かす様々なツールを提供しています。その中から、ここではこのワークブックで登場する数式や画像を表示させるための関数だけを紹介します。
 
@@ -1173,4 +1197,8 @@ slideshow:
 from IPython.display import Math
 
 Math(r'\frac{e^{2 \pi i j k}}{\sqrt{2}}')
+```
+
+```{code-cell} ipython3
+
 ```
