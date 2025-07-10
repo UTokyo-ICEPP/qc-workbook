@@ -5,21 +5,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -38,20 +38,20 @@ local: true
 
 ### IBMidを取得し、IBM Quantumにログインする
 
-IBM Quantumを利用するには、IBMidというアカウントを作り、サービストークンを取得する必要があります。<a href="https://quantum.ibm.com/" target="_blank">IBM Quantum</a>ウェブサイトからIDを取得し、サービスにログインしてください。
+IBM Quantumを利用するには、IBMidというアカウントを作り、 API Keyを取得する必要があります。<a href="https://quantum.cloud.ibm.com/" target="_blank">IBM Quantum Platform</a>ウェブサイトからIDを取得し、サービスにログインしてください。
 
 (install_token)=
-### （ローカル環境）IBM Quantum APIトークンを取得し、Qiskit設定に保存する
+### （ローカル環境）APIキーを取得し、Qiskit設定に保存する
 
-IBM Quantum Lab（IBM Quantumウェブサイト上のJupyter Lab）でプログラムを実行する場合、以下の手続きは不要です。
+APIキーはユーザー名＋パスワードの代わりとしてPythonプログラム中でIBM Cloudに接続するために使用されます。キーをローカルディスクに書き込める環境にある場合は、設定ファイルに保存することで、以降の認証を自動化できます。
 
-ログインしたらホーム画面のYour API tokenという欄からトークンをコピーできます。
+IBM Quantum Platformにログインしたらホーム画面右上のCreate API keyという枠をクリックし、作成する新しいキーに適当な名前を付けてCreateを押してください。作成されたキーはその場でコピーもしくはダウンロードする必要があります（あとから取得することはできません）。
 ```{image} figs/ibmq_home.png
 :height: 400px
 :name: My Account
 ```
 
-アカウントごとに発行されるサービストークンは、ユーザー名＋パスワードの代わりとしてPythonプログラム中でIBMQに接続するために使用されます。ローカルディスクに書き込める環境にある場合は、一度トークンを設定ファイルに保存することで、以降の認証を自動化できます。下のコードセルの`__paste_your_token_here__`のところにIBM Quantumからコピーしたトークンを貼り付け、実行してください。
+コピーしたキーを下のコードセルの`__paste_your_api_key_here__`というところに貼り付け、実行してください。
 
 ```{code-cell} ipython3
 ---
@@ -62,7 +62,7 @@ tags: [raises-exception, remove-output]
 ---
 from qiskit_ibm_runtime import QiskitRuntimeService
 
-QiskitRuntimeService.save_account('__paste_your_token_here__')
+QiskitRuntimeService.save_account('__paste_your_api_key_here__')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -72,17 +72,17 @@ QiskitRuntimeService.save_account('__paste_your_token_here__')
 ```{code-block} python
 from qiskit_ibm_runtime import QiskitRuntimeService
 
-service = QiskitRuntimeService(channel='ibm_quantum')
+service = QiskitRuntimeService(channel='ibm_quantum_platform')
 ```
 
-のようになります。ちなみにIBM Quantum Labでは最初からトークンが保存されている状態なので、このコードで認証が行なえます。
+のようになります。
 
 ローカルディスクに書き込める環境でない場合（このワークブックをインタラクティブに使っている場合など）は、Pythonプログラムを実行するたびに（Jupyterのカーネルを再起動するたびに）手動で認証を行う必要があります。
 
 ```{code-block} python
 from qiskit_ibm_runtime import QiskitRuntimeService
 
-service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__')
+service = QiskitRuntimeService(channel='ibm_quantum_platform', token='__paste_your_api_key_here__')
 ```
 
 ## ワークブックの使い方
@@ -118,5 +118,9 @@ service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_
 ノートブックをローカルに実行するためには、Pythonバージョン3.10以上が必要です。また、`pip`を使って以下のパッケージをインストールする必要があります。
 
 ```{code-block}
-pip install qiskit qiskit-aer qiskit-ibm-runtime qiskit-experiments qiskit-machine-learning qiskit-optimization matplotlib pylatexenc pandas tabulate
+pip install qiskit qiskit-aer qiskit-ibm-runtime qiskit-experiments qiskit-optimization matplotlib pylatexenc pandas tabulate
+```
+
+```{code-cell} ipython3
+
 ```
