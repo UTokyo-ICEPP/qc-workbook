@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: yiiyama/jupyterbook-qiskit-packages:1.3.0
+From: yiiyama/jupyterbook-qiskit-packages:1.3.1
 
 %environment
     export PATH="/opt/packages/bin:$PATH"
@@ -8,13 +8,10 @@ From: yiiyama/jupyterbook-qiskit-packages:1.3.0
     apt -y update
     DEBIAN_FRONTEND=noninteractive apt install -y git
 
-    export PATH="/opt/packages/bin:$PATH"
-    echo $PATH
-
-    pip3 install --no-cache-dir jupyterlab jupytext
+    pip3 install --no-cache-dir --prefix /usr jupyterlab jupytext
 
     git clone https://github.com/LAL/trackml-library.git
-    pip3 install ./trackml-library
+    pip3 install --no-cache-dir --prefix /usr ./trackml-library
     rm -rf trackml-library
 
 %startscript

@@ -1,16 +1,15 @@
-FROM ubuntu:latest AS packages
+FROM ubuntu:24.04 AS packages
 ADD requirements.txt /requirements.txt
 
 RUN apt -y update && \
-    apt install -y python3 python3-venv python3-pip && \
+    apt install -y wget python3 python3-venv && \
     apt -y clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m venv /opt/packages
-ENV PATH="/opt/packages/bin:$PATH"
+RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py --prefix /usr && rm get-pip.py
 
-RUN pip3 install --no-cache-dir -r /requirements.txt && rm /requirements.txt
-RUN pip3 install --no-cache-dir jupyter-book
+RUN pip3 install --no-cache-dir --prefix /usr -r /requirements.txt && rm /requirements.txt
+RUN pip3 install --no-cache-dir --prefix /usr jupyter-book
 
 # The next two blocks are libraries required at runtime (not build time) only, so they are not needed in principle
 # (Cells using these libraries are tagged as "throws-exception")
