@@ -362,7 +362,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output, raises-exception]
+tags: [remove-output, raises-exception]
 ---
 channel = 'ibm_quantum_platform'
 # 環境設定時に作成したインスタンスの名前を入れてください
