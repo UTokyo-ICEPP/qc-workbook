@@ -6,7 +6,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.16.7
+      jupytext_version: 1.17.2
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -20,9 +20,10 @@ jupyter:
     name: python
     nbconvert_exporter: python
     pygments_lexer: ipython3
-    version: 3.10.12
+    version: 3.12.3
 ---
 
+<!-- #region editable=true slideshow={"slide_type": ""} -->
 # 【課題】量子相関を調べる
 
 $\newcommand{\ket}[1]{|#1\rangle}$
@@ -39,7 +40,7 @@ $\newcommand{\rmIV}{\mathrm{IV}}$
 local: true
 ---
 ```
-
+<!-- #endregion -->
 
 ## QCシミュレータの使い方
 
@@ -591,7 +592,7 @@ $$
 
 様々な可分状態がランダムに登場するとしても、全ての状態の組み合わせについて上の不等式が成り立つので、全体の平均は常に2以下となります。これが、「古典力学では$|S| \leq 2$」という命題の意味です。
 
-<!-- #region tags=["raises-exception", "remove-output"] -->
+<!-- #region tags=["raises-exception", "remove-output"] editable=true slideshow={"slide_type": ""} -->
 **提出するもの**
 
 - 問題1, 2, 3において完成した回路のコード（EDIT BELOW / EDIT ABOVEの間を埋める）とシミュレーション結果によるプロット

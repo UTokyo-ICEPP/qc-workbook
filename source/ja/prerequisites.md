@@ -36,16 +36,18 @@ local: true
 
 ## IBM Quantum
 
-### IBMidを取得し、IBM Quantumにログインする
+### IBM Quantum Platformからインスタンスを作る
 
-IBM Quantumを利用するには、IBMidというアカウントを作り、 API Keyを取得する必要があります。<a href="https://quantum.cloud.ibm.com/" target="_blank">IBM Quantum Platform</a>ウェブサイトからIDを取得し、サービスにログインしてください。
+IBM Quantumを利用するには、IBM Quantum Platformにアカウントを作り、量子コンピュータを利用するインターフェースとなる「インスタンス」を作成する必要があります。また、IBMの量子コンピュータにジョブを投げるためには、アカウントに紐づいたAPI Keyを取得する必要があります。
+
+まず<a href="https://quantum.cloud.ibm.com/" target="_blank">IBM Quantum Platform</a>ウェブサイトからIDを取得し、サービスにログインしてください。次に<a href="https://quantum.cloud.ibm.com/docs/en/guides/cloud-setup" target="_blank">このページ</a>を参考にして適当な名前をつけたインスタンスを生成してください。
 
 (install_token)=
 ### （ローカル環境）APIキーを取得し、Qiskit設定に保存する
 
 APIキーはユーザー名＋パスワードの代わりとしてPythonプログラム中でIBM Cloudに接続するために使用されます。キーをローカルディスクに書き込める環境にある場合は、設定ファイルに保存することで、以降の認証を自動化できます。
 
-IBM Quantum Platformにログインしたらホーム画面右上のCreate API keyという枠をクリックし、作成する新しいキーに適当な名前を付けてCreateを押してください。作成されたキーはその場でコピーもしくはダウンロードする必要があります（あとから取得することはできません）。
+IBM Quantum Platformのホーム画面右上のCreate API keyという枠をクリックし、作成する新しいキーに適当な名前を付けてCreateを押してください。作成されたキーはその場でコピーもしくはダウンロードする必要があります（あとから取得することはできません）。
 ```{image} figs/ibmq_home.png
 :height: 400px
 :name: My Account

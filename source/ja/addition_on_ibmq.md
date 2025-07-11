@@ -5,22 +5,24 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.7
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 【参考】足し算を実機で行う
 
@@ -58,23 +60,29 @@ slideshow:
   slide_type: ''
 tags: [remove-output, raises-exception]
 ---
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
-# instance = 'hub-x/group-y/project-z'
-instance = None
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 
 backend = service.least_busy(filters=operational_backend())
 
 print(f'Using backend {backend.name}')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 実習と全く同じ`setup_addition`関数と、次のセルで効率化前の回路を返す`make_original_circuit`関数を定義します。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 def setup_addition(circuit, reg1, reg2, reg3):
     """Set up an addition subroutine to a circuit with three registers
     """
@@ -130,6 +138,8 @@ def make_original_circuit(n1, n2):
 
     return circuit
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 (1, 1)から(8, 8)までそれぞれ標準回路と効率化回路を作り、全てリストにまとめてバックエンドに送ります。
 
@@ -208,11 +218,17 @@ job = sampler.run(circuits, shots=shots)
 counts_list = [result.data.meas.get_counts() for result in job.result()]
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 ジョブが返ってきたら、正しい足し算を表しているものの割合を調べてみましょう。
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
+---
+tags: [remove-output, raises-exception]
+editable: true
+slideshow:
+  slide_type: ''
+---
 def count_correct_additions(counts, n1, n2):
     """Extract the addition equation from the counts dict key and tally up the correct ones."""
 
@@ -239,6 +255,8 @@ for nq in range(1, 9):
         print(f'  {ctype} circuit: {n_correct} / {shots} = {r_correct:.3f} +- {np.sqrt(r_correct * (1. - r_correct) / shots):.3f}')
         icirc += 1
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 トランスパイル後の標準回路と効率化回路とのCZの数の差が計算結果の精度に直接影響します。トランスパイルをするセルから先を何度か実行してみて、差が大きい時と小さい時を比べるのも参考になるでしょう。
 

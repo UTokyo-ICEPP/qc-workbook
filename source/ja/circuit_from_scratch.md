@@ -5,22 +5,24 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.7
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 単純な量子回路をゼロから書く
 
@@ -1045,6 +1047,11 @@ $$
 1ビットの情報を転送する回路は以下のようになります。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # まずは入力ビットを適当な状態にする回路を作る
 # circuit.u (U gate)は3パラメータで一つの量子ビットを完全にコントロールするゲート
 prep_circuit = QuantumCircuit(1, name='prep')
@@ -1058,7 +1065,8 @@ res_ent = ClassicalRegister(1)
 circuit = QuantumCircuit(reg_in, reg_out, res_in, res_ent)
 
 # まずreg_inをprep_circuitの状態にする
-circuit.append(prep_circuit, qargs=reg_in)
+circuit.compose(prep_circuit, qubits=reg_in, inplace=True)
+circuit.barrier()
 
 # reg_outはベル状態に用意する
 circuit.h(reg_out[0])
@@ -1083,20 +1091,41 @@ with circuit.if_test((res_in[0], 1)):
 circuit.draw('mpl')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 入力ビットの状態は
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 Math(statevector_expr(prep_circuit, state_label=r'\text{in}'))
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 回路の終状態は
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 Math(statevector_expr(circuit, register_sizes=(1, 1, 1)))
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 上のセルを何度か実行すると、右二つのレジスタは実行するごとにランダムに違う値を取るものの、二つの項で共通で、一番左のレジスタが$\ket{\text{in}}$と同じ状態にあることがわかります。このようにテレポーテーションが実際に起こることを、上の回路を元に数式でも確認してみるといいでしょう。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 
 ```

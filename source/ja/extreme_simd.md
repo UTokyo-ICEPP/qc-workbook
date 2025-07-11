@@ -6,7 +6,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.16.7
+      jupytext_version: 1.17.2
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -20,7 +20,7 @@ jupyter:
     name: python
     nbconvert_exporter: python
     pygments_lexer: ipython3
-    version: 3.10.12
+    version: 3.12.3
 ---
 
 <!-- #region editable=true slideshow={"slide_type": ""} -->
@@ -536,15 +536,14 @@ print('Number of operations in the optimized circuit:', circuit_optimized.size()
 
 SWAPの位置、つまりルーティングを回路の設計者が直接指定しているので、トランスパイル時にその上からさらにルーティングが行われないようにする必要があります。これまで`transpile`関数を回路とバックエンド以外の引数を渡さずに実行してきましたが、実はこの関数の実行時に様々なオプションを使ってトランスパイルの設定を細かくコントロールすることができます。以下では、効率化回路に対してはstochastic swapを使用しないよう設定を変更してトランスパイルをします。バックエンド上のどの量子ビット列を使うかは、`find_best_chain`という関数で自動的に決めます。
 
-```python tags=["remove-output"] editable=true slideshow={"slide_type": ""}
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
-# instance = 'hub-x/group-y/project-z'
-instance = None
+```python tags=["remove-output", "raises-exception"] editable=true slideshow={"slide_type": ""}
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 
 backend = service.least_busy(filters=operational_backend())
 
@@ -576,7 +575,7 @@ print(f'Number of operations in the optimized circuit: {circuit_optimized_tr.siz
 print(f'  Breakdown: N(Rz)={nops_opt["rz"]}, N(X)={nops_opt["x"]}, N(SX)={nops_opt["sx"]}, N(2Q)={nops_opt[entangling_gate]}')
 ```
 
-<!-- #region editable=true slideshow={"slide_type": ""} -->
+<!-- #region editable=true slideshow={"slide_type": ""} tags=["raises-exception", "remove-output"] -->
 上のセルを何度か実行すると、効率化回路の2量子ビットゲートの数は常に142なのに対し、標準回路では140-160程度で揺らぐことが見て取れます。Stochastic swapの影響で、疑似乱数のシード次第で回路の内容が大きく異なるということです。運が良ければ効率化回路と同等か、場合によっては更に2量子ビットゲートが少ない回路が生成されます。
 
 実は以前は`optimization_level=3`で標準回路をトランスパイルすると、2量子ビットゲートの数は常に160程度でした。Qiskitではトランスパイラのアルゴリズムも日々改良されており、今回の問題ではproblem specificな手動の回路最適化と同等の効率を達成できるようになったということです。
@@ -631,6 +630,6 @@ plot_counts(counts_optimized, n1, n2, ax_optimized)
 fig.subplots_adjust(bottom=-0.2)
 ```
 
-<!-- #region editable=true slideshow={"slide_type": ""} -->
+<!-- #region editable=true slideshow={"slide_type": ""} tags=["remove-output", "raises-exception"] -->
 両方の回路とも、正しい足し算の式がランダムに出現していることを確認してください。
 <!-- #endregion -->

@@ -5,21 +5,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -111,8 +111,6 @@ $$
 
 このことから、（$\ket{w}$を含む）状態$\ket{\psi}$を準備して、その状態にグローバーの反復$G$を作用させて量子位相推定を行えば、固有値の位相として角度$\theta/(2\pi)$を求めることができそうです。この角度が分かれば、求める答え$\ket{w}$の振幅$\sin\frac\theta2$を推定することができます。これが量子振幅推定と呼ばれる方法です。
 
-
-
 +++ {"pycharm": {"name": "#%% md\n"}}
 
 ## 問題設定
@@ -143,7 +141,9 @@ from IPython.display import Math
 
 # Qiskit関連のパッケージをインポート
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit.visualization import plot_distribution
 from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import Sampler as AerSampler
 
 # ワークブック独自のモジュール
 from qc_workbook.show_state import statevector_expr
@@ -159,7 +159,6 @@ $$
 
 を生成する量子回路を作ります。$\theta$の値は$\theta=\frac{\pi}{3}$とします。
 
-
 ```{code-cell} ipython3
 ---
 editable: true
@@ -171,14 +170,14 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-output]
+tags: [remove-output, raises-exception]
 ---
 n_state = 3
+state_prep = QuantumCircuit(n_state)
 
 ##################
 ### EDIT BELOW ###
 ##################
-
 # |psi(theta=pi/3)>を作る回路（state_prep）を書いてください
 #state_prep = ...
 
@@ -190,7 +189,6 @@ state_prep.draw('mpl')
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
-
 
 次に、state_prepで状態を作って確認します。
 
@@ -232,7 +230,6 @@ Math(expr)
 
 次にオラクル $U_w$とDiffuser $U_s$を作る回路を書いて、それらからグローバーの反復$G=U_sU_w$の量子回路を作ってください。
 
-
 ```{code-cell} ipython3
 ---
 editable: true
@@ -244,9 +241,8 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-output]
+tags: [remove-output, raises-exception]
 ---
-
 oracle = QuantumCircuit(n_state)
 diffuser = QuantumCircuit(n_state)
 
@@ -266,7 +262,6 @@ grover_iter.decompose().draw('mpl')
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-
 量子位相推定の回路は以下のようにします。読み出しレジスタ`qreg_readout`を制御ビットとして、制御Gゲートを状態レジスタ`qreg_status`に適用する回路を書いてください。
 
 ```{code-cell} ipython3
@@ -280,6 +275,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 # 読み出しレジスタの量子ビット数
 n_readout = 4
@@ -311,11 +307,9 @@ qc.barrier()
 ##################
 ### ABOVE BELOW ###
 ##################
-
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
-
 
 逆量子フーリエ変換の回路は以下のものを使います。
 
@@ -330,6 +324,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 def qft_dagger(qreg):
     """逆量子フーリエ変換用の回路"""
@@ -358,7 +353,6 @@ qc.draw('mpl')
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-
 シミュレータで実行して、結果を確かめましょう。
 
 ```{code-cell} ipython3
@@ -372,21 +366,19 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
-from qiskit.primitives import Sampler
-sampler = Sampler()
+sampler = AerSampler()
 
 # Now run the job and examine the results
 sampler_job = sampler.run(qc)
 result = sampler_job.result()
 
-from qiskit.visualization import plot_distribution
 plt.style.use('dark_background')
 plot_distribution(result.quasi_dists[0])
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
-
 
 **提出するもの**
 - 以下を行う回路

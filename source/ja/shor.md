@@ -5,21 +5,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
@@ -144,14 +144,19 @@ pycharm:
   name: '#%%
 
     '
+editable: true
+slideshow:
+  slide_type: ''
 ---
 from fractions import Fraction
 import matplotlib.pyplot as plt
 import numpy as np
 
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
-from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit.visualization import plot_distribution, plot_histogram
+from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
+from qiskit_aer.primitives import Sampler as AerSampler
 
 # ワークブック独自のモジュール
 from qc_workbook.utils import operational_backend
@@ -317,23 +322,22 @@ pycharm:
   name: '#%%
 
     '
+editable: true
+slideshow:
+  slide_type: ''
 ---
-from qiskit.primitives import Sampler
-
 # Instantiate a new Sampler object
-sampler = Sampler()
+sampler = AerSampler()
 
 # Now run the job and examine the results
 sampler_job = sampler.run(qc)
 result = sampler_job.result()
 
-from qiskit.visualization import plot_distribution
 plt.style.use('dark_background')
 plot_distribution(result.quasi_dists[0])
-
 ```
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 答えは10進数で2になっていますね。ここで測定した答えは$\ket{2^n\theta}$だったことを思い出すと、$\theta=2/2^3=1/4$となって正しい$\theta$が得られたことが分かります。
 
@@ -342,7 +346,7 @@ plot_distribution(result.quasi_dists[0])
 - 角度の選び方によっては、得られる位相の精度が悪くなります。その場合、どうすればより良い精度で測定できるでしょうか？
 - $S$ゲートの場合固有ベクトルは$\ket{1}$でしたが、$\ket{1}$以外の状態を使うとどうなりますか？特に固有ベクトルと線形従属なベクトルを使った場合の振る舞いを見てみてください。
 
-+++ {"pycharm": {"name": "#%% md\n"}}
++++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 (qpe_imp_real)=
 ### 量子コンピュータでの実験
@@ -358,17 +362,15 @@ pycharm:
     '
 slideshow:
   slide_type: ''
-tags: [remove-input, remove-output]
+tags: [remove-input, remove-output, raises-exception]
 ---
-# 量子コンピュータで実行する場合
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
-# instance = 'hub-x/group-y/project-z'
-instance = None
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 
 backend = service.least_busy(min_num_qubits=n_meas+1, simulator=False, operational=True)
 print(f"least busy backend: {backend.name}")
@@ -388,11 +390,8 @@ tags: [raises-exception, remove-output]
 # 最も空いているバックエンドで回路を実行します。キュー内のジョブの実行をモニターします。
 qc_tr = transpile(qc, backend=backend, optimization_level=3)
 
-from qiskit_ibm_runtime import Sampler, Session
-# create a Runtime session for efficient execution (optional)
-session = Session(service=service, backend=backend)
-sampler = Sampler(session=session)
-job = sampler.run(qc)
+sampler = Sampler(backend)
+job = sampler.run([qc_tr])
 ```
 
 ```{code-cell} ipython3
@@ -402,11 +401,16 @@ pycharm:
 
     '
 tags: [raises-exception, remove-output]
+editable: true
+slideshow:
+  slide_type: ''
 ---
 # 計算結果
-result = job.result()
-plot_distribution(result.quasi_dists[0])
+result = job.result()[0]
+plot_histogram(result.data.out.get_counts())
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 (shor_algo)=
 ## ショアのアルゴリズム
@@ -950,14 +954,12 @@ slideshow:
 shots = 10000
 
 # Instantiate a new Sampler object
-from qiskit.primitives import Sampler
-sampler = Sampler()
+sampler = AerSampler()
 
 # Now run the job and examine the results
 sampler_job = sampler.run(qc)
 answer = sampler_job.result().quasi_dists[0]
 
-from qiskit.visualization import plot_distribution
 plt.style.use('dark_background')
 plot_distribution(answer)
 ```
@@ -1029,12 +1031,3 @@ for row in rows:
 `limit_denominator`メソッドを使って、分母が特定の値（ここでは15）を下回る分数で、最も位相の値に近いものを得ています。
 
 測定された結果のうち、2つ（64と192）が正しい答えである$r=4$を与えたことが分かります。
-
-```{code-cell} ipython3
----
-editable: true
-slideshow:
-  slide_type: ''
----
-
-```

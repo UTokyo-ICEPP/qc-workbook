@@ -5,22 +5,24 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.7
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # 物理系を表現する
 
@@ -444,12 +446,17 @@ circuit.draw('mpl')
 [^sgate]: $P(\pi/2)$ゲートは$S$ゲートとも呼ばれます。$P(-\pi/2)$は$S^{\dagger}$です。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # まずは全てインポート
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from qiskit_aer.primitives import SamplerV2 as AerSampler
-from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as RuntimeSampler
+from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 # このワークブック独自のモジュール
 from qc_workbook.dynamics import plot_heisenberg_spins
@@ -457,6 +464,11 @@ from qc_workbook.utils import operational_backend
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 n_spins = 5
 M = 10
 omegadt = 0.1
@@ -509,6 +521,11 @@ print(f'{len(circuits)} circuits created')
 量子回路シミュレーターで実行し、各ビットにおける$Z$方向スピンの期待値をプロットしましょう。プロット用の関数は比較的長くなってしまいますが実習の本質とそこまで関係しないので、[別ファイル](https://github.com/UTokyo-ICEPP/qc-workbook/blob/master/source/utils/dynamics.py)に定義してあります。関数はジョブの実行結果、系のスピンの数、初期状態、ステップ間隔を引数にとります。
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
 # 初期状態 |0> x |0> x |0> x |0> x 1/√2(|0>+|1>) は配列では [1/√2 1/√2 0 0 ...]
 initial_state = np.zeros(2 ** n_spins, dtype=np.complex128)
 initial_state[0:2] = np.sqrt(0.5)
@@ -528,6 +545,8 @@ sim_counts_list = [result.data.meas.get_counts() for result in sim_results]
 plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theory_curve=True)
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
 ビット0でのスピンの不整合が徐々に他のビットに伝搬していく様子が観察できました。
 
 また、上のように関数`plot_heisenberg_spins`に`add_theory_curve=True`という引数を渡すと、ハミルトニアンを対角化して計算した厳密解のカーブも同時にプロットします。トロッター分解による解が、厳密解から少しずつずれていっている様子も観察できます。興味があれば$\Delta t$を小さく（$M$を大きく）して、ずれがどう変わるか確認してみてください。
@@ -535,16 +554,19 @@ plot_heisenberg_spins(sim_counts_list, n_spins, initial_state, omegadt, add_theo
 実機でも同様の結果が得られるか確認してみましょう。
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
+---
+tags: [raises-exception, remove-output]
+editable: true
+slideshow:
+  slide_type: ''
+---
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
-# instance = 'hub-x/group-y/project-z'
-instance = None
-
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 
 backend = service.least_busy(filters=operational_backend())
 
@@ -552,9 +574,13 @@ print(f'Job will run on {backend.name}')
 ```
 
 ```{code-cell} ipython3
-:tags: [raises-exception, remove-output]
-
-sampler = RuntimeSampler(backend)
+---
+tags: [raises-exception, remove-output]
+editable: true
+slideshow:
+  slide_type: ''
+---
+sampler = Sampler(backend)
 
 circuits_ibmq = transpile(circuits, backend=backend)
 job = sampler.run(circuits_ibmq, shots=2000)
@@ -563,4 +589,13 @@ results = job.result()
 counts_list = [result.data.meas.get_counts() for result in results]
 
 plot_heisenberg_spins(counts_list, n_spins, initial_state, omegadt)
+```
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+---
+
 ```

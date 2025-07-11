@@ -5,22 +5,24 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.7
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 # CHSH不等式の破れを確認する
 
@@ -548,11 +550,7 @@ $$
 
 ## 回路を実機で実行する
 
-まずはIBM Quantumに認証・接続します。すでに{ref}`認証設定が保存されている <install_token>`場合は
-```{code-block} python
-service = QiskitRuntimeService(channel='ibm_quantum')
-```
-で接続ができます。設定がない場合は`QiskitRuntimeService`のコンストラクタに{ref}`トークン <install_token>`を渡してIBM Quantumに接続します。
+まずはIBM Quantumに認証・接続します。
 
 ```{code-cell} ipython3
 ---
@@ -561,14 +559,13 @@ slideshow:
   slide_type: ''
 tags: [remove-output, raises-exception]
 ---
-# Specify an instance if you have access to multiple (e.g. premium access plan）
-# instance = 'hub-x/group-y/project-z'
-instance = None
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 ```
 
 認証が済んだら、利用する量子コンピュータ（「バックエンド」と呼びます）を選びます。バックエンドで回路を実行するために、Samplerというインターフェースを使います。
@@ -592,8 +589,7 @@ print(f'Jobs will run on {backend.name}')
 ```{code-cell} ipython3
 :tags: [raises-exception, remove-output]
 
-# max_shots = the maximum number of allowed shots for this backend with the access parameters
-shots = min(backend.max_shots, 2000)
+shots = 2000
 print(f'Running four circuits, {shots} shots each')
 
 circuits = transpile(circuits, backend=backend)

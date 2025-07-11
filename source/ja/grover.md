@@ -5,21 +5,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.17.2
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 language_info:
+  name: python
+  version: 3.12.3
+  mimetype: text/x-python
   codemirror_mode:
     name: ipython
     version: 3
-  file_extension: .py
-  mimetype: text/x-python
-  name: python
-  nbconvert_exporter: python
   pygments_lexer: ipython3
-  version: 3.10.12
+  nbconvert_exporter: python
+  file_extension: .py
 ---
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
@@ -324,14 +324,14 @@ import numpy as np
 
 # Qiskit関連のパッケージをインポート
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
-#from qiskit.quantum_info import Statevector
-#from qiskit.visualization import plot_histogram
+from qiskit.visualization import plot_histogram, plot_distribution
 from qiskit_aer import AerSimulator
-from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_aer.primitives import Sampler as AerSampler
+from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
 from qiskit_ibm_runtime.accounts import AccountNotFoundError
 
 # ワークブック独自のモジュール
-#from qc_workbook.utils import operational_backend
+from qc_workbook.utils import operational_backend
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -425,6 +425,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 def diffuser(n):
     qc = QuantumCircuit(n)
@@ -514,44 +515,15 @@ tags: [remove-output]
 ---
 # Instantiate new AerSimulator and Sampler objects
 simulator = AerSimulator()
-sampler = Sampler()
+aer_sampler = AerSampler()
 
 # Now run the job and examine the results
 grover_circuit = transpile(grover_circuit, backend=simulator)
-sampler_job = sampler.run(grover_circuit, shots=10000)
+sampler_job = aer_sampler.run(grover_circuit, shots=10000)
 result = sampler_job.result()
 
-from qiskit.visualization import plot_distribution
-#plt.style.use('dark_background')
+plt.style.use('dark_background')
 plot_distribution(result.quasi_dists[0])
-
-'''
-simulator = AerSimulator()
-grover_circuit = transpile(grover_circuit, backend=simulator)
-results = simulator.run(grover_circuit, shots=1024).result()
-answer = results.get_counts()
-
-# 横軸を整数でプロットする
-def show_distribution(answer):
-    n = len(answer)
-    x = [int(key,2) for key in list(answer.keys())]
-    y = list(answer.values())
-
-    fig, ax = plt.subplots()
-    rect = ax.bar(x,y)
-
-    def autolabel(rects):
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate('{:.3f}'.format(height/sum(y)),
-                        xy=(rect.get_x()+rect.get_width()/2, height),xytext=(0,0),
-                        textcoords="offset points",ha='center', va='bottom')
-    autolabel(rect)
-    plt.ylabel('Probabilities')
-    plt.show()
-
-show_distribution(answer)
-'''
 ```
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
@@ -580,17 +552,16 @@ slideshow:
   slide_type: ''
 tags: [raises-exception, remove-output]
 ---
-# 利用できるインスタンスが複数ある場合（Premium accessなど）はここで指定する
-# instance = 'hub-x/group-y/project-z'
-instance = None
+channel = 'ibm_quantum_platform'
+# 環境設定時に作成したインスタンスの名前を入れてください
+instance = '__your_instance_name__'
+# API keyをローカルに保存していない場合は、ここに文字列として貼り付けてください
+token = None
 
-try:
-    service = QiskitRuntimeService(channel='ibm_quantum', instance=instance)
-except AccountNotFoundError:
-    service = QiskitRuntimeService(channel='ibm_quantum', token='__paste_your_token_here__', instance=instance)
+service = QiskitRuntimeService(channel=channel, instance=instance, token=token)
 
 # 現在稼働中のバックエンド（実機）の中から一番空いているものを選ぶ
-backend = service.least_busy(min_num_qubits=n_qubits, simulator=False, operational=True)
+backend = service.least_busy(filters=operational_backend())
 print(f"least busy backend: {backend.name}")
 ```
 
@@ -610,14 +581,11 @@ tags: [raises-exception, remove-output]
 # 最も空いているバックエンドで回路を実行します。
 grover_circuit = transpile(grover_circuit, backend=backend, optimization_level=3)
 
-session = Session(service=service, backend=backend)
-sampler = RuntimeSampler(session=session)
+sampler = Sampler(backend)
 
-job = sampler.run(qc)
+job = sampler.run([grover_circuit])
 print(f">>> Job ID: {job.job_id()}")
-print(f">>> Session ID: {job.session_id}")
 print(f">>> Job Status: {job.status()}")
-#job = backend.run(grover_circuit, shots=1024)
 ```
 
 ```{code-cell} ipython3
@@ -629,11 +597,16 @@ pycharm:
 
     '
 tags: [raises-exception, remove-output]
+editable: true
+slideshow:
+  slide_type: ''
 ---
 # 計算結果
-result = job.result()
-plot_distribution(result.quasi_dists[0])
+result = job.result()[0]
+plot_histogram(result.data.meas.get_counts())
 ```
+
++++ {"editable": true, "slideshow": {"slide_type": ""}}
 
 シミュレータに比べると結果は非常に悪いですね。。。残念ながら、今の量子コンピュータをそのまま使うとこういう結果になってしまいます。しかし、{ref}`エラー緩和 <measurement_error_mitigation>`等のテクニックを使うことである程度改善することはできます。
 
@@ -677,15 +650,12 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 grover_circuit_iterN = transpile(grover_circuit_iterN, backend=simulator)
-sampler_job = sampler.run(grover_circuit_iterN, shots=10000)
+sampler_job = aer_sampler.run(grover_circuit_iterN, shots=10000)
 result = sampler_job.result()
 plot_distribution(result.quasi_dists[0])
-#grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
-#results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
-#answer = results.get_counts()
-#show_distribution(answer)
 ```
 
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
@@ -703,10 +673,8 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
-simulator = AerSimulator()
-sampler = Sampler()
-
 x = []
 y = []
 
@@ -722,7 +690,7 @@ for Niter in range(1,11):
     grover_circuit_iterN.measure_all()
 
     grover_circuit_iterN = transpile(grover_circuit_iterN, backend=simulator)
-    sampler_job_iterN = sampler.run(grover_circuit_iterN, shots=shots)
+    sampler_job_iterN = aer_sampler.run(grover_circuit_iterN, shots=shots)
     results_sim_iterN = sampler_job_iterN.result()
     #grover_circuit_iterN_tr = transpile(grover_circuit_iterN, backend=simulator)
     #results = simulator.run(grover_circuit_iterN_tr, shots=1024).result()
@@ -794,13 +762,7 @@ oracle_2sol_gate.append(oracle_2sol_2.to_gate(), list(range(n_qubits)))
 oracle_2sol_gate.barrier()
 oracle_2sol_gate.name = "U_w(2sol)"
 oracle_2sol_gate.decompose().draw('mpl')
-
-oracle_2sol_gate = oracle_2sol.to_gate()
-oracle_2sol_gate.name = "U_w(2sol)"
-print(oracle_2sol)
 ```
-
-+++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 ```{code-cell} ipython3
 ---
@@ -811,6 +773,7 @@ pycharm:
     '
 slideshow:
   slide_type: ''
+tags: [remove-output]
 ---
 x = []
 y = []
@@ -825,7 +788,7 @@ for Niter in range(1,11):
     #print(grover_circuit_2sol_iterN)
 
     grover_circuit_2sol_iterN = transpile(grover_circuit_2sol_iterN, backend=simulator)
-    sampler_job_2sol_iterN = sampler.run(grover_circuit_2sol_iterN, shots=shots)
+    sampler_job_2sol_iterN = aer_sampler.run(grover_circuit_2sol_iterN, shots=shots)
     results_sim_2sol_iterN = sampler_job_2sol_iterN.result()
     #grover_circuit_2sol_iterN_tr = transpile(grover_circuit_2sol_iterN, backend=simulator)
     #results = simulator.run(grover_circuit_2sol_iterN_tr, shots=1024).result()
@@ -845,12 +808,3 @@ plt.show()
 +++ {"pycharm": {"name": "#%% md\n"}, "editable": true, "slideshow": {"slide_type": ""}}
 
 複数解の場合、確率が最大になる反復回数が単一解の場合より減っていますね。予想と合っているでしょうか？
-
-```{code-cell} ipython3
----
-editable: true
-slideshow:
-  slide_type: ''
----
-
-```
