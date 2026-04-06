@@ -4,9 +4,9 @@
 
 内容は<a href="http://www.icepp.s.u-tokyo.ac.jp" target="_blank">東京大学素粒子物理国際研究センター（ICEPP）</a>の研究者が選定・執筆しました。私たちの関心は、量子計算そのものを理解することでもありますが、それ以上に**量子コンピュータを実際に使って科学や技術を進展させること**に向いています。そのため、この教材で扱うトピックや順番は一般的な量子コンピューティングの入門書と異なっています。より体系立った量子計算の理解のためには{doc}`参考文献 <bibliography>`に挙げた入門書をおすすめします。
 
-このワークブックは、<a href="http://qnec.jp" target="_blank">東京大学量子ネイティブ育成センター</a>による講義「IBM Qを使った量子コンピューター入門：ハードからソフトまで」の付属教材でもあります。教材の章立ては講義の時限に対応しており、各章の最後に実習課題が設けられています。受講者は課題ページ中で指定された内容をレポートとして提出してください。
+このワークブックは、<a href="http://qnec.jp" target="_blank">東京大学量子ネイティブ育成センター</a>による講義「IBM Quantumを使った量子コンピューター入門」の付属教材でもあります。教材の章立ては講義の時限に対応しており、各章の最後に実習課題が設けられています。
 
-ワークブック全体を通じて、<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリでプログラムを書き、作成した量子回路を<a href="https://quantum.ibm.com" target="_blank">IBM Quantum</a> (IBMQ)の量子コンピュータで実行します。IBMQを利用するにはアカウントを作成する必要があるので、実習を始める前に{doc}`prerequisites`を参考に準備をすることをおすすめします。
+ワークブック全体を通じて、<a href="https://www.ibm.com/quantum/qiskit" target="_blank">Qiskit</a>というPythonライブラリでプログラムを書き、作成した量子回路を<a href="https://quantum.cloud.ibm.com" target="_blank">IBM Quantum</a>の量子コンピュータで実行します。IBM Quantumを利用するにはアカウントを作成する必要があるので、実習を始める前に{doc}`prerequisites`を参考に準備をすることをおすすめします。
 
 **問い合わせ**
 
