@@ -505,7 +505,7 @@ cblackbox = blackbox.control(1)
 ```
 
 <!-- #region editable=true slideshow={"slide_type": ""} -->
-それでは、この制御ブラックボックスゲートを利用して、equal superpositionにある`haystack`レジスタで干渉を起こして、観測で`needle`が識別できるような回路を書いてください。
+それでは、この制御ブラックボックスゲートを利用して、均等重ね合わせ状態にある`haystack`レジスタで干渉を起こして、観測で`needle`が識別できるような回路を書いてください。
 
 ヒント：アダマールテストの回路は、量子状態ベクトル同士を足したり引いたりして振幅の干渉を起こさせる回路のテンプレートでもあります。
 <!-- #endregion -->
@@ -515,7 +515,7 @@ def make_haystack_needle():
     test_register = QuantumRegister(1, 'test')
     circuit = QuantumCircuit(haystack_register, test_register)
 
-    # equal superpositionを作る（このようにゲート操作のメソッドにレジスタを渡すと、レジスタの各ビットにゲートがかかります。）
+    # 均等重ね合わせを作る（このようにゲート操作のメソッドにレジスタを渡すと、レジスタの各ビットにゲートがかかります。）
     circuit.h(haystack_register)
 
     ##################
