@@ -430,7 +430,7 @@ plot_histogram(result.data.out.get_counts())
 (shor_algo_fig)=
 ```{image} figs/shor_flow.png
 :alt: shor_flow
-:width: 500px
+:width: 550px
 :align: center
 ```
 
@@ -447,7 +447,7 @@ plot_histogram(result.data.out.get_counts())
 |y|1|7|4|13|1|7|4|$\cdots$|
 
 のようになります。つまり、$\modequiv{7^r}{1}{15}$を満たす最小の非自明な$r$は4になることが分かります。
-$r=4$は偶数なので、$\modequiv{x}{7^{4/2}}{15}$が定義でき、$x=4$です。$x+1 = \modne{5}{0}{15}$なので、
+$r=4$は偶数なので、$\modequiv{7^{4/2}}{x}{15}$が定義でき、$x=4$です。$(x+1) \pmod{15} = 5 \ne 0$なので、
 
 $$
 \{p,q\}=\{\gcd(5,15), \gcd(3,15)\}=\{5,3\}
