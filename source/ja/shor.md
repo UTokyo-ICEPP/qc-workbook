@@ -605,7 +605,7 @@ $$
 
 ```{image} figs/shor_oracle.png
 :alt: shor_oracle
-:width: 600px
+:width: 650px
 :align: center
 ```
 
