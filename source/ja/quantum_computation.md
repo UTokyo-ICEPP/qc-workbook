@@ -87,7 +87,7 @@ $$
 
 ```{image} figs/ripple_carry_uma_fixed.png
 :alt: ripple_carry_uma_fixed
-:width: 400px
+:width: 500px
 :align: center
 ```
 
