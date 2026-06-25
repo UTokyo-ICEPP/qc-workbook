@@ -85,8 +85,8 @@ $$
 
 いっぽう、次の回路$V$は$\ket{\text{out}_1} = \ket{\{ x + y + z \} (x \oplus y) (x \oplus z)}$を$\ket{\text{out}_2} = \ket{x (x \oplus y \oplus z) z}$に変換します。
 
-```{image} figs/ripple_carry_uma.png
-:alt: ripple_carry_uma
+```{image} figs/ripple_carry_uma_fixed.png
+:alt: ripple_carry_uma_fixed
 :width: 400px
 :align: center
 ```
